@@ -1,0 +1,13 @@
+*.pyc
+__pycache__/
+.git/
+.gitignore
+*.log
+.sync-daemon.pid
+.claude/
+down/
+sync.log
+company_logs.db
+*.db
+.DS_Store
+README-SYNC.md
