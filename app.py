@@ -12,7 +12,8 @@ from sqlalchemy.orm import sessionmaker
 from database_setup import (
     ActivityLog, SyncLog, CompanyMetric, GitCommit,
     Employee, Task, SystemHealth, CompanyMilestone,
-    Revenue, BusinessMeeting, BusinessPlan, SCHEMA_NAME, initialize_database
+    Revenue, BusinessMeeting, BusinessPlan, EmployeeSuggestion, 
+    SuggestionFeedback, SCHEMA_NAME, initialize_database
 )
 from business_monitor import QhyxBusinessMonitor
 
@@ -229,6 +230,11 @@ def meetings():
     """회의 보고서 페이지"""
     return render_template('meetings.html')
 
+@app.route('/suggestions')
+def suggestions():
+    """직원 건의사항 페이지"""
+    return render_template('suggestions.html')
+
 @app.route('/api/meetings')
 def api_meetings():
     """회의 보고서 API"""
@@ -322,6 +328,215 @@ def api_meeting_detail(meeting_id):
         }
         
         return jsonify(meeting_detail)
+    finally:
+        session.close()
+
+@app.route('/api/suggestions')
+def api_suggestions():
+    """건의사항 목록 API"""
+    session = Session()
+    try:
+        # 최근 건의사항 목록 조회 (상태별로 정렬)
+        suggestions = session.query(EmployeeSuggestion).order_by(
+            EmployeeSuggestion.created_at.desc()
+        ).limit(20).all()
+        
+        suggestion_list = []
+        for suggestion in suggestions:
+            # 직원 정보 가져오기
+            employee = session.query(Employee).filter_by(employee_id=suggestion.employee_id).first()
+            employee_name = employee.name if employee else suggestion.employee_id
+            
+            suggestion_data = {
+                'id': suggestion.id,
+                'suggestion_id': suggestion.suggestion_id,
+                'employee_id': suggestion.employee_id,
+                'employee_name': employee_name,
+                'category': suggestion.category,
+                'priority': suggestion.priority,
+                'title': suggestion.title,
+                'description': suggestion.description,
+                'suggested_solution': suggestion.suggested_solution,
+                'expected_benefit': suggestion.expected_benefit,
+                'implementation_difficulty': suggestion.implementation_difficulty,
+                'status': suggestion.status,
+                'created_at': suggestion.created_at.strftime('%Y-%m-%d %H:%M') if suggestion.created_at else None,
+                'reviewed_at': suggestion.reviewed_at.strftime('%Y-%m-%d %H:%M') if suggestion.reviewed_at else None,
+                'estimated_impact': suggestion.estimated_impact,
+                'tags': suggestion.tags if suggestion.tags else []
+            }
+            suggestion_list.append(suggestion_data)
+        
+        # 상태별 통계
+        stats = {
+            'total': len(suggestion_list),
+            'submitted': len([s for s in suggestion_list if s['status'] == 'submitted']),
+            'reviewing': len([s for s in suggestion_list if s['status'] == 'reviewing']),
+            'approved': len([s for s in suggestion_list if s['status'] == 'approved']),
+            'implemented': len([s for s in suggestion_list if s['status'] == 'implemented'])
+        }
+        
+        return jsonify({
+            'suggestions': suggestion_list,
+            'stats': stats
+        })
+    finally:
+        session.close()
+
+@app.route('/api/suggestions/<int:suggestion_id>')
+def api_suggestion_detail(suggestion_id):
+    """특정 건의사항 상세 정보 API"""
+    session = Session()
+    try:
+        suggestion = session.query(EmployeeSuggestion).filter_by(id=suggestion_id).first()
+        if not suggestion:
+            return jsonify({'error': 'Suggestion not found'}), 404
+        
+        # 직원 정보
+        employee = session.query(Employee).filter_by(employee_id=suggestion.employee_id).first()
+        
+        # 피드백 목록
+        feedbacks = session.query(SuggestionFeedback).filter_by(
+            suggestion_id=suggestion.suggestion_id
+        ).order_by(SuggestionFeedback.created_at.desc()).all()
+        
+        feedback_list = []
+        for feedback in feedbacks:
+            feedback_list.append({
+                'id': feedback.id,
+                'feedback_type': feedback.feedback_type,
+                'feedback_text': feedback.feedback_text,
+                'created_by': feedback.created_by,
+                'created_at': feedback.created_at.strftime('%Y-%m-%d %H:%M'),
+                'is_internal': feedback.is_internal
+            })
+        
+        suggestion_detail = {
+            'id': suggestion.id,
+            'suggestion_id': suggestion.suggestion_id,
+            'employee_id': suggestion.employee_id,
+            'employee_name': employee.name if employee else suggestion.employee_id,
+            'employee_role': employee.role if employee else '',
+            'category': suggestion.category,
+            'priority': suggestion.priority,
+            'title': suggestion.title,
+            'description': suggestion.description,
+            'suggested_solution': suggestion.suggested_solution,
+            'expected_benefit': suggestion.expected_benefit,
+            'implementation_difficulty': suggestion.implementation_difficulty,
+            'status': suggestion.status,
+            'created_at': suggestion.created_at.strftime('%Y-%m-%d %H:%M') if suggestion.created_at else None,
+            'reviewed_at': suggestion.reviewed_at.strftime('%Y-%m-%d %H:%M') if suggestion.reviewed_at else None,
+            'implemented_at': suggestion.implemented_at.strftime('%Y-%m-%d %H:%M') if suggestion.implemented_at else None,
+            'reviewer_notes': suggestion.reviewer_notes,
+            'implementation_cost': suggestion.implementation_cost,
+            'estimated_impact': suggestion.estimated_impact,
+            'tags': suggestion.tags if suggestion.tags else [],
+            'feedbacks': feedback_list
+        }
+        
+        return jsonify(suggestion_detail)
+    finally:
+        session.close()
+
+@app.route('/api/suggestions', methods=['POST'])
+def api_create_suggestion():
+    """새 건의사항 생성 API"""
+    data = request.json
+    
+    session = Session()
+    try:
+        # 건의사항 ID 생성
+        from datetime import datetime
+        today = datetime.now()
+        suggestion_id = f"SUG_{today.strftime('%Y%m%d')}_{session.query(EmployeeSuggestion).count() + 1:03d}"
+        
+        suggestion = EmployeeSuggestion(
+            suggestion_id=suggestion_id,
+            employee_id=data.get('employee_id'),
+            category=data.get('category'),
+            priority=data.get('priority', 'medium'),
+            title=data.get('title'),
+            description=data.get('description'),
+            suggested_solution=data.get('suggested_solution'),
+            expected_benefit=data.get('expected_benefit'),
+            implementation_difficulty=data.get('implementation_difficulty', 'medium'),
+            estimated_impact=data.get('estimated_impact'),
+            tags=data.get('tags', [])
+        )
+        
+        session.add(suggestion)
+        session.commit()
+        
+        return jsonify({
+            'success': True, 
+            'suggestion_id': suggestion_id,
+            'id': suggestion.id
+        })
+    except Exception as e:
+        session.rollback()
+        return jsonify({'error': str(e)}), 500
+    finally:
+        session.close()
+
+@app.route('/api/suggestions/<int:suggestion_id>/feedback', methods=['POST'])
+def api_add_suggestion_feedback(suggestion_id):
+    """건의사항에 피드백 추가 API"""
+    data = request.json
+    
+    session = Session()
+    try:
+        # 건의사항 존재 확인
+        suggestion = session.query(EmployeeSuggestion).filter_by(id=suggestion_id).first()
+        if not suggestion:
+            return jsonify({'error': 'Suggestion not found'}), 404
+        
+        feedback = SuggestionFeedback(
+            suggestion_id=suggestion.suggestion_id,
+            feedback_type=data.get('feedback_type', 'comment'),
+            feedback_text=data.get('feedback_text'),
+            created_by=data.get('created_by', 'System'),
+            is_internal=data.get('is_internal', False)
+        )
+        
+        session.add(feedback)
+        session.commit()
+        
+        return jsonify({'success': True, 'id': feedback.id})
+    except Exception as e:
+        session.rollback()
+        return jsonify({'error': str(e)}), 500
+    finally:
+        session.close()
+
+@app.route('/api/suggestions/<int:suggestion_id>/status', methods=['PUT'])
+def api_update_suggestion_status(suggestion_id):
+    """건의사항 상태 업데이트 API"""
+    data = request.json
+    
+    session = Session()
+    try:
+        suggestion = session.query(EmployeeSuggestion).filter_by(id=suggestion_id).first()
+        if not suggestion:
+            return jsonify({'error': 'Suggestion not found'}), 404
+        
+        old_status = suggestion.status
+        suggestion.status = data.get('status')
+        suggestion.reviewer_notes = data.get('reviewer_notes')
+        
+        # 상태에 따라 날짜 업데이트
+        if suggestion.status in ['approved', 'rejected'] and old_status == 'submitted':
+            suggestion.reviewed_at = datetime.utcnow()
+        elif suggestion.status == 'implemented':
+            suggestion.implemented_at = datetime.utcnow()
+            suggestion.implementation_cost = data.get('implementation_cost')
+        
+        session.commit()
+        
+        return jsonify({'success': True})
+    except Exception as e:
+        session.rollback()
+        return jsonify({'error': str(e)}), 500
     finally:
         session.close()
 

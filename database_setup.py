@@ -144,6 +144,7 @@ class Employee(Base):
     
     # 관계
     tasks = relationship('Task', back_populates='employee')
+    suggestions = relationship('EmployeeSuggestion', back_populates='employee')
 
 class Task(Base):
     __tablename__ = 'tasks'
@@ -239,6 +240,44 @@ class BusinessPlan(Base):
     created_at = Column(DateTime, default=datetime.utcnow)
     approved_at = Column(DateTime)
     details = Column(JSON)
+
+class EmployeeSuggestion(Base):
+    __tablename__ = 'employee_suggestions'
+    __table_args__ = {'schema': SCHEMA_NAME, 'extend_existing': True}
+    
+    id = Column(Integer, primary_key=True)
+    suggestion_id = Column(String(50), unique=True, nullable=False)  # SUG_YYYYMMDD_XXX
+    employee_id = Column(String(50), ForeignKey(f'{SCHEMA_NAME}.ai_employees.employee_id'), nullable=False)
+    category = Column(String(50), nullable=False)  # efficiency, resource, process, idea, concern
+    priority = Column(String(20), default='medium')  # low, medium, high, urgent
+    title = Column(String(200), nullable=False)
+    description = Column(String(2000), nullable=False)
+    suggested_solution = Column(String(2000))
+    expected_benefit = Column(String(1000))
+    implementation_difficulty = Column(String(20), default='medium')  # easy, medium, hard, very_hard
+    status = Column(String(20), default='submitted')  # submitted, reviewing, approved, rejected, implemented
+    created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
+    reviewed_at = Column(DateTime)
+    implemented_at = Column(DateTime)
+    reviewer_notes = Column(String(1000))
+    implementation_cost = Column(Float)
+    estimated_impact = Column(Float)  # 1-10 expected impact score
+    tags = Column(JSON)  # 태그 리스트
+    
+    # 관계
+    employee = relationship('Employee', back_populates='suggestions')
+
+class SuggestionFeedback(Base):
+    __tablename__ = 'suggestion_feedback'
+    __table_args__ = {'schema': SCHEMA_NAME, 'extend_existing': True}
+    
+    id = Column(Integer, primary_key=True)
+    suggestion_id = Column(String(50), ForeignKey(f'{SCHEMA_NAME}.employee_suggestions.suggestion_id'), nullable=False)
+    feedback_type = Column(String(20), nullable=False)  # comment, update, decision
+    feedback_text = Column(String(1000), nullable=False)
+    created_by = Column(String(100))  # 누가 피드백을 남겼는지
+    created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
+    is_internal = Column(Boolean, default=False)  # 내부 메모인지 직원에게 공개되는지
 
 def initialize_database():
     """데이터베이스 초기화 및 테이블 생성"""
