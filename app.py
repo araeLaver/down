@@ -224,6 +224,77 @@ def api_logs():
     finally:
         session.close()
 
+@app.route('/meetings')
+def meetings():
+    """회의 보고서 페이지"""
+    return render_template('meetings.html')
+
+@app.route('/api/meetings')
+def api_meetings():
+    """회의 보고서 API"""
+    session = Session()
+    try:
+        # 최근 회의 목록 조회
+        meetings = session.query(BusinessMeeting).order_by(
+            BusinessMeeting.meeting_date.desc()
+        ).limit(10).all()
+        
+        meeting_list = []
+        for meeting in meetings:
+            meeting_data = {
+                'id': meeting.id,
+                'title': meeting.title,
+                'meeting_type': meeting.meeting_type,
+                'date': meeting.meeting_date.strftime('%Y-%m-%d %H:%M') if meeting.meeting_date else None,
+                'status': meeting.status,
+                'agenda': json.loads(meeting.agenda) if meeting.agenda else [],
+                'key_decisions': meeting.key_decisions if meeting.key_decisions else [],
+                'action_items': meeting.action_items if meeting.action_items else [],
+                'participants': meeting.participants if meeting.participants else []
+            }
+            meeting_list.append(meeting_data)
+        
+        return jsonify({
+            'meetings': meeting_list,
+            'total_count': len(meeting_list)
+        })
+    finally:
+        session.close()
+
+@app.route('/api/meetings/<int:meeting_id>')
+def api_meeting_detail(meeting_id):
+    """특정 회의 상세 정보 API"""
+    session = Session()
+    try:
+        meeting = session.query(BusinessMeeting).filter_by(id=meeting_id).first()
+        if not meeting:
+            return jsonify({'error': 'Meeting not found'}), 404
+        
+        # 회의록 파싱
+        meeting_notes = {}
+        if meeting.meeting_notes:
+            try:
+                meeting_notes = json.loads(meeting.meeting_notes)
+            except:
+                pass
+        
+        meeting_detail = {
+            'id': meeting.id,
+            'title': meeting.title,
+            'meeting_type': meeting.meeting_type,
+            'date': meeting.meeting_date.strftime('%Y-%m-%d %H:%M') if meeting.meeting_date else None,
+            'status': meeting.status,
+            'agenda': json.loads(meeting.agenda) if meeting.agenda else [],
+            'key_decisions': meeting.key_decisions if meeting.key_decisions else [],
+            'action_items': meeting.action_items if meeting.action_items else [],
+            'participants': meeting.participants if meeting.participants else [],
+            'meeting_notes': meeting_notes
+        }
+        
+        return jsonify(meeting_detail)
+    finally:
+        session.close()
+
 @app.route('/api/sync/control', methods=['POST'])
 def sync_control():
     """동기화 제어 API"""

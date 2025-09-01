@@ -8,7 +8,10 @@
       "Bash(git commit:*)",
       "Bash(pip install:*)",
       "Bash(python:*)",
-      "WebSearch"
+      "WebSearch",
+      "Bash(git push:*)",
+      "Bash(cat:*)",
+      "Bash(git rm:*)"
     ],
     "deny": [],
     "ask": []
