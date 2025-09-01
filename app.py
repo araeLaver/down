@@ -12,8 +12,9 @@ from sqlalchemy.orm import sessionmaker
 from database_setup import (
     ActivityLog, SyncLog, CompanyMetric, GitCommit,
     Employee, Task, SystemHealth, CompanyMilestone,
-    Revenue, SCHEMA_NAME, initialize_database
+    Revenue, BusinessMeeting, BusinessPlan, SCHEMA_NAME, initialize_database
 )
+from business_monitor import QhyxBusinessMonitor
 
 app = Flask(__name__)
 
@@ -124,7 +125,17 @@ def get_sync_status():
 
 @app.route('/')
 def index():
-    """메인 대시보드"""
+    """Qhyx Inc. 메인 웹사이트"""
+    return render_template('qhyx_main.html')
+
+@app.route('/dashboard')
+def dashboard():
+    """실시간 비즈니스 모니터링 대시보드"""
+    return render_template('business_dashboard.html')
+
+@app.route('/monitor')
+def monitor():
+    """기존 시스템 모니터링 (호환성)"""
     return render_template('dashboard.html')
 
 @app.route('/api/stats')
@@ -312,6 +323,105 @@ def record_activity():
         session.commit()
         
         return jsonify({'success': True, 'id': activity.id})
+    finally:
+        session.close()
+
+@app.route('/api/dashboard-data')
+def api_dashboard_data():
+    """비즈니스 대시보드 데이터 API"""
+    session = Session()
+    try:
+        today = datetime.utcnow().date()
+        
+        # 오늘의 회의 수
+        today_meetings = session.query(BusinessMeeting).filter(
+            BusinessMeeting.meeting_date >= today
+        ).count()
+        
+        # 진행중인 업무 수
+        active_tasks = session.query(Task).filter(
+            Task.status.in_(['pending', 'in_progress'])
+        ).count()
+        
+        # 오늘의 지표 업데이트 수
+        today_metrics = session.query(CompanyMetric).filter(
+            CompanyMetric.date >= today
+        ).count()
+        
+        # 최근 활동들
+        recent_activities = session.query(BusinessMeeting).order_by(
+            BusinessMeeting.meeting_date.desc()
+        ).limit(5).all()
+        
+        activities = []
+        for meeting in recent_activities:
+            activities.append({
+                'time': meeting.meeting_date.strftime('%H:%M'),
+                'type': 'meeting',
+                'description': meeting.title,
+                'status': meeting.status
+            })
+        
+        # AI 직원 현황
+        employees = session.query(Employee).filter_by(status='active').all()
+        employee_data = []
+        for emp in employees:
+            emp_tasks = session.query(Task).filter_by(assigned_to=emp.employee_id).count()
+            employee_data.append({
+                'name': emp.name,
+                'role': emp.role,
+                'status': emp.status,
+                'tasks': emp_tasks
+            })
+        
+        # 사업 계획 현황
+        business_plans = session.query(BusinessPlan).filter(
+            BusinessPlan.status.in_(['approved', 'in_progress'])
+        ).all()
+        
+        plan_data = []
+        for plan in business_plans:
+            monthly_revenue = int(plan.projected_revenue_12m / 12) if plan.projected_revenue_12m else 0
+            plan_data.append({
+                'name': plan.plan_name,
+                'status': plan.status,
+                'revenue': f'{monthly_revenue:,}원/월'
+            })
+        
+        return jsonify({
+            'meetings': today_meetings,
+            'tasks': active_tasks,
+            'metrics': today_metrics,
+            'activities': activities,
+            'employees': employee_data,
+            'business_plans': plan_data
+        })
+    finally:
+        session.close()
+
+@app.route('/api/status')
+def api_status():
+    """시스템 상태 API (메인 웹사이트용)"""
+    session = Session()
+    try:
+        # 시스템 상태 확인
+        sync_status = get_sync_status()
+        
+        # 오늘의 활동 수
+        today = datetime.utcnow().date()
+        today_meetings = session.query(BusinessMeeting).filter(
+            BusinessMeeting.meeting_date >= today
+        ).count()
+        
+        active_employees = session.query(Employee).filter_by(status='active').count()
+        
+        return jsonify({
+            'system_running': True,
+            'autonomous_meetings': today_meetings,
+            'active_employees': active_employees,
+            'sync_daemon_running': sync_status['running'],
+            'last_update': datetime.utcnow().isoformat()
+        })
     finally:
         session.close()
 

@@ -1,6 +1,7 @@
 """
-데이터베이스 스키마 설정 및 초기화
+Qhyx Inc. 데이터베이스 스키마 설정 및 초기화
 Koyeb PostgreSQL 연결 및 전용 스키마 생성
+회사명: Qhyx (큐히익스) - Quantum Hope Youth eXcellence
 """
 
 from sqlalchemy import create_engine, text, MetaData, Table, Column, Integer, String, DateTime, Float, JSON, Date, Boolean, ForeignKey, Index
@@ -24,8 +25,8 @@ engine = create_engine(connection_string, pool_pre_ping=True, pool_size=10)
 Session = sessionmaker(bind=engine)
 Base = declarative_base()
 
-# 스키마 이름
-SCHEMA_NAME = 'company_growth'
+# 스키마 이름 - Qhyx Inc.
+SCHEMA_NAME = 'qhyx_growth'
 
 def create_schema():
     """전용 스키마 생성"""
@@ -202,6 +203,43 @@ class Revenue(Base):
     customer_id = Column(String(100))
     notes = Column(String(500))
 
+class BusinessMeeting(Base):
+    __tablename__ = 'business_meetings'
+    __table_args__ = {'schema': SCHEMA_NAME, 'extend_existing': True}
+    
+    id = Column(Integer, primary_key=True)
+    meeting_type = Column(String(100), nullable=False)  # 사업성검토, 전략회의, 실적검토 등
+    title = Column(String(200), nullable=False)
+    agenda = Column(String(1000))
+    participants = Column(JSON)  # 참석자 리스트
+    key_decisions = Column(JSON)  # 주요 결정사항
+    action_items = Column(JSON)  # 실행 항목
+    meeting_date = Column(DateTime, default=datetime.utcnow)
+    status = Column(String(20), default='planned')  # planned, ongoing, completed
+    meeting_notes = Column(String(2000))
+    follow_up_date = Column(DateTime)
+
+class BusinessPlan(Base):
+    __tablename__ = 'business_plans'
+    __table_args__ = {'schema': SCHEMA_NAME, 'extend_existing': True}
+    
+    id = Column(Integer, primary_key=True)
+    plan_name = Column(String(200), nullable=False)
+    plan_type = Column(String(50))  # product, service, expansion, strategy
+    description = Column(String(1000))
+    target_market = Column(String(500))
+    revenue_model = Column(String(500))
+    projected_revenue_12m = Column(Float)
+    investment_required = Column(Float)
+    risk_level = Column(String(20))  # low, medium, high
+    feasibility_score = Column(Float)  # 1-10 실현 가능성
+    priority = Column(String(20), default='medium')
+    status = Column(String(20), default='draft')  # draft, approved, in_progress, completed
+    created_by = Column(String(100))
+    created_at = Column(DateTime, default=datetime.utcnow)
+    approved_at = Column(DateTime)
+    details = Column(JSON)
+
 def initialize_database():
     """데이터베이스 초기화 및 테이블 생성"""
     try:
@@ -215,18 +253,21 @@ def initialize_database():
         # 초기 데이터 삽입
         session = Session()
         
-        # 시스템 초기화 마일스톤 추가
-        milestone = session.query(CompanyMilestone).filter_by(
-            title="회사 성장 추적 시스템 초기화"
+        # Qhyx Inc. 설립 마일스톤 추가
+        qhyx_milestone = session.query(CompanyMilestone).filter_by(
+            title="Qhyx Inc. 회사 설립 및 시스템 구축"
         ).first()
         
-        if not milestone:
+        if not qhyx_milestone:
             initial_milestone = CompanyMilestone(
-                milestone_type='technical',
-                title='회사 성장 추적 시스템 초기화',
-                description='Koyeb PostgreSQL 기반 회사 성장 추적 시스템 구축 완료',
+                milestone_type='business',
+                title='Qhyx Inc. 회사 설립 및 시스템 구축',
+                description='Qhyx (큐히익스) - Quantum Hope Youth eXcellence 회사 설립 및 PostgreSQL 기반 성장 추적 시스템 구축 완료',
                 impact_score=10.0,
                 details={
+                    'company_name': 'Qhyx Inc.',
+                    'korean_name': '주식회사 큐히익스',
+                    'philosophy': 'Quantum Hope Youth eXcellence',
                     'database': 'PostgreSQL',
                     'hosting': 'Koyeb',
                     'schema': SCHEMA_NAME,
