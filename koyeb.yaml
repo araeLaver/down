@@ -1,5 +1,5 @@
 app:
-  name: company-dashboard
+  name: unplex-dashboard
   
 build:
   docker:
