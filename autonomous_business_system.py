@@ -16,15 +16,18 @@ class QhyxAutonomousAI:
     
     def __init__(self):
         self.employees = [
-            {'id': 'CEO_001', 'name': '김창의', 'role': 'CCO', 'specialty': 'creative_thinking'},
-            {'id': 'CPO_001', 'name': '박실용', 'role': 'CPO', 'specialty': 'practical_solutions'},
-            {'id': 'CGO_001', 'name': '이글로벌', 'role': 'CGO', 'specialty': 'global_strategy'},
-            {'id': 'CBO_001', 'name': '정브랜드', 'role': 'CBO', 'specialty': 'branding_marketing'},
-            {'id': 'CVO_001', 'name': '최검증', 'role': 'CVO', 'specialty': 'quality_validation'},
-            {'id': 'CFO_001', 'name': '신재무', 'role': 'CFO', 'specialty': 'financial_analysis'},
-            {'id': 'CSO_001', 'name': '한전략', 'role': 'CSO', 'specialty': 'strategic_planning'},
-            {'id': 'CTO_001', 'name': '테크노', 'role': 'CTO', 'specialty': 'technology_development'},
-            {'id': 'CMO_001', 'name': '마케터', 'role': 'CMO', 'specialty': 'market_analysis'}
+            {'id': 'CEO_001', 'name': '김창의', 'role': 'CCO', 'specialty': 'global_business_expansion', 'focus': '전세계 신시장 개척'},
+            {'id': 'CPO_001', 'name': '박실용', 'role': 'CPO', 'specialty': 'scalable_product_development', 'focus': '확장 가능한 제품 포트폴리오'},
+            {'id': 'CGO_001', 'name': '이글로벌', 'role': 'CGO', 'specialty': 'international_expansion', 'focus': '20개국 동시 진출 전략'},
+            {'id': 'CBO_001', 'name': '정브랜드', 'role': 'CBO', 'specialty': 'multi_brand_strategy', 'focus': '45개 분야 브랜드 확장'},
+            {'id': 'CVO_001', 'name': '최검증', 'role': 'CVO', 'specialty': 'market_validation', 'focus': '신사업 기회 검증 및 우선순위'},
+            {'id': 'CFO_001', 'name': '신재무', 'role': 'CFO', 'specialty': 'expansion_financing', 'focus': '확장 자금 조달 및 투자 유치'},
+            {'id': 'CSO_001', 'name': '한전략', 'role': 'CSO', 'specialty': 'infinite_growth_strategy', 'focus': '무한 확장 전략 수립'},
+            {'id': 'CTO_001', 'name': '테크노', 'role': 'CTO', 'specialty': 'tech_innovation_scouting', 'focus': '혁신 기술 발굴 및 적용'},
+            {'id': 'CMO_001', 'name': '마케터', 'role': 'CMO', 'specialty': 'global_market_penetration', 'focus': '글로벌 시장 점유율 확대'},
+            {'id': 'CPP_001', 'name': '파트너', 'role': 'CPP', 'specialty': 'strategic_partnerships', 'focus': '전략적 파트너십 발굴'},
+            {'id': 'CAI_001', 'name': '아이봇', 'role': 'CAI', 'specialty': 'ai_automation', 'focus': 'AI 기반 사업 자동화'},
+            {'id': 'CDA_001', 'name': '데이터', 'role': 'CDA', 'specialty': 'data_driven_insights', 'focus': '데이터 기반 확장 전략'}
         ]
         self.session = Session()
         self.initialize_ai_employees()
@@ -59,13 +62,17 @@ class DailyBusinessOperations:
         """매일 아침 9시 전략 회의"""
         meeting_types = [
             "일일 전략 회의",
-            "시장 분석 회의", 
+            "사업 확장 회의",
+            "혁신 전략 회의", 
+            "글로벌 진출 회의",
+            "시장 분석 회의",
             "제품 개발 회의",
             "마케팅 전략 회의",
-            "고객 피드백 검토",
-            "경쟁사 분석 회의",
             "투자 유치 전략 회의",
-            "파트너십 검토 회의"
+            "파트너십 검토 회의",
+            "M&A 기회 검토 회의",
+            "기술 혁신 트렌드 회의",
+            "무한 확장 전략 회의"
         ]
         
         selected_type = random.choice(meeting_types)
@@ -116,24 +123,40 @@ class DailyBusinessOperations:
         
         specific_agendas = {
             "일일 전략 회의": [
-                "Qhyx Bot 개발 진행상황 점검",
-                "시장 진입 전략 업데이트",
-                "경쟁 우위 강화 방안"
+                "무한 확장 전략 실행 현황 점검",
+                "45개 분야 사업 기회 발굴 상황",
+                "글로벌 진출 속도 가속화 방안",
+                "20개국 동시 진출 전략 업데이트"
             ],
             "시장 분석 회의": [
-                "AI 시장 트렌드 분석",
-                "잠재 고객 세그먼트 연구",
-                "가격 전략 재검토"
+                "전세계 신흥 시장 기회 분석",
+                "경쟁사 대비 차별화 전략 수립",
+                "35개 비즈니스 모델 적용 우선순위",
+                "시장 점유율 확대 전략"
             ],
             "제품 개발 회의": [
-                "Qhyx Bot 기능 로드맵",
-                "사용자 경험 개선 방안",
-                "기술적 챌린지 해결"
+                "확장 가능한 제품 포트폴리오 구축",
+                "AI 기반 자동화 솔루션 개발",
+                "기술 융합 혁신 프로젝트 추진",
+                "MVP 런칭 속도 최적화"
             ],
             "마케팅 전략 회의": [
-                "브랜드 인지도 제고 방안",
-                "콘텐츠 마케팅 전략",
-                "고객 획득 비용 최적화"
+                "글로벌 브랜드 인지도 확산 전략",
+                "다국가 마케팅 캠페인 기획",
+                "디지털 마케팅 자동화 시스템",
+                "1,000만 고객 확보 로드맵"
+            ],
+            "사업 확장 회의": [
+                "신규 사업 영역 진출 계획",
+                "M&A 및 인수합병 후보 검토",
+                "전략적 파트너십 체결 진행",
+                "투자 유치 및 자금 조달 전략"
+            ],
+            "혁신 전략 회의": [
+                "혁신 기술 트렌드 모니터링",
+                "양자컴퓨팅, AGI 적용 방안",
+                "블록체인 생태계 구축 계획",
+                "메타버스 사업 확장 전략"
             ]
         }
         
