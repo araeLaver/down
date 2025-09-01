@@ -1,3 +1,8 @@
 .sync-daemon.pid
 sync.log
 .claude/settings.local.json*
+down/
+__pycache__/
+*.pyc
+*.log
+daily_report_*.txt
