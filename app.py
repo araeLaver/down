@@ -241,13 +241,28 @@ def api_meetings():
         
         meeting_list = []
         for meeting in meetings:
+            # Safe JSON parsing for agenda
+            agenda_data = []
+            if meeting.agenda:
+                try:
+                    # Try to parse as JSON first
+                    agenda_data = json.loads(meeting.agenda)
+                except json.JSONDecodeError:
+                    # If not JSON, split plain text by common delimiters
+                    if ')' in meeting.agenda:
+                        # Split by numbered items like "1) Item 2) Item"
+                        agenda_data = [item.strip() for item in meeting.agenda.replace(') ', ')\n').split('\n') if item.strip()]
+                    else:
+                        # Just use as single item
+                        agenda_data = [meeting.agenda]
+            
             meeting_data = {
                 'id': meeting.id,
                 'title': meeting.title,
                 'meeting_type': meeting.meeting_type,
                 'date': meeting.meeting_date.strftime('%Y-%m-%d %H:%M') if meeting.meeting_date else None,
                 'status': meeting.status,
-                'agenda': json.loads(meeting.agenda) if meeting.agenda else [],
+                'agenda': agenda_data,
                 'key_decisions': meeting.key_decisions if meeting.key_decisions else [],
                 'action_items': meeting.action_items if meeting.action_items else [],
                 'participants': meeting.participants if meeting.participants else []
@@ -278,13 +293,28 @@ def api_meeting_detail(meeting_id):
             except:
                 pass
         
+        # Safe JSON parsing for agenda
+        agenda_data = []
+        if meeting.agenda:
+            try:
+                # Try to parse as JSON first
+                agenda_data = json.loads(meeting.agenda)
+            except json.JSONDecodeError:
+                # If not JSON, split plain text by common delimiters
+                if ')' in meeting.agenda:
+                    # Split by numbered items like "1) Item 2) Item"
+                    agenda_data = [item.strip() for item in meeting.agenda.replace(') ', ')\n').split('\n') if item.strip()]
+                else:
+                    # Just use as single item
+                    agenda_data = [meeting.agenda]
+        
         meeting_detail = {
             'id': meeting.id,
             'title': meeting.title,
             'meeting_type': meeting.meeting_type,
             'date': meeting.meeting_date.strftime('%Y-%m-%d %H:%M') if meeting.meeting_date else None,
             'status': meeting.status,
-            'agenda': json.loads(meeting.agenda) if meeting.agenda else [],
+            'agenda': agenda_data,
             'key_decisions': meeting.key_decisions if meeting.key_decisions else [],
             'action_items': meeting.action_items if meeting.action_items else [],
             'participants': meeting.participants if meeting.participants else [],
