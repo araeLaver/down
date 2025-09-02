@@ -369,17 +369,25 @@ class QhyxMVPPlanner:
             # 마감일 설정 (1-2주 후)
             due_days = 7 if priority == 'high' else 14
             
-            task = Task(
-                task_id=f"MVP_{datetime.now().strftime('%Y%m%d')}_{i+1:03d}",
-                title=task_desc,
-                description=f"MVP 개발을 위한 핵심 업무: {task_desc}",
-                priority=priority,
-                assigned_to=assignee.employee_id,
-                due_date=datetime.now() + timedelta(days=due_days),
-                status='pending'
-            )
+            # 중복 방지를 위해 시간까지 포함한 고유 ID 생성
+            task_id = f"MVP_{datetime.now().strftime('%Y%m%d_%H%M%S')}_{i+1:03d}"
             
-            self.session.add(task)
+            # 기존 Task ID 중복 확인
+            existing_task = self.session.query(Task).filter_by(task_id=task_id).first()
+            if not existing_task:
+                task = Task(
+                    task_id=task_id,
+                    title=task_desc,
+                    description=f"MVP 개발을 위한 핵심 업무: {task_desc}",
+                    priority=priority,
+                    assigned_to=assignee.employee_id,
+                    due_date=datetime.now() + timedelta(days=due_days),
+                    status='pending'
+                )
+                
+                self.session.add(task)
+            else:
+                print(f"⚠️ MVP task ID {task_id} 이미 존재, 건너뜀")
             tasks_created += 1
         
         self.session.commit()

@@ -246,43 +246,62 @@ class DailyBusinessOperations:
             if not assignee_id:
                 assignee_id = self.ai_team.employees[0]['id']  # 기본값
             
-            task = Task(
-                task_id=f"TASK_{datetime.now().strftime('%Y%m%d')}_{i+1:03d}",
-                title=task_desc,
-                description=f"일일 회의에서 도출된 실행 항목: {task_desc}",
-                priority=random.choice(['high', 'medium', 'low']),
-                assigned_to=assignee_id,
-                due_date=datetime.now() + timedelta(days=1),
-                status='pending'
-            )
+            # 중복 방지를 위해 시간까지 포함한 고유 ID 생성
+            task_id = f"TASK_{datetime.now().strftime('%Y%m%d_%H%M%S')}_{i+1:03d}"
             
-            self.session.add(task)
+            # 기존 Task ID 중복 확인
+            existing_task = self.session.query(Task).filter_by(task_id=task_id).first()
+            if not existing_task:
+                task = Task(
+                    task_id=task_id,
+                    title=task_desc,
+                    description=f"일일 회의에서 도출된 실행 항목: {task_desc}",
+                    priority=random.choice(['high', 'medium', 'low']),
+                    assigned_to=assignee_id,
+                    due_date=datetime.now() + timedelta(days=1),
+                    status='pending'
+                )
+                
+                self.session.add(task)
+            else:
+                print(f"⚠️ Task ID {task_id} 이미 존재, 건너뜀")
         
         self.session.commit()
         print(f"📋 {len(action_items)}개의 일일 업무가 생성되었습니다.")
     
     def update_company_metrics(self):
         """회사 지표 자동 업데이트"""
-        metrics = [
-            {'name': '일일활성사용자', 'value': random.randint(50, 200), 'unit': '명', 'category': 'growth'},
-            {'name': '신규가입자', 'value': random.randint(10, 50), 'unit': '명', 'category': 'growth'},  
-            {'name': '일일매출', 'value': random.randint(500000, 2000000), 'unit': 'KRW', 'category': 'finance'},
-            {'name': '고객만족도', 'value': random.uniform(8.0, 9.5), 'unit': '점', 'category': 'quality'},
-            {'name': '시스템가동률', 'value': random.uniform(98.0, 99.9), 'unit': '%', 'category': 'tech'},
-            {'name': '팀생산성', 'value': random.uniform(7.5, 9.0), 'unit': '점', 'category': 'team'}
-        ]
-        
-        for metric in metrics:
-            cm = CompanyMetric(
-                metric_name=metric['name'],
-                value=metric['value'],
-                unit=metric['unit'],
-                category=metric['category']
-            )
-            self.session.add(cm)
-        
-        self.session.commit()
-        print(f"📊 {len(metrics)}개의 회사 지표가 업데이트되었습니다.")
+        try:
+            # 세션 상태 확인 및 롤백
+            if self.session.dirty or self.session.new or self.session.deleted:
+                self.session.rollback()
+            
+            metrics = [
+                {'name': '일일활성사용자', 'value': random.randint(50, 200), 'unit': '명', 'category': 'growth'},
+                {'name': '신규가입자', 'value': random.randint(10, 50), 'unit': '명', 'category': 'growth'},  
+                {'name': '일일매출', 'value': random.randint(500000, 2000000), 'unit': 'KRW', 'category': 'finance'},
+                {'name': '고객만족도', 'value': random.uniform(8.0, 9.5), 'unit': '점', 'category': 'quality'},
+                {'name': '시스템가동률', 'value': random.uniform(98.0, 99.9), 'unit': '%', 'category': 'tech'},
+                {'name': '팀생산성', 'value': random.uniform(7.5, 9.0), 'unit': '점', 'category': 'team'}
+            ]
+            
+            for metric in metrics:
+                cm = CompanyMetric(
+                    metric_name=metric['name'],
+                    value=metric['value'],
+                    unit=metric['unit'],
+                    category=metric['category']
+                )
+                self.session.add(cm)
+            
+            self.session.commit()
+            print(f"📊 {len(metrics)}개의 회사 지표가 업데이트되었습니다.")
+        except Exception as e:
+            self.session.rollback()
+            print(f"❌ 지표 업데이트 중 오류: {e}")
+            # 세션 재생성
+            self.session.close()
+            self.session = Session()
     
     def evening_review_and_planning(self):
         """저녁 리뷰 및 다음날 계획"""
@@ -318,16 +337,24 @@ class DailyBusinessOperations:
         ]
         
         for i, priority in enumerate(tomorrow_priorities):
-            task = Task(
-                task_id=f"PRIORITY_{(datetime.now() + timedelta(days=1)).strftime('%Y%m%d')}_{i+1:03d}",
-                title=priority,
-                description=f"내일 우선 처리할 중요 업무: {priority}",
-                priority='high',
-                assigned_to=random.choice([emp['id'] for emp in self.ai_team.employees]),
-                due_date=datetime.now() + timedelta(days=1),
-                status='pending'
-            )
-            self.session.add(task)
+            # 중복 방지를 위해 시간까지 포함한 고유 ID 생성
+            task_id = f"PRIORITY_{datetime.now().strftime('%Y%m%d_%H%M%S')}_{i+1:03d}"
+            
+            # 기존 Task ID 중복 확인
+            existing_task = self.session.query(Task).filter_by(task_id=task_id).first()
+            if not existing_task:
+                task = Task(
+                    task_id=task_id,
+                    title=priority,
+                    description=f"내일 우선 처리할 중요 업무: {priority}",
+                    priority='high',
+                    assigned_to=random.choice([emp['id'] for emp in self.ai_team.employees]),
+                    due_date=datetime.now() + timedelta(days=1),
+                    status='pending'
+                )
+                self.session.add(task)
+            else:
+                print(f"⚠️ Priority task ID {task_id} 이미 존재, 건너뜀")
         
         self.session.commit()
 
