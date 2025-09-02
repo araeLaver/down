@@ -88,11 +88,12 @@ class DailyBusinessOperations:
         agendas = self.generate_daily_agenda(selected_type)
         
         # 회의 진행
+        participants_list = [{"name": emp['name'], "role": emp['role'], "id": emp['id']} for emp in self.ai_team.employees]
         meeting = BusinessMeeting(
             meeting_type=selected_type,
             title=f"Qhyx Inc. {selected_type} - {datetime.now().strftime('%Y-%m-%d')}",
             agenda=json.dumps(agendas, ensure_ascii=False),
-            participants=[emp for emp in self.ai_team.employees],
+            participants=participants_list,
             status='ongoing'
         )
         
