@@ -14,7 +14,7 @@ class RealisticBusinessPlanner:
     def conduct_realistic_business_meeting(self):
         """현실적 비즈니스 모델 수립 회의"""
         
-        print("🏢 Qhyx Inc. 현실적 비즈니스 모델 수립 회의")
+        print("Qhyx Inc. 현실적 비즈니스 모델 수립 회의")
         print("=" * 60)
         
         # 회의 기록
@@ -66,7 +66,7 @@ class RealisticBusinessPlanner:
         # 구체적 사업 계획들 생성
         self.create_realistic_business_plans(realistic_plans)
         
-        print("✅ 현실적 비즈니스 모델 수립 완료!")
+        print("현실적 비즈니스 모델 수립 완료!")
         return meeting.id, realistic_plans
     
     def analyze_realistic_opportunities(self):
@@ -181,7 +181,7 @@ class RealisticBusinessPlanner:
         
         # 각 기회별 상세 분석 출력
         for key, opp in opportunities.items():
-            print(f"\n💡 {opp['name']}")
+            print(f"\n� {opp['name']}")
             print(f"   실행가능성: {opp['immediate_feasibility']}/10")
             print(f"   초기투자: {opp['investment_required']:,}원")
             print(f"   예상월매출: {opp['expected_monthly_revenue']:,}원")
@@ -195,12 +195,12 @@ class RealisticBusinessPlanner:
         notes = f"""
 === Qhyx Inc. 현실적 비즈니스 모델 수립 회의록 ===
 
-📅 일시: {datetime.now().strftime('%Y-%m-%d %H:%M')}
-🎯 목표: 3개월 내 실제 수익 창출 가능한 비즈니스 모델 확정
+� 일시: {datetime.now().strftime('%Y-%m-%d %H:%M')}
+� 목표: 3개월 내 실제 수익 창출 가능한 비즈니스 모델 확정
 
-🔍 분석된 사업 기회: {len(opportunities)}개
+� 분석된 사업 기회: {len(opportunities)}개
 
-💰 수익 예상 (월별):
+� 수익 예상 (월별):
 """
         
         total_monthly = 0
@@ -208,27 +208,27 @@ class RealisticBusinessPlanner:
             total_monthly += opp['expected_monthly_revenue']
             notes += f"  • {opp['name']}: {opp['expected_monthly_revenue']:,}원\n"
         
-        notes += f"\n📊 전체 잠재 월매출: {total_monthly:,}원\n"
+        notes += f"\n� 전체 잠재 월매출: {total_monthly:,}원\n"
         
         notes += """
-🎯 1차 집중 사업 (즉시 실행):
+� 1차 집중 사업 (즉시 실행):
 1. AI 기반 비즈니스 자동화 컨설팅
    - 투자비용: 최소 (5만원)
    - 시작기간: 1주일
    - 즉시 고객 확보 가능
 
-🛠️ 필요한 즉시 실행 항목:
+�️ 필요한 즉시 실행 항목:
 1. 서비스 포트폴리오 웹사이트 구축
 2. 가격정책 및 서비스 패키지 정의
 3. 첫 파일럿 고객 10명 확보 목표
 4. 실제 사례 및 포트폴리오 구축
 
-📈 3개월 로드맵:
+� 3개월 로드맵:
 - 1개월차: 컨설팅 서비스 론칭, 첫 고객 확보
 - 2개월차: 챗봇 서비스 추가, 고객 기반 확대  
 - 3개월차: 데이터 분석 서비스 론칭, 월 500만원 매출 달성
 
-💡 핵심 성공 요소:
+� 핵심 성공 요소:
 - 실제 고객 문제 해결에 집중
 - 빠른 실행과 피드백 기반 개선
 - 기존 기술 스택 최대 활용
@@ -293,7 +293,7 @@ class RealisticBusinessPlanner:
         self.session.add(milestone)
         self.session.commit()
         
-        print(f"\n✅ {plans_created}개의 현실적 사업 계획이 생성되었습니다.")
+        print(f"{plans_created}개의 현실적 사업 계획이 생성되었습니다.")
         return plans_created
 
     def close(self):
@@ -307,16 +307,16 @@ def execute_realistic_business_planning():
         meeting_id, opportunities = planner.conduct_realistic_business_meeting()
         
         print("\n" + "="*60)
-        print("🎉 현실적 비즈니스 모델 수립 완료!")
-        print(f"📋 회의 ID: {meeting_id}")
-        print(f"💼 분석된 사업 기회: {len(opportunities)}개")
-        print(f"🎯 즉시 실행 가능: {len([o for o in opportunities.values() if o['immediate_feasibility'] >= 8])}개")
+        print("� 현실적 비즈니스 모델 수립 완료!")
+        print(f"� 회의 ID: {meeting_id}")
+        print(f"� 분석된 사업 기회: {len(opportunities)}개")
+        print(f"� 즉시 실행 가능: {len([o for o in opportunities.values() if o['immediate_feasibility'] >= 8])}개")
         
         # 즉시 실행 가능한 사업들
         immediate_start = {k: v for k, v in opportunities.items() if v['immediate_feasibility'] >= 8}
         
         if immediate_start:
-            print(f"\n🚀 즉시 시작 가능한 사업들:")
+            print(f"\n� 즉시 시작 가능한 사업들:")
             for opp in immediate_start.values():
                 print(f"  • {opp['name']} (투자: {opp['investment_required']:,}원, 예상월매출: {opp['expected_monthly_revenue']:,}원)")
         

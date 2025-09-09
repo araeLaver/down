@@ -49,7 +49,7 @@ class QhyxAutonomousAI:
                 self.session.add(employee)
         
         self.session.commit()
-        print(f"✅ {len(self.employees)}명의 AI 직원이 등록되었습니다.")
+        print(f"{len(self.employees)}명의 AI 직원이 등록되었습니다.")
 
 class DailyBusinessOperations:
     """일일 비즈니스 운영"""
@@ -92,7 +92,7 @@ class DailyBusinessOperations:
         self.session.add(meeting)
         self.session.commit()
         
-        print(f"🏢 [{datetime.now().strftime('%H:%M')}] {selected_type} 시작")
+        print(f"[{datetime.now().strftime('%H:%M')}] {selected_type} 시작")
         
         # 회의 내용 생성
         meeting_results = self.simulate_meeting_discussion(selected_type, agendas)
@@ -109,7 +109,7 @@ class DailyBusinessOperations:
         # 새로운 업무 생성
         self.create_daily_tasks(meeting_results['actions'])
         
-        print(f"✅ [{datetime.now().strftime('%H:%M')}] {selected_type} 완료 - {len(meeting_results['actions'])}개 액션아이템 생성")
+        print(f"[{datetime.now().strftime('%H:%M')}] {selected_type} 완료 - {len(meeting_results['actions'])}개 액션아이템 생성")
         
         return meeting.id
     
@@ -171,47 +171,47 @@ class DailyBusinessOperations:
         
         if "전략" in meeting_type:
             decisions = [
-                "Qhyx Bot MVP 완성도를 85% 수준으로 목표 설정",
-                "주간 고객 인터뷰 5건 이상 진행",
-                "경쟁사 대비 차별점 3개 이상 확보"
+                "AI 자동화 컨설팅을 1순위 사업으로 집중",
+                "3개월 내 월 500만원 매출 달성 목표",
+                "파일럿 고객 10명 확보 및 사례 구축"
             ]
             actions = [
-                "제품 기능 명세서 업데이트 (김창의)",
-                "고객 인터뷰 일정 수립 (정브랜드)", 
-                "경쟁사 분석 리포트 작성 (한전략)"
+                "AI 자동화 컨설팅 서비스 포트폴리오 웹사이트 구축",
+                "첫 파일럿 고객 발굴 및 미팅 예약", 
+                "서비스 가격 정책 및 계약서 템플릿 작성"
             ]
         elif "시장" in meeting_type:
             decisions = [
-                "타겟 고객을 스타트업 CEO/CTO로 구체화",
-                "초기 가격 정책을 프리미엄 전략으로 설정",
-                "파트너십 우선 대상 3개 회사 선정"
+                "AI 자동화 컨설팅 타겟: 중소기업, 소상공인",
+                "챗봇 서비스 타겟: 고객서비스 중요 기업",
+                "데이터 분석 타겟: 이커머스, 마케팅 업체"
             ]
             actions = [
-                "시장 조사 보고서 작성 (이글로벌)",
-                "가격 모델링 분석 (신재무)",
-                "파트너십 제안서 준비 (한전략)"
+                "중소기업 AI 도입 현황 시장 조사",
+                "챗봇 서비스 경쟁사 분석 및 차별화 포인트 정리",
+                "데이터 분석 서비스 파트너 채널 개발"
             ]
         elif "제품" in meeting_type:
             decisions = [
-                "사용자 피드백 기반 UI/UX 개선",
-                "API 응답 속도 30% 향상 목표",
-                "보안 강화 기능 우선 개발"
+                "AI 자동화 도구 개발 우선순위 결정",
+                "챗봇 기술 스택 선정: GPT-4 + 커스텀 API",
+                "데이터 분석 대시보드 MVP 개발 착수"
             ]
             actions = [
-                "프로토타입 테스트 진행 (테크노)",
-                "성능 최적화 작업 (테크노)",
-                "보안 감사 실시 (최검증)"
+                "고객 문의 자동응답 시스템 프로토타입 개발",
+                "매출 분석 대시보드 템플릿 제작",
+                "챗봇 빌더 기본 기능 구현"
             ]
         else:
             decisions = [
-                "브랜드 가이드라인 완성",
-                "소셜미디어 콘텐츠 전략 수립",
-                "고객 커뮤니티 구축 착수"
+                "AI 자동화 컨설팅 브랜딩 전략 수립",
+                "서비스별 전문성 어필 콘텐츠 제작",
+                "고객 성공 사례 수집 및 홍보"
             ]
             actions = [
-                "브랜드북 제작 (정브랜드)",
-                "콘텐츠 캘린더 작성 (마케터)",
-                "커뮤니티 플랫폼 구축 (테크노)"
+                "Qhyx AI 자동화 서비스 포트폴리오 제작",
+                "LinkedIn, 블로그 컨텐츠 마케팅 시작",
+                "첫 성공 사례 케이스 스터디 작성"
             ]
         
         notes += f"주요 결정사항: {len(decisions)}개\n"
@@ -227,62 +227,89 @@ class DailyBusinessOperations:
     
     def create_daily_tasks(self, action_items):
         """일일 업무 생성"""
+        created_tasks = 0
         for i, action in enumerate(action_items):
-            # 담당자 추출 (괄호 안의 이름)
-            if '(' in action and ')' in action:
-                assignee_name = action.split('(')[1].split(')')[0]
-                task_desc = action.split('(')[0].strip()
-            else:
-                assignee_name = random.choice([emp['name'] for emp in self.ai_team.employees])
-                task_desc = action
-            
-            # 담당자의 employee_id 찾기
-            assignee_id = None
-            for emp in self.ai_team.employees:
-                if emp['name'] == assignee_name:
-                    assignee_id = emp['id']
-                    break
-            
-            if not assignee_id:
-                assignee_id = self.ai_team.employees[0]['id']  # 기본값
-            
-            task = Task(
-                task_id=f"TASK_{datetime.now().strftime('%Y%m%d')}_{i+1:03d}",
-                title=task_desc,
-                description=f"일일 회의에서 도출된 실행 항목: {task_desc}",
-                priority=random.choice(['high', 'medium', 'low']),
-                assigned_to=assignee_id,
-                due_date=datetime.now() + timedelta(days=1),
-                status='pending'
-            )
-            
-            self.session.add(task)
+            try:
+                # 담당자 추출 (괄호 안의 이름)
+                if '(' in action and ')' in action:
+                    assignee_name = action.split('(')[1].split(')')[0]
+                    task_desc = action.split('(')[0].strip()
+                else:
+                    assignee_name = random.choice([emp['name'] for emp in self.ai_team.employees])
+                    task_desc = action
+                
+                # 담당자의 employee_id 찾기
+                assignee_id = None
+                for emp in self.ai_team.employees:
+                    if emp['name'] == assignee_name:
+                        assignee_id = emp['id']
+                        break
+                
+                if not assignee_id:
+                    assignee_id = self.ai_team.employees[0]['id']  # 기본값
+                
+                # 고유한 Task ID 생성 (timestamp + random)
+                task_id = f"TASK_{datetime.now().strftime('%Y%m%d_%H%M%S')}_{random.randint(1000, 9999)}"
+                
+                # 중복 체크
+                existing_task = self.session.query(Task).filter_by(task_id=task_id).first()
+                if existing_task:
+                    task_id = f"TASK_{datetime.now().strftime('%Y%m%d_%H%M%S')}_{random.randint(10000, 99999)}"
+                
+                task = Task(
+                    task_id=task_id,
+                    title=task_desc,
+                    description=f"일일 회의에서 도출된 실행 항목: {task_desc}",
+                    priority=random.choice(['high', 'medium', 'low']),
+                    assigned_to=assignee_id,
+                    due_date=datetime.now() + timedelta(days=1),
+                    status='pending'
+                )
+                
+                self.session.add(task)
+                self.session.flush()  # 즉시 검증
+                created_tasks += 1
+            except Exception as e:
+                self.session.rollback()
+                print(f"Task 생성 실패: {e}, 건너뜀...")
+                # 새로운 세션으로 재시작
+                self.session = Session()
         
-        self.session.commit()
-        print(f"📋 {len(action_items)}개의 일일 업무가 생성되었습니다.")
+        try:
+            self.session.commit()
+            print(f"📋 {created_tasks}개의 일일 업무가 생성되었습니다.")
+        except Exception as e:
+            self.session.rollback()
+            print(f"Task 커밋 실패: {e}")
     
     def update_company_metrics(self):
         """회사 지표 자동 업데이트"""
-        metrics = [
-            {'name': '일일활성사용자', 'value': random.randint(50, 200), 'unit': '명', 'category': 'growth'},
-            {'name': '신규가입자', 'value': random.randint(10, 50), 'unit': '명', 'category': 'growth'},  
-            {'name': '일일매출', 'value': random.randint(500000, 2000000), 'unit': 'KRW', 'category': 'finance'},
-            {'name': '고객만족도', 'value': random.uniform(8.0, 9.5), 'unit': '점', 'category': 'quality'},
-            {'name': '시스템가동률', 'value': random.uniform(98.0, 99.9), 'unit': '%', 'category': 'tech'},
-            {'name': '팀생산성', 'value': random.uniform(7.5, 9.0), 'unit': '점', 'category': 'team'}
-        ]
-        
-        for metric in metrics:
-            cm = CompanyMetric(
-                metric_name=metric['name'],
-                value=metric['value'],
-                unit=metric['unit'],
-                category=metric['category']
-            )
-            self.session.add(cm)
-        
-        self.session.commit()
-        print(f"📊 {len(metrics)}개의 회사 지표가 업데이트되었습니다.")
+        try:
+            metrics = [
+                {'name': '컨설팅_리드', 'value': random.randint(2, 8), 'unit': '개', 'category': 'sales'},
+                {'name': '챗봇_문의수', 'value': random.randint(5, 15), 'unit': '건', 'category': 'sales'},  
+                {'name': '일일매출', 'value': random.randint(100000, 500000), 'unit': 'KRW', 'category': 'finance'},
+                {'name': '프로젝트_진행률', 'value': random.uniform(75.0, 95.0), 'unit': '%', 'category': 'delivery'},
+                {'name': '고객_만족도', 'value': random.uniform(8.5, 9.8), 'unit': '점', 'category': 'quality'},
+                {'name': '서비스_가동률', 'value': random.uniform(98.5, 99.9), 'unit': '%', 'category': 'tech'}
+            ]
+            
+            for metric in metrics:
+                cm = CompanyMetric(
+                    metric_name=metric['name'],
+                    value=metric['value'],
+                    unit=metric['unit'],
+                    category=metric['category']
+                )
+                self.session.add(cm)
+            
+            self.session.commit()
+            print(f"{len(metrics)}개의 회사 지표가 업데이트되었습니다.")
+        except Exception as e:
+            self.session.rollback()
+            print(f"지표 업데이트 실패: {e}")
+            # 새로운 세션으로 재시작
+            self.session = Session()
     
     def evening_review_and_planning(self):
         """저녁 리뷰 및 다음날 계획"""
@@ -306,30 +333,53 @@ class DailyBusinessOperations:
         
         self.session.commit()
         
-        print(f"🌅 [{datetime.now().strftime('%H:%M')}] 일일 리뷰 완료 - {completed_count}/{len(today_tasks)} 업무 완료")
+        print(f"[{datetime.now().strftime('%H:%M')}] 일일 리뷰 완료 - {completed_count}/{len(today_tasks)} 업무 완료")
         
-        # 내일 우선순위 업무 생성
+        # 내일 우선순위 업무 생성 - 실질적 사업 중심
         tomorrow_priorities = [
-            "Qhyx Bot 핵심 기능 개발",
-            "고객 피드백 분석 및 반영",
-            "마케팅 콘텐츠 제작",
-            "투자 유치 자료 준비",
-            "팀 성과 리뷰 및 개선"
+            "AI 자동화 컨설팅 첫 고객 미팅 준비",
+            "챗봇 서비스 기술 검증 및 테스트",
+            "데이터 분석 서비스 포트폴리오 완성",
+            "서비스 홈페이지 SEO 최적화",
+            "고객 성공 사례 인터뷰 및 정리"
         ]
         
+        created_priority_tasks = 0
         for i, priority in enumerate(tomorrow_priorities):
-            task = Task(
-                task_id=f"PRIORITY_{(datetime.now() + timedelta(days=1)).strftime('%Y%m%d')}_{i+1:03d}",
-                title=priority,
-                description=f"내일 우선 처리할 중요 업무: {priority}",
-                priority='high',
-                assigned_to=random.choice([emp['id'] for emp in self.ai_team.employees]),
-                due_date=datetime.now() + timedelta(days=1),
-                status='pending'
-            )
-            self.session.add(task)
+            try:
+                # 고유한 Priority Task ID 생성
+                task_id = f"PRIORITY_{(datetime.now() + timedelta(days=1)).strftime('%Y%m%d_%H%M%S')}_{random.randint(1000, 9999)}"
+                
+                # 중복 체크
+                existing_task = self.session.query(Task).filter_by(task_id=task_id).first()
+                if existing_task:
+                    task_id = f"PRIORITY_{(datetime.now() + timedelta(days=1)).strftime('%Y%m%d_%H%M%S')}_{random.randint(10000, 99999)}"
+                
+                task = Task(
+                    task_id=task_id,
+                    title=priority,
+                    description=f"내일 우선 처리할 중요 업무: {priority}",
+                    priority='high',
+                    assigned_to=random.choice([emp['id'] for emp in self.ai_team.employees]),
+                    due_date=datetime.now() + timedelta(days=1),
+                    status='pending'
+                )
+                
+                self.session.add(task)
+                self.session.flush()  # 즉시 검증
+                created_priority_tasks += 1
+            except Exception as e:
+                self.session.rollback()
+                print(f"Priority Task 생성 실패: {e}, 건너뜀...")
+                # 새로운 세션으로 재시작
+                self.session = Session()
         
-        self.session.commit()
+        try:
+            self.session.commit()
+            print(f"{created_priority_tasks}개의 우선순위 업무가 생성되었습니다.")
+        except Exception as e:
+            self.session.rollback()
+            print(f"Priority Task 커밋 실패: {e}")
 
 class ContinuousBusinessSystem:
     """24/7 지속적 비즈니스 시스템"""
@@ -341,8 +391,8 @@ class ContinuousBusinessSystem:
     def start_autonomous_operations(self):
         """자율 운영 시작"""
         self.is_running = True
-        print("🚀 Qhyx Inc. 24/7 자율 비즈니스 시스템 시작!")
-        print("💤 잠들어 있는 동안에도 회사는 계속 성장합니다!")
+        print("Qhyx Inc. 24/7 자율 비즈니스 시스템 시작!")
+        print("잠들어 있는 동안에도 회사는 계속 성장합니다!")
         
         # 백그라운드 스레드로 실행
         threading.Thread(target=self._continuous_operations, daemon=True).start()
@@ -436,15 +486,15 @@ if __name__ == "__main__":
     qhyx_system = start_qhyx_autonomous_system()
     
     print("\n" + "="*60)
-    print("🌙 잠들어도 걱정 없습니다!")
-    print("💼 Qhyx Inc.는 24시간 자율적으로 성장합니다.")
-    print("📊 모든 활동이 데이터베이스에 실시간 기록됩니다.")
+    print("잠들어도 걱정 없습니다!")
+    print("Qhyx Inc.는 24시간 자율적으로 성장합니다.")
+    print("모든 활동이 데이터베이스에 실시간 기록됩니다.")
     print("="*60)
     
     # 5초마다 상태 업데이트 (데모용)
     try:
         while True:
             time.sleep(5)
-            print(f"⏰ [{datetime.now().strftime('%H:%M:%S')}] Qhyx 자율 시스템 정상 운영 중...")
+            print(f"[{datetime.now().strftime('%H:%M:%S')}] Qhyx 자율 시스템 정상 운영 중...")
     except KeyboardInterrupt:
-        print("\n🛑 자율 시스템이 종료되었습니다.")
+        print("\n자율 시스템이 종료되었습니다.")
