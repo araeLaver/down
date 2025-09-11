@@ -248,13 +248,23 @@ class DailyBusinessOperations:
                 if not assignee_id:
                     assignee_id = self.ai_team.employees[0]['id']  # 기본값
                 
-                # 고유한 Task ID 생성 (timestamp + random)
-                task_id = f"TASK_{datetime.now().strftime('%Y%m%d_%H%M%S')}_{random.randint(1000, 9999)}"
+                # 고유한 Task ID 생성 (timestamp + microseconds + random)
+                import time
+                timestamp = int(time.time() * 1000000)  # 마이크로초 포함
+                task_id = f"TASK_{timestamp}_{random.randint(1000, 9999)}"
                 
-                # 중복 체크
-                existing_task = self.session.query(Task).filter_by(task_id=task_id).first()
-                if existing_task:
-                    task_id = f"TASK_{datetime.now().strftime('%Y%m%d_%H%M%S')}_{random.randint(10000, 99999)}"
+                # 중복 체크 및 재생성
+                max_attempts = 10
+                for attempt in range(max_attempts):
+                    existing_task = self.session.query(Task).filter_by(task_id=task_id).first()
+                    if not existing_task:
+                        break
+                    timestamp = int(time.time() * 1000000)
+                    task_id = f"TASK_{timestamp}_{random.randint(10000, 99999)}"
+                else:
+                    # 최대 시도 후에도 중복이면 스킵
+                    print(f"Task ID 생성 실패: {action}")
+                    continue
                 
                 task = Task(
                     task_id=task_id,
@@ -347,13 +357,22 @@ class DailyBusinessOperations:
         created_priority_tasks = 0
         for i, priority in enumerate(tomorrow_priorities):
             try:
-                # 고유한 Priority Task ID 생성
-                task_id = f"PRIORITY_{(datetime.now() + timedelta(days=1)).strftime('%Y%m%d_%H%M%S')}_{random.randint(1000, 9999)}"
+                # 고유한 Priority Task ID 생성 (마이크로초 포함)
+                import time
+                timestamp = int(time.time() * 1000000)
+                task_id = f"PRIORITY_{timestamp}_{random.randint(1000, 9999)}"
                 
-                # 중복 체크
-                existing_task = self.session.query(Task).filter_by(task_id=task_id).first()
-                if existing_task:
-                    task_id = f"PRIORITY_{(datetime.now() + timedelta(days=1)).strftime('%Y%m%d_%H%M%S')}_{random.randint(10000, 99999)}"
+                # 중복 체크 및 재생성
+                max_attempts = 10
+                for attempt in range(max_attempts):
+                    existing_task = self.session.query(Task).filter_by(task_id=task_id).first()
+                    if not existing_task:
+                        break
+                    timestamp = int(time.time() * 1000000)
+                    task_id = f"PRIORITY_{timestamp}_{random.randint(10000, 99999)}"
+                else:
+                    print(f"Priority Task ID 생성 실패: {priority}")
+                    continue
                 
                 task = Task(
                     task_id=task_id,
