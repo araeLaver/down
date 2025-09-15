@@ -286,20 +286,32 @@
                                 <h6><i class="fas fa-users text-secondary"></i> 참석자</h6>
                                 ${(() => {
                                     let participantsList = [];
+                                    if (!meeting.participants) {
+                                        return '<span class="text-muted">참석자 정보 없음</span>';
+                                    }
                                     if (Array.isArray(meeting.participants)) {
                                         participantsList = meeting.participants;
                                     } else if (typeof meeting.participants === 'string') {
-                                        try {
-                                            participantsList = JSON.parse(meeting.participants);
-                                        } catch (e) {
-                                            participantsList = [meeting.participants];
+                                        if (meeting.participants.startsWith('[')) {
+                                            try {
+                                                participantsList = JSON.parse(meeting.participants);
+                                            } catch (e) {
+                                                participantsList = [meeting.participants];
+                                            }
+                                        } else {
+                                            participantsList = meeting.participants.split(',').map(p => p.trim());
                                         }
+                                    } else {
+                                        participantsList = [String(meeting.participants)];
+                                    }
+                                    if (participantsList.length === 0) {
+                                        return '<span class="text-muted">참석자 정보 없음</span>';
                                     }
                                     return participantsList.map(participant => {
                                         if (typeof participant === 'object' && participant.name) {
                                             return `<span class="participant-badge">${participant.name} (${participant.role})</span>`;
                                         } else {
-                                            return `<span class="participant-badge">${participant}</span>`;
+                                            return `<span class="participant-badge">${participant || '알 수 없음'}</span>`;
                                         }
                                     }).join('');
                                 })()}
