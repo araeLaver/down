@@ -284,9 +284,25 @@
                             
                             <div class="mt-3">
                                 <h6><i class="fas fa-users text-secondary"></i> 참석자</h6>
-                                ${meeting.participants.map(participant => `
-                                    <span class="participant-badge">${participant}</span>
-                                `).join('')}
+                                ${(() => {
+                                    let participantsList = [];
+                                    if (Array.isArray(meeting.participants)) {
+                                        participantsList = meeting.participants;
+                                    } else if (typeof meeting.participants === 'string') {
+                                        try {
+                                            participantsList = JSON.parse(meeting.participants);
+                                        } catch (e) {
+                                            participantsList = [meeting.participants];
+                                        }
+                                    }
+                                    return participantsList.map(participant => {
+                                        if (typeof participant === 'object' && participant.name) {
+                                            return `<span class="participant-badge">${participant.name} (${participant.role})</span>`;
+                                        } else {
+                                            return `<span class="participant-badge">${participant}</span>`;
+                                        }
+                                    }).join('');
+                                })()}
                             </div>
                         </div>
                         
