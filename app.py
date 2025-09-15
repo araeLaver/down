@@ -1,4 +1,5 @@
 from flask import Flask, render_template, jsonify, request
+from flask_cors import CORS
 from datetime import datetime, timedelta
 import subprocess
 import json
@@ -18,6 +19,7 @@ from database_setup import (
 from business_monitor import QhyxBusinessMonitor
 
 app = Flask(__name__)
+CORS(app, origins=["https://anonymous-kylen-untab-d30cd097.koyeb.app"])
 
 # Koyeb PostgreSQL 연결
 connection_string = URL.create(
@@ -262,6 +264,23 @@ def api_meetings():
                         # Just use as single item
                         agenda_data = [meeting.agenda]
             
+            # Safe JSON parsing for participants
+            participants_data = []
+            if meeting.participants:
+                if isinstance(meeting.participants, list):
+                    # Already a list
+                    participants_data = meeting.participants
+                elif isinstance(meeting.participants, str):
+                    try:
+                        # Try to parse as JSON first
+                        participants_data = json.loads(meeting.participants)
+                    except json.JSONDecodeError:
+                        # If not JSON, use as single item or split by comma
+                        if ',' in meeting.participants:
+                            participants_data = [p.strip() for p in meeting.participants.split(',')]
+                        else:
+                            participants_data = [meeting.participants]
+            
             meeting_data = {
                 'id': meeting.id,
                 'title': meeting.title,
@@ -271,7 +290,7 @@ def api_meetings():
                 'agenda': agenda_data,
                 'key_decisions': meeting.key_decisions if meeting.key_decisions else [],
                 'action_items': meeting.action_items if meeting.action_items else [],
-                'participants': meeting.participants if meeting.participants else []
+                'participants': participants_data
             }
             meeting_list.append(meeting_data)
         
@@ -314,6 +333,23 @@ def api_meeting_detail(meeting_id):
                     # Just use as single item
                     agenda_data = [meeting.agenda]
         
+        # Safe JSON parsing for participants
+        participants_data = []
+        if meeting.participants:
+            if isinstance(meeting.participants, list):
+                # Already a list
+                participants_data = meeting.participants
+            elif isinstance(meeting.participants, str):
+                try:
+                    # Try to parse as JSON first
+                    participants_data = json.loads(meeting.participants)
+                except json.JSONDecodeError:
+                    # If not JSON, use as single item or split by comma
+                    if ',' in meeting.participants:
+                        participants_data = [p.strip() for p in meeting.participants.split(',')]
+                    else:
+                        participants_data = [meeting.participants]
+        
         meeting_detail = {
             'id': meeting.id,
             'title': meeting.title,
@@ -323,7 +359,7 @@ def api_meeting_detail(meeting_id):
             'agenda': agenda_data,
             'key_decisions': meeting.key_decisions if meeting.key_decisions else [],
             'action_items': meeting.action_items if meeting.action_items else [],
-            'participants': meeting.participants if meeting.participants else [],
+            'participants': participants_data,
             'meeting_notes': meeting_notes
         }
         

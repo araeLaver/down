@@ -16,18 +16,18 @@ class QhyxAutonomousAI:
     
     def __init__(self):
         self.employees = [
-            {'id': 'CEO_001', 'name': '김창의', 'role': 'CCO', 'specialty': 'global_business_expansion', 'focus': '전세계 신시장 개척'},
-            {'id': 'CPO_001', 'name': '박실용', 'role': 'CPO', 'specialty': 'scalable_product_development', 'focus': '확장 가능한 제품 포트폴리오'},
-            {'id': 'CGO_001', 'name': '이글로벌', 'role': 'CGO', 'specialty': 'international_expansion', 'focus': '20개국 동시 진출 전략'},
-            {'id': 'CBO_001', 'name': '정브랜드', 'role': 'CBO', 'specialty': 'multi_brand_strategy', 'focus': '45개 분야 브랜드 확장'},
-            {'id': 'CVO_001', 'name': '최검증', 'role': 'CVO', 'specialty': 'market_validation', 'focus': '신사업 기회 검증 및 우선순위'},
-            {'id': 'CFO_001', 'name': '신재무', 'role': 'CFO', 'specialty': 'expansion_financing', 'focus': '확장 자금 조달 및 투자 유치'},
-            {'id': 'CSO_001', 'name': '한전략', 'role': 'CSO', 'specialty': 'infinite_growth_strategy', 'focus': '무한 확장 전략 수립'},
-            {'id': 'CTO_001', 'name': '테크노', 'role': 'CTO', 'specialty': 'tech_innovation_scouting', 'focus': '혁신 기술 발굴 및 적용'},
-            {'id': 'CMO_001', 'name': '마케터', 'role': 'CMO', 'specialty': 'global_market_penetration', 'focus': '글로벌 시장 점유율 확대'},
-            {'id': 'CPP_001', 'name': '파트너', 'role': 'CPP', 'specialty': 'strategic_partnerships', 'focus': '전략적 파트너십 발굴'},
-            {'id': 'CAI_001', 'name': '아이봇', 'role': 'CAI', 'specialty': 'ai_automation', 'focus': 'AI 기반 사업 자동화'},
-            {'id': 'CDA_001', 'name': '데이터', 'role': 'CDA', 'specialty': 'data_driven_insights', 'focus': '데이터 기반 확장 전략'}
+            {'id': 'CEO_001', 'name': '알렉스 김', 'role': 'CEO', 'specialty': 'strategic_leadership', 'focus': '전사 비전 및 전략 수립'},
+            {'id': 'CFO_001', 'name': '에밀리 박', 'role': 'CFO', 'specialty': 'financial_strategy', 'focus': '재무 전략 및 투자 유치'},
+            {'id': 'CTO_001', 'name': '마이클 이', 'role': 'CTO', 'specialty': 'technology_innovation', 'focus': '기술 혁신 및 개발 총괄'},
+            {'id': 'CMO_001', 'name': '소피아 최', 'role': 'CMO', 'specialty': 'digital_marketing', 'focus': '디지털 마케팅 및 브랜딩'},
+            {'id': 'COO_001', 'name': '다니엘 정', 'role': 'COO', 'specialty': 'operations_optimization', 'focus': '운영 최적화 및 프로세스 관리'},
+            {'id': 'CPO_001', 'name': '올리비아 한', 'role': 'CPO', 'specialty': 'product_strategy', 'focus': '제품 전략 및 로드맵 수립'},
+            {'id': 'CSO_001', 'name': '라이언 조', 'role': 'CSO', 'specialty': 'sales_growth', 'focus': '영업 전략 및 고객 확보'},
+            {'id': 'CHR_001', 'name': '그레이스 윤', 'role': 'CHR', 'specialty': 'talent_management', 'focus': '인재 관리 및 조직 문화'},
+            {'id': 'CLS_001', 'name': '벤자민 강', 'role': 'CLS', 'specialty': 'legal_compliance', 'focus': '법무 및 컴플라이언스'},
+            {'id': 'CDO_001', 'name': '사만사 임', 'role': 'CDO', 'specialty': 'data_analytics', 'focus': '데이터 분석 및 인사이트'},
+            {'id': 'CIS_001', 'name': '조슈아 서', 'role': 'CIS', 'specialty': 'information_security', 'focus': '정보보안 및 시스템 안전성'},
+            {'id': 'CCX_001', 'name': '나탈리 류', 'role': 'CCX', 'specialty': 'customer_experience', 'focus': '고객 경험 최적화'}
         ]
         self.session = Session()
         self.initialize_ai_employees()
@@ -85,7 +85,7 @@ class DailyBusinessOperations:
             meeting_type=selected_type,
             title=f"Qhyx Inc. {selected_type} - {datetime.now().strftime('%Y-%m-%d')}",
             agenda=json.dumps(agendas, ensure_ascii=False),
-            participants=[emp for emp in self.ai_team.employees],
+            participants=json.dumps([emp['name'] for emp in self.ai_team.employees], ensure_ascii=False),
             status='ongoing'
         )
         
@@ -287,10 +287,10 @@ class DailyBusinessOperations:
         
         try:
             self.session.commit()
-            print(f"📋 {created_tasks}개의 일일 업무가 생성되었습니다.")
+            print(f"[Tasks] {created_tasks} daily tasks created successfully.")
         except Exception as e:
             self.session.rollback()
-            print(f"Task 커밋 실패: {e}")
+            print(f"Task commit failed: {e}")
     
     def update_company_metrics(self):
         """회사 지표 자동 업데이트"""
@@ -398,7 +398,7 @@ class DailyBusinessOperations:
             print(f"{created_priority_tasks}개의 우선순위 업무가 생성되었습니다.")
         except Exception as e:
             self.session.rollback()
-            print(f"Priority Task 커밋 실패: {e}")
+            print(f"Priority Task commit failed: {e}")
 
 class ContinuousBusinessSystem:
     """24/7 지속적 비즈니스 시스템"""
@@ -416,7 +416,7 @@ class ContinuousBusinessSystem:
         # 백그라운드 스레드로 실행
         threading.Thread(target=self._continuous_operations, daemon=True).start()
         
-        return "✅ 자율 운영 시스템이 시작되었습니다."
+        return "[OK] Autonomous operating system started."
     
     def _continuous_operations(self):
         """지속적 운영 루프"""
@@ -470,12 +470,12 @@ class ContinuousBusinessSystem:
 - 업무: {len(tasks)}건 
 - 지표 업데이트: {len(metrics)}건
 
-📊 주요 성과:
+[Metrics] Key Performance:
 - 완료된 업무: {len([t for t in tasks if t.status == 'completed'])}건
 - 진행 중인 업무: {len([t for t in tasks if t.status == 'in_progress'])}건
 - 대기 중인 업무: {len([t for t in tasks if t.status == 'pending'])}건
 
-💡 내일 계획:
+[Plan] Tomorrow's Agenda:
 - 우선순위 업무 처리
 - 주간 성과 리뷰 준비
 - 새로운 기회 발굴
@@ -491,7 +491,7 @@ def start_qhyx_autonomous_system():
     system = ContinuousBusinessSystem()
     
     # 즉시 첫 회의 진행
-    print("🎬 첫 번째 자율 회의를 진행합니다...")
+    print("[System] Starting first autonomous meeting...")
     meeting_id = system.daily_ops.conduct_daily_morning_meeting()
     system.daily_ops.update_company_metrics()
     
@@ -510,10 +510,10 @@ if __name__ == "__main__":
     print("모든 활동이 데이터베이스에 실시간 기록됩니다.")
     print("="*60)
     
-    # 5초마다 상태 업데이트 (데모용)
+    # 시스템 유지 (백그라운드에서 실행)
     try:
         while True:
-            time.sleep(5)
-            print(f"[{datetime.now().strftime('%H:%M:%S')}] Qhyx 자율 시스템 정상 운영 중...")
+            time.sleep(300)  # 5분마다 체크
+            print(f"[{datetime.now().strftime('%H:%M:%S')}] System operational - next check in 5 minutes")
     except KeyboardInterrupt:
         print("\n자율 시스템이 종료되었습니다.")
