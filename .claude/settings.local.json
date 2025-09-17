@@ -13,7 +13,19 @@
       "WebSearch",
       "Bash(cat:*)",
       "Bash(git rm:*)",
-      "Bash(curl:*)"
+      "Bash(curl:*)",
+      "Bash(python:*)",
+      "Bash(pip install:*)",
+      "Bash(sed:*)",
+      "Bash(git merge:*)",
+      "Bash(tasklist)",
+      "Bash(findstr:*)",
+      "WebFetch(domain:github.com)",
+      "Bash(set PYTHONIOENCODING=utf-8)",
+      "Bash(dir:*)",
+      "WebFetch(domain:anonymous-kylen-untab-d30cd097.koyeb.app)",
+      "Bash(where ngrok)",
+      "Bash(start http://localhost:5000/meetings)"
     ],
     "deny": [],
     "ask": []

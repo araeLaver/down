@@ -10,6 +10,7 @@ from database_setup import Session, BusinessMeeting, BusinessPlan, ActivityLog, 
 import json
 import threading
 from typing import List, Dict
+from realistic_business_generator import RealisticBusinessGenerator
 
 class QhyxAutonomousAI:
     """Qhyx AI 직원들의 자율적 업무 수행"""
@@ -30,6 +31,7 @@ class QhyxAutonomousAI:
             {'id': 'CCX_001', 'name': '나탈리 류', 'role': 'CCX', 'specialty': 'customer_experience', 'focus': '고객 경험 최적화'}
         ]
         self.session = Session()
+        self.business_generator = RealisticBusinessGenerator()
         self.initialize_ai_employees()
     
     def initialize_ai_employees(self):
@@ -61,18 +63,12 @@ class DailyBusinessOperations:
     def conduct_daily_morning_meeting(self):
         """매일 아침 9시 전략 회의"""
         meeting_types = [
+            "현실적 사업 발굴 회의",
             "일일 전략 회의",
             "사업 확장 회의",
-            "혁신 전략 회의", 
-            "글로벌 진출 회의",
             "시장 분석 회의",
             "제품 개발 회의",
-            "마케팅 전략 회의",
-            "투자 유치 전략 회의",
-            "파트너십 검토 회의",
-            "M&A 기회 검토 회의",
-            "기술 혁신 트렌드 회의",
-            "무한 확장 전략 회의"
+            "마케팅 전략 회의"
         ]
         
         selected_type = random.choice(meeting_types)
@@ -121,42 +117,45 @@ class DailyBusinessOperations:
             "이슈 및 해결방안 논의"
         ]
         
+        # 현실적 사업 기회 생성
+        realistic_opportunities = self.business_generator.generate_monthly_opportunities()
+        
         specific_agendas = {
             "일일 전략 회의": [
-                "무한 확장 전략 실행 현황 점검",
-                "45개 분야 사업 기회 발굴 상황",
-                "글로벌 진출 속도 가속화 방안",
-                "20개국 동시 진출 전략 업데이트"
+                "현실적 사업 기회 발굴 및 검토",
+                f"이번 달 우선 검토 사업: {realistic_opportunities[0]['business']['name'] if realistic_opportunities else '미정'}",
+                "즉시 시작 가능한 저비용 고수익 모델 분석",
+                "월 손익분기점 달성 로드맵 수립"
             ],
             "시장 분석 회의": [
-                "전세계 신흥 시장 기회 분석",
-                "경쟁사 대비 차별화 전략 수립",
-                "35개 비즈니스 모델 적용 우선순위",
-                "시장 점유율 확대 전략"
+                "현실적 사업 아이템 시장 검증",
+                "경쟁사 분석 및 차별화 포인트 도출",
+                "타겟 고객층 명확화 및 접근 전략",
+                "수익 모델 검증 및 가격 정책"
             ],
             "제품 개발 회의": [
-                "확장 가능한 제품 포트폴리오 구축",
-                "AI 기반 자동화 솔루션 개발",
-                "기술 융합 혁신 프로젝트 추진",
-                "MVP 런칭 속도 최적화"
+                "MVP 개발 우선순위 및 리소스 배분",
+                "최소 실행 가능 제품 기획",
+                "기술 스택 선정 및 개발 일정",
+                "초기 사용자 테스트 계획"
             ],
             "마케팅 전략 회의": [
-                "글로벌 브랜드 인지도 확산 전략",
-                "다국가 마케팅 캠페인 기획",
-                "디지털 마케팅 자동화 시스템",
-                "1,000만 고객 확보 로드맵"
+                "현실적 마케팅 채널 선정",
+                "초기 고객 100명 확보 전략",
+                "저비용 고효율 마케팅 방안",
+                "브랜딩 및 포지셀닝 전략"
             ],
             "사업 확장 회의": [
-                "신규 사업 영역 진출 계획",
-                "M&A 및 인수합병 후보 검토",
-                "전략적 파트너십 체결 진행",
-                "투자 유치 및 자금 조달 전략"
+                "검증된 비즈니스 모델 확장 계획",
+                "지역별/카테고리별 확장 우선순위",
+                "파트너십 및 유통채널 구축",
+                "확장을 위한 자금 조달 방안"
             ],
-            "혁신 전략 회의": [
-                "혁신 기술 트렌드 모니터링",
-                "양자컴퓨팅, AGI 적용 방안",
-                "블록체인 생태계 구축 계획",
-                "메타버스 사업 확장 전략"
+            "현실적 사업 발굴 회의": [
+                "즉시 시작 가능한 사업 아이템 검토",
+                "계절별 기회 사업 평가",
+                "기술 활용 저비용 창업 방안",
+                "시장 검증된 비즈니스 모델 분석"
             ]
         }
         
@@ -164,37 +163,66 @@ class DailyBusinessOperations:
     
     def simulate_meeting_discussion(self, meeting_type, agendas):
         """회의 토론 시뮬레이션"""
-        # 각 직원별 관점에서 의견 생성
+        # 현실적 사업 기회 생성
+        realistic_opportunities = self.business_generator.generate_monthly_opportunities()
+        validated_models = self.business_generator.get_validated_business_models()
+        
         decisions = []
         actions = []
         notes = f"=== {meeting_type} 결과 ===\n"
         
-        if "전략" in meeting_type:
-            decisions = [
-                "AI 자동화 컨설팅을 1순위 사업으로 집중",
-                "3개월 내 월 500만원 매출 달성 목표",
-                "파일럿 고객 10명 확보 및 사례 구축"
-            ]
-            actions = [
-                "AI 자동화 컨설팅 서비스 포트폴리오 웹사이트 구축",
-                "첫 파일럿 고객 발굴 및 미팅 예약", 
-                "서비스 가격 정책 및 계약서 템플릿 작성"
-            ]
+        if "전략" in meeting_type or "현실적" in meeting_type:
+            if realistic_opportunities:
+                primary_business = realistic_opportunities[0]['business']
+                decisions = [
+                    f"{primary_business['name']} 우선 검토 결정",
+                    f"목표 초기 투자금: {primary_business['startup_cost']}",
+                    f"예상 수익 목표: {primary_business['revenue_potential']}"
+                ]
+                actions = [
+                    f"{primary_business['name']} 시장 조사 실시",
+                    "경쟁업체 가격 분석 및 차별화 포인트 도출",
+                    "최소 실행 가능 제품(MVP) 개발 계획 수립",
+                    "초기 고객 100명 확보 전략 수립"
+                ]
+            else:
+                decisions = [
+                    "AI 자동화 컨설팅을 1순위 사업으로 집중",
+                    "3개월 내 월 500만원 매출 달성 목표",
+                    "파일럿 고객 10명 확보 및 사례 구축"
+                ]
+                actions = [
+                    "AI 자동화 컨설팅 서비스 포트폴리오 웹사이트 구축",
+                    "첫 파일럿 고객 발굴 및 미팅 예약", 
+                    "서비스 가격 정책 및 계약서 템플릿 작성"
+                ]
         elif "시장" in meeting_type:
-            decisions = [
-                "AI 자동화 컨설팅 타겟: 중소기업, 소상공인",
-                "챗봇 서비스 타겟: 고객서비스 중요 기업",
-                "데이터 분석 타겟: 이커머스, 마케팅 업체"
-            ]
-            actions = [
-                "중소기업 AI 도입 현황 시장 조사",
-                "챗봇 서비스 경쟁사 분석 및 차별화 포인트 정리",
-                "데이터 분석 서비스 파트너 채널 개발"
-            ]
+            if realistic_opportunities:
+                decisions = [
+                    f"타겟 시장: {realistic_opportunities[0]['business'].get('description', '중소기업 대상')}",
+                    f"실행 난이도: {realistic_opportunities[0]['business'].get('difficulty', '보통')}",
+                    f"예상 시작 시점: {realistic_opportunities[0]['business'].get('timeline', '2주 내')}"
+                ]
+                actions = [
+                    "타겟 고객 인터뷰 및 니즈 분석",
+                    "경쟁사 분석 및 차별화 포인트 정리",
+                    "가격 정책 및 수익 모델 구체화"
+                ]
+            else:
+                decisions = [
+                    "AI 자동화 컨설팅 타겟: 중소기업, 소상공인",
+                    "챗봇 서비스 타겟: 고객서비스 중요 기업",
+                    "데이터 분석 타겟: 이커머스, 마케팅 업체"
+                ]
+                actions = [
+                    "중소기업 AI 도입 현황 시장 조사",
+                    "챗봇 서비스 경쟁사 분석 및 차별화 포인트 정리",
+                    "데이터 분석 서비스 파트너 채널 개발"
+                ]
         elif "제품" in meeting_type:
             decisions = [
-                "AI 자동화 도구 개발 우선순위 결정",
-                "챗봇 기술 스택 선정: GPT-4 + 커스텀 API",
+                "현실적 MVP 개발 우선순위 결정",
+                "기술 스택 선정: 검증된 기술 중심으로",
                 "데이터 분석 대시보드 MVP 개발 착수"
             ]
             actions = [
