@@ -55,10 +55,11 @@ class QhyxAutonomousAI:
 
 class DailyBusinessOperations:
     """일일 비즈니스 운영"""
-    
+
     def __init__(self):
         self.ai_team = QhyxAutonomousAI()
         self.session = Session()
+        self.business_generator = RealisticBusinessGenerator()
     
     def conduct_daily_morning_meeting(self):
         """매일 아침 9시 전략 회의"""
@@ -163,28 +164,39 @@ class DailyBusinessOperations:
     
     def simulate_meeting_discussion(self, meeting_type, agendas):
         """회의 토론 시뮬레이션"""
-        # 현실적 사업 기회 생성
+        # 현실적 사업 기회 생성 (강화된 버전)
         realistic_opportunities = self.business_generator.generate_monthly_opportunities()
         validated_models = self.business_generator.get_validated_business_models()
+        high_viability_themes = self.business_generator.generate_high_viability_themes()
         
         decisions = []
         actions = []
         notes = f"=== {meeting_type} 결과 ===\n"
-        
+
         if "전략" in meeting_type or "현실적" in meeting_type:
             if realistic_opportunities:
-                primary_business = realistic_opportunities[0]['business']
+                # 가장 높은 우선순위 사업 선택
+                top_opportunity = max(realistic_opportunities, key=lambda x: 1 if x['priority'] == '매우 높음' else 0.5 if x['priority'] == '높음' else 0.3)
+                primary_business = top_opportunity['business']
+
                 decisions = [
-                    f"{primary_business['name']} 우선 검토 결정",
-                    f"목표 초기 투자금: {primary_business['startup_cost']}",
-                    f"예상 수익 목표: {primary_business['revenue_potential']}"
+                    f"{primary_business['name']} 우선 검토 결정 (우선순위: {top_opportunity['priority']})",
+                    f"사업 유형: {top_opportunity['type']}",
+                    f"목표 초기 투자금: {primary_business.get('startup_cost', '미정')}",
+                    f"예상 월 수익: {primary_business.get('monthly_revenue', primary_business.get('revenue_potential', '미정'))}"
                 ]
                 actions = [
-                    f"{primary_business['name']} 시장 조사 실시",
-                    "경쟁업체 가격 분석 및 차별화 포인트 도출",
+                    f"{primary_business['name']} 상세 시장 조사 실시",
+                    "경쟁업체 TOP 5 분석 및 차별화 포인트 도출",
                     "최소 실행 가능 제품(MVP) 개발 계획 수립",
-                    "초기 고객 100명 확보 전략 수립"
+                    "타겟 고객 100명 인터뷰 및 니즈 검증",
+                    "수익 모델 시뮬레이션 및 손익분기점 계산"
                 ]
+
+                # 고수익 테마 정보 추가
+                if high_viability_themes:
+                    notes += f"\n📊 ROI 최고 테마: {high_viability_themes[0]['idea']['name']} (ROI: {high_viability_themes[0]['roi_score']})\n"
+                    notes += f"상위 5개 수익성 테마 검토 완료\n"
             else:
                 decisions = [
                     "AI 자동화 컨설팅을 1순위 사업으로 집중",
@@ -276,23 +288,9 @@ class DailyBusinessOperations:
                 if not assignee_id:
                     assignee_id = self.ai_team.employees[0]['id']  # 기본값
                 
-                # 고유한 Task ID 생성 (timestamp + microseconds + random)
-                import time
-                timestamp = int(time.time() * 1000000)  # 마이크로초 포함
-                task_id = f"TASK_{timestamp}_{random.randint(1000, 9999)}"
-                
-                # 중복 체크 및 재생성
-                max_attempts = 10
-                for attempt in range(max_attempts):
-                    existing_task = self.session.query(Task).filter_by(task_id=task_id).first()
-                    if not existing_task:
-                        break
-                    timestamp = int(time.time() * 1000000)
-                    task_id = f"TASK_{timestamp}_{random.randint(10000, 99999)}"
-                else:
-                    # 최대 시도 후에도 중복이면 스킵
-                    print(f"Task ID 생성 실패: {action}")
-                    continue
+                # 고유한 Task ID 생성 (UUID 사용으로 중복 방지)
+                import uuid
+                task_id = f"TASK_{datetime.now().strftime('%Y%m%d_%H%M%S')}_{str(uuid.uuid4())[:8]}"
                 
                 task = Task(
                     task_id=task_id,
@@ -310,8 +308,7 @@ class DailyBusinessOperations:
             except Exception as e:
                 self.session.rollback()
                 print(f"Task 생성 실패: {e}, 건너뜀...")
-                # 새로운 세션으로 재시작
-                self.session = Session()
+                continue
         
         try:
             self.session.commit()
@@ -346,8 +343,6 @@ class DailyBusinessOperations:
         except Exception as e:
             self.session.rollback()
             print(f"지표 업데이트 실패: {e}")
-            # 새로운 세션으로 재시작
-            self.session = Session()
     
     def evening_review_and_planning(self):
         """저녁 리뷰 및 다음날 계획"""
@@ -385,22 +380,9 @@ class DailyBusinessOperations:
         created_priority_tasks = 0
         for i, priority in enumerate(tomorrow_priorities):
             try:
-                # 고유한 Priority Task ID 생성 (마이크로초 포함)
-                import time
-                timestamp = int(time.time() * 1000000)
-                task_id = f"PRIORITY_{timestamp}_{random.randint(1000, 9999)}"
-                
-                # 중복 체크 및 재생성
-                max_attempts = 10
-                for attempt in range(max_attempts):
-                    existing_task = self.session.query(Task).filter_by(task_id=task_id).first()
-                    if not existing_task:
-                        break
-                    timestamp = int(time.time() * 1000000)
-                    task_id = f"PRIORITY_{timestamp}_{random.randint(10000, 99999)}"
-                else:
-                    print(f"Priority Task ID 생성 실패: {priority}")
-                    continue
+                # 고유한 Priority Task ID 생성 (UUID 사용으로 중복 방지)
+                import uuid
+                task_id = f"PRIORITY_{datetime.now().strftime('%Y%m%d_%H%M%S')}_{str(uuid.uuid4())[:8]}"
                 
                 task = Task(
                     task_id=task_id,
@@ -418,8 +400,7 @@ class DailyBusinessOperations:
             except Exception as e:
                 self.session.rollback()
                 print(f"Priority Task 생성 실패: {e}, 건너뜀...")
-                # 새로운 세션으로 재시작
-                self.session = Session()
+                continue
         
         try:
             self.session.commit()
@@ -427,6 +408,279 @@ class DailyBusinessOperations:
         except Exception as e:
             self.session.rollback()
             print(f"Priority Task commit failed: {e}")
+
+    def conduct_business_opportunity_meeting(self):
+        """사업 기회 발굴 전문 회의"""
+        opportunities = self.business_generator.generate_monthly_opportunities()
+
+        meeting = BusinessMeeting(
+            meeting_type="사업 기회 발굴 회의",
+            title=f"Qhyx Inc. 사업 기회 발굴 회의 - {datetime.now().strftime('%Y-%m-%d %H:%M')}",
+            agenda=json.dumps([
+                "신규 사업 기회 3개 심층 분석",
+                "시장 검증 및 수익성 평가",
+                "즉시 실행 가능한 사업 선별",
+                "투자 대비 수익률(ROI) 계산",
+                "리스크 분석 및 대응 방안"
+            ], ensure_ascii=False),
+            participants=json.dumps([emp['name'] for emp in self.ai_team.employees], ensure_ascii=False),
+            status='ongoing'
+        )
+
+        self.session.add(meeting)
+        self.session.commit()
+
+        # 구체적인 사업 기회 분석
+        if opportunities:
+            top_opportunity = opportunities[0]['business']
+            decisions = [
+                f"우선 검토 사업: {top_opportunity['name']}",
+                f"예상 초기 투자: {top_opportunity['startup_cost']}",
+                f"목표 수익: {top_opportunity['revenue_potential']}",
+                f"실행 타임라인: {top_opportunity['timeline']}",
+                "즉시 시장 조사 착수 결정"
+            ]
+
+            actions = [
+                f"{top_opportunity['name']} 경쟁사 TOP 10 분석",
+                "타겟 고객 100명 설문 조사 실시",
+                "수익 모델 상세 설계 및 시뮬레이션",
+                "법적 검토 및 인허가 사항 확인",
+                "초기 투자 자금 조달 계획 수립",
+                "파일럿 테스트 계획 및 일정 수립"
+            ]
+        else:
+            decisions = [
+                "AI 자동화 컨설팅 심화 전략 수립",
+                "B2B 시장 진출 우선순위 결정",
+                "서비스 차별화 포인트 3개 도출"
+            ]
+            actions = [
+                "AI 컨설팅 서비스 포트폴리오 고도화",
+                "B2B 영업 파이프라인 구축",
+                "고객 성공 사례 10건 수집 및 정리"
+            ]
+
+        meeting.status = 'completed'
+        meeting.key_decisions = decisions
+        meeting.action_items = actions
+        meeting.meeting_notes = f"=== 사업 기회 발굴 회의 결과 ===\n주요 결정: {len(decisions)}건\n실행 항목: {len(actions)}건\n새로운 사업 기회 심층 분석 완료"
+
+        self.session.commit()
+        self.create_specialized_tasks(actions, "사업기회")
+
+        print(f"[{datetime.now().strftime('%H:%M')}] 사업 기회 발굴 회의 완료 - {len(actions)}개 전문 업무 생성")
+
+    def conduct_lunch_strategy_meeting(self):
+        """점심 전략 회의"""
+        meeting = BusinessMeeting(
+            meeting_type="점심 전략 회의",
+            title=f"Qhyx Inc. 점심 전략 회의 - {datetime.now().strftime('%Y-%m-%d %H:%M')}",
+            agenda=json.dumps([
+                "오전 성과 검토 및 피드백",
+                "실시간 시장 동향 분석",
+                "오후 우선순위 업무 재조정",
+                "긴급 이슈 대응 방안",
+                "즉시 실행 가능한 개선 사항"
+            ], ensure_ascii=False),
+            participants=json.dumps([emp['name'] for emp in self.ai_team.employees], ensure_ascii=False),
+            status='ongoing'
+        )
+
+        self.session.add(meeting)
+        self.session.commit()
+
+        decisions = [
+            "오전 업무 진행률 80% 이상 달성 확인",
+            "고객 문의 응답 시간 1시간 내 단축 결정",
+            "오후 집중 업무 3개 선정",
+            "일일 매출 목표 상향 조정"
+        ]
+
+        actions = [
+            "고객 응답 시간 단축을 위한 템플릿 개선",
+            "오후 집중 업무 리스트 작성 및 배포",
+            "일일 매출 현황 실시간 모니터링 시스템 점검",
+            "팀별 진행 상황 중간 점검 실시"
+        ]
+
+        meeting.status = 'completed'
+        meeting.key_decisions = decisions
+        meeting.action_items = actions
+        meeting.meeting_notes = f"=== 점심 전략 회의 결과 ===\n오전 성과 검토 완료\n오후 전략 수정 및 최적화"
+
+        self.session.commit()
+        self.create_specialized_tasks(actions, "점심전략")
+
+        print(f"[{datetime.now().strftime('%H:%M')}] 점심 전략 회의 완료 - {len(actions)}개 조정 업무 생성")
+
+    def conduct_product_development_meeting(self):
+        """제품/서비스 개발 회의"""
+        meeting = BusinessMeeting(
+            meeting_type="제품/서비스 개발 회의",
+            title=f"Qhyx Inc. 제품 개발 회의 - {datetime.now().strftime('%Y-%m-%d %H:%M')}",
+            agenda=json.dumps([
+                "신제품/서비스 아이디어 브레인스토밍",
+                "기존 서비스 개선 사항 도출",
+                "기술적 실현 가능성 검토",
+                "개발 우선순위 및 일정 수립",
+                "MVP(최소실행제품) 설계"
+            ], ensure_ascii=False),
+            participants=json.dumps([emp['name'] for emp in self.ai_team.employees], ensure_ascii=False),
+            status='ongoing'
+        )
+
+        self.session.add(meeting)
+        self.session.commit()
+
+        decisions = [
+            "AI 챗봇 빌더 서비스 신규 개발 결정",
+            "기존 컨설팅 서비스 자동화 도구 추가",
+            "고객 맞춤형 대시보드 기능 개발",
+            "2주 내 MVP 완성 목표 설정"
+        ]
+
+        actions = [
+            "AI 챗봇 빌더 기능 명세서 작성",
+            "컨설팅 자동화 도구 요구사항 정의",
+            "고객 대시보드 UI/UX 설계",
+            "기술 스택 선정 및 개발 환경 구축",
+            "베타 테스터 10명 모집 계획 수립"
+        ]
+
+        meeting.status = 'completed'
+        meeting.key_decisions = decisions
+        meeting.action_items = actions
+        meeting.meeting_notes = f"=== 제품 개발 회의 결과 ===\n신제품 개발 방향 확정\n기술적 실현 방안 구체화"
+
+        self.session.commit()
+        self.create_specialized_tasks(actions, "제품개발")
+
+        print(f"[{datetime.now().strftime('%H:%M')}] 제품 개발 회의 완료 - {len(actions)}개 개발 업무 생성")
+
+    def conduct_marketing_sales_meeting(self):
+        """마케팅 및 영업 전략 회의"""
+        meeting = BusinessMeeting(
+            meeting_type="마케팅 영업 전략 회의",
+            title=f"Qhyx Inc. 마케팅 영업 회의 - {datetime.now().strftime('%Y-%m-%d %H:%M')}",
+            agenda=json.dumps([
+                "고객 확보 전략 점검 및 개선",
+                "마케팅 채널별 성과 분석",
+                "영업 파이프라인 관리",
+                "고객 만족도 및 리텐션 전략",
+                "브랜딩 및 포지셔닝 강화"
+            ], ensure_ascii=False),
+            participants=json.dumps([emp['name'] for emp in self.ai_team.employees], ensure_ascii=False),
+            status='ongoing'
+        )
+
+        self.session.add(meeting)
+        self.session.commit()
+
+        decisions = [
+            "LinkedIn 마케팅 예산 50% 증액 결정",
+            "고객 추천 프로그램 런칭",
+            "주간 고객 만족도 조사 실시",
+            "브랜드 스토리텔링 콘텐츠 강화"
+        ]
+
+        actions = [
+            "LinkedIn 광고 캠페인 3개 신규 제작",
+            "고객 추천 리워드 시스템 설계",
+            "고객 만족도 설문 양식 개발",
+            "브랜드 스토리 영상 콘텐츠 기획",
+            "영업 성과 대시보드 업데이트",
+            "경쟁사 마케팅 전략 벤치마킹"
+        ]
+
+        meeting.status = 'completed'
+        meeting.key_decisions = decisions
+        meeting.action_items = actions
+        meeting.meeting_notes = f"=== 마케팅 영업 회의 결과 ===\n고객 확보 전략 고도화\n마케팅 ROI 최적화 방안 도출"
+
+        self.session.commit()
+        self.create_specialized_tasks(actions, "마케팅영업")
+
+        print(f"[{datetime.now().strftime('%H:%M')}] 마케팅 영업 회의 완료 - {len(actions)}개 마케팅 업무 생성")
+
+    def conduct_evening_strategy_meeting(self):
+        """야간 전략 회의"""
+        meeting = BusinessMeeting(
+            meeting_type="야간 전략 회의",
+            title=f"Qhyx Inc. 야간 전략 회의 - {datetime.now().strftime('%Y-%m-%d %H:%M')}",
+            agenda=json.dumps([
+                "일일 전체 성과 종합 분석",
+                "내일 전략 수립 및 우선순위",
+                "주간/월간 목표 진행 상황",
+                "장기 비전 및 로드맵 점검",
+                "혁신 아이디어 발굴 및 검토"
+            ], ensure_ascii=False),
+            participants=json.dumps([emp['name'] for emp in self.ai_team.employees], ensure_ascii=False),
+            status='ongoing'
+        )
+
+        self.session.add(meeting)
+        self.session.commit()
+
+        decisions = [
+            "일일 목표 달성률 85% 확인",
+            "내일 최우선 과제 5개 선정",
+            "주간 매출 목표 120% 달성 계획",
+            "신규 사업 영역 확장 검토"
+        ]
+
+        actions = [
+            "내일 최우선 업무 상세 계획 수립",
+            "주간 매출 가속화 전략 실행",
+            "장기 비전 달성을 위한 마일스톤 점검",
+            "혁신 프로젝트 아이디어 3개 구체화",
+            "팀별 성과 분석 리포트 작성"
+        ]
+
+        meeting.status = 'completed'
+        meeting.key_decisions = decisions
+        meeting.action_items = actions
+        meeting.meeting_notes = f"=== 야간 전략 회의 결과 ===\n일일 성과 종합 평가\n전략적 방향성 재확인"
+
+        self.session.commit()
+        self.create_specialized_tasks(actions, "야간전략")
+
+        print(f"[{datetime.now().strftime('%H:%M')}] 야간 전략 회의 완료 - {len(actions)}개 전략 업무 생성")
+
+    def create_specialized_tasks(self, action_items, task_prefix):
+        """전문 업무 생성"""
+        created_tasks = 0
+        for i, action in enumerate(action_items):
+            try:
+                import uuid
+                task_id = f"{task_prefix}_{datetime.now().strftime('%Y%m%d_%H%M%S')}_{str(uuid.uuid4())[:8]}"
+
+                assignee_id = random.choice([emp['id'] for emp in self.ai_team.employees])
+
+                task = Task(
+                    task_id=task_id,
+                    title=action,
+                    description=f"전문 {task_prefix} 회의에서 도출된 실행 항목: {action}",
+                    priority=random.choice(['high', 'high', 'medium']),  # 전문 업무는 높은 우선순위
+                    assigned_to=assignee_id,
+                    due_date=datetime.now() + timedelta(hours=random.randint(4, 24)),
+                    status='pending'
+                )
+
+                self.session.add(task)
+                self.session.flush()
+                created_tasks += 1
+            except Exception as e:
+                self.session.rollback()
+                print(f"전문 Task 생성 실패: {e}, 건너뜀...")
+                continue
+
+        try:
+            self.session.commit()
+            print(f"[{task_prefix}] {created_tasks} specialized tasks created successfully.")
+        except Exception as e:
+            self.session.rollback()
+            print(f"Specialized Task commit failed: {e}")
 
 class ContinuousBusinessSystem:
     """24/7 지속적 비즈니스 시스템"""
@@ -450,25 +704,51 @@ class ContinuousBusinessSystem:
         """지속적 운영 루프"""
         while self.is_running:
             current_hour = datetime.now().hour
-            
-            # 09:00 - 아침 회의
-            if current_hour == 9:
+            current_minute = datetime.now().minute
+
+            # 09:00 - 아침 전략 회의
+            if current_hour == 9 and current_minute < 5:
                 self.daily_ops.conduct_daily_morning_meeting()
-                time.sleep(3600)  # 1시간 대기
-            
-            # 매 2시간마다 - 지표 업데이트
-            elif current_hour % 2 == 0:
-                self.daily_ops.update_company_metrics()
-                time.sleep(1800)  # 30분 대기
-            
-            # 18:00 - 저녁 리뷰
-            elif current_hour == 18:
+                time.sleep(300)  # 5분 대기
+
+            # 11:00 - 사업 기회 발굴 회의
+            elif current_hour == 11 and current_minute < 5:
+                self.daily_ops.conduct_business_opportunity_meeting()
+                time.sleep(300)
+
+            # 13:00 - 점심 전략 회의
+            elif current_hour == 13 and current_minute < 5:
+                self.daily_ops.conduct_lunch_strategy_meeting()
+                time.sleep(300)
+
+            # 15:00 - 제품/서비스 개발 회의
+            elif current_hour == 15 and current_minute < 5:
+                self.daily_ops.conduct_product_development_meeting()
+                time.sleep(300)
+
+            # 17:00 - 마케팅 및 영업 전략 회의
+            elif current_hour == 17 and current_minute < 5:
+                self.daily_ops.conduct_marketing_sales_meeting()
+                time.sleep(300)
+
+            # 19:00 - 저녁 리뷰 및 다음날 계획
+            elif current_hour == 19 and current_minute < 5:
                 self.daily_ops.evening_review_and_planning()
-                time.sleep(3600)  # 1시간 대기
-            
-            # 기본 대기 (10분)
+                time.sleep(300)
+
+            # 21:00 - 야간 전략 회의
+            elif current_hour == 21 and current_minute < 5:
+                self.daily_ops.conduct_evening_strategy_meeting()
+                time.sleep(300)
+
+            # 매시간 정각 - 지표 업데이트
+            elif current_minute == 0:
+                self.daily_ops.update_company_metrics()
+                time.sleep(300)  # 5분 대기
+
+            # 기본 대기 (5분)
             else:
-                time.sleep(600)
+                time.sleep(300)
     
     def get_daily_summary(self):
         """일일 요약 보고서"""

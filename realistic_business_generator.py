@@ -162,14 +162,187 @@ class RealisticBusinessGenerator:
             }
         ]
 
+        # 앱 개발 중심 수익성 높은 테마들
+        self.high_potential_app_themes = [
+            {
+                "category": "생활 편의 앱",
+                "apps": [
+                    {
+                        "name": "동네 맛집 주문 통합 앱",
+                        "description": "여러 배달앱 통합 비교주문, 할인쿠폰 통합관리",
+                        "target": "20-40대 직장인",
+                        "revenue_model": "배달 수수료 5%, 광고료",
+                        "startup_cost": "500만원",
+                        "monthly_revenue": "200-800만원",
+                        "development_time": "3개월",
+                        "viability": "매우 높음"
+                    },
+                    {
+                        "name": "주차장 실시간 공유 앱",
+                        "description": "개인/상업 주차공간 실시간 대여, 예약시스템",
+                        "target": "차량 소유자 전체",
+                        "revenue_model": "거래 수수료 15%, 프리미엄 기능",
+                        "startup_cost": "800만원",
+                        "monthly_revenue": "500-2000만원",
+                        "development_time": "4개월",
+                        "viability": "매우 높음"
+                    },
+                    {
+                        "name": "집안일 도우미 매칭 앱",
+                        "description": "청소, 요리, 정리정돈 전문가 실시간 매칭",
+                        "target": "맞벌이 부부, 1인가구",
+                        "revenue_model": "매칭 수수료 20%, 보험료",
+                        "startup_cost": "600만원",
+                        "monthly_revenue": "300-1200만원",
+                        "development_time": "3개월",
+                        "viability": "높음"
+                    }
+                ]
+            },
+            {
+                "category": "건강/피트니스 앱",
+                "apps": [
+                    {
+                        "name": "AI 개인 트레이너 앱",
+                        "description": "AI 기반 맞춤 운동 프로그램, 실시간 자세교정",
+                        "target": "20-50대 건강관심층",
+                        "revenue_model": "월 구독료 9900원, 프리미엄 19900원",
+                        "startup_cost": "1000만원",
+                        "monthly_revenue": "800-3000만원",
+                        "development_time": "6개월",
+                        "viability": "매우 높음"
+                    },
+                    {
+                        "name": "식단 관리 + 배달 연동 앱",
+                        "description": "개인 맞춤 식단 추천 후 즉시 주문 연결",
+                        "target": "다이어터, 헬스인",
+                        "revenue_model": "주문 수수료 8%, 식단 구독료",
+                        "startup_cost": "700만원",
+                        "monthly_revenue": "400-1500만원",
+                        "development_time": "4개월",
+                        "viability": "높음"
+                    },
+                    {
+                        "name": "수면 개선 종합 플랫폼",
+                        "description": "수면패턴 분석, 맞춤 음악, 환경 자동제어 연동",
+                        "target": "불면증, 수면장애인",
+                        "revenue_model": "월 구독료 7900원, IoT기기 판매",
+                        "startup_cost": "1200만원",
+                        "monthly_revenue": "600-2500만원",
+                        "development_time": "5개월",
+                        "viability": "높음"
+                    }
+                ]
+            },
+            {
+                "category": "금융/투자 앱",
+                "apps": [
+                    {
+                        "name": "소액투자 소셜 플랫폼",
+                        "description": "1만원부터 시작하는 공동투자, 전문가 팔로우",
+                        "target": "20-30대 투자 초보자",
+                        "revenue_model": "수익 수수료 10%, 프리미엄 정보료",
+                        "startup_cost": "1500만원",
+                        "monthly_revenue": "1000-5000만원",
+                        "development_time": "6개월",
+                        "viability": "매우 높음"
+                    },
+                    {
+                        "name": "용돈 관리 교육 앱",
+                        "description": "어린이/청소년 대상 용돈 관리, 부모 연동",
+                        "target": "초중고생 자녀 부모",
+                        "revenue_model": "월 구독료 4900원, 교육 콘텐츠",
+                        "startup_cost": "400만원",
+                        "monthly_revenue": "200-800만원",
+                        "development_time": "3개월",
+                        "viability": "높음"
+                    }
+                ]
+            },
+            {
+                "category": "교육/스킬 앱",
+                "apps": [
+                    {
+                        "name": "실시간 외국어 대화 매칭",
+                        "description": "원어민과 1:1 실시간 화상 언어교환",
+                        "target": "외국어 학습자 전체",
+                        "revenue_model": "분당 500원, 프리미엄 클래스",
+                        "startup_cost": "800만원",
+                        "monthly_revenue": "600-2000만원",
+                        "development_time": "4개월",
+                        "viability": "매우 높음"
+                    },
+                    {
+                        "name": "직무 스킬 마이크로러닝",
+                        "description": "5분 단위 직무교육, 실무 즉시 적용",
+                        "target": "직장인, 취준생",
+                        "revenue_model": "월 구독료 12900원, 기업 라이센스",
+                        "startup_cost": "600만원",
+                        "monthly_revenue": "400-1800만원",
+                        "development_time": "3개월",
+                        "viability": "높음"
+                    }
+                ]
+            }
+        ]
+
+        # 신규 사업 아이디어 (비앱 분야)
+        self.innovative_business_ideas = [
+            {
+                "category": "서비스 혁신",
+                "ideas": [
+                    {
+                        "name": "1시간 배송 로컬 마트",
+                        "description": "동네 반경 3km 내 1시간 내 생필품 배송",
+                        "startup_cost": "2000만원",
+                        "monthly_revenue": "800-3000만원",
+                        "viability": "매우 높음"
+                    },
+                    {
+                        "name": "AI 기반 맞춤 도시락",
+                        "description": "개인 건강데이터 기반 맞춤 영양식 제작 배달",
+                        "startup_cost": "1500만원",
+                        "monthly_revenue": "600-2500만원",
+                        "viability": "높음"
+                    },
+                    {
+                        "name": "공유 작업공간 + 육아",
+                        "description": "부모용 코워킹 스페이스 + 아이 돌봄 통합 서비스",
+                        "startup_cost": "3000만원",
+                        "monthly_revenue": "1000-4000만원",
+                        "viability": "높음"
+                    }
+                ]
+            },
+            {
+                "category": "구독경제 모델",
+                "ideas": [
+                    {
+                        "name": "펫 케어 구독박스",
+                        "description": "반려동물 개체별 맞춤 사료, 간식, 용품 정기배송",
+                        "startup_cost": "800만원",
+                        "monthly_revenue": "500-2000만원",
+                        "viability": "매우 높음"
+                    },
+                    {
+                        "name": "시니어 라이프 케어",
+                        "description": "어르신 대상 건강관리, 생활편의 통합 구독서비스",
+                        "startup_cost": "1200만원",
+                        "monthly_revenue": "700-2800만원",
+                        "viability": "높음"
+                    }
+                ]
+            }
+        ]
+
     def generate_monthly_opportunities(self):
         """매월 새로운 현실적 사업 기회 생성"""
         current_month = datetime.now().month
         seasons = ["겨울", "겨울", "봄", "봄", "봄", "여름", "여름", "여름", "가을", "가을", "가을", "겨울"]
         current_season = seasons[current_month - 1]
-        
+
         opportunities = []
-        
+
         # 즉시 시작 가능한 사업 2개
         for category_data in random.sample(self.immediate_businesses, 2):
             business = random.choice(category_data["businesses"])
@@ -179,7 +352,27 @@ class RealisticBusinessGenerator:
                 "business": business,
                 "priority": "높음"
             })
-        
+
+        # 고수익 앱 테마 2개 (새로 추가)
+        for app_category in random.sample(self.high_potential_app_themes, 2):
+            app = random.choice(app_category["apps"])
+            opportunities.append({
+                "type": "고수익 앱 개발",
+                "category": app_category["category"],
+                "business": app,
+                "priority": "매우 높음"
+            })
+
+        # 혁신 사업 아이디어 1개 (새로 추가)
+        innovation_category = random.choice(self.innovative_business_ideas)
+        innovation_idea = random.choice(innovation_category["ideas"])
+        opportunities.append({
+            "type": "혁신 사업 모델",
+            "category": innovation_category["category"],
+            "business": innovation_idea,
+            "priority": "높음"
+        })
+
         # 계절 특화 사업 1개
         seasonal_business = random.choice(self.seasonal_opportunities[current_season])
         opportunities.append({
@@ -194,7 +387,7 @@ class RealisticBusinessGenerator:
             },
             "priority": "보통"
         })
-        
+
         # 기술 활용 사업 1개
         tech_business = random.choice(self.tech_enabled_businesses)
         opportunities.append({
@@ -202,8 +395,66 @@ class RealisticBusinessGenerator:
             "business": tech_business,
             "priority": "높음"
         })
-        
+
         return opportunities
+
+    def generate_high_viability_themes(self):
+        """사업성 높은 테마들을 체계적으로 생성"""
+        themes = []
+
+        # 앱 개발 테마들
+        for category in self.high_potential_app_themes:
+            for app in category["apps"]:
+                themes.append({
+                    "theme_type": "앱 개발",
+                    "category": category["category"],
+                    "idea": app,
+                    "market_size": "대형" if app["viability"] == "매우 높음" else "중형",
+                    "roi_score": self._calculate_roi_score(app),
+                    "implementation_complexity": app["development_time"]
+                })
+
+        # 혁신 사업 테마들
+        for category in self.innovative_business_ideas:
+            for idea in category["ideas"]:
+                themes.append({
+                    "theme_type": "혁신 사업",
+                    "category": category["category"],
+                    "idea": idea,
+                    "market_size": "대형" if idea["viability"] == "매우 높음" else "중형",
+                    "roi_score": self._calculate_roi_score_for_business(idea),
+                    "implementation_complexity": "중간"
+                })
+
+        # ROI 점수 기준으로 정렬
+        themes.sort(key=lambda x: x["roi_score"], reverse=True)
+
+        return themes[:10]  # 상위 10개 테마만 반환
+
+    def _calculate_roi_score(self, app):
+        """앱의 ROI 점수 계산"""
+        startup_cost = int(app["startup_cost"].replace("만원", ""))
+        monthly_revenue = int(app["monthly_revenue"].split("-")[1].replace("만원", ""))
+        development_months = int(app["development_time"].replace("개월", ""))
+
+        # ROI = (월매출 * 12 - 초기투자) / 초기투자
+        annual_revenue = monthly_revenue * 12
+        roi = (annual_revenue - startup_cost) / startup_cost
+
+        # 개발기간 고려하여 조정
+        adjusted_roi = roi / (development_months / 3)  # 3개월 기준으로 정규화
+
+        return round(adjusted_roi, 2)
+
+    def _calculate_roi_score_for_business(self, business):
+        """일반 사업의 ROI 점수 계산"""
+        startup_cost = int(business["startup_cost"].replace("만원", ""))
+        monthly_revenue = int(business["monthly_revenue"].split("-")[1].replace("만원", ""))
+
+        annual_revenue = monthly_revenue * 12
+        roi = (annual_revenue - startup_cost) / startup_cost
+
+        return round(roi, 2)
 
     def get_validated_business_models(self):
         """이미 검증된 비즈니스 모델들"""
@@ -235,36 +486,50 @@ class RealisticBusinessGenerator:
         """현실적 사업 검토 회의 안건 생성"""
         opportunities = self.generate_monthly_opportunities()
         validated_models = self.get_validated_business_models()
-        
+        high_viability_themes = self.generate_high_viability_themes()
+
         agenda = [
             "시장 검증된 비즈니스 모델 분석",
             "즉시 실행 가능한 사업 아이템 검토",
+            "고수익 앱 개발 테마 분석",
+            "혁신 사업 모델 검토",
             "최소 투자 고수익 모델 발굴",
             "계절별 기회 사업 평가",
-            "기술 활용 저비용 창업 방안"
+            "기술 활용 저비용 창업 방안",
+            "ROI 기반 우선순위 설정"
         ]
-        
+
+        # 가장 높은 우선순위 사업 선택
+        top_opportunity = max(opportunities, key=lambda x: 1 if x['priority'] == '매우 높음' else 0.5 if x['priority'] == '높음' else 0.3)
+
         decisions = [
-            f"이번 달 우선 검토 사업: {opportunities[0]['business']['name']}",
-            f"목표 초기 투자금: {opportunities[0]['business']['startup_cost']}",
-            f"예상 수익 달성 시점: {opportunities[0]['business']['timeline']}"
+            f"이번 달 우선 검토 사업: {top_opportunity['business']['name']}",
+            f"사업 유형: {top_opportunity['type']}",
+            f"목표 초기 투자금: {top_opportunity['business'].get('startup_cost', '미정')}",
+            f"예상 월 수익: {top_opportunity['business'].get('monthly_revenue', top_opportunity['business'].get('revenue_potential', '미정'))}",
+            f"실행 우선순위: {top_opportunity['priority']}"
         ]
-        
+
         action_items = [
-            f"{opportunities[0]['business']['name']} 시장 조사 실시",
-            "경쟁업체 가격 분석 및 차별화 포인트 도출",
+            f"{top_opportunity['business']['name']} 상세 시장 조사 실시",
+            "경쟁업체 TOP 5 분석 및 차별화 포인트 도출",
             "최소 실행 가능 제품(MVP) 개발 계획 수립",
-            "초기 고객 100명 확보 전략 수립",
-            "월 손익분기점 달성 로드맵 작성"
+            "타겟 고객 100명 인터뷰 및 니즈 검증",
+            "수익 모델 시뮬레이션 및 손익분기점 계산",
+            "파일럿 테스트 계획 수립 및 실행",
+            "초기 투자 자금 조달 방안 검토",
+            "팀 구성 및 역할 분담 계획"
         ]
-        
+
         return {
-            "meeting_type": "현실적 사업 발굴 회의",
+            "meeting_type": "고수익 사업 테마 발굴 회의",
             "agenda": agenda,
             "key_decisions": decisions,
             "action_items": action_items,
             "opportunities": opportunities,
-            "validated_models": validated_models
+            "validated_models": validated_models,
+            "high_viability_themes": high_viability_themes,
+            "top_priority_business": top_opportunity
         }
 
 if __name__ == "__main__":
