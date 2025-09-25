@@ -335,66 +335,259 @@ class RealisticBusinessGenerator:
             }
         ]
 
+        # 추가: 소규모 앱 아이디어 풀
+        self.small_app_ideas = [
+            {
+                "name": "습관 체크 알림 앱",
+                "description": "간단한 습관 체크리스트와 알림 기능",
+                "startup_cost": "50만원",
+                "monthly_revenue": "50-200만원",
+                "development_time": "2주",
+                "difficulty": "매우 쉬움"
+            },
+            {
+                "name": "가계부 공유 앱",
+                "description": "부부/가족이 함께 쓰는 실시간 가계부",
+                "startup_cost": "100만원",
+                "monthly_revenue": "100-400만원",
+                "development_time": "1개월",
+                "difficulty": "쉬움"
+            },
+            {
+                "name": "동네 중고장터 알림",
+                "description": "원하는 물건 올라오면 즉시 알림",
+                "startup_cost": "80만원",
+                "monthly_revenue": "80-300만원",
+                "development_time": "3주",
+                "difficulty": "쉬움"
+            },
+            {
+                "name": "분할 계산기 프리미엄",
+                "description": "더치페이 자동 계산과 송금 연동",
+                "startup_cost": "60만원",
+                "monthly_revenue": "60-250만원",
+                "development_time": "2주",
+                "difficulty": "매우 쉬움"
+            },
+            {
+                "name": "일일 미션 챌린지",
+                "description": "친구들과 함께하는 일일 챌린지 앱",
+                "startup_cost": "70만원",
+                "monthly_revenue": "70-280만원",
+                "development_time": "3주",
+                "difficulty": "쉬움"
+            },
+            {
+                "name": "냉장고 재료 레시피",
+                "description": "남은 재료로 만들 수 있는 요리 추천",
+                "startup_cost": "90만원",
+                "monthly_revenue": "90-350만원",
+                "development_time": "1개월",
+                "difficulty": "쉬움"
+            },
+            {
+                "name": "운동 파트너 매칭",
+                "description": "동네 운동 친구 찾기 앱",
+                "startup_cost": "120만원",
+                "monthly_revenue": "150-500만원",
+                "development_time": "1.5개월",
+                "difficulty": "보통"
+            },
+            {
+                "name": "택시 합승 매칭",
+                "description": "같은 방향 택시 합승자 실시간 매칭",
+                "startup_cost": "150만원",
+                "monthly_revenue": "200-700만원",
+                "development_time": "2개월",
+                "difficulty": "보통"
+            },
+            {
+                "name": "육아 일기 공유",
+                "description": "가족이 함께 쓰는 아기 성장 기록",
+                "startup_cost": "80만원",
+                "monthly_revenue": "100-400만원",
+                "development_time": "1개월",
+                "difficulty": "쉬움"
+            },
+            {
+                "name": "동네 카페 스탬프",
+                "description": "디지털 스탬프 적립 통합 앱",
+                "startup_cost": "200만원",
+                "monthly_revenue": "300-1000만원",
+                "development_time": "2개월",
+                "difficulty": "보통"
+            }
+        ]
+
+        # 추가: 마이크로 사업 아이디어 풀
+        self.micro_business_ideas = [
+            {
+                "name": "SNS 댓글 관리 서비스",
+                "description": "인플루언서 댓글 모니터링 및 응대",
+                "startup_cost": "10만원",
+                "monthly_revenue": "50-150만원",
+                "difficulty": "매우 쉬움"
+            },
+            {
+                "name": "PDF 변환 서비스",
+                "description": "대량 문서 PDF 변환 및 편집",
+                "startup_cost": "20만원",
+                "monthly_revenue": "80-200만원",
+                "difficulty": "매우 쉬움"
+            },
+            {
+                "name": "이메일 템플릿 제작",
+                "description": "기업용 이메일 템플릿 디자인",
+                "startup_cost": "30만원",
+                "monthly_revenue": "100-300만원",
+                "difficulty": "쉬움"
+            },
+            {
+                "name": "온라인 설문조사 대행",
+                "description": "설문 제작부터 분석까지 대행",
+                "startup_cost": "40만원",
+                "monthly_revenue": "120-350만원",
+                "difficulty": "쉬움"
+            },
+            {
+                "name": "챗봇 시나리오 작성",
+                "description": "기업 고객센터 챗봇 대화 설계",
+                "startup_cost": "50만원",
+                "monthly_revenue": "150-400만원",
+                "difficulty": "보통"
+            },
+            {
+                "name": "유튜브 자막 제작",
+                "description": "다국어 자막 제작 및 싱크 조정",
+                "startup_cost": "30만원",
+                "monthly_revenue": "100-250만원",
+                "difficulty": "쉬움"
+            },
+            {
+                "name": "온라인 명함 제작",
+                "description": "디지털 명함 디자인 및 관리",
+                "startup_cost": "20만원",
+                "monthly_revenue": "60-180만원",
+                "difficulty": "매우 쉬움"
+            },
+            {
+                "name": "상품 사진 편집",
+                "description": "쇼핑몰 상품 사진 보정 서비스",
+                "startup_cost": "40만원",
+                "monthly_revenue": "150-400만원",
+                "difficulty": "쉬움"
+            },
+            {
+                "name": "엑셀 자동화 컨설팅",
+                "description": "반복 업무 엑셀 매크로 제작",
+                "startup_cost": "30만원",
+                "monthly_revenue": "200-500만원",
+                "difficulty": "보통"
+            },
+            {
+                "name": "블로그 대필 서비스",
+                "description": "기업 블로그 콘텐츠 작성 대행",
+                "startup_cost": "20만원",
+                "monthly_revenue": "100-300만원",
+                "difficulty": "쉬움"
+            }
+        ]
+
+    def generate_micro_business_ideas(self):
+        """마이크로 사업 아이디어 생성"""
+        ideas = []
+        for micro in random.sample(self.micro_business_ideas, min(5, len(self.micro_business_ideas))):
+            ideas.append({
+                "type": "마이크로 비즈니스",
+                "category": "초소형 창업",
+                "business": micro,
+                "priority": "보통"
+            })
+        return ideas
+
+    def generate_small_app_ideas(self):
+        """소규모 앱 아이디어 생성"""
+        ideas = []
+        for app in random.sample(self.small_app_ideas, min(5, len(self.small_app_ideas))):
+            ideas.append({
+                "type": "소규모 앱 개발",
+                "category": "간단 앱",
+                "business": app,
+                "priority": "높음"
+            })
+        return ideas
+
     def generate_monthly_opportunities(self):
-        """매월 새로운 현실적 사업 기회 생성"""
+        """매월 새로운 현실적 사업 기회 생성 - 대량 생성 버전"""
         current_month = datetime.now().month
         seasons = ["겨울", "겨울", "봄", "봄", "봄", "여름", "여름", "여름", "가을", "가을", "가을", "겨울"]
         current_season = seasons[current_month - 1]
 
         opportunities = []
 
-        # 즉시 시작 가능한 사업 2개
-        for category_data in random.sample(self.immediate_businesses, 2):
-            business = random.choice(category_data["businesses"])
+        # 즉시 시작 가능한 사업 5-8개 (기존 2개에서 확대)
+        for category_data in self.immediate_businesses:
+            for business in random.sample(category_data["businesses"], min(2, len(category_data["businesses"]))):
+                opportunities.append({
+                    "type": "즉시 시작 가능",
+                    "category": category_data["category"],
+                    "business": business,
+                    "priority": "높음"
+                })
+
+        # 고수익 앱 테마 8-10개 (기존 2개에서 확대)
+        for app_category in self.high_potential_app_themes:
+            for app in random.sample(app_category["apps"], min(2, len(app_category["apps"]))):
+                opportunities.append({
+                    "type": "고수익 앱 개발",
+                    "category": app_category["category"],
+                    "business": app,
+                    "priority": "매우 높음"
+                })
+
+        # 혁신 사업 아이디어 4-5개 (기존 1개에서 확대)
+        for category in self.innovative_business_ideas:
+            for idea in category["ideas"]:
+                opportunities.append({
+                    "type": "혁신 사업 모델",
+                    "category": category["category"],
+                    "business": idea,
+                    "priority": "높음"
+                })
+
+        # 계절 특화 사업 3-4개 (기존 1개에서 확대)
+        for seasonal_business in random.sample(self.seasonal_opportunities[current_season],
+                                              min(3, len(self.seasonal_opportunities[current_season]))):
             opportunities.append({
-                "type": "즉시 시작 가능",
-                "category": category_data["category"],
-                "business": business,
+                "type": "계절 특화",
+                "season": current_season,
+                "business": {
+                    "name": seasonal_business,
+                    "startup_cost": "100-300만원",
+                    "revenue_potential": "월 200-500만원",
+                    "timeline": "2-4주 내 시작",
+                    "difficulty": "보통"
+                },
+                "priority": "보통"
+            })
+
+        # 기술 활용 사업 3개 (기존 1개에서 확대)
+        for tech_business in self.tech_enabled_businesses:
+            opportunities.append({
+                "type": "기술 활용",
+                "business": tech_business,
                 "priority": "높음"
             })
 
-        # 고수익 앱 테마 2개 (새로 추가)
-        for app_category in random.sample(self.high_potential_app_themes, 2):
-            app = random.choice(app_category["apps"])
-            opportunities.append({
-                "type": "고수익 앱 개발",
-                "category": app_category["category"],
-                "business": app,
-                "priority": "매우 높음"
-            })
+        # 추가: 마이크로 사업 아이디어들
+        micro_businesses = self.generate_micro_business_ideas()
+        for micro in micro_businesses:
+            opportunities.append(micro)
 
-        # 혁신 사업 아이디어 1개 (새로 추가)
-        innovation_category = random.choice(self.innovative_business_ideas)
-        innovation_idea = random.choice(innovation_category["ideas"])
-        opportunities.append({
-            "type": "혁신 사업 모델",
-            "category": innovation_category["category"],
-            "business": innovation_idea,
-            "priority": "높음"
-        })
-
-        # 계절 특화 사업 1개
-        seasonal_business = random.choice(self.seasonal_opportunities[current_season])
-        opportunities.append({
-            "type": "계절 특화",
-            "season": current_season,
-            "business": {
-                "name": seasonal_business,
-                "startup_cost": "100-300만원",
-                "revenue_potential": "월 200-500만원",
-                "timeline": "2-4주 내 시작",
-                "difficulty": "보통"
-            },
-            "priority": "보통"
-        })
-
-        # 기술 활용 사업 1개
-        tech_business = random.choice(self.tech_enabled_businesses)
-        opportunities.append({
-            "type": "기술 활용",
-            "business": tech_business,
-            "priority": "높음"
-        })
+        # 추가: 소규모 앱 아이디어들
+        small_apps = self.generate_small_app_ideas()
+        for app in small_apps:
+            opportunities.append(app)
 
         return opportunities
 

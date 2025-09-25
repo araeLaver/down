@@ -1,0 +1,141 @@
+CONTINUOUS BUSINESS MEETING GENERATOR
+=====================================
+
+Created: continuous_meeting_generator.py
+Demo Version: demo_meeting_generator.py
+
+DESCRIPTION:
+-----------
+Automatically generates comprehensive business meeting agendas every 30 minutes using the realistic_business_generator module. Each meeting includes 35-40 business opportunities and is saved to timestamped text files.
+
+FEATURES:
+---------
+- Imports and uses the realistic_business_generator module
+- Generates business meeting agendas with comprehensive analysis
+- Includes 35-40 business ideas per meeting (covers immediate startups, high-revenue apps, innovative models, seasonal opportunities, and more)
+- Saves each meeting to a timestamped text file
+- Displays summary on screen for each generated meeting
+- Runs continuously every 30 minutes
+- Automatic directory creation for meeting files
+
+USAGE:
+------
+
+1. CONTINUOUS GENERATION (30-minute intervals):
+   python continuous_meeting_generator.py
+
+2. DEMO VERSION (shorter intervals for testing):
+   python demo_meeting_generator.py
+
+FILES CREATED:
+--------------
+- Meeting files are saved in 'generated_meetings/' directory
+- Format: business_meeting_YYYYMMDD_HHMMSS.txt
+- Demo files are saved in 'demo_meetings/' directory
+
+MEETING CONTENT STRUCTURE:
+-------------------------
+Each generated meeting file contains:
+
+1. Meeting Header with timestamp
+2. Meeting Agenda (8 key discussion points)
+3. Key Decisions (5 strategic decisions)
+4. Action Items (8 specific tasks)
+5. Top Priority Business (detailed analysis)
+6. ALL BUSINESS OPPORTUNITIES (35-40 detailed ideas including):
+   - Immediate startup opportunities
+   - High-revenue app development themes
+   - Innovative business models
+   - Seasonal business opportunities
+   - Technology-enabled businesses
+   - Micro-business ideas
+   - Small app development opportunities
+7. High-Revenue Themes (with ROI scores)
+8. Validated Business Models
+
+SAMPLE OUTPUT STRUCTURE:
+-----------------------
+BUSINESS MEETING: [Meeting Type]
+GENERATED TIME: [Timestamp]
+
+MEETING AGENDA:
+1. Market-validated business model analysis
+2. Immediately executable business item review
+3. High-revenue app development theme analysis
+...
+
+ALL BUSINESS OPPORTUNITIES (37+ ideas):
+1. Translation/Interpretation Service
+   Type: Immediately Startable
+   Category: Digital Services
+   Description: Document translation, video interpretation, website localization
+   Initial Investment: 10만원 이하
+   Expected Revenue: 월 100-300만원
+   Difficulty: 쉬움
+   Priority: 높음
+
+2. Local Restaurant Order Integration App
+   Type: High-Revenue App Development
+   Category: Lifestyle Convenience Apps
+   Description: Multi-delivery app comparison ordering, integrated coupon management
+   Initial Investment: 500만원
+   Expected Revenue: 200-800만원
+   Priority: 매우 높음
+...
+
+STOPPING THE GENERATOR:
+----------------------
+Press Ctrl+C to stop the continuous generator.
+The program will display:
+- Total number of meetings generated
+- Location of saved files
+- Graceful shutdown message
+
+REQUIREMENTS:
+------------
+- realistic_business_generator.py module (already present)
+- Python 3.6 or higher
+- No additional dependencies required
+
+CUSTOMIZATION:
+-------------
+You can modify the script to:
+- Change the interval time (currently 30 minutes = 1800 seconds)
+- Modify the meeting content format
+- Change the output directory name
+- Adjust the number of business opportunities included
+
+TROUBLESHOOTING:
+---------------
+- If encoding errors occur on Windows, the script automatically handles them
+- Meeting files are saved with UTF-8 encoding
+- If generation fails, the script retries after 5 minutes
+- All Korean text in console output has been converted to English for compatibility
+
+EXAMPLE RUN:
+-----------
+$ python continuous_meeting_generator.py
+
+Continuous Business Meeting Generator Started
+Meeting files saved to: C:\Develop\workspace\Down_ai\generated_meetings
+Generating new meetings every 30 minutes...
+Press Ctrl+C to stop
+
+================================================================================
+New Business Meeting Generated (#1)
+File: generated_meetings\business_meeting_20250925_101653.txt
+Time: 2025-09-25 10:16:53
+================================================================================
+
+Meeting Type: 고수익 사업 테마 발굴 회의
+Total Business Opportunities: 37
+High-Revenue Themes: 10
+
+Top Priority Business: 동네 맛집 주문 통합 앱
+   Type: 고수익 앱 개발
+   Initial Investment: 500만원
+   Expected Revenue: 200-800만원
+   Priority Level: 매우 높음
+
+Next meeting scheduled: 10:46:53
+Waiting 30 minutes...
