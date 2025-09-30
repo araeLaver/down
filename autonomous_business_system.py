@@ -702,53 +702,36 @@ class ContinuousBusinessSystem:
     
     def _continuous_operations(self):
         """지속적 운영 루프"""
+        last_meeting_hour = -1
+
         while self.is_running:
             current_hour = datetime.now().hour
             current_minute = datetime.now().minute
 
-            # 09:00 - 아침 전략 회의
-            if current_hour == 9 and current_minute < 5:
-                self.daily_ops.conduct_daily_morning_meeting()
-                time.sleep(300)  # 5분 대기
+            # 매시간 정각마다 회의 진행 (중복 방지)
+            if current_minute < 5 and current_hour != last_meeting_hour:
+                meeting_types = [
+                    self.daily_ops.conduct_daily_morning_meeting,
+                    self.daily_ops.conduct_business_opportunity_meeting,
+                    self.daily_ops.conduct_lunch_strategy_meeting,
+                    self.daily_ops.conduct_product_development_meeting,
+                    self.daily_ops.conduct_marketing_sales_meeting,
+                    self.daily_ops.conduct_evening_strategy_meeting
+                ]
 
-            # 11:00 - 사업 기회 발굴 회의
-            elif current_hour == 11 and current_minute < 5:
-                self.daily_ops.conduct_business_opportunity_meeting()
-                time.sleep(300)
+                # 시간별로 다양한 회의 유형 선택
+                selected_meeting = meeting_types[current_hour % len(meeting_types)]
+                selected_meeting()
 
-            # 13:00 - 점심 전략 회의
-            elif current_hour == 13 and current_minute < 5:
-                self.daily_ops.conduct_lunch_strategy_meeting()
-                time.sleep(300)
-
-            # 15:00 - 제품/서비스 개발 회의
-            elif current_hour == 15 and current_minute < 5:
-                self.daily_ops.conduct_product_development_meeting()
-                time.sleep(300)
-
-            # 17:00 - 마케팅 및 영업 전략 회의
-            elif current_hour == 17 and current_minute < 5:
-                self.daily_ops.conduct_marketing_sales_meeting()
-                time.sleep(300)
-
-            # 19:00 - 저녁 리뷰 및 다음날 계획
-            elif current_hour == 19 and current_minute < 5:
-                self.daily_ops.evening_review_and_planning()
-                time.sleep(300)
-
-            # 21:00 - 야간 전략 회의
-            elif current_hour == 21 and current_minute < 5:
-                self.daily_ops.conduct_evening_strategy_meeting()
-                time.sleep(300)
-
-            # 매시간 정각 - 지표 업데이트
-            elif current_minute == 0:
+                # 지표도 업데이트
                 self.daily_ops.update_company_metrics()
+
+                last_meeting_hour = current_hour
                 time.sleep(300)  # 5분 대기
 
-            # 기본 대기 (5분)
+            # 기본 대기 (1분)
             else:
-                time.sleep(300)
+                time.sleep(60)
     
     def get_daily_summary(self):
         """일일 요약 보고서"""
