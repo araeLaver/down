@@ -788,11 +788,64 @@ def background_sync_parser():
         time.sleep(30)  # 30초마다 파싱
 
 
-# 백그라운드 스레드 시작
-if __name__ == '__main__':
+def background_meeting_generator():
+    """백그라운드에서 매시간 회의 생성"""
+    from stable_hourly_meeting import StableHourlyMeeting
+    import logging
+
+    logging.info("[BACKGROUND] Starting hourly meeting generator...")
+    print("[BACKGROUND] Starting hourly meeting generator...")
+
+    system = StableHourlyMeeting()
+    last_hour = -1
+
+    # 시작하자마자 한번 실행
+    try:
+        system.conduct_hourly_meeting()
+    except Exception as e:
+        logging.error(f"Initial meeting failed: {e}")
+        print(f"Initial meeting failed: {e}")
+
+    while True:
+        try:
+            now = datetime.now()
+            current_hour = now.hour
+            current_minute = now.minute
+
+            # 매시간 00분에 실행
+            if current_minute == 0 and current_hour != last_hour:
+                logging.info(f"[MEETING] Generating meeting at {now}")
+                print(f"[MEETING] Generating meeting at {now}")
+                system.conduct_hourly_meeting()
+                last_hour = current_hour
+                time.sleep(60)
+            else:
+                # 30초마다 체크
+                time.sleep(30)
+        except Exception as e:
+            logging.error(f"Meeting generator error: {e}")
+            print(f"Meeting generator error: {e}")
+            time.sleep(60)
+
+
+# 백그라운드 스레드 자동 시작 (Gunicorn에서도 작동)
+def start_background_threads():
+    """백그라운드 스레드 시작"""
+    # Sync parser thread
     parser_thread = Thread(target=background_sync_parser, daemon=True)
     parser_thread.start()
-    
+    print("[STARTUP] Background sync parser started")
+
+    # Meeting generator thread
+    meeting_thread = Thread(target=background_meeting_generator, daemon=True)
+    meeting_thread.start()
+    print("[STARTUP] Background meeting generator started")
+
+# Production 환경 (Gunicorn)에서도 백그라운드 스레드 시작
+start_background_threads()
+
+# 백그라운드 스레드 시작
+if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
     debug = os.environ.get('FLASK_ENV') != 'production'
     app.run(host='0.0.0.0', port=port, debug=debug)

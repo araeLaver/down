@@ -51,19 +51,28 @@ class StableHourlyMeeting:
         now = datetime.now()
         logging.info(f"Starting meeting at {now}")
 
+        # 매일 다른 회의 주제 선택 (날짜와 시간 기반)
         meeting_types = [
-            "현실적 사업 발굴 회의",
-            "일일 전략 회의",
-            "시장 분석 회의",
-            "사업 확장 회의",
-            "제품 개발 회의",
-            "파트너십 검토 회의"
+            ("현실적 사업 발굴 회의", "새로운 수익원 창출"),
+            ("일일 전략 회의", "오늘의 우선순위 결정"),
+            ("시장 분석 회의", "시장 트렌드 및 기회 분석"),
+            ("사업 확장 회의", "기존 사업 확장 전략"),
+            ("제품 개발 회의", "신제품 개발 계획"),
+            ("파트너십 검토 회의", "협력 기회 탐색"),
+            ("고객 피드백 회의", "고객 의견 반영"),
+            ("재무 현황 회의", "수익성 분석 및 개선"),
+            ("마케팅 전략 회의", "홍보 및 브랜딩"),
+            ("기술 혁신 회의", "AI 및 자동화 도입"),
+            ("경쟁사 분석 회의", "시장 포지셔닝"),
+            ("리스크 관리 회의", "위험 요소 대응")
         ]
 
-        selected_type = meeting_types[now.hour % len(meeting_types)]
+        # 날짜와 시간을 조합하여 다양한 회의 선택
+        index = (now.day * 24 + now.hour) % len(meeting_types)
+        selected_type, theme = meeting_types[index]
 
         print(f"\n{'='*80}")
-        print(f"[{now.strftime('%Y-%m-%d %H:%M:%S')}] {selected_type} 시작")
+        print(f"[{now.strftime('%Y-%m-%d %H:%M:%S')}] {selected_type} ({theme})")
         print(f"{'='*80}")
 
         try:
@@ -74,32 +83,115 @@ class StableHourlyMeeting:
             opportunities = []
             high_viability = []
 
-        agendas = [
+        # 매일 다른 안건 생성 (회의 유형에 따라 변경)
+        all_agendas = {
+            "현실적 사업 발굴 회의": [
+                "즉시 시작 가능한 사업 아이템 검토",
+                "시장 검증된 비즈니스 모델 분석",
+                "고수익 앱 개발 테마 분석",
+                "최소 투자 고수익 모델 발굴"
+            ],
+            "일일 전략 회의": [
+                "전날 진행사항 검토 및 피드백",
+                "오늘의 최우선 과제 3가지 선정",
+                "이슈 및 해결방안 즉시 논의",
+                "내일 준비 사항 점검"
+            ],
+            "시장 분석 회의": [
+                "경쟁사 동향 분석 (TOP 5)",
+                "시장 트렌드 및 소비자 행동 변화",
+                "신규 진입 기회 평가",
+                "우리 포지셔닝 점검"
+            ],
+            "사업 확장 회의": [
+                "기존 사업 성과 리뷰",
+                "확장 가능 영역 탐색",
+                "투자 대비 효과 시뮬레이션",
+                "리스크 및 대응 방안"
+            ],
+            "제품 개발 회의": [
+                "신제품 아이디어 브레인스토밍",
+                "고객 니즈 검증 결과 분석",
+                "MVP 개발 우선순위",
+                "출시 일정 및 마일스톤"
+            ],
+            "파트너십 검토 회의": [
+                "잠재 협력 파트너 리스트업",
+                "상호 이익 모델 설계",
+                "계약 조건 및 협상 포인트",
+                "리스크 관리 방안"
+            ],
+            "고객 피드백 회의": [
+                "이번 주 고객 의견 종합",
+                "불만 사항 및 개선 요청",
+                "긍정 피드백 및 강화 방안",
+                "즉시 반영 가능한 항목"
+            ],
+            "재무 현황 회의": [
+                "이번 주 매출 및 비용 분석",
+                "수익성 개선 포인트 발굴",
+                "불필요한 지출 절감 방안",
+                "다음 달 예산 계획"
+            ],
+            "마케팅 전략 회의": [
+                "캠페인 성과 리뷰 (ROI 중심)",
+                "신규 채널 및 전략 검토",
+                "브랜딩 강화 방안",
+                "고객 획득 비용 최적화"
+            ],
+            "기술 혁신 회의": [
+                "AI 및 자동화 도입 기회",
+                "기술 스택 업그레이드 검토",
+                "개발 생산성 향상 방안",
+                "보안 및 성능 개선"
+            ],
+            "경쟁사 분석 회의": [
+                "주요 경쟁사 전략 분석",
+                "우리만의 차별화 포인트",
+                "시장 점유율 확대 방안",
+                "선제적 대응 전략"
+            ],
+            "리스크 관리 회의": [
+                "현재 주요 리스크 요소 점검",
+                "비상 대응 계획 수립",
+                "법률 및 규제 검토",
+                "위기 시나리오 및 대응"
+            ]
+        }
+
+        agendas = all_agendas.get(selected_type, [
             "전날 진행사항 검토",
             "오늘의 우선순위 설정",
             "이슈 및 해결방안 논의",
-            "즉시 시작 가능한 사업 아이템 검토",
-            "계절별 기회 사업 평가",
-            "기술 활용 저비용 창업 방안",
-            "시장 검증된 비즈니스 모델 분석"
-        ]
+            "다음 단계 계획 수립"
+        ])
 
+        # 회의 유형별 다양한 결정사항 및 실행항목 생성
         if opportunities:
-            top_biz = opportunities[0]['business']
+            # 매일 다른 사업 아이템 선택 (랜덤하게)
+            import random
+            random.seed(now.day * 100 + now.hour)
+            selected_opportunities = random.sample(opportunities, min(3, len(opportunities)))
+            top_biz = selected_opportunities[0]['business']
 
             key_decisions = [
-                f"{top_biz['name']} 우선 검토 결정 (우선순위: {opportunities[0]['priority']})",
-                f"사업 유형: {opportunities[0]['type']}",
+                f"{now.strftime('%Y년 %m월 %d일')} 회의 결과",
+                f"최우선 검토 사업: {top_biz['name']} ({selected_opportunities[0]['priority']} 우선순위)",
+                f"사업 카테고리: {selected_opportunities[0]['type']}",
                 f"목표 초기 투자금: {top_biz.get('startup_cost', '미정')}",
-                f"예상 월 수익: {top_biz.get('monthly_revenue', top_biz.get('revenue_potential', '미정'))}"
+                f"예상 월 수익: {top_biz.get('monthly_revenue', top_biz.get('revenue_potential', '미정'))}",
+                f"추가 검토 사업 2가지 선정 완료"
             ]
 
             action_items = [
-                f"{top_biz['name']} 상세 시장 조사 실시",
-                "경쟁업체 TOP 5 분석 및 차별화 포인트 도출",
-                "최소 실행 가능 제품(MVP) 개발 계획 수립",
-                "타겟 고객 100명 인터뷰 및 니즈 검증",
-                "수익 모델 시뮬레이션 및 손익분기점 계산"
+                f"【최우선】{top_biz['name']} 상세 시장 조사 (7일 내)",
+                f"경쟁업체 TOP 5 분석 및 차별화 전략 수립 (5일 내)",
+                f"최소 실행 가능 제품(MVP) 개발 계획 작성 (3일 내)",
+                f"타겟 고객 50명 인터뷰 및 니즈 검증 (10일 내)",
+                f"수익 모델 시뮬레이션 및 손익분기점 계산 (7일 내)",
+                f"초기 자금 조달 방안 검토 (5일 내)",
+                f"팀 구성 및 역할 분담 계획 (3일 내)",
+                f"다음 회의일: {(now + timedelta(days=1)).strftime('%Y년 %m월 %d일 %H시')}"
             ]
 
             print(f"\n[TOP] 최우선 사업: {top_biz['name']}")
@@ -107,16 +199,18 @@ class StableHourlyMeeting:
             print(f"   월수익: {top_biz.get('monthly_revenue', top_biz.get('revenue_potential', 'N/A'))}")
             print(f"\n[STATS] 총 발굴 사업 기회: {len(opportunities)}개")
             print(f"[HIGH] 고수익 테마: {len(high_viability)}개")
+            print(f"[SELECTED] 오늘 선정된 검토 대상: {len(selected_opportunities)}개")
         else:
             key_decisions = [
-                "AI 자동화 컨설팅 우선 검토",
-                "목표 초기 투자금: 50만원",
-                "예상 월 수익: 200-500만원"
+                f"{now.strftime('%Y년 %m월 %d일')} {selected_type} 결과",
+                "기존 사업 성과 분석 우선",
+                "신규 투자 검토 보류",
+                "내부 프로세스 개선 집중"
             ]
             action_items = [
-                "AI 자동화 컨설팅 시장 조사",
-                "경쟁사 분석",
-                "MVP 개발 계획"
+                f"현재 진행 중인 프로젝트 상태 점검 ({now.strftime('%m월 %d일')})",
+                "팀별 주간 보고서 제출 요청 (2일 내)",
+                "다음 분기 계획 초안 작성 (7일 내)"
             ]
 
         meeting = BusinessMeeting(
