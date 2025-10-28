@@ -201,6 +201,11 @@ class StableHourlyMeeting:
         # 회의 타입별 결정사항과 실행항목
         decisions_and_actions = {
             "주간 매출 리뷰 및 목표 달성률 점검": {
+                "business_topics": [
+                    f"신규 수익 모델: {random.choice(['B2B 엔터프라이즈 플랜 출시', '프리미엄 애드온 기능 판매', '화이트라벨 솔루션 제공'])}",
+                    f"확장 채널: {random.choice(['대기업 파트너십', '리셀러 프로그램', '해외 진출 (동남아)'])}",
+                    f"교차 판매 기회: {random.choice(['기존 고객 업셀링', '번들 상품 패키지', '추천 프로그램 강화'])}"
+                ],
                 "decisions": [
                     f"이번 주 매출: 목표 대비 {random.randint(85, 115)}% 달성",
                     f"주요 히트 상품: {random.choice(['프리미엄 구독', 'API 이용권', '프로 플랜'])} - 전주 대비 {random.randint(10, 40)}% 증가",
@@ -215,6 +220,11 @@ class StableHourlyMeeting:
                 ]
             },
             "긴급 CS 이슈 대응 회의": {
+                "business_topics": [
+                    f"CS 자동화: AI 챗봇 도입으로 반복 문의 80% 자동 처리",
+                    f"프리미엄 지원 서비스: VIP 고객 전담 팀 운영 (추가 요금제)",
+                    f"셀프 서비스 강화: FAQ, 튜토리얼 비디오 확충",
+                ],
                 "decisions": [
                     f"금일 접수된 긴급 이슈 {random.randint(3, 8)}건 중 {random.randint(2, 4)}건 즉시 처리 완료",
                     f"주요 불만: {random.choice(['결제 오류', '로그인 실패', '느린 응답 속도'])} - 시스템 개선 필요",
@@ -229,6 +239,11 @@ class StableHourlyMeeting:
                 ]
             },
             "신규 기능 출시 전 최종 점검": {
+                "business_topics": [
+                    f"신규 기능: {random.choice(['AI 추천 엔진', '실시간 협업 기능', '고급 분석 대시보드'])}",
+                    f"프리미엄 Tier 출시: 고급 기능을 유료화하여 ARPU 증대",
+                    f"얼리어댑터 프로그램: 베타 테스터를 유료 고객으로 전환",
+                ],
                 "decisions": [
                     f"출시 예정일: {(now + timedelta(days=random.randint(1, 3))).strftime('%m월 %d일 %H시')}",
                     f"QA 통과율: {random.randint(92, 100)}% (Critical Bug {random.randint(0, 2)}건 해결 완료)",
@@ -243,6 +258,11 @@ class StableHourlyMeeting:
                 ]
             },
             "월간 KPI 리뷰 및 개선안": {
+                "business_topics": [
+                    f"성장 가속: {random.choice(['바이럴 마케팅', '레퍼럴 프로그램', '인플루언서 협업'])}",
+                    f"신규 시장 진출: {random.choice(['교육 기관', '정부 기관', '중소기업'])} 타겟팅",
+                    f"수익화 강화: 무료→유료 전환율 개선 전략",
+                ],
                 "decisions": [
                     f"MAU: {random.randint(15000, 25000)}명 (전월 대비 {random.randint(-10, 20):+d}%)",
                     f"Retention Rate (D7): {random.randint(35, 60)}% (목표 {random.randint(40, 50)}%)",
@@ -257,6 +277,11 @@ class StableHourlyMeeting:
                 ]
             },
             "고객 이탈 방지 대책 회의": {
+                "business_topics": [
+                    f"로열티 프로그램: 장기 고객 리워드 시스템 도입",
+                    f"맞춤형 리텐션: 이탈 위험 고객 자동 감지 및 개인화 혜택",
+                    f"커뮤니티 구축: 사용자 커뮤니티로 Lock-in 효과 강화",
+                ],
                 "decisions": [
                     f"이번 달 Churn Rate: {random.uniform(5, 15):.1f}% (전월 대비 {random.uniform(-2, 3):+.1f}%p)",
                     f"주요 이탈 원인: {random.choice(['가격 부담', '기능 부족', '사용 불편'])} ({random.randint(30, 50)}%)",
@@ -271,6 +296,11 @@ class StableHourlyMeeting:
                 ]
             },
             "주간 스프린트 회고": {
+                "business_topics": [
+                    f"개발 생산성 툴: {random.choice(['CI/CD 파이프라인 개선', 'Low-code 도입', 'AI 코딩 어시스턴트'])}",
+                    f"기술 스택 현대화: 레거시 시스템 마이그레이션",
+                    f"오픈소스 기여: 자사 도구 오픈소스화로 브랜딩",
+                ],
                 "decisions": [
                     f"완료된 스토리 포인트: {random.randint(25, 45)}/{random.randint(40, 50)} ({random.randint(60, 100)}% 달성)",
                     f"주요 블로커: {random.choice(['API 연동 지연', '디자인 리소스 부족', '요구사항 변경'])}",
@@ -285,6 +315,11 @@ class StableHourlyMeeting:
                 ]
             },
             "경쟁사 신제품 분석 긴급 회의": {
+                "business_topics": [
+                    f"차별화 포인트 강화: {random.choice(['독보적 AI 기술', '업계 최고 보안', '최저 가격 보장'])}",
+                    f"블루오션 전략: 경쟁사가 놓친 니치 시장 공략",
+                    f"파트너십 강화: 경쟁사 대신 우리와 제휴하도록 유도",
+                ],
                 "decisions": [
                     f"경쟁사: {random.choice(['A사', 'B사', 'C사'])} 신제품 출시 ({now.strftime('%m월 %d일')})",
                     f"주요 차별화: {random.choice(['AI 기능 탑재', '가격 30% 인하', '모바일 최적화'])}",
@@ -299,6 +334,11 @@ class StableHourlyMeeting:
                 ]
             },
             "파트너사 계약 조건 협상": {
+                "business_topics": [
+                    f"전략적 제휴: {random.choice(['대기업과 공동 마케팅', '유통망 확보', '기술 크로스 라이선싱'])}",
+                    f"수익 다각화: 파트너 네트워크 통한 간접 매출 창출",
+                    f"Win-Win 모델: 리셀러 프로그램으로 시장 확대",
+                ],
                 "decisions": [
                     f"제안 수수료율: {random.randint(10, 30)}% → 최종 {random.randint(15, 25)}%로 합의",
                     f"계약 기간: {random.choice(['1년', '2년', '3년'])} + 자동 연장 조항 포함",
@@ -313,6 +353,11 @@ class StableHourlyMeeting:
                 ]
             },
             "투자자 미팅 준비": {
+                "business_topics": [
+                    f"투자 활용 계획: {random.choice(['해외 진출 자금', '인력 확충', 'R&D 투자'])}",
+                    f"엑싯 시나리오: {random.choice(['IPO', 'M&A', '전략적 인수'])} 로드맵 제시",
+                    f"성장 스토리: 시장 규모 X 우리 점유율 X 수익성 입증",
+                ],
                 "decisions": [
                     f"미팅 일정: {(now + timedelta(days=random.randint(3, 10))).strftime('%m월 %d일 %H시')}",
                     f"목표 투자 유치액: {random.randint(10, 50)}억원 (Valuation: {random.randint(100, 500)}억원)",
@@ -327,6 +372,11 @@ class StableHourlyMeeting:
                 ]
             },
             "비용 절감 및 효율화 방안": {
+                "business_topics": [
+                    f"자동화 투자: RPA로 반복 업무 제거하여 인건비 절감",
+                    f"클라우드 최적화: 서버 비용 30% 절감 (Reserved Instance, Spot)",
+                    f"아웃소싱 전환: 비핵심 업무 외주화로 고정비 변동비화",
+                ],
                 "decisions": [
                     f"이번 달 총 운영비: {random.randint(3000, 8000)}만원 (예산 대비 {random.randint(-10, 20):+d}%)",
                     f"절감 가능 항목: {random.randint(5, 15)}개 발굴 (예상 절감액: {random.randint(300, 800)}만원/월)",
@@ -341,6 +391,11 @@ class StableHourlyMeeting:
                 ]
             },
             "인력 채용 및 조직 확대 회의": {
+                "business_topics": [
+                    f"인재 영입 전략: {random.choice(['주식 옵션 제공', '원격 근무 허용', '경력 개발 지원'])}",
+                    f"조직 문화: 강점화로 인재 유치 및 retention",
+                    f"글로벌 채용: 해외 우수 인력 원격 채용",
+                ],
                 "decisions": [
                     f"긴급 채용 포지션: {random.choice(['백엔드 개발자', '프론트엔드 개발자', '마케터', 'CS 매니저'])} {random.randint(1, 3)}명",
                     f"채용 예산: 1인당 연봉 {random.randint(4000, 7000)}만원 (총 {random.randint(5000, 15000)}만원)",
@@ -355,6 +410,11 @@ class StableHourlyMeeting:
                 ]
             },
             "서버 장애 사후 분석 및 재발 방지": {
+                "business_topics": [
+                    f"인프라 사업: 안정성 노하우를 B2B 클라우드 서비스로 상품화",
+                    f"SLA 보장 상품: 가용성 99.99% 보장 프리미엄 플랜",
+                    f"재해 복구 서비스: DR(Disaster Recovery) 솔루션 판매",
+                ],
                 "decisions": [
                     f"장애 발생 시간: {(now - timedelta(hours=random.randint(12, 48))).strftime('%m월 %d일 %H시')} (총 {random.randint(15, 180)}분)",
                     f"원인: {random.choice(['DB 과부하', 'API Rate Limit 초과', '메모리 누수', 'CDN 장애'])}",
@@ -369,6 +429,11 @@ class StableHourlyMeeting:
                 ]
             },
             "마케팅 ROI 분석 및 채널 최적화": {
+                "business_topics": [
+                    f"퍼포먼스 마케팅 강화: 데이터 기반 실시간 최적화",
+                    f"브랜드 마케팅: 장기적 브랜드 가치 구축 투자",
+                    f"바이럴 콘텐츠: 자발적 공유 유도하여 CAC 절감",
+                ],
                 "decisions": [
                     f"총 광고비: {random.randint(1000, 5000)}만원 (ROI: {random.uniform(1.5, 4.0):.1f}x)",
                     f"최고 성과 채널: {random.choice(['Google Ads', 'Facebook', 'Instagram', '카카오'])} (ROI {random.uniform(3.0, 5.0):.1f}x)",
@@ -383,6 +448,11 @@ class StableHourlyMeeting:
                 ]
             },
             "제품 로드맵 우선순위 조정": {
+                "business_topics": [
+                    f"신제품 라인: {random.choice(['모바일 앱 출시', 'API 플랫폼', '화이트라벨 솔루션'])}",
+                    f"수직 통합: 연관 제품군 인수하여 생태계 구축",
+                    f"플랫폼화: 써드파티 개발자 유치하여 확장",
+                ],
                 "decisions": [
                     f"고객 요청 기능 TOP 3: {random.choice(['다크모드', '엑셀 내보내기', '알림 커스터마이징'])}",
                     f"기술 부채 긴급도: {random.choice(['높음', '보통'])} - 리팩토링 시간 {random.randint(2, 4)}주 필요",
@@ -397,6 +467,11 @@ class StableHourlyMeeting:
                 ]
             },
             "B2B 세일즈 파이프라인 리뷰": {
+                "business_topics": [
+                    f"엔터프라이즈 영업: 대기업 전담 세일즈 팀 신설",
+                    f"채널 파트너: 리셀러, SI 파트너 네트워크 구축",
+                    f"인바운드 강화: 콘텐츠 마케팅으로 리드 자동 생성",
+                ],
                 "decisions": [
                     f"현재 파이프라인 딜: {random.randint(10, 30)}개 (총액 {random.randint(5, 20)}억원)",
                     f"Close 예정: {random.randint(2, 5)}개 (이번 달 내, 예상 계약액 {random.randint(1, 5)}억원)",
@@ -411,6 +486,11 @@ class StableHourlyMeeting:
                 ]
             },
             "사용자 행동 데이터 분석": {
+                "business_topics": [
+                    f"데이터 기반 신사업: 사용자 데이터 분석 인사이트를 컨설팅 상품화",
+                    f"개인화 서비스: AI 추천으로 사용자 경험 극대화",
+                    f"프로덕트 애널리틱스: 분석 도구 자체를 B2B 제품으로 판매",
+                ],
                 "decisions": [
                     f"핵심 기능 사용률: {random.choice(['검색', '필터', '대시보드', '리포트'])} {random.randint(60, 90)}%",
                     f"이탈 구간: {random.choice(['온보딩 2단계', '결제 페이지', '설정 화면'])} ({random.randint(30, 60)}% 이탈)",
@@ -465,7 +545,8 @@ class StableHourlyMeeting:
                 'participants_count': len(self.employees),
                 'agenda_items': len(agendas),
                 'decisions_count': len(key_decisions),
-                'action_items_count': len(action_items)
+                'action_items_count': len(action_items),
+                'business_topics': meeting_data.get('business_topics', []) if meeting_data else []
             }, ensure_ascii=False)
         )
 

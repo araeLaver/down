@@ -508,6 +508,30 @@
                     <button class="modal-close" onclick="closeModal()">×</button>
                 </div>
                 <div class="modal-body">
+                    ${(() => {
+                        let businessTopics = [];
+                        if (meeting.meeting_notes) {
+                            try {
+                                const notes = typeof meeting.meeting_notes === 'string'
+                                    ? JSON.parse(meeting.meeting_notes)
+                                    : meeting.meeting_notes;
+                                businessTopics = notes.business_topics || [];
+                            } catch(e) {}
+                        }
+
+                        if (businessTopics.length > 0) {
+                            return `
+                                <div class="detail-section">
+                                    <h3><i class="fas fa-lightbulb"></i> 논의된 사업 주제</h3>
+                                    ${businessTopics.map((item, i) => `
+                                        <div class="detail-item" style="border-left-color: #34a853; background: #e6f4ea;">${i + 1}. ${item}</div>
+                                    `).join('')}
+                                </div>
+                            `;
+                        }
+                        return '';
+                    })()}
+
                     ${meeting.agenda && meeting.agenda.length > 0 ? `
                         <div class="detail-section">
                             <h3><i class="fas fa-list"></i> 회의 안건</h3>

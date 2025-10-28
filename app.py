@@ -281,6 +281,14 @@ def api_meetings():
                         else:
                             participants_data = [meeting.participants]
             
+            # Parse meeting_notes
+            meeting_notes_data = {}
+            if meeting.meeting_notes:
+                try:
+                    meeting_notes_data = json.loads(meeting.meeting_notes)
+                except:
+                    pass
+
             meeting_data = {
                 'id': meeting.id,
                 'title': meeting.title,
@@ -290,7 +298,8 @@ def api_meetings():
                 'agenda': agenda_data,
                 'key_decisions': meeting.key_decisions if meeting.key_decisions else [],
                 'action_items': meeting.action_items if meeting.action_items else [],
-                'participants': participants_data
+                'participants': participants_data,
+                'meeting_notes': meeting_notes_data
             }
             meeting_list.append(meeting_data)
         
