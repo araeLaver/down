@@ -25,7 +25,9 @@
       "Bash(dir:*)",
       "WebFetch(domain:anonymous-kylen-untab-d30cd097.koyeb.app)",
       "Bash(where ngrok)",
-      "Bash(start http://localhost:5000/meetings)"
+      "Bash(start http://localhost:5000/meetings)",
+      "Bash(tasklist:*)",
+      "Bash(nul)"
     ],
     "deny": [],
     "ask": []
