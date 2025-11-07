@@ -17,6 +17,7 @@ from database_setup import (
     SuggestionFeedback, SCHEMA_NAME, initialize_database
 )
 from business_monitor import QhyxBusinessMonitor
+from continuous_business_discovery import ContinuousBusinessDiscovery
 
 app = Flask(__name__)
 CORS(app, origins=["https://anonymous-kylen-untab-d30cd097.koyeb.app"])
@@ -786,6 +787,69 @@ def api_status():
     finally:
         session.close()
 
+@app.route('/business-discovery')
+def business_discovery():
+    """사업 발굴 대시보드 페이지"""
+    return render_template('business_discovery.html')
+
+@app.route('/api/discovered-businesses')
+def api_discovered_businesses():
+    """자동 발굴된 사업 목록 API"""
+    session = Session()
+    try:
+        # 최근 발굴된 사업
+        businesses = session.query(BusinessPlan).filter(
+            BusinessPlan.created_by == 'AI_Discovery_System',
+            BusinessPlan.status == 'approved'
+        ).order_by(BusinessPlan.created_at.desc()).limit(50).all()
+
+        business_list = []
+        for biz in businesses:
+            details = biz.details if isinstance(biz.details, dict) else {}
+
+            business_list.append({
+                'id': biz.id,
+                'name': biz.plan_name,
+                'type': biz.plan_type,
+                'score': details.get('analysis_score', 0),
+                'feasibility': biz.feasibility_score,
+                'revenue_12m': biz.projected_revenue_12m,
+                'investment': biz.investment_required,
+                'risk': biz.risk_level,
+                'priority': biz.priority,
+                'created_at': biz.created_at.strftime('%Y-%m-%d %H:%M') if biz.created_at else None,
+                'description': biz.description,
+                'revenue_model': biz.revenue_model,
+                'details': details
+            })
+
+        # 통계
+        today = datetime.utcnow().date()
+        today_count = session.query(BusinessPlan).filter(
+            BusinessPlan.created_by == 'AI_Discovery_System',
+            BusinessPlan.created_at >= today
+        ).count()
+
+        week_ago = datetime.utcnow() - timedelta(days=7)
+        week_count = session.query(BusinessPlan).filter(
+            BusinessPlan.created_by == 'AI_Discovery_System',
+            BusinessPlan.created_at >= week_ago
+        ).count()
+
+        high_score_count = len([b for b in business_list if b['score'] >= 85])
+
+        return jsonify({
+            'businesses': business_list,
+            'stats': {
+                'total': len(business_list),
+                'today': today_count,
+                'this_week': week_count,
+                'high_score': high_score_count
+            }
+        })
+    finally:
+        session.close()
+
 # 백그라운드 작업
 def background_sync_parser():
     """백그라운드에서 주기적으로 sync.log 파싱"""
@@ -837,6 +901,42 @@ def background_meeting_generator():
             time.sleep(60)
 
 
+def background_business_discovery():
+    """백그라운드에서 지속적으로 사업 발굴"""
+    import logging
+    logging.info("[BACKGROUND] Starting continuous business discovery...")
+    print("[BACKGROUND] Starting continuous business discovery...")
+
+    discovery = ContinuousBusinessDiscovery()
+    last_hour = -1
+
+    while True:
+        try:
+            now = datetime.now()
+            current_hour = now.hour
+            current_minute = now.minute
+
+            # 매시간 정각에 실행
+            if current_minute == 0 and current_hour != last_hour:
+                logging.info(f"[DISCOVERY] Running hourly discovery at {now}")
+                print(f"[DISCOVERY] Running hourly discovery at {now}")
+
+                results = discovery.run_hourly_discovery()
+
+                if results['saved'] > 0:
+                    discovery.generate_discovery_meeting(results)
+
+                last_hour = current_hour
+                time.sleep(60)
+            else:
+                time.sleep(30)
+
+        except Exception as e:
+            logging.error(f"Discovery error: {e}")
+            print(f"Discovery error: {e}")
+            time.sleep(60)
+
+
 # 백그라운드 스레드 자동 시작 (Gunicorn에서도 작동)
 def start_background_threads():
     """백그라운드 스레드 시작"""
@@ -849,6 +949,11 @@ def start_background_threads():
     meeting_thread = Thread(target=background_meeting_generator, daemon=True)
     meeting_thread.start()
     print("[STARTUP] Background meeting generator started")
+
+    # Business discovery thread
+    discovery_thread = Thread(target=background_business_discovery, daemon=True)
+    discovery_thread.start()
+    print("[STARTUP] Background business discovery started")
 
 # Production 환경 (Gunicorn)에서도 백그라운드 스레드 시작
 start_background_threads()
