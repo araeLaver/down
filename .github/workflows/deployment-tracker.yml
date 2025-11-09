@@ -1,0 +1,232 @@
+name: 📊 배포 및 변경사항 추적
+
+on:
+  push:
+    branches: [ master ]
+  workflow_dispatch:
+
+jobs:
+  track-changes:
+    runs-on: ubuntu-latest
+    name: 변경사항 분석 및 기록
+
+    steps:
+    - name: 📥 코드 체크아웃
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 0  # 전체 히스토리 가져오기
+
+    - name: 📊 커밋 정보 분석
+      id: commit-info
+      run: |
+        echo "## 📋 최신 커밋 정보" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+
+        # 커밋 해시
+        COMMIT_SHA=$(git rev-parse HEAD)
+        SHORT_SHA=$(git rev-parse --short HEAD)
+        echo "**커밋 해시:** \`$SHORT_SHA\`" >> $GITHUB_STEP_SUMMARY
+
+        # 커밋 메시지
+        COMMIT_MSG=$(git log -1 --pretty=%B)
+        echo "**커밋 메시지:**" >> $GITHUB_STEP_SUMMARY
+        echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+        echo "$COMMIT_MSG" >> $GITHUB_STEP_SUMMARY
+        echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+
+        # 작성자 정보
+        AUTHOR=$(git log -1 --pretty=format:'%an')
+        DATE=$(git log -1 --pretty=format:'%ad' --date=format:'%Y-%m-%d %H:%M:%S')
+        echo "**작성자:** $AUTHOR" >> $GITHUB_STEP_SUMMARY
+        echo "**날짜:** $DATE" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+
+    - name: 📁 변경된 파일 분석
+      run: |
+        echo "## 📁 변경된 파일" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+
+        # 변경된 파일 목록
+        git diff --name-status HEAD~1 HEAD > changed_files.txt || echo "최초 커밋" > changed_files.txt
+
+        if [ -s changed_files.txt ]; then
+          echo "| 상태 | 파일 경로 |" >> $GITHUB_STEP_SUMMARY
+          echo "|------|-----------|" >> $GITHUB_STEP_SUMMARY
+
+          while IFS=$'\t' read -r status file; do
+            case $status in
+              A) STATUS_ICON="✅ 추가" ;;
+              M) STATUS_ICON="✏️ 수정" ;;
+              D) STATUS_ICON="❌ 삭제" ;;
+              R*) STATUS_ICON="📝 이름변경" ;;
+              *) STATUS_ICON="$status" ;;
+            esac
+            echo "| $STATUS_ICON | \`$file\` |" >> $GITHUB_STEP_SUMMARY
+          done < changed_files.txt
+        else
+          echo "변경된 파일이 없습니다." >> $GITHUB_STEP_SUMMARY
+        fi
+        echo "" >> $GITHUB_STEP_SUMMARY
+
+    - name: 📈 코드 통계
+      run: |
+        echo "## 📈 코드 변경 통계" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+
+        # 변경 통계
+        STATS=$(git diff --shortstat HEAD~1 HEAD 2>/dev/null || echo "통계 없음")
+        echo "**변경 요약:** $STATS" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+
+        # 파일별 상세 통계
+        echo "### 파일별 상세 변경사항" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "| 파일 | 추가 | 삭제 |" >> $GITHUB_STEP_SUMMARY
+        echo "|------|------|------|" >> $GITHUB_STEP_SUMMARY
+
+        git diff --numstat HEAD~1 HEAD 2>/dev/null | while read added deleted file; do
+          if [ "$added" != "-" ] && [ "$deleted" != "-" ]; then
+            echo "| \`$file\` | +$added | -$deleted |" >> $GITHUB_STEP_SUMMARY
+          fi
+        done || echo "| - | - | - |" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+
+    - name: 🔍 Python 파일 분석
+      run: |
+        echo "## 🐍 Python 파일 분석" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+
+        PYTHON_FILES=$(git diff --name-only HEAD~1 HEAD 2>/dev/null | grep '\.py$' || echo "")
+
+        if [ -n "$PYTHON_FILES" ]; then
+          echo "**변경된 Python 파일:**" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          for file in $PYTHON_FILES; do
+            if [ -f "$file" ]; then
+              LINES=$(wc -l < "$file" 2>/dev/null || echo "0")
+              echo "- \`$file\` ($LINES 줄)" >> $GITHUB_STEP_SUMMARY
+            fi
+          done
+        else
+          echo "변경된 Python 파일이 없습니다." >> $GITHUB_STEP_SUMMARY
+        fi
+        echo "" >> $GITHUB_STEP_SUMMARY
+
+    - name: 🎨 템플릿 파일 분석
+      run: |
+        echo "## 🎨 템플릿 파일 분석" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+
+        HTML_FILES=$(git diff --name-only HEAD~1 HEAD 2>/dev/null | grep '\.html$' || echo "")
+
+        if [ -n "$HTML_FILES" ]; then
+          echo "**변경된 HTML 템플릿:**" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          for file in $HTML_FILES; do
+            if [ -f "$file" ]; then
+              LINES=$(wc -l < "$file" 2>/dev/null || echo "0")
+              echo "- \`$file\` ($LINES 줄)" >> $GITHUB_STEP_SUMMARY
+            fi
+          done
+        else
+          echo "변경된 HTML 파일이 없습니다." >> $GITHUB_STEP_SUMMARY
+        fi
+        echo "" >> $GITHUB_STEP_SUMMARY
+
+    - name: 📦 의존성 변경 확인
+      run: |
+        echo "## 📦 의존성 변경 확인" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+
+        if git diff --name-only HEAD~1 HEAD 2>/dev/null | grep -q 'requirements.txt'; then
+          echo "**⚠️ requirements.txt 변경됨**" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "\`\`\`diff" >> $GITHUB_STEP_SUMMARY
+          git diff HEAD~1 HEAD requirements.txt 2>/dev/null | grep -E '^\+|^\-' | grep -v '^\+\+\+\|^\-\-\-' >> $GITHUB_STEP_SUMMARY || echo "변경 없음" >> $GITHUB_STEP_SUMMARY
+          echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+        else
+          echo "의존성 파일 변경 없음" >> $GITHUB_STEP_SUMMARY
+        fi
+        echo "" >> $GITHUB_STEP_SUMMARY
+
+    - name: 🚀 배포 설정 확인
+      run: |
+        echo "## 🚀 배포 설정" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+
+        DEPLOY_FILES_CHANGED=false
+
+        for file in koyeb.yaml Dockerfile Procfile; do
+          if git diff --name-only HEAD~1 HEAD 2>/dev/null | grep -q "$file"; then
+            echo "**⚠️ $file 변경됨**" >> $GITHUB_STEP_SUMMARY
+            DEPLOY_FILES_CHANGED=true
+          fi
+        done
+
+        if [ "$DEPLOY_FILES_CHANGED" = false ]; then
+          echo "배포 설정 파일 변경 없음" >> $GITHUB_STEP_SUMMARY
+        fi
+        echo "" >> $GITHUB_STEP_SUMMARY
+
+    - name: 📝 CHANGELOG 업데이트 확인
+      run: |
+        echo "## 📝 변경 로그" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+
+        if [ -f "CHANGELOG.md" ]; then
+          echo "**CHANGELOG.md 존재:** ✅" >> $GITHUB_STEP_SUMMARY
+
+          if git diff --name-only HEAD~1 HEAD 2>/dev/null | grep -q 'CHANGELOG.md'; then
+            echo "**상태:** 이번 커밋에서 업데이트됨 ✨" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "**상태:** 변경 없음" >> $GITHUB_STEP_SUMMARY
+          fi
+        else
+          echo "**⚠️ CHANGELOG.md 파일이 없습니다**" >> $GITHUB_STEP_SUMMARY
+        fi
+        echo "" >> $GITHUB_STEP_SUMMARY
+
+    - name: 🎯 배포 상태 요약
+      run: |
+        echo "## 🎯 배포 준비 상태" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+
+        # 체크리스트
+        echo "### 체크리스트" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+
+        # Python 파일 체크
+        if ls *.py 1> /dev/null 2>&1; then
+          echo "- ✅ Python 파일 존재" >> $GITHUB_STEP_SUMMARY
+        fi
+
+        # requirements.txt 체크
+        if [ -f "requirements.txt" ]; then
+          DEPS_COUNT=$(wc -l < requirements.txt)
+          echo "- ✅ requirements.txt ($DEPS_COUNT 개 의존성)" >> $GITHUB_STEP_SUMMARY
+        fi
+
+        # Dockerfile 체크
+        if [ -f "Dockerfile" ]; then
+          echo "- ✅ Dockerfile 존재" >> $GITHUB_STEP_SUMMARY
+        fi
+
+        # koyeb.yaml 체크
+        if [ -f "koyeb.yaml" ]; then
+          echo "- ✅ koyeb.yaml 존재" >> $GITHUB_STEP_SUMMARY
+        fi
+
+        # CHANGELOG 체크
+        if [ -f "CHANGELOG.md" ]; then
+          echo "- ✅ CHANGELOG.md 존재" >> $GITHUB_STEP_SUMMARY
+        fi
+
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "---" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "**배포 준비 완료!** 🚀" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "GitHub 커밋: [\`$(git rev-parse --short HEAD)\`](https://github.com/${{ github.repository }}/commit/$(git rev-parse HEAD))" >> $GITHUB_STEP_SUMMARY

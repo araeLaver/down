@@ -1,0 +1,123 @@
+name: 📢 릴리즈 노트 생성
+
+on:
+  push:
+    branches: [ master ]
+    paths:
+      - 'CHANGELOG.md'
+  workflow_dispatch:
+
+jobs:
+  create-release-notes:
+    runs-on: ubuntu-latest
+    name: 릴리즈 노트 자동 생성
+
+    steps:
+    - name: 📥 코드 체크아웃
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+
+    - name: 📋 CHANGELOG 최신 항목 추출
+      id: extract-changelog
+      run: |
+        echo "## 📋 최신 변경사항 (CHANGELOG.md)" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+
+        if [ -f "CHANGELOG.md" ]; then
+          # 최신 버전 섹션 추출 (첫 번째 ## 부터 다음 ## 전까지)
+          LATEST_CHANGES=$(awk '/^## \[2025/{flag=1; next} /^## \[/{flag=0} flag' CHANGELOG.md | head -100)
+
+          if [ -n "$LATEST_CHANGES" ]; then
+            echo "$LATEST_CHANGES" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "최신 변경사항을 찾을 수 없습니다." >> $GITHUB_STEP_SUMMARY
+          fi
+        else
+          echo "**⚠️ CHANGELOG.md 파일이 없습니다**" >> $GITHUB_STEP_SUMMARY
+        fi
+        echo "" >> $GITHUB_STEP_SUMMARY
+
+    - name: 🏷️ 버전 태그 생성 (선택적)
+      run: |
+        echo "## 🏷️ 버전 정보" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+
+        # 날짜 기반 버전 (예: v2025.01.09)
+        VERSION="v$(date +%Y.%m.%d)"
+        echo "**제안 버전:** $VERSION" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+
+        # 최근 태그 확인
+        LATEST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "태그 없음")
+        echo "**최근 태그:** $LATEST_TAG" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+
+    - name: 📊 주요 변경사항 요약
+      run: |
+        echo "## 📊 이번 릴리즈 요약" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+
+        # 최근 5개 커밋 메시지
+        echo "### 최근 커밋 (최대 5개)" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+
+        git log -5 --pretty=format:"- **%s** (%ar) by %an" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+
+    - name: 🎨 카테고리별 변경사항
+      run: |
+        echo "## 🎨 카테고리별 변경사항" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+
+        # 최근 10개 커밋에서 카테고리 추출
+        echo "### ✨ 새로운 기능" >> $GITHUB_STEP_SUMMARY
+        git log -10 --pretty=format:"%s" | grep -iE "^(add|new|feat)" | sed 's/^/- /' >> $GITHUB_STEP_SUMMARY || echo "없음" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+
+        echo "### 🔧 개선사항" >> $GITHUB_STEP_SUMMARY
+        git log -10 --pretty=format:"%s" | grep -iE "^(improve|enhance|update|redesign)" | sed 's/^/- /' >> $GITHUB_STEP_SUMMARY || echo "없음" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+
+        echo "### 🐛 버그 수정" >> $GITHUB_STEP_SUMMARY
+        git log -10 --pretty=format:"%s" | grep -iE "^(fix|bugfix)" | sed 's/^/- /' >> $GITHUB_STEP_SUMMARY || echo "없음" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+
+        echo "### 📝 문서화" >> $GITHUB_STEP_SUMMARY
+        git log -10 --pretty=format:"%s" | grep -iE "^(doc|docs)" | sed 's/^/- /' >> $GITHUB_STEP_SUMMARY || echo "없음" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+
+    - name: 📈 프로젝트 통계
+      run: |
+        echo "## 📈 프로젝트 전체 통계" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+
+        # Python 파일 개수
+        PY_COUNT=$(find . -name "*.py" -not -path "./.git/*" | wc -l)
+        echo "**Python 파일:** $PY_COUNT 개" >> $GITHUB_STEP_SUMMARY
+
+        # HTML 템플릿 개수
+        HTML_COUNT=$(find . -name "*.html" -not -path "./.git/*" | wc -l)
+        echo "**HTML 템플릿:** $HTML_COUNT 개" >> $GITHUB_STEP_SUMMARY
+
+        # 총 커밋 수
+        TOTAL_COMMITS=$(git rev-list --count HEAD)
+        echo "**총 커밋 수:** $TOTAL_COMMITS" >> $GITHUB_STEP_SUMMARY
+
+        # 기여자 수
+        CONTRIBUTORS=$(git log --format='%an' | sort -u | wc -l)
+        echo "**기여자 수:** $CONTRIBUTORS" >> $GITHUB_STEP_SUMMARY
+
+        echo "" >> $GITHUB_STEP_SUMMARY
+
+    - name: 🎉 릴리즈 완료
+      run: |
+        echo "---" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "## 🎉 릴리즈 노트 생성 완료!" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "이 정보는 GitHub Actions 요약에서 확인할 수 있습니다." >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "**배포 일시:** $(date '+%Y-%m-%d %H:%M:%S')" >> $GITHUB_STEP_SUMMARY
+        echo "**GitHub:** https://github.com/${{ github.repository }}" >> $GITHUB_STEP_SUMMARY

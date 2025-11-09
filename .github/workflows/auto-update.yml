@@ -1,4 +1,4 @@
-name: 자동 업데이트
+name: 📅 자동 업데이트 (일일)
 
 on:
   schedule:
@@ -8,27 +8,100 @@ on:
     # 수동 실행 가능
 
 jobs:
-  update-readme:
+  daily-update:
     runs-on: ubuntu-latest
-    
+    name: 일일 자동 업데이트 및 리포트
+
     steps:
-    - name: 체크아웃
+    - name: 📥 체크아웃
       uses: actions/checkout@v3
-      
-    - name: README 업데이트 날짜 갱신
+      with:
+        fetch-depth: 0
+
+    - name: 📊 일일 활동 요약
       run: |
-        # 현재 날짜로 README.md의 마지막 업데이트 날짜 변경
+        echo "## 📊 일일 프로젝트 활동 요약" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "**날짜:** $(date '+%Y-%m-%d %H:%M:%S')" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+
+        # 오늘 커밋 수
+        TODAY=$(date '+%Y-%m-%d')
+        TODAY_COMMITS=$(git log --since="$TODAY 00:00:00" --until="$TODAY 23:59:59" --oneline | wc -l)
+        echo "**오늘 커밋 수:** $TODAY_COMMITS" >> $GITHUB_STEP_SUMMARY
+
+        # 최근 3개 커밋
+        if [ $TODAY_COMMITS -gt 0 ]; then
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### 최근 커밋" >> $GITHUB_STEP_SUMMARY
+          git log --since="$TODAY 00:00:00" -3 --pretty=format:"- **%s** (%ar)" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+        fi
+
+        # 변경된 파일 수
+        if [ $TODAY_COMMITS -gt 0 ]; then
+          CHANGED_FILES=$(git log --since="$TODAY 00:00:00" --name-only --pretty=format: | sort -u | grep -v '^$' | wc -l)
+          echo "**변경된 파일:** $CHANGED_FILES 개" >> $GITHUB_STEP_SUMMARY
+        fi
+        echo "" >> $GITHUB_STEP_SUMMARY
+
+    - name: 📝 README 업데이트 날짜 갱신
+      run: |
         current_date=$(date '+%Y-%m-%d')
-        sed -i "s/마지막 업데이트: [0-9-]*/마지막 업데이트: $current_date/" README.md
-        
-    - name: 변경사항 커밋
+
+        if [ -f "README.md" ]; then
+          sed -i "s/마지막 업데이트: [0-9-]*/마지막 업데이트: $current_date/" README.md
+          echo "✅ README.md 날짜 업데이트: $current_date" >> $GITHUB_STEP_SUMMARY
+        else
+          echo "⚠️ README.md 파일이 없습니다" >> $GITHUB_STEP_SUMMARY
+        fi
+        echo "" >> $GITHUB_STEP_SUMMARY
+
+    - name: 📈 프로젝트 건강도 체크
+      run: |
+        echo "## 📈 프로젝트 건강도" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+
+        # Python 파일 체크
+        if ls *.py 1> /dev/null 2>&1; then
+          PY_COUNT=$(find . -name "*.py" -not -path "./.git/*" | wc -l)
+          echo "- ✅ Python 파일: $PY_COUNT 개" >> $GITHUB_STEP_SUMMARY
+        fi
+
+        # requirements.txt 체크
+        if [ -f "requirements.txt" ]; then
+          DEPS=$(wc -l < requirements.txt)
+          echo "- ✅ 의존성: $DEPS 개" >> $GITHUB_STEP_SUMMARY
+        fi
+
+        # CHANGELOG 체크
+        if [ -f "CHANGELOG.md" ]; then
+          echo "- ✅ CHANGELOG.md 존재" >> $GITHUB_STEP_SUMMARY
+        else
+          echo "- ⚠️ CHANGELOG.md 없음" >> $GITHUB_STEP_SUMMARY
+        fi
+
+        # 배포 설정 체크
+        if [ -f "Dockerfile" ] && [ -f "koyeb.yaml" ]; then
+          echo "- ✅ 배포 설정 완료" >> $GITHUB_STEP_SUMMARY
+        fi
+
+        echo "" >> $GITHUB_STEP_SUMMARY
+
+    - name: 💾 변경사항 커밋
       run: |
         git config --local user.email "action@github.com"
-        git config --local user.name "GitHub Action"
+        git config --local user.name "GitHub Action Bot"
         git add README.md
+
         if git diff --staged --quiet; then
-          echo "변경사항 없음"
+          echo "## 📌 결과" >> $GITHUB_STEP_SUMMARY
+          echo "변경사항 없음 - 커밋 스킵" >> $GITHUB_STEP_SUMMARY
         else
-          git commit -m "자동 업데이트: README.md 날짜 갱신 (${{ github.run_number }})"
+          COMMIT_MSG="📅 자동 업데이트: $(date '+%Y-%m-%d') 일일 리포트 #${{ github.run_number }}"
+          git commit -m "$COMMIT_MSG"
           git push
+
+          echo "## ✅ 커밋 완료" >> $GITHUB_STEP_SUMMARY
+          echo "**메시지:** $COMMIT_MSG" >> $GITHUB_STEP_SUMMARY
         fi
