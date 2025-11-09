@@ -18,6 +18,10 @@ from database_setup import (
 )
 from business_monitor import QhyxBusinessMonitor
 from continuous_business_discovery import ContinuousBusinessDiscovery
+from business_discovery_history import (
+    BusinessDiscoveryHistory, BusinessAnalysisSnapshot,
+    BusinessInsight, BusinessHistoryTracker, initialize_history_tables
+)
 
 app = Flask(__name__)
 CORS(app, origins=["https://anonymous-kylen-untab-d30cd097.koyeb.app"])
@@ -37,6 +41,7 @@ Session = sessionmaker(bind=engine)
 # 데이터베이스 초기화
 try:
     initialize_database()
+    initialize_history_tables()
 except Exception as e:
     print(f"Database initialization warning: {e}")
 
@@ -792,6 +797,11 @@ def business_discovery():
     """사업 발굴 대시보드 페이지"""
     return render_template('business_discovery.html')
 
+@app.route('/business-history')
+def business_history():
+    """사업 발굴 히스토리 & 분석 대시보드"""
+    return render_template('business_history.html')
+
 @app.route('/api/discovered-businesses')
 def api_discovered_businesses():
     """자동 발굴된 사업 목록 API"""
@@ -850,7 +860,220 @@ def api_discovered_businesses():
     finally:
         session.close()
 
-# 백그라운드 작업
+# ==================== 사업 발굴 히스토리 API ====================
+
+@app.route('/api/business-history/stats')
+def api_business_history_stats():
+    """히스토리 통계 API"""
+    session = Session()
+    try:
+        days = int(request.args.get('days', 7))
+        tracker = BusinessHistoryTracker()
+        stats = tracker.get_history_stats(days=days)
+        return jsonify(stats)
+    finally:
+        session.close()
+
+@app.route('/api/business-history/list')
+def api_business_history_list():
+    """전체 히스토리 목록 API"""
+    session = Session()
+    try:
+        # 필터 파라미터
+        period = request.args.get('period', '24h')
+        score_filter = request.args.get('score', 'all')
+        category_filter = request.args.get('category', 'all')
+        search = request.args.get('search', '')
+        limit = int(request.args.get('limit', 100))
+
+        # 기간 필터
+        from datetime import datetime, timedelta
+        now = datetime.utcnow()
+        if period == '24h':
+            start_date = now - timedelta(hours=24)
+        elif period == '7d':
+            start_date = now - timedelta(days=7)
+        elif period == '30d':
+            start_date = now - timedelta(days=30)
+        else:
+            start_date = None
+
+        # 쿼리 시작
+        query = session.query(BusinessDiscoveryHistory)
+
+        if start_date:
+            query = query.filter(BusinessDiscoveryHistory.discovered_at >= start_date)
+
+        # 점수 필터
+        if score_filter == '90+':
+            query = query.filter(BusinessDiscoveryHistory.total_score >= 90)
+        elif score_filter == '80-89':
+            query = query.filter(BusinessDiscoveryHistory.total_score >= 80, BusinessDiscoveryHistory.total_score < 90)
+        elif score_filter == '70-79':
+            query = query.filter(BusinessDiscoveryHistory.total_score >= 70, BusinessDiscoveryHistory.total_score < 80)
+        elif score_filter == '60-69':
+            query = query.filter(BusinessDiscoveryHistory.total_score >= 60, BusinessDiscoveryHistory.total_score < 70)
+        elif score_filter == '60-':
+            query = query.filter(BusinessDiscoveryHistory.total_score < 60)
+
+        # 카테고리 필터
+        if category_filter != 'all':
+            query = query.filter(BusinessDiscoveryHistory.category == category_filter)
+
+        # 검색
+        if search:
+            query = query.filter(BusinessDiscoveryHistory.business_name.ilike(f'%{search}%'))
+
+        # 정렬 및 제한
+        histories = query.order_by(BusinessDiscoveryHistory.discovered_at.desc()).limit(limit).all()
+
+        # 결과 변환
+        result = []
+        for h in histories:
+            result.append({
+                'id': h.id,
+                'discovered_at': h.discovered_at.isoformat() if h.discovered_at else None,
+                'business_name': h.business_name,
+                'business_type': h.business_type,
+                'category': h.category,
+                'keyword': h.keyword,
+                'total_score': h.total_score or 0,
+                'market_score': h.market_score or 0,
+                'revenue_score': h.revenue_score or 0,
+                'saved_to_db': h.saved_to_db,
+                'discovery_batch': h.discovery_batch,
+                'analysis_duration_ms': h.analysis_duration_ms
+            })
+
+        return jsonify(result)
+    finally:
+        session.close()
+
+@app.route('/api/business-history/insights')
+def api_business_history_insights():
+    """인사이트 목록 API"""
+    session = Session()
+    try:
+        status = request.args.get('status', 'new')
+        limit = int(request.args.get('limit', 20))
+
+        query = session.query(BusinessInsight)
+
+        if status != 'all':
+            query = query.filter(BusinessInsight.status == status)
+
+        insights = query.order_by(BusinessInsight.created_at.desc()).limit(limit).all()
+
+        result = []
+        for insight in insights:
+            result.append({
+                'id': insight.id,
+                'created_at': insight.created_at.isoformat() if insight.created_at else None,
+                'insight_type': insight.insight_type,
+                'category': insight.category,
+                'title': insight.title,
+                'description': insight.description,
+                'impact_level': insight.impact_level,
+                'confidence_score': insight.confidence_score,
+                'actionable': insight.actionable,
+                'suggested_actions': insight.suggested_actions,
+                'status': insight.status
+            })
+
+        return jsonify(result)
+    finally:
+        session.close()
+
+@app.route('/api/business-history/categories')
+def api_business_history_categories():
+    """카테고리별 분포 API"""
+    session = Session()
+    try:
+        days = int(request.args.get('days', 7))
+        start_date = datetime.utcnow() - timedelta(days=days)
+
+        histories = session.query(BusinessDiscoveryHistory).filter(
+            BusinessDiscoveryHistory.discovered_at >= start_date
+        ).all()
+
+        categories = {}
+        for h in histories:
+            cat = h.category or 'Unknown'
+            categories[cat] = categories.get(cat, 0) + 1
+
+        return jsonify(categories)
+    finally:
+        session.close()
+
+@app.route('/api/business-history/snapshots')
+def api_business_history_snapshots():
+    """스냅샷 목록 API"""
+    session = Session()
+    try:
+        snapshot_type = request.args.get('type', 'hourly')
+        limit = int(request.args.get('limit', 24))
+
+        snapshots = session.query(BusinessAnalysisSnapshot).filter(
+            BusinessAnalysisSnapshot.snapshot_type == snapshot_type
+        ).order_by(BusinessAnalysisSnapshot.snapshot_time.desc()).limit(limit).all()
+
+        result = []
+        for s in snapshots:
+            result.append({
+                'id': s.id,
+                'snapshot_time': s.snapshot_time.isoformat() if s.snapshot_time else None,
+                'snapshot_type': s.snapshot_type,
+                'total_analyzed': s.total_analyzed,
+                'total_saved': s.total_saved,
+                'avg_total_score': s.avg_total_score,
+                'avg_market_score': s.avg_market_score,
+                'avg_revenue_score': s.avg_revenue_score,
+                'category_distribution': s.category_distribution,
+                'score_distribution': s.score_distribution,
+                'top_businesses': s.top_businesses,
+                'trending_keywords': s.trending_keywords
+            })
+
+        return jsonify(result)
+    finally:
+        session.close()
+
+@app.route('/api/business-history/trends')
+def api_business_history_trends():
+    """트렌드 분석 API"""
+    session = Session()
+    try:
+        days = int(request.args.get('days', 30))
+        start_date = datetime.utcnow() - timedelta(days=days)
+
+        # 일별 통계
+        from sqlalchemy import func, cast, Date
+        daily_stats = session.query(
+            cast(BusinessDiscoveryHistory.discovered_at, Date).label('date'),
+            func.count(BusinessDiscoveryHistory.id).label('total'),
+            func.avg(BusinessDiscoveryHistory.total_score).label('avg_score'),
+            func.sum(func.cast(BusinessDiscoveryHistory.saved_to_db, Integer)).label('saved_count')
+        ).filter(
+            BusinessDiscoveryHistory.discovered_at >= start_date
+        ).group_by(
+            cast(BusinessDiscoveryHistory.discovered_at, Date)
+        ).order_by('date').all()
+
+        result = []
+        for stat in daily_stats:
+            result.append({
+                'date': stat.date.isoformat() if stat.date else None,
+                'total': stat.total or 0,
+                'avg_score': round(stat.avg_score, 2) if stat.avg_score else 0,
+                'saved_count': stat.saved_count or 0
+            })
+
+        return jsonify(result)
+    finally:
+        session.close()
+
+# ==================== 백그라운드 작업 ====================
+
 def background_sync_parser():
     """백그라운드에서 주기적으로 sync.log 파싱"""
     while True:

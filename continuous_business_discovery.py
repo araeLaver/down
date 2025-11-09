@@ -12,6 +12,7 @@ sys.path.append(os.path.dirname(__file__))
 from smart_business_system import SmartBusinessSystem
 from realistic_business_generator import RealisticBusinessGenerator
 from database_setup import Session, BusinessPlan, BusinessMeeting, Employee
+from business_discovery_history import BusinessHistoryTracker, initialize_history_tables
 from datetime import datetime, timedelta
 import time
 import logging
@@ -31,14 +32,22 @@ class ContinuousBusinessDiscovery:
         self.smart_system = SmartBusinessSystem()
         self.idea_generator = RealisticBusinessGenerator()
         self.session = Session()
+        self.history_tracker = BusinessHistoryTracker()
+
+        # 히스토리 테이블 초기화
+        try:
+            initialize_history_tables()
+        except Exception as e:
+            print(f"History tables already exist: {e}")
 
         print("="*80)
-        print("🔄 지속적 사업 발굴 시스템 시작")
+        print("🔄 지속적 사업 발굴 시스템 시작 (히스토리 추적 활성화)")
         print("="*80)
         print("매시간 자동으로 IT 사업 아이디어 분석 및 DB 저장")
-        print("80점 이상만 선별하여 실행 가능한 사업으로 등록\n")
+        print("80점 이상만 선별하여 실행 가능한 사업으로 등록")
+        print("✅ 모든 분석 결과를 히스토리에 기록하여 트렌드 분석 가능\n")
 
-        logging.info("Continuous Business Discovery System Started")
+        logging.info("Continuous Business Discovery System Started with History Tracking")
 
     def get_it_business_ideas(self):
         """IT 사업 아이디어 생성"""
@@ -150,10 +159,12 @@ class ContinuousBusinessDiscovery:
             'timeline_weeks': 4
         }
 
-    def analyze_and_save(self, opportunity):
-        """아이디어 분석 및 DB 저장"""
+    def analyze_and_save(self, opportunity, discovery_batch):
+        """아이디어 분석 및 DB 저장 (히스토리 기록 포함)"""
         business = opportunity['business']
         name = business.get('name', '')
+
+        start_time = time.time()
 
         print(f"\n{'='*80}")
         print(f"🔍 분석 중: {name}")
@@ -195,9 +206,62 @@ class ContinuousBusinessDiscovery:
             # 랜덤 변동 (±5점)
             total_score = base_score + random.randint(-5, 5)
 
-            print(f"   예상 점수: {total_score}/100")
+            # 시장/수익 점수 분리 (간략화)
+            market_score = total_score * 0.6 + random.randint(-3, 3)
+            revenue_score = total_score * 0.4 + random.randint(-3, 3)
 
-            # 80점 이상만 DB 저장
+            print(f"   종합 점수: {total_score}/100")
+            print(f"   ㄴ 시장성: {market_score:.1f}/100")
+            print(f"   ㄴ 수익성: {revenue_score:.1f}/100")
+
+            # 분석 시간 계산
+            analysis_duration_ms = int((time.time() - start_time) * 1000)
+
+            # 분석 데이터 구조화
+            market_analysis = {
+                'keyword': keyword,
+                'viability': viability,
+                'difficulty': difficulty,
+                'category': opportunity.get('category', 'IT/디지털')
+            }
+
+            revenue_analysis = {
+                'monthly_revenue_estimate': config['pricing'].get('monthly', config['pricing'].get('one_time', 50000)),
+                'startup_cost': config['budget'],
+                'revenue_model': config['revenue_model']
+            }
+
+            action_plan = None
+            saved_to_db = total_score >= 80
+
+            # 80점 이상이면 실행 계획 생성
+            if saved_to_db:
+                action_plan = {
+                    'week1': '시장 조사 및 MVP 설계',
+                    'week2': '프로토타입 개발',
+                    'week3': '베타 테스트',
+                    'week4': '정식 런칭'
+                }
+
+            # 📊 히스토리에 기록 (모든 분석 결과 저장)
+            self.history_tracker.record_analysis(
+                business_name=name,
+                business_type=config['type'],
+                category=opportunity.get('category', 'IT/디지털'),
+                keyword=keyword,
+                total_score=total_score,
+                market_score=market_score,
+                revenue_score=revenue_score,
+                market_analysis=market_analysis,
+                revenue_analysis=revenue_analysis,
+                action_plan=action_plan,
+                discovery_batch=discovery_batch,
+                saved_to_db=saved_to_db,
+                analysis_duration_ms=analysis_duration_ms,
+                full_analysis=opportunity
+            )
+
+            # 80점 이상만 business_plans 테이블에 저장
             if total_score >= 80:
                 print(f"   ✅ 우수한 아이디어! DB에 저장 중...")
 
@@ -231,6 +295,8 @@ class ContinuousBusinessDiscovery:
                         details={
                             'discovery_date': datetime.now().isoformat(),
                             'analysis_score': total_score,
+                            'market_score': market_score,
+                            'revenue_score': revenue_score,
                             'market_keyword': keyword,
                             'business_type': config['type'],
                             'startup_cost': config['budget'],
@@ -243,23 +309,27 @@ class ContinuousBusinessDiscovery:
                     self.session.add(business_plan)
 
                 self.session.commit()
-                print(f"   💾 DB 저장 완료!")
+                print(f"   💾 business_plans & history 테이블에 저장 완료!")
                 logging.info(f"Saved business idea: {name} (Score: {total_score})")
 
                 return {
                     'saved': True,
                     'name': name,
-                    'score': total_score
+                    'score': total_score,
+                    'market_score': market_score,
+                    'revenue_score': revenue_score
                 }
 
             else:
-                print(f"   ❌ 점수 부족 (80점 미만). 건너뜀.")
-                logging.info(f"Skipped business idea: {name} (Score: {total_score})")
+                print(f"   ❌ 점수 부족 (80점 미만). business_plans 건너뜀 (히스토리만 기록)")
+                logging.info(f"Skipped business_plans but recorded in history: {name} (Score: {total_score})")
 
                 return {
                     'saved': False,
                     'name': name,
-                    'score': total_score
+                    'score': total_score,
+                    'market_score': market_score,
+                    'revenue_score': revenue_score
                 }
 
         except Exception as e:
@@ -272,11 +342,13 @@ class ContinuousBusinessDiscovery:
             }
 
     def run_hourly_discovery(self):
-        """매시간 사업 발굴"""
+        """매시간 사업 발굴 (히스토리 추적 및 인사이트 생성)"""
         now = datetime.now()
+        discovery_batch = now.strftime('%Y-%m-%d-%H')  # 배치 ID
 
         print(f"\n{'='*80}")
         print(f"🕐 {now.strftime('%Y-%m-%d %H:%M:%S')} - 사업 발굴 시작")
+        print(f"📦 배치 ID: {discovery_batch}")
         print(f"{'='*80}\n")
 
         # IT 사업 아이디어 생성
@@ -288,7 +360,7 @@ class ContinuousBusinessDiscovery:
 
         for i, idea in enumerate(it_ideas, 1):
             print(f"\n[{i}/{len(it_ideas)}]")
-            result = self.analyze_and_save(idea)
+            result = self.analyze_and_save(idea, discovery_batch)
             results.append(result)
 
             if result.get('saved'):
@@ -305,10 +377,31 @@ class ContinuousBusinessDiscovery:
         print(f"저장: {saved_count}개 (80점 이상)")
         print(f"제외: {len(it_ideas) - saved_count}개\n")
 
+        # 📸 시간별 스냅샷 생성
+        print(f"📸 시간별 스냅샷 생성 중...")
+        try:
+            snapshot_id = self.history_tracker.create_snapshot(snapshot_type='hourly')
+            if snapshot_id:
+                print(f"   ✅ 스냅샷 생성 완료 (ID: {snapshot_id})")
+        except Exception as e:
+            print(f"   ⚠️  스냅샷 생성 실패: {e}")
+
+        # 💡 인사이트 생성
+        print(f"💡 인사이트 분석 중...")
+        try:
+            insight_count = self.history_tracker.generate_insights()
+            if insight_count > 0:
+                print(f"   ✅ {insight_count}개 인사이트 생성")
+            else:
+                print(f"   ℹ️  새로운 인사이트 없음")
+        except Exception as e:
+            print(f"   ⚠️  인사이트 생성 실패: {e}")
+
         logging.info(f"Hourly discovery completed: {saved_count}/{len(it_ideas)} saved")
 
         return {
             'timestamp': now.isoformat(),
+            'batch_id': discovery_batch,
             'analyzed': len(it_ideas),
             'saved': saved_count,
             'results': results
