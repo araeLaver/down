@@ -412,6 +412,7 @@
             <div class="tab" onclick="switchTab('insights')">💡 인사이트</div>
             <div class="tab" onclick="switchTab('categories')">🏷️ 카테고리 분석</div>
             <div class="tab" onclick="switchTab('timeline')">⏱️ 시간대별 분석</div>
+            <div class="tab" onclick="switchTab('lowscore')">⚠️ 저점수 사업 (60점 미만)</div>
         </div>
 
         <!-- 종합 개요 탭 -->
@@ -539,6 +540,53 @@
             <div class="chart-container">
                 <div class="chart-title">시간대별 평균 점수</div>
                 <canvas id="hourly-chart"></canvas>
+            </div>
+        </div>
+
+        <!-- 저점수 사업 탭 (60점 미만) -->
+        <div id="lowscore" class="tab-content">
+            <div class="stats-grid" id="lowscore-stats-grid">
+                <div class="stat-card">
+                    <div class="stat-value" id="lowscore-total">-</div>
+                    <div class="stat-label">총 저점수 사업</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="lowscore-avg">-</div>
+                    <div class="stat-label">평균 점수</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="lowscore-improvement">-</div>
+                    <div class="stat-label">개선 가능성 (%)</div>
+                </div>
+            </div>
+
+            <div class="filter-bar" style="margin-bottom: 20px;">
+                <select id="lowscore-reason-filter" onchange="loadLowScoreBusinesses()">
+                    <option value="all">모든 실패 원인</option>
+                    <option value="low_market">시장성 부족</option>
+                    <option value="low_revenue">수익성 부족</option>
+                    <option value="both">시장성+수익성 모두 부족</option>
+                </select>
+                <select id="lowscore-category-filter" onchange="loadLowScoreBusinesses()">
+                    <option value="all">모든 카테고리</option>
+                </select>
+            </div>
+
+            <div class="section">
+                <h2>📉 실패 원인 분포</h2>
+                <div id="failure-distribution" class="chart-container" style="height: 300px;">
+                    <canvas id="failure-chart"></canvas>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>⚠️ 60점 미만 사업 목록</h2>
+                <div id="lowscore-businesses-list"></div>
+            </div>
+
+            <div class="section">
+                <h2>💡 개선 인사이트</h2>
+                <div id="improvement-insights"></div>
             </div>
         </div>
     </div>
@@ -728,6 +776,206 @@
             console.log('Applying filters:', {period, score, category, search});
             loadHistory();
         }
+
+        // 저점수 사업 통계 로드
+        async function loadLowScoreStats() {
+            try {
+                const response = await fetch('/api/low-score-businesses/stats?days=7');
+                const data = await response.json();
+
+                document.getElementById('lowscore-total').textContent = data.total_low_score || 0;
+                document.getElementById('lowscore-avg').textContent = data.avg_score || 0;
+                document.getElementById('lowscore-improvement').textContent = data.improvement_rate || 0;
+
+                // 실패 원인 분포 차트
+                if (data.failure_distribution) {
+                    const ctx = document.getElementById('failure-chart');
+                    if (ctx) {
+                        new Chart(ctx, {
+                            type: 'pie',
+                            data: {
+                                labels: ['시장성 부족', '수익성 부족', '모두 부족'],
+                                datasets: [{
+                                    data: [
+                                        data.failure_distribution.low_market || 0,
+                                        data.failure_distribution.low_revenue || 0,
+                                        data.failure_distribution.both || 0
+                                    ],
+                                    backgroundColor: ['#f59e0b', '#ef4444', '#dc2626']
+                                }]
+                            },
+                            options: {
+                                responsive: true,
+                                maintainAspectRatio: false
+                            }
+                        });
+                    }
+                }
+
+                // 카테고리 필터 옵션 추가
+                const categoryFilter = document.getElementById('lowscore-category-filter');
+                if (data.category_failures) {
+                    Object.keys(data.category_failures).forEach(cat => {
+                        const option = document.createElement('option');
+                        option.value = cat;
+                        option.textContent = `${cat} (${data.category_failures[cat]})`;
+                        categoryFilter.appendChild(option);
+                    });
+                }
+
+            } catch (error) {
+                console.error('Failed to load low score stats:', error);
+            }
+        }
+
+        // 저점수 사업 목록 로드
+        async function loadLowScoreBusinesses() {
+            const reasonFilter = document.getElementById('lowscore-reason-filter').value;
+            const categoryFilter = document.getElementById('lowscore-category-filter').value;
+
+            try {
+                const response = await fetch(`/api/low-score-businesses/list?days=7&failure_reason=${reasonFilter}&category=${categoryFilter}`);
+                const data = await response.json();
+
+                const list = document.getElementById('lowscore-businesses-list');
+                list.innerHTML = '';
+
+                if (data.businesses && data.businesses.length > 0) {
+                    data.businesses.forEach(biz => {
+                        const card = document.createElement('div');
+                        card.className = 'history-card';
+
+                        const reasonBadge = biz.failure_reason === 'both' ? '시장+수익 부족' :
+                                          biz.failure_reason === 'low_market' ? '시장성 부족' : '수익성 부족';
+                        const reasonColor = biz.failure_reason === 'both' ? '#dc2626' :
+                                          biz.failure_reason === 'low_market' ? '#f59e0b' : '#ef4444';
+
+                        card.innerHTML = `
+                            <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 10px;">
+                                <div>
+                                    <strong style="font-size: 18px;">${biz.business_name}</strong>
+                                    <div style="color: #6b7280; margin-top: 5px;">
+                                        ${biz.category} | ${biz.keyword}
+                                    </div>
+                                </div>
+                                <div style="text-align: right;">
+                                    <div style="font-size: 24px; font-weight: bold; color: #ef4444;">${biz.total_score}</div>
+                                    <span style="background: ${reasonColor}; color: white; padding: 4px 8px; border-radius: 5px; font-size: 12px;">
+                                        ${reasonBadge}
+                                    </span>
+                                </div>
+                            </div>
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 15px 0;">
+                                <div>
+                                    <div style="color: #6b7280; font-size: 12px;">시장성</div>
+                                    <div style="font-weight: bold; color: ${biz.market_score < 60 ? '#ef4444' : '#10b981'};">
+                                        ${biz.market_score.toFixed(1)}
+                                    </div>
+                                </div>
+                                <div>
+                                    <div style="color: #6b7280; font-size: 12px;">수익성</div>
+                                    <div style="font-weight: bold; color: ${biz.revenue_score < 60 ? '#ef4444' : '#10b981'};">
+                                        ${biz.revenue_score.toFixed(1)}
+                                    </div>
+                                </div>
+                            </div>
+                            ${biz.improvement_suggestions && biz.improvement_suggestions.length > 0 ? `
+                                <div style="background: #fef3c7; padding: 10px; border-radius: 8px; margin-top: 10px;">
+                                    <strong style="color: #92400e;">💡 개선 제안:</strong>
+                                    <ul style="margin: 5px 0 0 20px; color: #92400e;">
+                                        ${biz.improvement_suggestions.map(s => `<li>${s.suggestion}</li>`).join('')}
+                                    </ul>
+                                </div>
+                            ` : ''}
+                            <div style="margin-top: 10px; font-size: 12px; color: #9ca3af;">
+                                ${new Date(biz.created_at).toLocaleString('ko-KR')} | 분석 시간: ${biz.analysis_duration_ms}ms
+                            </div>
+                        `;
+
+                        list.appendChild(card);
+                    });
+                } else {
+                    list.innerHTML = '<div class="loading">저점수 사업이 없습니다.</div>';
+                }
+
+                // 개선 인사이트 표시
+                displayImprovementInsights(data.businesses);
+
+            } catch (error) {
+                console.error('Failed to load low score businesses:', error);
+            }
+        }
+
+        // 개선 인사이트 표시
+        function displayImprovementInsights(businesses) {
+            const container = document.getElementById('improvement-insights');
+            container.innerHTML = '';
+
+            // 공통 문제 패턴 분석
+            const marketIssues = businesses.filter(b => b.market_score < 60).length;
+            const revenueIssues = businesses.filter(b => b.revenue_score < 60).length;
+
+            const insights = [];
+
+            if (marketIssues > revenueIssues) {
+                insights.push({
+                    type: 'warning',
+                    title: '시장성 문제가 주요 원인',
+                    description: `전체 ${businesses.length}개 중 ${marketIssues}개가 시장성 부족으로 낮은 점수를 받았습니다.`,
+                    action: '더 니치한 시장을 타겟하거나, 검증된 시장의 사업 모델을 선택하세요.'
+                });
+            } else if (revenueIssues > marketIssues) {
+                insights.push({
+                    type: 'danger',
+                    title: '수익성 문제가 주요 원인',
+                    description: `전체 ${businesses.length}개 중 ${revenueIssues}개가 수익성 부족으로 낮은 점수를 받았습니다.`,
+                    action: '가격 전략을 재검토하거나, 운영 비용을 최적화하세요.'
+                });
+            }
+
+            // 50점 이상 사업 (개선 가능성 높음)
+            const improvable = businesses.filter(b => b.total_score >= 50);
+            if (improvable.length > 0) {
+                insights.push({
+                    type: 'success',
+                    title: `${improvable.length}개 사업은 개선 가능`,
+                    description: '50점 이상의 사업은 약간의 개선으로 60점을 넘길 수 있습니다.',
+                    action: '개선 제안을 참고하여 사업 모델을 수정해보세요.'
+                });
+            }
+
+            insights.forEach(insight => {
+                const card = document.createElement('div');
+                card.className = 'insight-card';
+                card.innerHTML = `
+                    <div style="display: flex; gap: 15px;">
+                        <div style="font-size: 32px;">💡</div>
+                        <div style="flex: 1;">
+                            <h3 style="margin: 0 0 8px 0;">${insight.title}</h3>
+                            <p style="margin: 0 0 8px 0; color: #6b7280;">${insight.description}</p>
+                            <div style="background: #e0e7ff; padding: 10px; border-radius: 8px; border-left: 4px solid #6366f1;">
+                                <strong>실행 제안:</strong> ${insight.action}
+                            </div>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+
+            if (insights.length === 0) {
+                container.innerHTML = '<div class="loading">개선 인사이트가 없습니다.</div>';
+            }
+        }
+
+        // 탭 전환 시 저점수 데이터 로드
+        const originalSwitchTab = switchTab;
+        switchTab = function(tabName) {
+            originalSwitchTab.call(this, tabName);
+            if (tabName === 'lowscore') {
+                loadLowScoreStats();
+                loadLowScoreBusinesses();
+            }
+        };
     </script>
 </body>
 </html>

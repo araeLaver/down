@@ -261,8 +261,47 @@ class ContinuousBusinessDiscovery:
                 full_analysis=opportunity
             )
 
+            # 60점 미만이면 low_score_businesses 테이블에 저장
+            if total_score < 60:
+                # 실패 원인 판단
+                if market_score < 60 and revenue_score < 60:
+                    failure_reason = 'both'
+                elif market_score < 60:
+                    failure_reason = 'low_market'
+                else:
+                    failure_reason = 'low_revenue'
+
+                self.history_tracker.save_low_score_business(
+                    business_name=name,
+                    business_type=config['type'],
+                    category=opportunity.get('category', 'IT/디지털'),
+                    keyword=keyword,
+                    total_score=total_score,
+                    market_score=market_score,
+                    revenue_score=revenue_score,
+                    failure_reason=failure_reason,
+                    market_analysis=market_analysis,
+                    revenue_analysis=revenue_analysis,
+                    discovery_batch=discovery_batch,
+                    analysis_duration_ms=analysis_duration_ms,
+                    full_data=opportunity
+                )
+
+                print(f"   ⚠️  저점수 사업 (60점 미만). low_score_businesses 테이블에 저장 (개선 분석용)")
+                logging.info(f"Saved to low_score_businesses: {name} (Score: {total_score}, Reason: {failure_reason})")
+
+                return {
+                    'saved': False,
+                    'low_score_saved': True,
+                    'name': name,
+                    'score': total_score,
+                    'market_score': market_score,
+                    'revenue_score': revenue_score,
+                    'failure_reason': failure_reason
+                }
+
             # 80점 이상만 business_plans 테이블에 저장
-            if total_score >= 80:
+            elif total_score >= 80:
                 print(f"   ✅ 우수한 아이디어! DB에 저장 중...")
 
                 # 사업 계획으로 DB에 저장

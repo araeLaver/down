@@ -157,6 +157,50 @@ class BusinessComparisonLog(Base):
     recommendations = Column(JSON)
 
 
+class LowScoreBusiness(Base):
+    """60점 미만 사업 아이디어 (학습 및 개선 목적)"""
+    __tablename__ = 'low_score_businesses'
+    __table_args__ = {'schema': SCHEMA_NAME, 'extend_existing': True}
+
+    id = Column(Integer, primary_key=True)
+    created_at = Column(DateTime, default=datetime.utcnow, nullable=False, index=True)
+
+    # 사업 기본 정보
+    business_name = Column(String(300), nullable=False)
+    business_type = Column(String(100), index=True)
+    category = Column(String(100), index=True)
+    keyword = Column(String(200), index=True)
+
+    # 점수 정보
+    total_score = Column(Float, index=True)
+    market_score = Column(Float, index=True)
+    revenue_score = Column(Float, index=True)
+
+    # 실패 원인
+    failure_reason = Column(String(100), index=True)  # 'low_market', 'low_revenue', 'both'
+
+    # 시장/수익 분석 데이터
+    market_analysis = Column(JSON)
+    revenue_analysis = Column(JSON)
+
+    # 개선 제안
+    improvement_suggestions = Column(JSON)  # AI가 분석한 개선 방향
+
+    # 메타 정보
+    discovery_batch = Column(String(50), index=True)
+    analysis_duration_ms = Column(Integer)
+
+    # 원본 데이터
+    full_data = Column(JSON)
+
+    __table_args__ = (
+        Index('idx_low_score_date', 'created_at'),
+        Index('idx_low_score_reason', 'failure_reason'),
+        Index('idx_low_score_category', 'category', 'total_score'),
+        {'schema': SCHEMA_NAME, 'extend_existing': True}
+    )
+
+
 # 히스토리 관리 클래스
 class BusinessHistoryTracker:
     def __init__(self):
@@ -388,6 +432,92 @@ class BusinessHistoryTracker:
 
         return len(insights)
 
+    def save_low_score_business(self, business_name, business_type, category, keyword,
+                                total_score, market_score, revenue_score,
+                                failure_reason, market_analysis, revenue_analysis,
+                                discovery_batch, analysis_duration_ms, full_data):
+        """60점 미만 사업을 별도 테이블에 저장"""
+
+        # AI 개선 제안 생성
+        improvement_suggestions = self._generate_improvement_suggestions(
+            failure_reason, market_score, revenue_score, category
+        )
+
+        low_score = LowScoreBusiness(
+            business_name=business_name,
+            business_type=business_type,
+            category=category,
+            keyword=keyword,
+            total_score=total_score,
+            market_score=market_score,
+            revenue_score=revenue_score,
+            failure_reason=failure_reason,
+            market_analysis=market_analysis,
+            revenue_analysis=revenue_analysis,
+            improvement_suggestions=improvement_suggestions,
+            discovery_batch=discovery_batch,
+            analysis_duration_ms=analysis_duration_ms,
+            full_data=full_data
+        )
+
+        self.session.add(low_score)
+        self.session.commit()
+
+        return low_score.id
+
+    def _generate_improvement_suggestions(self, failure_reason, market_score, revenue_score, category):
+        """개선 제안 생성"""
+        suggestions = []
+
+        if failure_reason in ['low_market', 'both']:
+            if market_score < 30:
+                suggestions.append({
+                    'area': 'market',
+                    'severity': 'critical',
+                    'suggestion': '시장 수요가 매우 낮습니다. 타겟 고객층을 재정의하거나 다른 카테고리를 고려하세요.'
+                })
+            elif market_score < 45:
+                suggestions.append({
+                    'area': 'market',
+                    'severity': 'high',
+                    'suggestion': '경쟁이 치열하거나 시장이 작습니다. 니치 마켓을 찾거나 차별화 전략이 필요합니다.'
+                })
+            else:
+                suggestions.append({
+                    'area': 'market',
+                    'severity': 'medium',
+                    'suggestion': '시장성이 경계선입니다. 마케팅 전략을 강화하면 개선 가능합니다.'
+                })
+
+        if failure_reason in ['low_revenue', 'both']:
+            if revenue_score < 30:
+                suggestions.append({
+                    'area': 'revenue',
+                    'severity': 'critical',
+                    'suggestion': '수익 모델이 약합니다. 가격 전략 재검토 또는 비용 구조 개선이 필요합니다.'
+                })
+            elif revenue_score < 45:
+                suggestions.append({
+                    'area': 'revenue',
+                    'severity': 'high',
+                    'suggestion': '초기 투자 대비 수익성이 낮습니다. ROI 개선 방안을 찾아야 합니다.'
+                })
+            else:
+                suggestions.append({
+                    'area': 'revenue',
+                    'severity': 'medium',
+                    'suggestion': '수익성이 경계선입니다. 운영 비용 최적화로 개선 가능합니다.'
+                })
+
+        # 카테고리별 추가 제안
+        suggestions.append({
+            'area': 'strategy',
+            'severity': 'info',
+            'suggestion': f'{category} 카테고리에서 성공한 유사 사업 모델을 벤치마킹하세요.'
+        })
+
+        return suggestions
+
     def get_history_stats(self, days=7):
         """히스토리 통계"""
         start_date = datetime.utcnow() - timedelta(days=days)
@@ -406,6 +536,39 @@ class BusinessHistoryTracker:
                 'end': datetime.utcnow().strftime('%Y-%m-%d')
             }
         }
+
+    def get_low_score_stats(self, days=7):
+        """60점 미만 사업 통계"""
+        start_date = datetime.utcnow() - timedelta(days=days)
+
+        low_scores = self.session.query(LowScoreBusiness).filter(
+            LowScoreBusiness.created_at >= start_date
+        ).all()
+
+        # 실패 원인별 분포
+        failure_dist = {}
+        for ls in low_scores:
+            reason = ls.failure_reason or 'unknown'
+            failure_dist[reason] = failure_dist.get(reason, 0) + 1
+
+        # 카테고리별 실패율
+        category_failures = {}
+        for ls in low_scores:
+            cat = ls.category or 'Unknown'
+            category_failures[cat] = category_failures.get(cat, 0) + 1
+
+        return {
+            'total_low_score': len(low_scores),
+            'avg_score': round(sum(ls.total_score for ls in low_scores if ls.total_score) / len(low_scores), 2) if low_scores else 0,
+            'failure_distribution': failure_dist,
+            'category_failures': dict(sorted(category_failures.items(), key=lambda x: x[1], reverse=True)[:5]),
+            'improvement_rate': self._calculate_improvement_rate(low_scores)
+        }
+
+    def _calculate_improvement_rate(self, low_scores):
+        """개선 가능성 비율 계산"""
+        near_threshold = sum(1 for ls in low_scores if ls.total_score and ls.total_score >= 50)
+        return round((near_threshold / len(low_scores) * 100), 1) if low_scores else 0
 
 
 def initialize_history_tables():

@@ -1072,6 +1072,105 @@ def api_business_history_trends():
     finally:
         session.close()
 
+
+@app.route('/api/low-score-businesses/list')
+def api_low_score_businesses_list():
+    """60점 미만 사업 목록 API"""
+    from business_discovery_history import LowScoreBusiness
+    session = Session()
+    try:
+        # 필터 파라미터
+        days = int(request.args.get('days', 7))
+        failure_reason = request.args.get('failure_reason', 'all')
+        category = request.args.get('category', 'all')
+        limit = int(request.args.get('limit', 50))
+
+        start_date = datetime.utcnow() - timedelta(days=days)
+
+        query = session.query(LowScoreBusiness).filter(
+            LowScoreBusiness.created_at >= start_date
+        )
+
+        if failure_reason != 'all':
+            query = query.filter(LowScoreBusiness.failure_reason == failure_reason)
+
+        if category != 'all':
+            query = query.filter(LowScoreBusiness.category == category)
+
+        businesses = query.order_by(
+            LowScoreBusiness.created_at.desc()
+        ).limit(limit).all()
+
+        result = []
+        for biz in businesses:
+            result.append({
+                'id': biz.id,
+                'business_name': biz.business_name,
+                'business_type': biz.business_type,
+                'category': biz.category,
+                'keyword': biz.keyword,
+                'total_score': biz.total_score,
+                'market_score': biz.market_score,
+                'revenue_score': biz.revenue_score,
+                'failure_reason': biz.failure_reason,
+                'improvement_suggestions': biz.improvement_suggestions,
+                'created_at': biz.created_at.isoformat() if biz.created_at else None,
+                'discovery_batch': biz.discovery_batch,
+                'analysis_duration_ms': biz.analysis_duration_ms
+            })
+
+        return jsonify({
+            'total': len(result),
+            'businesses': result
+        })
+    finally:
+        session.close()
+
+
+@app.route('/api/low-score-businesses/stats')
+def api_low_score_businesses_stats():
+    """60점 미만 사업 통계 API"""
+    tracker = BusinessHistoryTracker()
+    try:
+        days = int(request.args.get('days', 7))
+        stats = tracker.get_low_score_stats(days=days)
+        return jsonify(stats)
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+
+@app.route('/api/low-score-businesses/detail/<int:business_id>')
+def api_low_score_business_detail(business_id):
+    """60점 미만 사업 상세 정보 API"""
+    from business_discovery_history import LowScoreBusiness
+    session = Session()
+    try:
+        biz = session.query(LowScoreBusiness).filter_by(id=business_id).first()
+
+        if not biz:
+            return jsonify({'error': 'Business not found'}), 404
+
+        return jsonify({
+            'id': biz.id,
+            'business_name': biz.business_name,
+            'business_type': biz.business_type,
+            'category': biz.category,
+            'keyword': biz.keyword,
+            'total_score': biz.total_score,
+            'market_score': biz.market_score,
+            'revenue_score': biz.revenue_score,
+            'failure_reason': biz.failure_reason,
+            'market_analysis': biz.market_analysis,
+            'revenue_analysis': biz.revenue_analysis,
+            'improvement_suggestions': biz.improvement_suggestions,
+            'created_at': biz.created_at.isoformat() if biz.created_at else None,
+            'discovery_batch': biz.discovery_batch,
+            'analysis_duration_ms': biz.analysis_duration_ms,
+            'full_data': biz.full_data
+        })
+    finally:
+        session.close()
+
 # ==================== 백그라운드 작업 ====================
 
 def background_sync_parser():
