@@ -802,6 +802,16 @@ def business_history():
     """사업 발굴 히스토리 & 분석 대시보드"""
     return render_template('business_history.html')
 
+@app.route('/business-review')
+def business_review():
+    """검토 필요 사업 (60-79점)"""
+    return render_template('business_review.html')
+
+@app.route('/business-rejected')
+def business_rejected():
+    """부적합 사업 (60점 미만)"""
+    return render_template('business_rejected.html')
+
 @app.route('/api/discovered-businesses')
 def api_discovered_businesses():
     """자동 발굴된 사업 목록 API"""
