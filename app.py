@@ -1287,10 +1287,10 @@ def start_background_threads():
     meeting_thread.start()
     print("[STARTUP] Background meeting generator started")
 
-    # Business discovery thread
-    discovery_thread = Thread(target=background_business_discovery, daemon=True)
-    discovery_thread.start()
-    print("[STARTUP] Background business discovery started")
+    # Business discovery thread - 임시 비활성화 (배포 안정화)
+    # discovery_thread = Thread(target=background_business_discovery, daemon=True)
+    # discovery_thread.start()
+    print("[STARTUP] Background business discovery DISABLED (for deployment stability)")
 
 # Production 환경 (Gunicorn)에서도 백그라운드 스레드 시작
 start_background_threads()
