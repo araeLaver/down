@@ -1232,6 +1232,18 @@ def background_business_discovery():
     discovery = ContinuousBusinessDiscovery()
     last_hour = -1
 
+    # 🔥 시작하자마자 즉시 1회 실행
+    try:
+        logging.info("[DISCOVERY] Running initial discovery on startup...")
+        print("[DISCOVERY] Running initial discovery on startup...")
+        results = discovery.run_hourly_discovery()
+        if results['saved'] > 0:
+            discovery.generate_discovery_meeting(results)
+        last_hour = datetime.now().hour
+    except Exception as e:
+        logging.error(f"Initial discovery failed: {e}")
+        print(f"Initial discovery failed: {e}")
+
     while True:
         try:
             now = datetime.now()
