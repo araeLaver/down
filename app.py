@@ -812,6 +812,11 @@ def business_rejected():
     """부적합 사업 (60점 미만)"""
     return render_template('business_rejected.html')
 
+@app.route('/business')
+def business_landing():
+    """사업 분석 랜딩 페이지"""
+    return render_template('business_landing.html')
+
 @app.route('/api/discovered-businesses')
 def api_discovered_businesses():
     """자동 발굴된 사업 목록 API"""
