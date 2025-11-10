@@ -1247,10 +1247,13 @@ def background_business_discovery():
     discovery = ContinuousBusinessDiscovery()
     last_hour = -1
 
-    # 🔥 시작하자마자 즉시 1회 실행
+    # 앱 시작 후 30초 대기 후 첫 실행 (health check 통과 위해)
+    time.sleep(30)
+
+    # 첫 실행
     try:
-        logging.info("[DISCOVERY] Running initial discovery on startup...")
-        print("[DISCOVERY] Running initial discovery on startup...")
+        logging.info("[DISCOVERY] Running first discovery after startup delay...")
+        print("[DISCOVERY] Running first discovery after startup delay...")
         results = discovery.run_hourly_discovery()
         if results['saved'] > 0:
             discovery.generate_discovery_meeting(results)
