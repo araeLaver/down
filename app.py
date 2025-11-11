@@ -817,6 +817,11 @@ def business_landing():
     """사업 분석 랜딩 페이지"""
     return render_template('business_landing.html')
 
+@app.route('/trigger-discovery')
+def trigger_discovery_page():
+    """수동 사업 발굴 페이지"""
+    return render_template('trigger_discovery.html')
+
 @app.route('/api/trigger-discovery')
 def trigger_discovery():
     """수동으로 사업 발굴 트리거 (테스트용)"""

@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>수동 사업 발굴 - Qhyx Inc.</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 600px;
+            width: 100%;
+            background: white;
+            border-radius: 20px;
+            padding: 3rem;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .header h1 {
+            font-size: 2rem;
+            color: #111827;
+            margin-bottom: 0.5rem;
+        }
+
+        .header p {
+            color: #6b7280;
+            font-size: 1rem;
+        }
+
+        .trigger-btn {
+            width: 100%;
+            padding: 1.5rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.25rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-bottom: 1.5rem;
+        }
+
+        .trigger-btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .trigger-btn:disabled {
+            background: #9ca3af;
+            cursor: not-allowed;
+        }
+
+        .status-box {
+            background: #f9fafb;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            display: none;
+        }
+
+        .status-box.show {
+            display: block;
+        }
+
+        .status-title {
+            font-weight: 700;
+            color: #111827;
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+        }
+
+        .status-item {
+            padding: 0.75rem;
+            background: white;
+            border-radius: 8px;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .status-item i {
+            font-size: 1.25rem;
+        }
+
+        .status-item.loading i {
+            color: #6366f1;
+            animation: spin 1s linear infinite;
+        }
+
+        .status-item.success i {
+            color: #10b981;
+        }
+
+        .status-item.error i {
+            color: #ef4444;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .result-box {
+            background: #f0fdf4;
+            border: 2px solid #10b981;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            display: none;
+        }
+
+        .result-box.show {
+            display: block;
+        }
+
+        .result-title {
+            font-weight: 700;
+            color: #065f46;
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+        }
+
+        .result-stat {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #d1fae5;
+        }
+
+        .result-stat:last-child {
+            border-bottom: none;
+        }
+
+        .result-label {
+            color: #047857;
+        }
+
+        .result-value {
+            font-weight: 700;
+            color: #065f46;
+        }
+
+        .nav-buttons {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.75rem;
+        }
+
+        .nav-btn {
+            padding: 1rem;
+            border-radius: 8px;
+            text-decoration: none;
+            text-align: center;
+            font-weight: 600;
+            font-size: 0.875rem;
+            transition: all 0.2s;
+        }
+
+        .nav-btn.excellent {
+            background: #ede9fe;
+            color: #6366f1;
+        }
+
+        .nav-btn.review {
+            background: #fef3c7;
+            color: #f59e0b;
+        }
+
+        .nav-btn.rejected {
+            background: #fee2e2;
+            color: #ef4444;
+        }
+
+        .nav-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 1.5rem;
+            color: #6b7280;
+            text-decoration: none;
+        }
+
+        .back-link:hover {
+            color: #111827;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1><i class="fas fa-robot"></i> 수동 사업 발굴</h1>
+            <p>버튼을 클릭하여 새로운 사업 아이디어를 생성하세요</p>
+        </div>
+
+        <button class="trigger-btn" id="triggerBtn" onclick="runDiscovery()">
+            <i class="fas fa-play-circle"></i> 사업 발굴 시작
+        </button>
+
+        <div class="status-box" id="statusBox">
+            <div class="status-title"><i class="fas fa-tasks"></i> 진행 상황</div>
+            <div id="statusList"></div>
+        </div>
+
+        <div class="result-box" id="resultBox">
+            <div class="result-title"><i class="fas fa-check-circle"></i> 완료!</div>
+            <div class="result-stat">
+                <span class="result-label">분석된 사업</span>
+                <span class="result-value" id="analyzedCount">-</span>
+            </div>
+            <div class="result-stat">
+                <span class="result-label">저장된 사업 (80+)</span>
+                <span class="result-value" id="savedCount">-</span>
+            </div>
+            <div class="result-stat">
+                <span class="result-label">완료 시간</span>
+                <span class="result-value" id="timestamp">-</span>
+            </div>
+        </div>
+
+        <div class="nav-buttons">
+            <a href="/business-discovery" class="nav-btn excellent">
+                <i class="fas fa-trophy"></i><br>80+ 사업
+            </a>
+            <a href="/business-review" class="nav-btn review">
+                <i class="fas fa-clipboard-check"></i><br>60-79 사업
+            </a>
+            <a href="/business-rejected" class="nav-btn rejected">
+                <i class="fas fa-times-circle"></i><br>60미만
+            </a>
+        </div>
+
+        <a href="/business" class="back-link">
+            <i class="fas fa-arrow-left"></i> 메인으로 돌아가기
+        </a>
+    </div>
+
+    <script>
+        function addStatus(message, type = 'loading') {
+            const statusList = document.getElementById('statusList');
+            const iconMap = {
+                'loading': 'fa-spinner',
+                'success': 'fa-check-circle',
+                'error': 'fa-exclamation-circle'
+            };
+
+            const statusItem = document.createElement('div');
+            statusItem.className = `status-item ${type}`;
+            statusItem.innerHTML = `
+                <i class="fas ${iconMap[type]}"></i>
+                <span>${message}</span>
+            `;
+            statusList.appendChild(statusItem);
+            statusList.scrollTop = statusList.scrollHeight;
+        }
+
+        async function runDiscovery() {
+            const btn = document.getElementById('triggerBtn');
+            const statusBox = document.getElementById('statusBox');
+            const resultBox = document.getElementById('resultBox');
+            const statusList = document.getElementById('statusList');
+
+            // 초기화
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 실행 중...';
+            statusBox.classList.add('show');
+            resultBox.classList.remove('show');
+            statusList.innerHTML = '';
+
+            addStatus('사업 발굴 시작...', 'loading');
+            addStatus('5개 IT 사업 아이디어 생성 중...', 'loading');
+
+            try {
+                const response = await fetch('/api/trigger-discovery');
+                const data = await response.json();
+
+                if (data.success) {
+                    addStatus('사업 아이디어 생성 완료!', 'success');
+                    addStatus(`${data.results.analyzed}개 사업 분석 완료`, 'success');
+                    addStatus(`${data.results.saved}개 사업 DB 저장 (80점 이상)`, 'success');
+                    addStatus('히스토리에 모든 결과 기록 완료', 'success');
+
+                    // 결과 표시
+                    document.getElementById('analyzedCount').textContent = data.results.analyzed + '개';
+                    document.getElementById('savedCount').textContent = data.results.saved + '개';
+                    document.getElementById('timestamp').textContent = new Date(data.results.timestamp).toLocaleString('ko-KR');
+                    resultBox.classList.add('show');
+
+                    btn.innerHTML = '<i class="fas fa-check-circle"></i> 완료!';
+                    setTimeout(() => {
+                        btn.disabled = false;
+                        btn.innerHTML = '<i class="fas fa-redo"></i> 다시 실행';
+                    }, 2000);
+                } else {
+                    addStatus('오류 발생: ' + data.error, 'error');
+                    btn.innerHTML = '<i class="fas fa-exclamation-triangle"></i> 실패';
+                    setTimeout(() => {
+                        btn.disabled = false;
+                        btn.innerHTML = '<i class="fas fa-redo"></i> 다시 시도';
+                    }, 2000);
+                }
+            } catch (error) {
+                addStatus('네트워크 오류: ' + error.message, 'error');
+                btn.innerHTML = '<i class="fas fa-exclamation-triangle"></i> 실패';
+                setTimeout(() => {
+                    btn.disabled = false;
+                    btn.innerHTML = '<i class="fas fa-redo"></i> 다시 시도';
+                }, 2000);
+            }
+        }
+    </script>
+</body>
+</html>
