@@ -817,6 +817,36 @@ def business_landing():
     """사업 분석 랜딩 페이지"""
     return render_template('business_landing.html')
 
+@app.route('/api/trigger-discovery')
+def trigger_discovery():
+    """수동으로 사업 발굴 트리거 (테스트용)"""
+    try:
+        from continuous_business_discovery import ContinuousBusinessDiscovery
+        from datetime import datetime
+
+        discovery = ContinuousBusinessDiscovery()
+        results = discovery.run_hourly_discovery()
+
+        if results['saved'] > 0:
+            discovery.generate_discovery_meeting(results)
+
+        discovery.close()
+
+        return jsonify({
+            'success': True,
+            'message': 'Discovery completed',
+            'results': {
+                'analyzed': results['analyzed'],
+                'saved': results['saved'],
+                'timestamp': datetime.now().isoformat()
+            }
+        })
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'error': str(e)
+        }), 500
+
 @app.route('/api/discovered-businesses')
 def api_discovered_businesses():
     """자동 발굴된 사업 목록 API"""
