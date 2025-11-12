@@ -20,7 +20,8 @@ from business_monitor import QhyxBusinessMonitor
 from continuous_business_discovery import ContinuousBusinessDiscovery
 from business_discovery_history import (
     BusinessDiscoveryHistory, BusinessAnalysisSnapshot,
-    BusinessInsight, BusinessHistoryTracker, initialize_history_tables
+    BusinessInsight, BusinessHistoryTracker, initialize_history_tables,
+    LowScoreBusiness
 )
 
 app = Flask(__name__)
@@ -35,7 +36,13 @@ connection_string = URL.create(
     database='unble',
 )
 
-engine = create_engine(connection_string, pool_pre_ping=True)
+engine = create_engine(
+    connection_string,
+    pool_pre_ping=True,
+    pool_recycle=3600,  # 연결 1시간마다 재생성 (SSL 타임아웃 방지)
+    pool_size=10,
+    max_overflow=20
+)
 Session = sessionmaker(bind=engine)
 
 # 데이터베이스 초기화
@@ -910,6 +917,127 @@ def api_discovered_businesses():
     finally:
         session.close()
 
+@app.route('/api/review-businesses')
+def api_review_businesses():
+    """검토 필요 사업 (60-79점) API"""
+    session = Session()
+    try:
+        businesses = session.query(BusinessDiscoveryHistory).filter(
+            BusinessDiscoveryHistory.total_score >= 60,
+            BusinessDiscoveryHistory.total_score < 80
+        ).order_by(BusinessDiscoveryHistory.discovered_at.desc()).limit(100).all()
+
+        business_list = []
+        for biz in businesses:
+            business_list.append({
+                'id': biz.id,
+                'business_name': biz.business_name,
+                'business_type': biz.business_type,
+                'category': biz.category,
+                'total_score': biz.total_score,
+                'market_score': biz.market_score,
+                'revenue_score': biz.revenue_score,
+                'discovered_at': biz.discovered_at.strftime('%Y-%m-%d %H:%M') if biz.discovered_at else None,
+                'market_analysis': biz.market_analysis,
+                'revenue_analysis': biz.revenue_analysis
+            })
+
+        return jsonify({
+            'businesses': business_list,
+            'total': len(business_list)
+        })
+    finally:
+        session.close()
+
+@app.route('/api/rejected-businesses')
+def api_rejected_businesses():
+    """부적합 사업 (60점 미만) API"""
+    session = Session()
+    try:
+        businesses = session.query(BusinessDiscoveryHistory).filter(
+            BusinessDiscoveryHistory.total_score < 60
+        ).order_by(BusinessDiscoveryHistory.discovered_at.desc()).limit(100).all()
+
+        business_list = []
+        for biz in businesses:
+            business_list.append({
+                'id': biz.id,
+                'business_name': biz.business_name,
+                'business_type': biz.business_type,
+                'category': biz.category,
+                'total_score': biz.total_score,
+                'market_score': biz.market_score,
+                'revenue_score': biz.revenue_score,
+                'discovered_at': biz.discovered_at.strftime('%Y-%m-%d %H:%M') if biz.discovered_at else None,
+                'market_analysis': biz.market_analysis,
+                'revenue_analysis': biz.revenue_analysis,
+                'full_analysis': biz.full_analysis
+            })
+
+        return jsonify({
+            'businesses': business_list,
+            'total': len(business_list)
+        })
+    finally:
+        session.close()
+
+@app.route('/api/low-score-businesses/list')
+def api_low_score_businesses():
+    """낮은 점수 사업 목록 API (60점 미만)"""
+    session = Session()
+    try:
+        days = int(request.args.get('days', 30))
+        limit = int(request.args.get('limit', 200))
+
+        from datetime import datetime, timedelta
+        start_date = datetime.utcnow() - timedelta(days=days)
+
+        # LowScoreBusiness 테이블에서 조회
+        businesses = session.query(LowScoreBusiness).filter(
+            LowScoreBusiness.created_at >= start_date
+        ).order_by(LowScoreBusiness.created_at.desc()).limit(limit).all()
+
+        business_list = []
+        for biz in businesses:
+            business_list.append({
+                'id': biz.id,
+                'business_name': biz.business_name,
+                'business_type': biz.business_type,
+                'category': biz.category,
+                'keyword': biz.keyword,
+                'total_score': biz.total_score,
+                'market_score': biz.market_score,
+                'revenue_score': biz.revenue_score,
+                'failure_reason': biz.failure_reason,
+                'created_at': biz.created_at.strftime('%Y-%m-%d %H:%M') if biz.created_at else None,
+                'market_analysis': biz.market_analysis,
+                'revenue_analysis': biz.revenue_analysis,
+                'improvement_suggestions': biz.improvement_suggestions,
+                'discovery_batch': biz.discovery_batch,
+                'full_data': biz.full_data
+            })
+
+        # 통계
+        total_count = len(business_list)
+        avg_score = sum([b['total_score'] for b in business_list]) / total_count if total_count > 0 else 0
+
+        # 실패 이유별 분포
+        failure_reasons = {}
+        for biz in business_list:
+            reason = biz['failure_reason'] or 'unknown'
+            failure_reasons[reason] = failure_reasons.get(reason, 0) + 1
+
+        return jsonify({
+            'businesses': business_list,
+            'total': total_count,
+            'stats': {
+                'avg_score': round(avg_score, 1),
+                'failure_reasons': failure_reasons
+            }
+        })
+    finally:
+        session.close()
+
 # ==================== 사업 발굴 히스토리 API ====================
 
 @app.route('/api/business-history/stats')
@@ -961,8 +1089,12 @@ def api_business_history_list():
             query = query.filter(BusinessDiscoveryHistory.total_score >= 80, BusinessDiscoveryHistory.total_score < 90)
         elif score_filter == '70-79':
             query = query.filter(BusinessDiscoveryHistory.total_score >= 70, BusinessDiscoveryHistory.total_score < 80)
+        elif score_filter == '60-79':
+            query = query.filter(BusinessDiscoveryHistory.total_score >= 60, BusinessDiscoveryHistory.total_score < 80)
         elif score_filter == '60-69':
             query = query.filter(BusinessDiscoveryHistory.total_score >= 60, BusinessDiscoveryHistory.total_score < 70)
+        elif score_filter == '0-59':
+            query = query.filter(BusinessDiscoveryHistory.total_score < 60)
         elif score_filter == '60-':
             query = query.filter(BusinessDiscoveryHistory.total_score < 60)
 
