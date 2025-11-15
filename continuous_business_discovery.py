@@ -229,7 +229,7 @@ class ContinuousBusinessDiscovery:
             # 실행 계획 추출 (있으면)
             action_plan = analysis_result.get('action_plan')
 
-            saved_to_db = total_score >= 80
+            saved_to_db = total_score >= 70  # 70점 이상으로 변경 (실제 AI 분석 결과가 보수적이므로)
 
             # 📊 히스토리에 기록 (모든 분석 결과 저장)
             self.history_tracker.record_analysis(

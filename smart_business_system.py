@@ -77,8 +77,8 @@ class SmartBusinessSystem:
 
         print(f"\n   📈 종합 점수: {total_score:.1f}/100")
 
-        # 80점 이상만 실행 계획 생성
-        if total_score >= 80:
+        # 70점 이상이면 실행 계획 생성
+        if total_score >= 70:
             print(f"   ✅ 우수한 아이디어! 실행 계획 생성 중...\n")
 
             # 3단계: 실행 계획 자동 생성
@@ -133,8 +133,8 @@ class SmartBusinessSystem:
                 time.sleep(5)
 
         # 결과 정리
-        passed = [r for r in results if r['passed'] and r.get('total_score', 0) >= 80]
-        further_validation = [r for r in results if r['passed'] and 60 <= r.get('total_score', 0) < 80]
+        passed = [r for r in results if r['passed'] and r.get('total_score', 0) >= 70]
+        further_validation = [r for r in results if r['passed'] and 60 <= r.get('total_score', 0) < 70]
         rejected = [r for r in results if not r['passed'] or r.get('total_score', 0) < 60]
 
         # 최종 리포트
