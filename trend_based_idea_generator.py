@@ -152,36 +152,67 @@ class TrendBasedIdeaGenerator:
         return keywords
 
     def get_google_trends(self):
-        """Google Trends에서 실시간 트렌드 키워드 수집"""
+        """Google Trends에서 실시간 트렌드 키워드 수집 (다국가)"""
         trending_keywords = []
 
         if not self.pytrends:
             print("⚠️ Google Trends를 사용할 수 없습니다")
             return trending_keywords
 
-        try:
-            # 한국 실시간 트렌드
-            trending_searches = self.pytrends.trending_searches(pn='south_korea')
+        # 여러 국가에서 트렌드 수집
+        countries = {
+            'south_korea': '한국',
+            'united_states': '미국',
+            'japan': '일본',
+            'united_kingdom': '영국',
+            'singapore': '싱가포르'
+        }
 
-            for keyword in trending_searches[0][:20]:  # 상위 20개
-                # IT 관련 키워드만 필터
-                it_keywords = ['앱', '웹', 'AI', '프로그래밍', '개발', '사이트', '플랫폼',
-                              '자동화', 'SaaS', '소프트웨어', '디지털', '온라인', '서비스']
+        for country_code, country_name in countries.items():
+            try:
+                print(f"   🌍 {country_name} 트렌드 수집 중...")
+                trending_searches = self.pytrends.trending_searches(pn=country_code)
 
-                keyword_str = str(keyword)
+                for keyword in trending_searches[0][:10]:  # 국가당 상위 10개
+                    keyword_str = str(keyword)
 
-                trending_keywords.append({
-                    'keyword': keyword_str,
-                    'source': 'Google Trends',
-                    'timestamp': datetime.now().isoformat()
-                })
+                    # IT/비즈니스 관련 키워드 필터 (한글 + 영어)
+                    it_keywords = [
+                        # 한글
+                        '앱', '웹', 'AI', '프로그래밍', '개발', '사이트', '플랫폼',
+                        '자동화', 'SaaS', '소프트웨어', '디지털', '온라인', '서비스',
+                        # 영어
+                        'app', 'web', 'AI', 'software', 'platform', 'automation',
+                        'SaaS', 'digital', 'online', 'service', 'startup', 'business',
+                        'tech', 'mobile', 'cloud', 'API', 'coding', 'programming'
+                    ]
 
-                time.sleep(0.3)  # API 호출 제한 방지
+                    # 키워드 필터링 (IT 관련이거나, 비즈니스 아이디어로 전환 가능한 것)
+                    is_relevant = any(kw.lower() in keyword_str.lower() for kw in it_keywords)
 
-            print(f"✅ Google Trends에서 {len(trending_keywords)}개 키워드 수집")
+                    # 또는 길이가 적당하고 특수문자가 없는 일반 키워드도 포함 (사업 아이디어로 전환 가능)
+                    is_general_topic = (
+                        len(keyword_str) >= 2 and
+                        len(keyword_str) <= 30 and
+                        not keyword_str.startswith('#')
+                    )
 
-        except Exception as e:
-            print(f"⚠️ Google Trends 수집 실패: {e}")
+                    if is_relevant or is_general_topic:
+                        trending_keywords.append({
+                            'keyword': keyword_str,
+                            'source': f'Google Trends ({country_name})',
+                            'country': country_name,
+                            'country_code': country_code,
+                            'timestamp': datetime.now().isoformat()
+                        })
+
+                time.sleep(2)  # 국가별 API 호출 간격
+
+            except Exception as e:
+                print(f"   ⚠️ {country_name} 트렌드 수집 실패: {e}")
+                continue
+
+        print(f"✅ Google Trends에서 총 {len(trending_keywords)}개 키워드 수집 (5개국)")
 
         return trending_keywords
 
@@ -299,40 +330,54 @@ class TrendBasedIdeaGenerator:
     def _create_idea_from_keyword(self, keyword_data):
         """키워드로부터 사업 아이디어 생성"""
         keyword = keyword_data.get('keyword', '')
+        country = keyword_data.get('country', '한국')
+        source = keyword_data.get('source', '트렌드')
 
-        # IT 관련 키워드만 필터
-        it_keywords = ['앱', '웹', 'AI', '프로그래밍', '개발', '사이트', '플랫폼',
-                      '자동화', 'SaaS', '소프트웨어', '디지털', '온라인']
-
-        if not any(kw in keyword for kw in it_keywords):
-            return None
-
-        # 키워드 기반 사업 아이디어 생성
+        # 키워드 기반 사업 아이디어 템플릿
         business_templates = [
             f"{keyword} 온라인 플랫폼",
             f"{keyword} 자동화 도구",
             f"{keyword} 매칭 서비스",
             f"{keyword} 관리 시스템",
-            f"{keyword} 컨설팅 서비스"
+            f"{keyword} 컨설팅 서비스",
+            f"{keyword} SaaS 솔루션",
+            f"{keyword} 모바일 앱",
+            f"{keyword} AI 분석 서비스"
         ]
 
         business_name = random.choice(business_templates)
 
+        # 국가별 설명 추가
+        if country == '한국':
+            description = f"한국 트렌드 키워드 '{keyword}' 기반 사업"
+            market = "한국 시장"
+        elif country == '미국':
+            description = f"미국 트렌드 '{keyword}' 기반 글로벌 사업"
+            market = "글로벌 시장"
+        elif country == '일본':
+            description = f"일본 트렌드 '{keyword}' 기반 한일 시장 진출"
+            market = "한일 시장"
+        else:
+            description = f"{country} 트렌드 '{keyword}' 기반 글로벌 사업"
+            market = f"{country} 시장"
+
         return {
-            'type': '네이버_트렌드',
+            'type': f'{source}_트렌드',
             'category': 'IT/디지털',
             'business': {
                 'name': business_name,
-                'description': f"네이버 트렌드 키워드 '{keyword}' 기반 사업",
-                'startup_cost': '300만원 이하',
-                'monthly_revenue': '500만원',
-                'revenue_potential': '월 500-1500만원',
+                'description': description,
+                'startup_cost': '300만원 이하' if country == '한국' else '500만원 이하',
+                'monthly_revenue': '500만원' if country == '한국' else '1000만원',
+                'revenue_potential': f'월 500-1500만원 ({market})',
                 'timeline': '1개월 내 시작',
                 'difficulty': '보통',
                 'viability': '높음',
-                'trend_keyword': keyword
+                'trend_keyword': keyword,
+                'trend_country': country,
+                'global_potential': country != '한국'
             },
-            'priority': '높음'
+            'priority': '높음' if country in ['미국', '영국'] else '보통'
         }
 
 if __name__ == '__main__':

@@ -72,20 +72,31 @@ class ContinuousBusinessDiscovery:
             if any(keyword in name for keyword in it_keywords):
                 it_opportunities.append(opp)
 
-        all_opportunities.extend(it_opportunities[:3])
+        all_opportunities.extend(it_opportunities[:2])
 
-        # 2. 실시간 트렌드 기반 아이디어 (2-3개)
+        # 2. 실시간 트렌드 기반 아이디어 (4-5개) - 글로벌 트렌드 포함
         try:
-            print("\n🔥 실시간 트렌드 수집 중...")
+            print("\n🔥 실시간 글로벌 트렌드 수집 중...")
             trend_ideas = self.trend_generator.generate_ideas_from_trends()
-            all_opportunities.extend(trend_ideas[:3])
-            print(f"✅ 트렌드 기반 아이디어 {len(trend_ideas[:3])}개 추가")
+
+            # 트렌드 아이디어를 우선순위별로 정렬 (글로벌 트렌드 우선)
+            sorted_trends = sorted(
+                trend_ideas,
+                key=lambda x: (
+                    x.get('business', {}).get('global_potential', False),
+                    x.get('priority', '보통') == '높음'
+                ),
+                reverse=True
+            )
+
+            all_opportunities.extend(sorted_trends[:5])
+            print(f"✅ 트렌드 기반 아이디어 {len(sorted_trends[:5])}개 추가 (글로벌 포함)")
         except Exception as e:
             print(f"⚠️ 트렌드 수집 실패: {e}")
             logging.warning(f"Trend collection failed: {e}")
 
-        # 최종적으로 5-6개 반환
-        return all_opportunities[:6]
+        # 최종적으로 7-8개 반환
+        return all_opportunities[:8]
 
     def generate_keyword(self, business_name):
         """사업 이름에서 검색 키워드 생성"""
