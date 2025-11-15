@@ -24,10 +24,11 @@ class SmartBusinessSystem:
         self.action_planner = ActionPlanGenerator()
         self.idea_generator = RealisticBusinessGenerator()
 
+        # Windows 콘솔 호환성을 위해 이모지 제거
         print("="*80)
-        print("🚀 스마트 IT 사업 발굴 시스템")
+        print("[SMART] 스마트 IT 사업 발굴 시스템")
         print("="*80)
-        print("실시간 시장 분석 → 수익성 검증 → 실행 계획 자동 생성\n")
+        print("실시간 시장 분석 -> 수익성 검증 -> 실행 계획 자동 생성\n")
 
     def analyze_business_idea(self, business_idea, keyword, business_config):
         """단일 사업 아이디어 종합 분석"""

@@ -27,7 +27,12 @@
       "Bash(where ngrok)",
       "Bash(start http://localhost:5000/meetings)",
       "Bash(tasklist:*)",
-      "Bash(nul)"
+      "Bash(nul)",
+      "Bash(gh workflow list:*)",
+      "Bash(gh run:*)",
+      "Bash(start https://github.com/araeLaver/down/actions/runs/19203313221)",
+      "Bash(git log:*)",
+      "Bash(git fetch:*)"
     ],
     "deny": [],
     "ask": []

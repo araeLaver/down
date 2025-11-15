@@ -43,26 +43,40 @@ class ContinuousBusinessDiscovery:
             print(f"History tables already exist: {e}")
 
         print("="*80)
-        print("🔄 지속적 사업 발굴 시스템 시작 (히스토리 추적 활성화)")
+        print("[DISCOVERY] 지속적 사업 발굴 시스템 시작 (히스토리 추적 활성화)")
         print("="*80)
         print("매시간 자동으로 IT 사업 아이디어 분석 및 DB 저장")
-        print("80점 이상만 선별하여 실행 가능한 사업으로 등록")
-        print("✅ 모든 분석 결과를 히스토리에 기록하여 트렌드 분석 가능\n")
+        print("70점 이상만 선별하여 실행 가능한 사업으로 등록")
+        print("[OK] 모든 분석 결과를 히스토리에 기록하여 트렌드 분석 가능\n")
 
         logging.info("Continuous Business Discovery System Started with History Tracking")
 
     def get_it_business_ideas(self):
-        """IT 사업 아이디어 생성 (템플릿 + 트렌드 혼합)"""
+        """IT 사업 아이디어 생성 (템플릿 + 트렌드 혼합) - 중복 제거"""
         all_opportunities = []
+
+        # 최근 7일간 이미 분석한 사업명 가져오기 (중복 방지)
+        from datetime import timedelta
+        seven_days_ago = datetime.now() - timedelta(days=7)
+        recent_businesses = self.session.query(BusinessDiscoveryHistory).filter(
+            BusinessDiscoveryHistory.discovered_at >= seven_days_ago
+        ).all()
+        recent_names = set([b.business_name for b in recent_businesses])
+
+        print(f"   최근 7일간 분석된 사업: {len(recent_names)}개 (중복 방지)")
 
         # 1. 기존 템플릿 기반 아이디어 (2-3개)
         template_opportunities = self.idea_generator.generate_monthly_opportunities()
 
-        # IT/디지털/앱 관련만 필터
+        # IT/디지털/앱 관련만 필터 + 중복 제거
         it_opportunities = []
         for opp in template_opportunities:
             business = opp.get('business', {})
             name = business.get('name', '')
+
+            # 이미 최근에 분석한 사업이면 스킵
+            if name in recent_names:
+                continue
 
             # IT 관련 키워드 체크
             it_keywords = ['앱', '웹', 'AI', 'IT', '사이트', '플랫폼',
@@ -71,17 +85,26 @@ class ContinuousBusinessDiscovery:
 
             if any(keyword in name for keyword in it_keywords):
                 it_opportunities.append(opp)
+                recent_names.add(name)  # 추가한 것도 중복 체크 목록에 추가
 
         all_opportunities.extend(it_opportunities[:2])
 
         # 2. 실시간 트렌드 기반 아이디어 (4-5개) - 글로벌 트렌드 포함
         try:
-            print("\n🔥 실시간 글로벌 트렌드 수집 중...")
+            print("\n[TREND] 실시간 글로벌 트렌드 수집 중...")
             trend_ideas = self.trend_generator.generate_ideas_from_trends()
+
+            # 중복 제거 후 트렌드 아이디어 필터링
+            unique_trends = []
+            for idea in trend_ideas:
+                name = idea.get('business', {}).get('name', '')
+                if name not in recent_names:
+                    unique_trends.append(idea)
+                    recent_names.add(name)
 
             # 트렌드 아이디어를 우선순위별로 정렬 (글로벌 트렌드 우선)
             sorted_trends = sorted(
-                trend_ideas,
+                unique_trends,
                 key=lambda x: (
                     x.get('business', {}).get('global_potential', False),
                     x.get('priority', '보통') == '높음'
@@ -90,12 +113,13 @@ class ContinuousBusinessDiscovery:
             )
 
             all_opportunities.extend(sorted_trends[:5])
-            print(f"✅ 트렌드 기반 아이디어 {len(sorted_trends[:5])}개 추가 (글로벌 포함)")
+            print(f"   트렌드 기반 아이디어 {len(sorted_trends[:5])}개 추가 (글로벌 포함, 중복 제거됨)")
         except Exception as e:
-            print(f"⚠️ 트렌드 수집 실패: {e}")
+            print(f"   [WARNING] 트렌드 수집 실패: {e}")
             logging.warning(f"Trend collection failed: {e}")
 
         # 최종적으로 7-8개 반환
+        print(f"   최종 생성된 아이디어: {len(all_opportunities)}개 (모두 중복 제거됨)\n")
         return all_opportunities[:8]
 
     def generate_keyword(self, business_name):
@@ -212,7 +236,7 @@ class ContinuousBusinessDiscovery:
 
             # 분석 실패 시 처리
             if not analysis_result.get('passed'):
-                print(f"   ❌ 분석 실패: {analysis_result.get('reason', 'Unknown')}")
+                print(f"   [FAIL] 분석 실패: {analysis_result.get('reason', 'Unknown')}")
                 # 실패한 경우도 히스토리에 기록하고 종료
                 market_score = analysis_result.get('market_score', 0)
                 total_score = market_score
@@ -260,7 +284,7 @@ class ContinuousBusinessDiscovery:
 
             saved_to_db = total_score >= 70  # 70점 이상으로 변경 (실제 AI 분석 결과가 보수적이므로)
 
-            # 📊 히스토리에 기록 (모든 분석 결과 저장)
+            # [HISTORY] 히스토리에 기록 (모든 분석 결과 저장)
             self.history_tracker.record_analysis(
                 business_name=name,
                 business_type=config['type'],
@@ -304,7 +328,7 @@ class ContinuousBusinessDiscovery:
                     full_data=opportunity
                 )
 
-                print(f"   ⚠️  저점수 사업 (60점 미만). low_score_businesses 테이블에 저장 (개선 분석용)")
+                print(f"   [LOW] 저점수 사업 (60점 미만). low_score_businesses 테이블에 저장 (개선 분석용)")
                 logging.info(f"Saved to low_score_businesses: {name} (Score: {total_score}, Reason: {failure_reason})")
 
                 return {
@@ -319,7 +343,7 @@ class ContinuousBusinessDiscovery:
 
             # 80점 이상만 business_plans 테이블에 저장
             elif total_score >= 80:
-                print(f"   ✅ 우수한 아이디어! DB에 저장 중...")
+                print(f"   [SAVE] 우수한 아이디어! DB에 저장 중...")
 
                 # 사업 계획으로 DB에 저장
                 existing = self.session.query(BusinessPlan).filter_by(
@@ -327,7 +351,7 @@ class ContinuousBusinessDiscovery:
                 ).first()
 
                 if existing:
-                    print(f"   ⚠️  이미 존재하는 사업. 점수 업데이트")
+                    print(f"   [UPDATE] 이미 존재하는 사업. 점수 업데이트")
                     existing.feasibility_score = total_score / 10
                 else:
                     # 실제 AI 분석 결과에서 매출 추정값 추출
@@ -372,7 +396,7 @@ class ContinuousBusinessDiscovery:
                     self.session.add(business_plan)
 
                 self.session.commit()
-                print(f"   💾 business_plans & history 테이블에 저장 완료!")
+                print(f"   [OK] business_plans & history 테이블에 저장 완료!")
                 logging.info(f"Saved business idea: {name} (Score: {total_score})")
 
                 return {
@@ -384,7 +408,7 @@ class ContinuousBusinessDiscovery:
                 }
 
             else:
-                print(f"   ❌ 점수 부족 (80점 미만). business_plans 건너뜀 (히스토리만 기록)")
+                print(f"   [SKIP] 점수 부족 (80점 미만). business_plans 건너뜀 (히스토리만 기록)")
                 logging.info(f"Skipped business_plans but recorded in history: {name} (Score: {total_score})")
 
                 return {
@@ -396,7 +420,7 @@ class ContinuousBusinessDiscovery:
                 }
 
         except Exception as e:
-            print(f"   ⚠️  오류 발생: {e}")
+            print(f"   [ERROR] 오류 발생: {e}")
             logging.error(f"Error analyzing {name}: {e}")
             return {
                 'saved': False,
@@ -434,31 +458,31 @@ class ContinuousBusinessDiscovery:
 
         # 결과 요약
         print(f"\n{'='*80}")
-        print(f"📊 이번 시간 결과")
+        print(f"[RESULT] 이번 시간 결과")
         print(f"{'='*80}")
         print(f"분석: {len(it_ideas)}개")
         print(f"저장: {saved_count}개 (80점 이상)")
         print(f"제외: {len(it_ideas) - saved_count}개\n")
 
-        # 📸 시간별 스냅샷 생성
-        print(f"📸 시간별 스냅샷 생성 중...")
+        # 시간별 스냅샷 생성
+        print(f"[SNAPSHOT] 시간별 스냅샷 생성 중...")
         try:
             snapshot_id = self.history_tracker.create_snapshot(snapshot_type='hourly')
             if snapshot_id:
-                print(f"   ✅ 스냅샷 생성 완료 (ID: {snapshot_id})")
+                print(f"   [OK] 스냅샷 생성 완료 (ID: {snapshot_id})")
         except Exception as e:
-            print(f"   ⚠️  스냅샷 생성 실패: {e}")
+            print(f"   [WARNING] 스냅샷 생성 실패: {e}")
 
-        # 💡 인사이트 생성
-        print(f"💡 인사이트 분석 중...")
+        # 인사이트 생성
+        print(f"[INSIGHT] 인사이트 분석 중...")
         try:
             insight_count = self.history_tracker.generate_insights()
             if insight_count > 0:
-                print(f"   ✅ {insight_count}개 인사이트 생성")
+                print(f"   [OK] {insight_count}개 인사이트 생성")
             else:
-                print(f"   ℹ️  새로운 인사이트 없음")
+                print(f"   [INFO] 새로운 인사이트 없음")
         except Exception as e:
-            print(f"   ⚠️  인사이트 생성 실패: {e}")
+            print(f"   [WARNING] 인사이트 생성 실패: {e}")
 
         logging.info(f"Hourly discovery completed: {saved_count}/{len(it_ideas)} saved")
 
@@ -493,7 +517,7 @@ class ContinuousBusinessDiscovery:
         ]
 
         for idea in saved_ideas:
-            key_decisions.append(f"✅ {idea['name']} (점수: {idea['score']})")
+            key_decisions.append(f"[OK] {idea['name']} (점수: {idea['score']})")
 
         action_items = [
             "상위 3개 아이디어 상세 시장 조사",
@@ -559,24 +583,24 @@ class ContinuousBusinessDiscovery:
                     time.sleep(30)
 
             except KeyboardInterrupt:
-                print("\n\n🛑 시스템 종료")
+                print("\n\n[STOP] 시스템 종료")
                 logging.info("System stopped by user")
                 break
             except Exception as e:
-                print(f"\n⚠️  오류 발생: {e}")
+                print(f"\n[ERROR] 오류 발생: {e}")
                 logging.error(f"System error: {e}")
                 time.sleep(60)
 
     def run_once_now(self):
         """즉시 1회 실행 (테스트용)"""
-        print("🔥 즉시 실행 모드\n")
+        print("[RUN] 즉시 실행 모드\n")
 
         results = self.run_hourly_discovery()
 
         if results['saved'] > 0:
             self.generate_discovery_meeting(results)
 
-        print("\n✅ 완료!")
+        print("\n[DONE] 완료!")
         return results
 
     def close(self):
