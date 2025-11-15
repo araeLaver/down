@@ -11,6 +11,7 @@ sys.path.append(os.path.dirname(__file__))
 
 from smart_business_system import SmartBusinessSystem
 from realistic_business_generator import RealisticBusinessGenerator
+from trend_based_idea_generator import TrendBasedIdeaGenerator
 from database_setup import Session, BusinessPlan, BusinessMeeting, Employee
 from business_discovery_history import BusinessHistoryTracker, initialize_history_tables
 from datetime import datetime, timedelta
@@ -31,6 +32,7 @@ class ContinuousBusinessDiscovery:
     def __init__(self):
         self.smart_system = SmartBusinessSystem()
         self.idea_generator = RealisticBusinessGenerator()
+        self.trend_generator = TrendBasedIdeaGenerator()  # 트렌드 기반 생성기 추가
         self.session = Session()
         self.history_tracker = BusinessHistoryTracker()
 
@@ -50,12 +52,15 @@ class ContinuousBusinessDiscovery:
         logging.info("Continuous Business Discovery System Started with History Tracking")
 
     def get_it_business_ideas(self):
-        """IT 사업 아이디어 생성"""
-        all_opportunities = self.idea_generator.generate_monthly_opportunities()
+        """IT 사업 아이디어 생성 (템플릿 + 트렌드 혼합)"""
+        all_opportunities = []
+
+        # 1. 기존 템플릿 기반 아이디어 (2-3개)
+        template_opportunities = self.idea_generator.generate_monthly_opportunities()
 
         # IT/디지털/앱 관련만 필터
         it_opportunities = []
-        for opp in all_opportunities:
+        for opp in template_opportunities:
             business = opp.get('business', {})
             name = business.get('name', '')
 
@@ -67,7 +72,20 @@ class ContinuousBusinessDiscovery:
             if any(keyword in name for keyword in it_keywords):
                 it_opportunities.append(opp)
 
-        return it_opportunities[:5]  # 시간당 5개만
+        all_opportunities.extend(it_opportunities[:3])
+
+        # 2. 실시간 트렌드 기반 아이디어 (2-3개)
+        try:
+            print("\n🔥 실시간 트렌드 수집 중...")
+            trend_ideas = self.trend_generator.generate_ideas_from_trends()
+            all_opportunities.extend(trend_ideas[:3])
+            print(f"✅ 트렌드 기반 아이디어 {len(trend_ideas[:3])}개 추가")
+        except Exception as e:
+            print(f"⚠️ 트렌드 수집 실패: {e}")
+            logging.warning(f"Trend collection failed: {e}")
+
+        # 최종적으로 5-6개 반환
+        return all_opportunities[:6]
 
     def generate_keyword(self, business_name):
         """사업 이름에서 검색 키워드 생성"""
