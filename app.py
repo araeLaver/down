@@ -861,46 +861,56 @@ def trigger_discovery():
 
 @app.route('/api/discovered-businesses')
 def api_discovered_businesses():
-    """자동 발굴된 사업 목록 API"""
+    """자동 발굴된 사업 목록 API (60점 이상 모두 포함)"""
     session = Session()
     try:
-        # 최근 발굴된 사업
-        businesses = session.query(BusinessPlan).filter(
-            BusinessPlan.created_by == 'AI_Discovery_System',
-            BusinessPlan.status == 'approved'
-        ).order_by(BusinessPlan.created_at.desc()).limit(50).all()
+        # BusinessDiscoveryHistory에서 60점 이상 사업 모두 조회
+        histories = session.query(BusinessDiscoveryHistory).filter(
+            BusinessDiscoveryHistory.total_score >= 60
+        ).order_by(BusinessDiscoveryHistory.discovered_at.desc()).limit(100).all()
 
         business_list = []
-        for biz in businesses:
-            details = biz.details if isinstance(biz.details, dict) else {}
+        for biz in histories:
+            # 월 매출 추정 (간단한 계산)
+            monthly_revenue = biz.total_score * 100000  # 점수 * 10만원
+            annual_revenue = monthly_revenue * 12
+            investment = biz.total_score * 50000  # 점수 * 5만원
 
             business_list.append({
                 'id': biz.id,
-                'name': biz.plan_name,
-                'type': biz.plan_type,
-                'score': details.get('analysis_score', 0),
-                'feasibility': biz.feasibility_score,
-                'revenue_12m': biz.projected_revenue_12m,
-                'investment': biz.investment_required,
-                'risk': biz.risk_level,
-                'priority': biz.priority,
-                'created_at': biz.created_at.strftime('%Y-%m-%d %H:%M') if biz.created_at else None,
-                'description': biz.description,
-                'revenue_model': biz.revenue_model,
-                'details': details
+                'name': biz.business_name,
+                'type': biz.business_type,
+                'score': biz.total_score,
+                'feasibility': biz.total_score / 10,
+                'revenue_12m': annual_revenue,
+                'investment': investment,
+                'risk': 'low' if biz.total_score >= 80 else 'medium' if biz.total_score >= 70 else 'high',
+                'priority': 'high' if biz.total_score >= 80 else 'medium',
+                'created_at': biz.discovered_at.strftime('%Y-%m-%d %H:%M') if biz.discovered_at else None,
+                'description': f"{biz.business_name} - 시장성 {biz.market_score:.1f}점, 수익성 {biz.revenue_score:.1f}점",
+                'revenue_model': 'subscription',
+                'details': {
+                    'analysis_score': biz.total_score,
+                    'market_score': biz.market_score,
+                    'revenue_score': biz.revenue_score,
+                    'category': biz.category,
+                    'keyword': biz.keyword,
+                    'market_analysis': biz.market_analysis,
+                    'revenue_analysis': biz.revenue_analysis
+                }
             })
 
         # 통계
         today = datetime.utcnow().date()
-        today_count = session.query(BusinessPlan).filter(
-            BusinessPlan.created_by == 'AI_Discovery_System',
-            BusinessPlan.created_at >= today
+        today_count = session.query(BusinessDiscoveryHistory).filter(
+            BusinessDiscoveryHistory.total_score >= 60,
+            BusinessDiscoveryHistory.discovered_at >= today
         ).count()
 
         week_ago = datetime.utcnow() - timedelta(days=7)
-        week_count = session.query(BusinessPlan).filter(
-            BusinessPlan.created_by == 'AI_Discovery_System',
-            BusinessPlan.created_at >= week_ago
+        week_count = session.query(BusinessDiscoveryHistory).filter(
+            BusinessDiscoveryHistory.total_score >= 60,
+            BusinessDiscoveryHistory.discovered_at >= week_ago
         ).count()
 
         high_score_count = len([b for b in business_list if b['score'] >= 85])
