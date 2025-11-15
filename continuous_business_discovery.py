@@ -177,71 +177,59 @@ class ContinuousBusinessDiscovery:
             # 설정 생성
             config = self.create_business_config(opportunity)
 
-            # 종합 분석 (시장 + 수익성)
-            # 주의: 실제 웹 스크래핑은 시간이 걸리므로 여기서는 간소화
-            # 프로덕션에서는 full analysis 사용
+            # 🚀 실제 AI 분석 수행 (SmartBusinessSystem 사용)
+            print("   🤖 실제 AI 분석 시작...")
+            analysis_result = self.smart_system.analyze_business_idea(name, keyword, config)
 
-            # 간단한 점수 계산 (실제로는 smart_system 사용)
-            # 여기서는 데모를 위해 realistic_business_generator 데이터 활용
+            # 분석 실패 시 처리
+            if not analysis_result.get('passed'):
+                print(f"   ❌ 분석 실패: {analysis_result.get('reason', 'Unknown')}")
+                # 실패한 경우도 히스토리에 기록하고 종료
+                market_score = analysis_result.get('market_score', 0)
+                total_score = market_score
+                revenue_score = 0
 
-            viability = business.get('viability', '높음')
-            difficulty = business.get('difficulty', '보통')
+                self.history_tracker.record_analysis(
+                    business_name=name,
+                    business_type=config['type'],
+                    category=opportunity.get('category', 'IT/디지털'),
+                    keyword=keyword,
+                    total_score=total_score,
+                    market_score=market_score,
+                    revenue_score=revenue_score,
+                    saved_to_db=False,
+                    discovery_batch=discovery_batch,
+                    market_analysis=f"실패: {analysis_result.get('reason', 'Unknown')}",
+                    revenue_analysis="N/A",
+                    full_analysis=json.dumps(analysis_result, ensure_ascii=False),
+                    analysis_duration_ms=int((time.time() - start_time) * 1000)
+                )
 
-            # 점수 추정
-            if viability == '매우 높음':
-                base_score = 85
-            elif viability == '높음':
-                base_score = 75
-            elif viability == '보통':
-                base_score = 65
-            else:
-                base_score = 50
+                return {'saved': False, 'reason': analysis_result.get('reason')}
 
-            # 난이도 보정
-            if difficulty in ['매우 쉬움', '쉬움']:
-                base_score += 5
-            elif difficulty == '어려움':
-                base_score -= 5
+            # 분석 성공 - 점수 추출
+            market_data = analysis_result.get('market_data', {})
+            revenue_data = analysis_result.get('revenue_data', {})
 
-            # 랜덤 변동 (±5점)
-            total_score = base_score + random.randint(-5, 5)
+            market_score = market_data.get('market_score', 0)
+            revenue_score = revenue_data.get('verdict', {}).get('score', 0)
+            total_score = analysis_result.get('total_score', 0)
 
-            # 시장/수익 점수 분리 (간략화)
-            market_score = total_score * 0.6 + random.randint(-3, 3)
-            revenue_score = total_score * 0.4 + random.randint(-3, 3)
-
-            print(f"   종합 점수: {total_score}/100")
+            print(f"   종합 점수: {total_score:.1f}/100")
             print(f"   ㄴ 시장성: {market_score:.1f}/100")
             print(f"   ㄴ 수익성: {revenue_score:.1f}/100")
 
             # 분석 시간 계산
             analysis_duration_ms = int((time.time() - start_time) * 1000)
 
-            # 분석 데이터 구조화
-            market_analysis = {
-                'keyword': keyword,
-                'viability': viability,
-                'difficulty': difficulty,
-                'category': opportunity.get('category', 'IT/디지털')
-            }
+            # 실제 분석 데이터 사용
+            market_analysis = market_data
+            revenue_analysis = revenue_data
 
-            revenue_analysis = {
-                'monthly_revenue_estimate': config['pricing'].get('monthly', config['pricing'].get('one_time', 50000)),
-                'startup_cost': config['budget'],
-                'revenue_model': config['revenue_model']
-            }
+            # 실행 계획 추출 (있으면)
+            action_plan = analysis_result.get('action_plan')
 
-            action_plan = None
             saved_to_db = total_score >= 80
-
-            # 80점 이상이면 실행 계획 생성
-            if saved_to_db:
-                action_plan = {
-                    'week1': '시장 조사 및 MVP 설계',
-                    'week2': '프로토타입 개발',
-                    'week3': '베타 테스트',
-                    'week4': '정식 런칭'
-                }
 
             # 📊 히스토리에 기록 (모든 분석 결과 저장)
             self.history_tracker.record_analysis(
@@ -313,10 +301,11 @@ class ContinuousBusinessDiscovery:
                     print(f"   ⚠️  이미 존재하는 사업. 점수 업데이트")
                     existing.feasibility_score = total_score / 10
                 else:
-                    # 매출 추정
-                    monthly_revenue = config['pricing'].get('monthly', config['pricing'].get('one_time', 50000))
-                    estimated_customers = config['target_market_size'] * 0.03  # 3% 전환율
-                    annual_revenue = monthly_revenue * estimated_customers * 12
+                    # 실제 AI 분석 결과에서 매출 추정값 추출
+                    realistic_scenario = revenue_data.get('scenarios', {}).get('realistic', {})
+                    monthly_profit = realistic_scenario.get('monthly_profit', 0)
+                    monthly_revenue_estimate = realistic_scenario.get('monthly_revenue', 0)
+                    annual_revenue = monthly_revenue_estimate * 12 if monthly_revenue_estimate > 0 else config['pricing'].get('monthly', 50000) * 12 * 20
 
                     business_plan = BusinessPlan(
                         plan_name=name,
@@ -339,9 +328,15 @@ class ContinuousBusinessDiscovery:
                             'market_keyword': keyword,
                             'business_type': config['type'],
                             'startup_cost': config['budget'],
-                            'estimated_monthly_revenue': int(monthly_revenue * estimated_customers),
-                            'opportunity_type': opportunity['type'],
-                            'priority_reason': f"자동 발굴: {opportunity['priority']} 우선순위"
+                            'estimated_monthly_revenue': monthly_revenue_estimate,
+                            'estimated_monthly_profit': monthly_profit,
+                            'opportunity_type': opportunity.get('type', 'AI_Discovery'),
+                            'priority_reason': f"AI 분석 점수: {total_score:.1f}점",
+                            'ai_analysis': {
+                                'market_analysis': market_analysis,
+                                'revenue_analysis': revenue_analysis,
+                                'action_plan': action_plan
+                            }
                         }
                     )
 
