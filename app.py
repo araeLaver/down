@@ -927,6 +927,30 @@ def api_discovered_businesses():
     finally:
         session.close()
 
+@app.route('/api/trigger-discovery', methods=['POST'])
+def trigger_discovery():
+    """수동으로 사업 발굴 트리거 (즉시 실행)"""
+    try:
+        from continuous_business_discovery import ContinuousBusinessDiscovery
+
+        discovery = ContinuousBusinessDiscovery()
+        results = discovery.run_once_now()
+
+        return jsonify({
+            'success': True,
+            'message': '사업 발굴 실행 완료',
+            'results': {
+                'analyzed': results.get('total', 0),
+                'saved': results.get('saved', 0),
+                'timestamp': results.get('timestamp')
+            }
+        })
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'error': str(e)
+        }), 500
+
 @app.route('/api/review-businesses')
 def api_review_businesses():
     """검토 필요 사업 (60-79점) API"""
