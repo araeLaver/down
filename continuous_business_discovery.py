@@ -434,8 +434,8 @@ class ContinuousBusinessDiscovery:
         discovery_batch = now.strftime('%Y-%m-%d-%H')  # 배치 ID
 
         print(f"\n{'='*80}")
-        print(f"🕐 {now.strftime('%Y-%m-%d %H:%M:%S')} - 사업 발굴 시작")
-        print(f"📦 배치 ID: {discovery_batch}")
+        print(f"[TIME] {now.strftime('%Y-%m-%d %H:%M:%S')} - 사업 발굴 시작")
+        print(f"[BATCH] 배치 ID: {discovery_batch}")
         print(f"{'='*80}\n")
 
         # IT 사업 아이디어 생성
