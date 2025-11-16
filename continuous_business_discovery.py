@@ -13,7 +13,7 @@ from smart_business_system import SmartBusinessSystem
 from realistic_business_generator import RealisticBusinessGenerator
 from trend_based_idea_generator import TrendBasedIdeaGenerator
 from database_setup import Session, BusinessPlan, BusinessMeeting, Employee
-from business_discovery_history import BusinessHistoryTracker, initialize_history_tables
+from business_discovery_history import BusinessHistoryTracker, initialize_history_tables, BusinessDiscoveryHistory
 from datetime import datetime, timedelta
 import time
 import logging
