@@ -270,7 +270,7 @@ class EmployeeSuggestion(Base):
 class SuggestionFeedback(Base):
     __tablename__ = 'suggestion_feedback'
     __table_args__ = {'schema': SCHEMA_NAME, 'extend_existing': True}
-    
+
     id = Column(Integer, primary_key=True)
     suggestion_id = Column(String(50), ForeignKey(f'{SCHEMA_NAME}.employee_suggestions.suggestion_id'), nullable=False)
     feedback_type = Column(String(20), nullable=False)  # comment, update, decision
@@ -278,6 +278,60 @@ class SuggestionFeedback(Base):
     created_by = Column(String(100))  # 누가 피드백을 남겼는지
     created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
     is_internal = Column(Boolean, default=False)  # 내부 메모인지 직원에게 공개되는지
+
+class StartupSupportProgram(Base):
+    """창업 지원 사업 정보"""
+    __tablename__ = 'startup_support_programs'
+    __table_args__ = {'schema': SCHEMA_NAME, 'extend_existing': True}
+
+    id = Column(Integer, primary_key=True)
+    program_id = Column(String(100), unique=True, nullable=False)  # 고유 ID
+    name = Column(String(200), nullable=False)  # 사업명
+    organization = Column(String(200), nullable=False)  # 주관기관
+    category = Column(String(50), nullable=False)  # 창업 초기, 성장 단계, IT/기술, 융자, 투자 등
+    program_type = Column(String(50))  # startup_packages, regional_support, tech_support 등
+    target = Column(String(500))  # 지원대상
+    support_type = Column(String(200))  # 지원형태
+    support_amount = Column(String(200))  # 지원금액
+    application_period = Column(String(200))  # 신청기간
+    website = Column(String(500))  # 웹사이트
+    description = Column(String(2000))  # 설명
+    requirements = Column(JSON)  # 신청요건 리스트
+    benefits = Column(JSON)  # 혜택 리스트
+    region = Column(String(50))  # 지역 (해당시)
+    created_at = Column(DateTime, default=datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    is_active = Column(Boolean, default=True)  # 현재 진행중인 사업인지
+
+class UserStartupProfile(Base):
+    """사용자 창업 프로필"""
+    __tablename__ = 'user_startup_profiles'
+    __table_args__ = {'schema': SCHEMA_NAME, 'extend_existing': True}
+
+    id = Column(Integer, primary_key=True)
+    user_id = Column(String(100), unique=True, nullable=False)
+    age = Column(Integer)
+    business_age = Column(Integer, default=0)  # 사업 연차 (0: 예비창업)
+    industry = Column(String(100))  # IT, 기술, 제조, 서비스 등
+    region = Column(String(50))  # 지역
+    business_type = Column(String(50))  # 1인, 팀, 법인 등
+    funding_needs = Column(Float)  # 필요자금
+    current_status = Column(String(100))  # 현재 상태
+    interests = Column(JSON)  # 관심 지원사업 카테고리
+    applied_programs = Column(JSON)  # 신청한 사업 ID 리스트
+    created_at = Column(DateTime, default=datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+class StartupProgramBookmark(Base):
+    """지원사업 북마크"""
+    __tablename__ = 'startup_program_bookmarks'
+    __table_args__ = {'schema': SCHEMA_NAME, 'extend_existing': True}
+
+    id = Column(Integer, primary_key=True)
+    user_id = Column(String(100), nullable=False)
+    program_id = Column(String(100), ForeignKey(f'{SCHEMA_NAME}.startup_support_programs.program_id'), nullable=False)
+    created_at = Column(DateTime, default=datetime.utcnow)
+    notes = Column(String(1000))  # 개인 메모
 
 def initialize_database():
     """데이터베이스 초기화 및 테이블 생성"""

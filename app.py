@@ -23,6 +23,7 @@ from business_discovery_history import (
     BusinessInsight, BusinessHistoryTracker, initialize_history_tables,
     LowScoreBusiness
 )
+from startup_support_crawler import StartupSupportCrawler
 
 app = Flask(__name__)
 CORS(app, origins=["https://anonymous-kylen-untab-d30cd097.koyeb.app"])
@@ -1462,6 +1463,54 @@ def start_background_threads():
     discovery_thread = Thread(target=background_business_discovery, daemon=True)
     discovery_thread.start()
     print("[STARTUP] Background business discovery ENABLED - Running hourly")
+
+# ============================================
+# 창업 지원사업 관련 라우트
+# ============================================
+
+@app.route('/startup-support')
+def startup_support():
+    """1인 창업 지원사업 탐색 페이지"""
+    return render_template('startup_support.html')
+
+@app.route('/api/startup-support/programs')
+def api_startup_support_programs():
+    """모든 창업 지원사업 조회"""
+    try:
+        crawler = StartupSupportCrawler()
+        programs = crawler.get_all_support_programs()
+        return jsonify(programs)
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/startup-support/recommend', methods=['POST'])
+def api_startup_support_recommend():
+    """사용자 맞춤 지원사업 추천"""
+    try:
+        user_profile = request.json
+        crawler = StartupSupportCrawler()
+        recommendations = crawler.get_recommended_programs(user_profile)
+        return jsonify(recommendations)
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/startup-support/search')
+def api_startup_support_search():
+    """지원사업 검색"""
+    try:
+        keyword = request.args.get('keyword')
+        category = request.args.get('category')
+        max_amount = request.args.get('max_amount')
+
+        crawler = StartupSupportCrawler()
+        results = crawler.search_programs(
+            keyword=keyword,
+            category=category,
+            max_amount=max_amount
+        )
+        return jsonify(results)
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
 
 # Production 환경 (Gunicorn)에서도 백그라운드 스레드 시작
 start_background_threads()
