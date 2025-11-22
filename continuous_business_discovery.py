@@ -65,8 +65,11 @@ class ContinuousBusinessDiscovery:
 
         print(f"   최근 7일간 분석된 사업: {len(recent_names)}개 (중복 방지)")
 
-        # 1. 기존 템플릿 기반 아이디어 (2-3개)
-        template_opportunities = self.idea_generator.generate_monthly_opportunities()
+        # 1. 기존 템플릿 기반 아이디어 - 매번 다른 아이디어 생성
+        # 여러 번 생성해서 더 많은 옵션 확보
+        template_opportunities = []
+        for _ in range(5):  # 5번 생성해서 더 다양한 아이디어 수집
+            template_opportunities.extend(self.idea_generator.generate_monthly_opportunities())
 
         # IT/디지털/앱 관련만 필터 + 중복 제거
         it_opportunities = []
@@ -87,7 +90,10 @@ class ContinuousBusinessDiscovery:
                 it_opportunities.append(opp)
                 recent_names.add(name)  # 추가한 것도 중복 체크 목록에 추가
 
-        all_opportunities.extend(it_opportunities[:2])
+        # 랜덤하게 섞어서 선택
+        import random
+        random.shuffle(it_opportunities)
+        all_opportunities.extend(it_opportunities[:3])  # 3개 선택
 
         # 2. 실시간 트렌드 기반 아이디어 (4-5개) - 글로벌 트렌드 포함
         try:
@@ -118,9 +124,9 @@ class ContinuousBusinessDiscovery:
             print(f"   [WARNING] 트렌드 수집 실패: {e}")
             logging.warning(f"Trend collection failed: {e}")
 
-        # 최종적으로 7-8개 반환
+        # 최종적으로 5-8개 반환 (더 다양한 아이디어)
         print(f"   최종 생성된 아이디어: {len(all_opportunities)}개 (모두 중복 제거됨)\n")
-        return all_opportunities[:8]
+        return all_opportunities[:10]  # 최대 10개까지
 
     def generate_keyword(self, business_name):
         """사업 이름에서 검색 키워드 생성"""
