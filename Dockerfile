@@ -2,6 +2,11 @@ FROM python:3.11-slim
 
 WORKDIR /app
 
+# UTF-8 인코딩 환경변수 설정 (이모지 지원)
+ENV PYTHONIOENCODING=utf-8
+ENV LANG=C.UTF-8
+ENV LC_ALL=C.UTF-8
+
 # 시스템 패키지 설치
 RUN apt-get update && apt-get install -y \
     git \

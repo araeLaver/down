@@ -220,7 +220,7 @@ class ContinuousBusinessDiscovery:
         start_time = time.time()
 
         print(f"\n{'='*80}")
-        print(f"🔍 분석 중: {name}")
+        print(f"[ANALYSIS] {name}")
         print(f"{'='*80}")
 
         try:
@@ -230,8 +230,8 @@ class ContinuousBusinessDiscovery:
             # 설정 생성
             config = self.create_business_config(opportunity)
 
-            # 🚀 실제 AI 분석 수행 (SmartBusinessSystem 사용)
-            print("   🤖 실제 AI 분석 시작...")
+            # 실제 AI 분석 수행 (SmartBusinessSystem 사용)
+            print("   [AI] 실제 AI 분석 시작...")
             analysis_result = self.smart_system.analyze_business_idea(name, keyword, config)
 
             # 분석 실패 시 처리
@@ -341,8 +341,8 @@ class ContinuousBusinessDiscovery:
                     'failure_reason': failure_reason
                 }
 
-            # 80점 이상만 business_plans 테이블에 저장
-            elif total_score >= 80:
+            # 60점 이상 business_plans 테이블에 저장 (60-79: 검토 대상, 80+: 우수)
+            elif total_score >= 60:
                 print(f"   [SAVE] 우수한 아이디어! DB에 저장 중...")
 
                 # 사업 계획으로 DB에 저장
@@ -440,7 +440,7 @@ class ContinuousBusinessDiscovery:
 
         # IT 사업 아이디어 생성
         it_ideas = self.get_it_business_ideas()
-        print(f"📋 이번 시간 분석 대상: {len(it_ideas)}개\n")
+        print(f"[IDEAS] 이번 시간 분석 대상: {len(it_ideas)}개\n")
 
         results = []
         saved_count = 0
@@ -461,8 +461,8 @@ class ContinuousBusinessDiscovery:
         print(f"[RESULT] 이번 시간 결과")
         print(f"{'='*80}")
         print(f"분석: {len(it_ideas)}개")
-        print(f"저장: {saved_count}개 (80점 이상)")
-        print(f"제외: {len(it_ideas) - saved_count}개\n")
+        print(f"저장: {saved_count}개 (60점 이상)")
+        print(f"제외: {len(it_ideas) - saved_count}개 (60점 미만)\n")
 
         # 시간별 스냅샷 생성
         print(f"[SNAPSHOT] 시간별 스냅샷 생성 중...")
@@ -546,12 +546,12 @@ class ContinuousBusinessDiscovery:
         self.session.add(meeting)
         self.session.commit()
 
-        print(f"   📝 회의록 생성 완료!")
+        print(f"   [MEETING] 회의록 생성 완료!")
         logging.info(f"Meeting record created with {len(saved_ideas)} ideas")
 
     def run_continuous(self):
         """지속적 실행 (24/7)"""
-        print("🚀 24/7 지속 실행 모드 시작")
+        print("[CONTINUOUS] 24/7 지속 실행 모드 시작")
         print("매시간 정각에 자동 사업 발굴")
         print("Ctrl+C로 종료\n")
 
@@ -574,7 +574,7 @@ class ContinuousBusinessDiscovery:
                     last_hour = current_hour
 
                     # 다음 시간까지 대기
-                    print(f"\n⏰ 다음 발굴: {(now + timedelta(hours=1)).strftime('%H:00')}")
+                    print(f"\n[NEXT] 다음 발굴: {(now + timedelta(hours=1)).strftime('%H:00')}")
                     print("="*80 + "\n")
 
                     time.sleep(60)  # 1분 대기

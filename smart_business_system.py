@@ -84,9 +84,13 @@ class SmartBusinessSystem:
 
             # 3단계: 실행 계획 자동 생성
             print("3️⃣  4주 실행 계획 생성 중...")
-            action_plan = self.action_planner.generate_comprehensive_plan(business_config)
-
-            print(f"\n   ✅ 실행 계획 완성!")
+            action_plan = None
+            try:
+                action_plan = self.action_planner.generate_comprehensive_plan(business_config)
+                print(f"\n   ✅ 실행 계획 완성!")
+            except Exception as e:
+                print(f"\n   ⚠️ 실행 계획 생성 실패: {e}")
+                print(f"   ℹ️ 분석 결과는 정상적으로 저장됩니다.")
 
             return {
                 'business_idea': business_idea,
