@@ -142,8 +142,8 @@ def get_sync_status():
 
 @app.route('/')
 def index():
-    """Qhyx Inc. 메인 웹사이트"""
-    return render_template('qhyx_main.html')
+    """Qhyx Inc. 메인 홈페이지"""
+    return render_template('index.html')
 
 @app.route('/dashboard')
 def dashboard():

@@ -5,6 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>1인 창업 지원사업 탐색 - Qhyx</title>
     <style>
+        /* 네비게이션 바가 있을 때 body 패딩 조정 */
+        body.with-navbar {
+            padding-top: 0;
+        }
+    </style>
+    <style>
         * {
             margin: 0;
             padding: 0;
@@ -341,7 +347,9 @@
         }
     </style>
 </head>
-<body>
+<body class="with-navbar">
+    {% include 'navbar.html' %}
+
     <div class="container">
         <div class="header">
             <h1>🚀 1인 창업 지원사업 탐색</h1>
