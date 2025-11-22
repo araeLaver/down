@@ -12,7 +12,7 @@ sys.path.append(os.path.dirname(__file__))
 from smart_business_system import SmartBusinessSystem
 from realistic_business_generator import RealisticBusinessGenerator
 from trend_based_idea_generator import TrendBasedIdeaGenerator
-from database_setup import Session, BusinessPlan, BusinessMeeting, Employee
+from database_setup import Session, BusinessPlan, BusinessMeeting, Employee, get_kst_now
 from business_discovery_history import BusinessHistoryTracker, initialize_history_tables, BusinessDiscoveryHistory
 from datetime import datetime, timedelta
 import time
@@ -57,7 +57,7 @@ class ContinuousBusinessDiscovery:
 
         # 최근 7일간 이미 분석한 사업명 가져오기 (중복 방지)
         from datetime import timedelta
-        seven_days_ago = datetime.now() - timedelta(days=7)
+        seven_days_ago = get_kst_now() - timedelta(days=7)
         recent_businesses = self.session.query(BusinessDiscoveryHistory).filter(
             BusinessDiscoveryHistory.discovered_at >= seven_days_ago
         ).all()
@@ -380,7 +380,7 @@ class ContinuousBusinessDiscovery:
                         status='approved',
                         created_by='AI_Discovery_System',
                         details={
-                            'discovery_date': datetime.now().isoformat(),
+                            'discovery_date': get_kst_now().isoformat(),
                             'analysis_score': total_score,
                             'market_score': market_score,
                             'revenue_score': revenue_score,
@@ -436,7 +436,7 @@ class ContinuousBusinessDiscovery:
 
     def run_hourly_discovery(self):
         """매시간 사업 발굴 (히스토리 추적 및 인사이트 생성)"""
-        now = datetime.now()
+        now = get_kst_now()
         discovery_batch = now.strftime('%Y-%m-%d-%H')  # 배치 ID
 
         print(f"\n{'='*80}")
@@ -502,7 +502,7 @@ class ContinuousBusinessDiscovery:
 
     def generate_discovery_meeting(self, results):
         """발굴 결과 회의록 생성"""
-        now = datetime.now()
+        now = get_kst_now()
         saved_ideas = [r for r in results['results'] if r.get('saved')]
 
         if not saved_ideas:
@@ -565,7 +565,7 @@ class ContinuousBusinessDiscovery:
 
         while True:
             try:
-                now = datetime.now()
+                now = get_kst_now()
                 current_hour = now.hour
                 current_minute = now.minute
 

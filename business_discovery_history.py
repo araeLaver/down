@@ -8,7 +8,7 @@
 from sqlalchemy import Column, Integer, String, DateTime, Float, JSON, Text, Boolean, Index
 from sqlalchemy.ext.declarative import declarative_base
 from datetime import datetime, timedelta
-from database_setup import Base, Session, SCHEMA_NAME, engine
+from database_setup import Base, Session, SCHEMA_NAME, engine, get_kst_now
 import json
 
 # 새로운 히스토리 테이블들
@@ -238,7 +238,7 @@ class BusinessHistoryTracker:
     def create_snapshot(self, snapshot_type='hourly'):
         """현재 상황의 스냅샷 생성"""
 
-        now = datetime.utcnow()
+        now = get_kst_now()
 
         # 시간 범위 설정
         if snapshot_type == 'hourly':
@@ -343,7 +343,7 @@ class BusinessHistoryTracker:
         """인사이트 자동 생성"""
 
         # 최근 24시간 데이터
-        yesterday = datetime.utcnow() - timedelta(days=1)
+        yesterday = get_kst_now() - timedelta(days=1)
         recent = self.session.query(BusinessDiscoveryHistory).filter(
             BusinessDiscoveryHistory.discovered_at >= yesterday
         ).all()
@@ -520,7 +520,7 @@ class BusinessHistoryTracker:
 
     def get_history_stats(self, days=7):
         """히스토리 통계"""
-        start_date = datetime.utcnow() - timedelta(days=days)
+        start_date = get_kst_now() - timedelta(days=days)
 
         histories = self.session.query(BusinessDiscoveryHistory).filter(
             BusinessDiscoveryHistory.discovered_at >= start_date
@@ -533,13 +533,13 @@ class BusinessHistoryTracker:
             'categories': len(set(h.category for h in histories if h.category)),
             'date_range': {
                 'start': start_date.strftime('%Y-%m-%d'),
-                'end': datetime.utcnow().strftime('%Y-%m-%d')
+                'end': get_kst_now().strftime('%Y-%m-%d')
             }
         }
 
     def get_low_score_stats(self, days=7):
         """60점 미만 사업 통계"""
-        start_date = datetime.utcnow() - timedelta(days=days)
+        start_date = get_kst_now() - timedelta(days=days)
 
         low_scores = self.session.query(LowScoreBusiness).filter(
             LowScoreBusiness.created_at >= start_date

@@ -8,8 +8,15 @@ from sqlalchemy import create_engine, text, MetaData, Table, Column, Integer, St
 from sqlalchemy.engine import URL
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, relationship
-from datetime import datetime
+from datetime import datetime, timezone, timedelta
 import os
+
+# 한국 시간대 (KST = UTC+9)
+KST = timezone(timedelta(hours=9))
+
+def get_kst_now():
+    """한국 시간(KST) 반환"""
+    return datetime.now(KST).replace(tzinfo=None)
 
 # Koyeb PostgreSQL 연결 설정
 connection_string = URL.create(
@@ -54,7 +61,7 @@ class ActivityLog(Base):
     }
     
     id = Column(Integer, primary_key=True)
-    timestamp = Column(DateTime, default=datetime.utcnow, nullable=False)
+    timestamp = Column(DateTime, default=get_kst_now, nullable=False)
     activity_type = Column(String(50), nullable=False)
     description = Column(String(500))
     details = Column(JSON)
@@ -74,7 +81,7 @@ class SyncLog(Base):
     __table_args__ = {'schema': SCHEMA_NAME, 'extend_existing': True}
     
     id = Column(Integer, primary_key=True)
-    timestamp = Column(DateTime, default=datetime.utcnow, nullable=False)
+    timestamp = Column(DateTime, default=get_kst_now, nullable=False)
     action = Column(String(50), nullable=False)
     message = Column(String(1000))
     status = Column(String(20), default='info')
@@ -93,7 +100,7 @@ class CompanyMetric(Base):
     __table_args__ = {'schema': SCHEMA_NAME, 'extend_existing': True}
     
     id = Column(Integer, primary_key=True)
-    date = Column(Date, default=datetime.utcnow, nullable=False)
+    date = Column(Date, default=get_kst_now, nullable=False)
     metric_name = Column(String(100), nullable=False)
     value = Column(Float, nullable=False)
     unit = Column(String(20))
@@ -137,7 +144,7 @@ class Employee(Base):
     role = Column(String(100))
     department = Column(String(100))
     status = Column(String(20), default='active')  # active, inactive, terminated
-    created_at = Column(DateTime, default=datetime.utcnow)
+    created_at = Column(DateTime, default=get_kst_now)
     last_activity = Column(DateTime)
     performance_score = Column(Float)
     tasks_completed = Column(Integer, default=0)
@@ -157,7 +164,7 @@ class Task(Base):
     status = Column(String(20), default='pending')  # pending, in_progress, completed, failed
     priority = Column(String(20), default='medium')  # low, medium, high, critical
     assigned_to = Column(String(50), ForeignKey(f'{SCHEMA_NAME}.ai_employees.employee_id'))
-    created_at = Column(DateTime, default=datetime.utcnow)
+    created_at = Column(DateTime, default=get_kst_now)
     started_at = Column(DateTime)
     completed_at = Column(DateTime)
     due_date = Column(DateTime)
@@ -170,7 +177,7 @@ class SystemHealth(Base):
     __table_args__ = {'schema': SCHEMA_NAME, 'extend_existing': True}
     
     id = Column(Integer, primary_key=True)
-    timestamp = Column(DateTime, default=datetime.utcnow, nullable=False)
+    timestamp = Column(DateTime, default=get_kst_now, nullable=False)
     service_name = Column(String(100), nullable=False)
     status = Column(String(20), nullable=False)  # healthy, degraded, down
     response_time_ms = Column(Integer)
@@ -187,7 +194,7 @@ class CompanyMilestone(Base):
     milestone_type = Column(String(50), nullable=False)  # technical, business, team
     title = Column(String(200), nullable=False)
     description = Column(String(1000))
-    achieved_at = Column(DateTime, default=datetime.utcnow)
+    achieved_at = Column(DateTime, default=get_kst_now)
     impact_score = Column(Float)  # 1-10 중요도
     details = Column(JSON)
 
@@ -196,7 +203,7 @@ class Revenue(Base):
     __table_args__ = {'schema': SCHEMA_NAME, 'extend_existing': True}
     
     id = Column(Integer, primary_key=True)
-    date = Column(Date, default=datetime.utcnow, nullable=False)
+    date = Column(Date, default=get_kst_now, nullable=False)
     source = Column(String(100))  # 수익원
     amount = Column(Float, nullable=False)
     currency = Column(String(10), default='KRW')
@@ -215,7 +222,7 @@ class BusinessMeeting(Base):
     participants = Column(JSON)  # 참석자 리스트
     key_decisions = Column(JSON)  # 주요 결정사항
     action_items = Column(JSON)  # 실행 항목
-    meeting_date = Column(DateTime, default=datetime.utcnow)
+    meeting_date = Column(DateTime, default=get_kst_now)
     status = Column(String(20), default='planned')  # planned, ongoing, completed
     meeting_notes = Column(String(2000))
     follow_up_date = Column(DateTime)
@@ -237,7 +244,7 @@ class BusinessPlan(Base):
     priority = Column(String(20), default='medium')
     status = Column(String(20), default='draft')  # draft, approved, in_progress, completed
     created_by = Column(String(100))
-    created_at = Column(DateTime, default=datetime.utcnow)
+    created_at = Column(DateTime, default=get_kst_now)
     approved_at = Column(DateTime)
     details = Column(JSON)
 
@@ -256,7 +263,7 @@ class EmployeeSuggestion(Base):
     expected_benefit = Column(String(1000))
     implementation_difficulty = Column(String(20), default='medium')  # easy, medium, hard, very_hard
     status = Column(String(20), default='submitted')  # submitted, reviewing, approved, rejected, implemented
-    created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
+    created_at = Column(DateTime, default=get_kst_now, nullable=False)
     reviewed_at = Column(DateTime)
     implemented_at = Column(DateTime)
     reviewer_notes = Column(String(1000))
@@ -276,7 +283,7 @@ class SuggestionFeedback(Base):
     feedback_type = Column(String(20), nullable=False)  # comment, update, decision
     feedback_text = Column(String(1000), nullable=False)
     created_by = Column(String(100))  # 누가 피드백을 남겼는지
-    created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
+    created_at = Column(DateTime, default=get_kst_now, nullable=False)
     is_internal = Column(Boolean, default=False)  # 내부 메모인지 직원에게 공개되는지
 
 class StartupSupportProgram(Base):
@@ -299,8 +306,8 @@ class StartupSupportProgram(Base):
     requirements = Column(JSON)  # 신청요건 리스트
     benefits = Column(JSON)  # 혜택 리스트
     region = Column(String(50))  # 지역 (해당시)
-    created_at = Column(DateTime, default=datetime.utcnow)
-    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    created_at = Column(DateTime, default=get_kst_now)
+    updated_at = Column(DateTime, default=get_kst_now, onupdate=get_kst_now)
     is_active = Column(Boolean, default=True)  # 현재 진행중인 사업인지
 
 class UserStartupProfile(Base):
@@ -319,8 +326,8 @@ class UserStartupProfile(Base):
     current_status = Column(String(100))  # 현재 상태
     interests = Column(JSON)  # 관심 지원사업 카테고리
     applied_programs = Column(JSON)  # 신청한 사업 ID 리스트
-    created_at = Column(DateTime, default=datetime.utcnow)
-    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    created_at = Column(DateTime, default=get_kst_now)
+    updated_at = Column(DateTime, default=get_kst_now, onupdate=get_kst_now)
 
 class StartupProgramBookmark(Base):
     """지원사업 북마크"""
@@ -330,7 +337,7 @@ class StartupProgramBookmark(Base):
     id = Column(Integer, primary_key=True)
     user_id = Column(String(100), nullable=False)
     program_id = Column(String(100), ForeignKey(f'{SCHEMA_NAME}.startup_support_programs.program_id'), nullable=False)
-    created_at = Column(DateTime, default=datetime.utcnow)
+    created_at = Column(DateTime, default=get_kst_now)
     notes = Column(String(1000))  # 개인 메모
 
 def initialize_database():
