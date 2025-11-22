@@ -88,6 +88,22 @@ jobs:
 
         echo "" >> $GITHUB_STEP_SUMMARY
 
+    - name: 🔍 자동 사업 발굴 트리거
+      run: |
+        echo "## 🔍 자동 사업 발굴" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+
+        # Koyeb 배포된 서버에 사업 발굴 API 호출
+        RESPONSE=$(curl -s -X POST https://anonymous-kylen-untab-d30cd097.koyeb.app/api/trigger-discovery || echo "FAILED")
+
+        if [ "$RESPONSE" != "FAILED" ]; then
+          echo "- ✅ 사업 발굴 트리거 성공" >> $GITHUB_STEP_SUMMARY
+          echo "- 응답: $RESPONSE" >> $GITHUB_STEP_SUMMARY
+        else
+          echo "- ⚠️ 사업 발굴 트리거 실패" >> $GITHUB_STEP_SUMMARY
+        fi
+        echo "" >> $GITHUB_STEP_SUMMARY
+
     - name: 💾 변경사항 커밋
       run: |
         git config --local user.email "action@github.com"

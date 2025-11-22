@@ -829,36 +829,6 @@ def trigger_discovery_page():
     """수동 사업 발굴 페이지"""
     return render_template('trigger_discovery.html')
 
-@app.route('/api/trigger-discovery')
-def trigger_discovery():
-    """수동으로 사업 발굴 트리거 (테스트용)"""
-    try:
-        from continuous_business_discovery import ContinuousBusinessDiscovery
-        from datetime import datetime
-
-        discovery = ContinuousBusinessDiscovery()
-        results = discovery.run_hourly_discovery()
-
-        if results['saved'] > 0:
-            discovery.generate_discovery_meeting(results)
-
-        discovery.close()
-
-        return jsonify({
-            'success': True,
-            'message': 'Discovery completed',
-            'results': {
-                'analyzed': results['analyzed'],
-                'saved': results['saved'],
-                'timestamp': datetime.now().isoformat()
-            }
-        })
-    except Exception as e:
-        return jsonify({
-            'success': False,
-            'error': str(e)
-        }), 500
-
 @app.route('/api/discovered-businesses')
 def api_discovered_businesses():
     """자동 발굴된 사업 목록 API (60점 이상 모두 포함)"""
@@ -927,7 +897,7 @@ def api_discovered_businesses():
     finally:
         session.close()
 
-@app.route('/api/trigger-discovery', methods=['POST'])
+@app.route('/api/trigger-discovery', methods=['GET', 'POST'])
 def trigger_discovery():
     """수동으로 사업 발굴 트리거 (즉시 실행)"""
     try:
@@ -940,7 +910,7 @@ def trigger_discovery():
             'success': True,
             'message': '사업 발굴 실행 완료',
             'results': {
-                'analyzed': results.get('total', 0),
+                'analyzed': results.get('analyzed', 0),
                 'saved': results.get('saved', 0),
                 'timestamp': results.get('timestamp')
             }
