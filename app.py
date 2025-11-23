@@ -900,21 +900,35 @@ def api_discovered_businesses():
 
 @app.route('/api/trigger-discovery', methods=['GET', 'POST'])
 def trigger_discovery():
-    """수동으로 사업 발굴 트리거 (즉시 실행)"""
+    """수동으로 사업 발굴 트리거 (백그라운드에서 비동기 실행)"""
     try:
+        from threading import Thread
         from continuous_business_discovery import ContinuousBusinessDiscovery
 
-        discovery = ContinuousBusinessDiscovery()
-        results = discovery.run_once_now()
+        def run_discovery_background():
+            """백그라운드에서 발굴 실행"""
+            try:
+                discovery = ContinuousBusinessDiscovery()
+                results = discovery.run_hourly_discovery()
+
+                if results['saved'] > 0:
+                    discovery.generate_discovery_meeting(results)
+
+                logging.info(f"Discovery completed: analyzed={results.get('analyzed')}, saved={results.get('saved')}")
+                print(f"[TRIGGER] Discovery completed: {results.get('analyzed')} analyzed, {results.get('saved')} saved")
+            except Exception as e:
+                logging.error(f"Background discovery error: {e}")
+                print(f"[TRIGGER ERROR] {e}")
+
+        # 백그라운드 스레드로 실행
+        thread = Thread(target=run_discovery_background, daemon=True)
+        thread.start()
 
         return jsonify({
             'success': True,
-            'message': '사업 발굴 실행 완료',
-            'results': {
-                'analyzed': results.get('analyzed', 0),
-                'saved': results.get('saved', 0),
-                'timestamp': results.get('timestamp')
-            }
+            'message': '사업 발굴이 백그라운드에서 시작되었습니다',
+            'status': 'running',
+            'timestamp': datetime.now().isoformat()
         })
     except Exception as e:
         return jsonify({
