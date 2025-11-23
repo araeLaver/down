@@ -1425,24 +1425,34 @@ def background_business_discovery():
             current_hour = now.hour
             current_minute = now.minute
 
-            # 매시간 정각에 실행
-            if current_minute == 0 and current_hour != last_hour:
+            # 매시간 정각 근처(0~2분)에 실행, 중복 방지
+            if current_minute <= 2 and current_hour != last_hour:
                 logging.info(f"[DISCOVERY] Running hourly discovery at {now}")
-                print(f"[DISCOVERY] Running hourly discovery at {now}")
+                print(f"\n" + "="*80)
+                print(f"[DISCOVERY] Running hourly discovery at {now.strftime('%Y-%m-%d %H:%M:%S')}")
+                print("="*80)
 
                 results = discovery.run_hourly_discovery()
+
+                logging.info(f"[DISCOVERY] Results: analyzed={results.get('analyzed', 0)}, saved={results.get('saved', 0)}")
+                print(f"\n[RESULTS] Analyzed: {results.get('analyzed', 0)}, Saved: {results.get('saved', 0)}")
 
                 if results['saved'] > 0:
                     discovery.generate_discovery_meeting(results)
 
                 last_hour = current_hour
-                time.sleep(60)
+                print(f"[NEXT] Next discovery at {(now + timedelta(hours=1)).strftime('%H:00')}")
+                print("="*80 + "\n")
+
+                time.sleep(180)  # 3분 대기 (정각 근처 중복 실행 방지)
             else:
-                time.sleep(30)
+                time.sleep(20)  # 20초마다 체크
 
         except Exception as e:
             logging.error(f"Discovery error: {e}")
-            print(f"Discovery error: {e}")
+            print(f"\n[ERROR] Discovery error: {e}\n")
+            import traceback
+            traceback.print_exc()
             time.sleep(60)
 
 
