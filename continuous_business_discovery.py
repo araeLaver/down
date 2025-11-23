@@ -308,7 +308,7 @@ class ContinuousBusinessDiscovery:
                 full_analysis=opportunity
             )
 
-            # 60점 미만이면 low_score_businesses 테이블에 저장
+            # 50점 미만이면 low_score_businesses 테이블에 저장
             if total_score < 60:
                 # 실패 원인 판단
                 if market_score < 60 and revenue_score < 60:
@@ -334,7 +334,7 @@ class ContinuousBusinessDiscovery:
                     full_data=opportunity
                 )
 
-                print(f"   [LOW] 저점수 사업 (60점 미만). low_score_businesses 테이블에 저장 (개선 분석용)")
+                print(f"   [LOW] 저점수 사업 (50점 미만). low_score_businesses 테이블에 저장 (개선 분석용)")
                 logging.info(f"Saved to low_score_businesses: {name} (Score: {total_score}, Reason: {failure_reason})")
 
                 return {
@@ -347,8 +347,8 @@ class ContinuousBusinessDiscovery:
                     'failure_reason': failure_reason
                 }
 
-            # 60점 이상 business_plans 테이블에 저장 (60-79: 검토 대상, 80+: 우수)
-            elif total_score >= 60:
+            # 50점 이상 business_plans 테이블에 저장 (50-69: 검토 대상, 70+: 우수)
+            elif total_score >= 50:
                 print(f"   [SAVE] 우수한 아이디어! DB에 저장 중...")
 
                 # 사업 계획으로 DB에 저장
@@ -467,8 +467,8 @@ class ContinuousBusinessDiscovery:
         print(f"[RESULT] 이번 시간 결과")
         print(f"{'='*80}")
         print(f"분석: {len(it_ideas)}개")
-        print(f"저장: {saved_count}개 (60점 이상)")
-        print(f"제외: {len(it_ideas) - saved_count}개 (60점 미만)\n")
+        print(f"저장: {saved_count}개 (50점 이상)")
+        print(f"제외: {len(it_ideas) - saved_count}개 (50점 미만)\n")
 
         # 시간별 스냅샷 생성
         print(f"[SNAPSHOT] 시간별 스냅샷 생성 중...")
