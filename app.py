@@ -835,9 +835,9 @@ def api_discovered_businesses():
     """자동 발굴된 사업 목록 API (60점 이상 모두 포함)"""
     session = Session()
     try:
-        # BusinessDiscoveryHistory에서 60점 이상 사업 모두 조회
+        # BusinessDiscoveryHistory에서 50점 이상 사업 모두 조회
         histories = session.query(BusinessDiscoveryHistory).filter(
-            BusinessDiscoveryHistory.total_score >= 60
+            BusinessDiscoveryHistory.total_score >= 50
         ).order_by(BusinessDiscoveryHistory.discovered_at.desc()).limit(100).all()
 
         business_list = []
@@ -874,13 +874,13 @@ def api_discovered_businesses():
         # 통계
         today = datetime.utcnow().date()
         today_count = session.query(BusinessDiscoveryHistory).filter(
-            BusinessDiscoveryHistory.total_score >= 60,
+            BusinessDiscoveryHistory.total_score >= 50,
             BusinessDiscoveryHistory.discovered_at >= today
         ).count()
 
         week_ago = datetime.utcnow() - timedelta(days=7)
         week_count = session.query(BusinessDiscoveryHistory).filter(
-            BusinessDiscoveryHistory.total_score >= 60,
+            BusinessDiscoveryHistory.total_score >= 50,
             BusinessDiscoveryHistory.discovered_at >= week_ago
         ).count()
 
@@ -893,6 +893,89 @@ def api_discovered_businesses():
                 'today': today_count,
                 'this_week': week_count,
                 'high_score': high_score_count
+            }
+        })
+    finally:
+        session.close()
+
+@app.route('/api/low-score-businesses')
+def api_low_score_businesses():
+    """저점수 사업 목록 API (50점 미만)"""
+    session = Session()
+    try:
+        # low_score_businesses 테이블에서 50점 미만 사업 조회
+        from sqlalchemy import text
+
+        # 직접 SQL로 조회 (테이블이 존재한다면)
+        result = session.execute(text(f"""
+            SELECT id, business_name, business_type, total_score, market_score, revenue_score,
+                   category, keyword, market_analysis, revenue_analysis, discovered_at
+            FROM {SCHEMA_NAME}.low_score_businesses
+            ORDER BY discovered_at DESC
+            LIMIT 100
+        """))
+
+        business_list = []
+        for row in result:
+            # 월 매출 추정
+            monthly_revenue = row.total_score * 100000
+            annual_revenue = monthly_revenue * 12
+            investment = row.total_score * 50000
+
+            business_list.append({
+                'id': row.id,
+                'name': row.business_name,
+                'type': row.business_type,
+                'score': row.total_score,
+                'feasibility': row.total_score / 10,
+                'revenue_12m': annual_revenue,
+                'investment': investment,
+                'risk': 'high',
+                'priority': 'low',
+                'created_at': row.discovered_at.strftime('%Y-%m-%d %H:%M') if row.discovered_at else None,
+                'description': f"{row.business_name} - 시장성 {row.market_score:.1f}점, 수익성 {row.revenue_score:.1f}점 (실험적 아이디어)",
+                'revenue_model': 'experimental',
+                'details': {
+                    'analysis_score': row.total_score,
+                    'market_score': row.market_score,
+                    'revenue_score': row.revenue_score,
+                    'category': row.category,
+                    'keyword': row.keyword,
+                    'market_analysis': row.market_analysis,
+                    'revenue_analysis': row.revenue_analysis
+                }
+            })
+
+        # 통계
+        total_count = session.execute(text(f"""
+            SELECT COUNT(*) FROM {SCHEMA_NAME}.low_score_businesses
+        """)).scalar()
+
+        today = datetime.utcnow().date()
+        today_count = session.execute(text(f"""
+            SELECT COUNT(*) FROM {SCHEMA_NAME}.low_score_businesses
+            WHERE DATE(discovered_at) = :today
+        """), {'today': today}).scalar()
+
+        return jsonify({
+            'businesses': business_list,
+            'stats': {
+                'total': total_count or 0,
+                'today': today_count or 0,
+                'this_week': 0,
+                'high_score': 0
+            }
+        })
+    except Exception as e:
+        # 테이블이 없거나 에러가 발생하면 빈 목록 반환
+        logging.error(f"Error fetching low score businesses: {e}")
+        return jsonify({
+            'businesses': [],
+            'stats': {
+                'total': 0,
+                'today': 0,
+                'this_week': 0,
+                'high_score': 0
             }
         })
     finally:

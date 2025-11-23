@@ -573,6 +573,9 @@
                 <button class="filter-btn" onclick="filterBusinesses('medium')">
                     <i class="fas fa-check"></i> 중간 (80-84)
                 </button>
+                <button class="filter-btn" onclick="filterBusinesses('low')">
+                    <i class="fas fa-flask"></i> 저점수 (50점 미만)
+                </button>
             </div>
             <div style="display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap;">
                 <span class="filter-label">정렬:</span>
@@ -741,7 +744,7 @@
         }
 
         // Filter businesses
-        function filterBusinesses(filter) {
+        async function filterBusinesses(filter) {
             currentFilter = filter;
 
             // Update active button
@@ -756,6 +759,16 @@
                 filteredBusinesses = allBusinesses.filter(b => b.score >= 85);
             } else if (filter === 'medium') {
                 filteredBusinesses = allBusinesses.filter(b => b.score >= 80 && b.score < 85);
+            } else if (filter === 'low') {
+                // Load low score businesses from separate table
+                try {
+                    const response = await fetch('/api/low-score-businesses');
+                    const data = await response.json();
+                    filteredBusinesses = data.businesses;
+                } catch (error) {
+                    console.error('Error loading low score businesses:', error);
+                    filteredBusinesses = [];
+                }
             }
 
             displayBusinesses(filteredBusinesses);
