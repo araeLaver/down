@@ -9,13 +9,27 @@ on:
 jobs:
   discover:
     runs-on: ubuntu-latest
+    timeout-minutes: 30  # 최대 30분
 
     steps:
-      - name: Trigger Business Discovery
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install dependencies
         run: |
-          curl -X POST "https://anonymous-kylen-untab-d30cd097.koyeb.app/api/trigger-discovery" \
-            -H "Content-Type: application/json" \
-            -w "\nHTTP Status: %{http_code}\n"
+          pip install -r requirements.txt
+
+      - name: Run Business Discovery
+        env:
+          DATABASE_URL: postgresql://unble:npg_1kjV0mhECxqs@ep-divine-bird-a1f4mly5.ap-southeast-1.pg.koyeb.app/unble
+        run: |
+          python run_discovery.py
 
       - name: Check Result
-        run: echo "Discovery triggered successfully"
+        run: echo "Discovery completed successfully"
