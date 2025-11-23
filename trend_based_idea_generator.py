@@ -26,7 +26,7 @@ class TrendBasedIdeaGenerator:
             self.pytrends = TrendReq(hl='ko-KR', tz=540)
         except:
             self.pytrends = None
-            print("⚠️ Google Trends 초기화 실패")
+            print("[WARNING] Google Trends initialization failed")
 
     def scrape_kmong_trending(self):
         """크몽에서 인기 서비스 크롤링"""
@@ -71,10 +71,10 @@ class TrendBasedIdeaGenerator:
                 except Exception as e:
                     continue
 
-            print(f"✅ 크몽에서 {len(trending_services)}개 인기 서비스 수집")
+            print(f"[OK] Collected {len(trending_services)} popular services from Kmong")
 
         except Exception as e:
-            print(f"⚠️ 크몽 크롤링 실패: {e}")
+            print(f"[WARNING] Kmong crawling failed: {e}")
 
         return trending_services
 
@@ -111,10 +111,10 @@ class TrendBasedIdeaGenerator:
                 except Exception as e:
                     continue
 
-            print(f"✅ 탈잉에서 {len(trending_classes)}개 인기 클래스 수집")
+            print(f"[OK] Collected {len(trending_classes)} popular classes from Taling")
 
         except Exception as e:
-            print(f"⚠️ 탈잉 크롤링 실패: {e}")
+            print(f"[WARNING] Taling crawling failed: {e}")
 
         return trending_classes
 
@@ -144,10 +144,10 @@ class TrendBasedIdeaGenerator:
 
                 time.sleep(0.5)  # API 호출 간격
 
-            print(f"✅ 네이버에서 {len(keywords)}개 트렌드 키워드 수집")
+            print(f"[OK] Collected {len(keywords)} trend keywords from Naver")
 
         except Exception as e:
-            print(f"⚠️ 네이버 키워드 수집 실패: {e}")
+            print(f"[WARNING] Naver keyword collection failed: {e}")
 
         return keywords
 
@@ -156,7 +156,7 @@ class TrendBasedIdeaGenerator:
         trending_keywords = []
 
         if not self.pytrends:
-            print("⚠️ Google Trends를 사용할 수 없습니다")
+            print("[WARNING] Google Trends cannot be used")
             return trending_keywords
 
         # 여러 국가에서 트렌드 수집
@@ -170,7 +170,7 @@ class TrendBasedIdeaGenerator:
 
         for country_code, country_name in countries.items():
             try:
-                print(f"   🌍 {country_name} 트렌드 수집 중...")
+                print(f"   [{country_name}] 트렌드 수집 중...")
                 trending_searches = self.pytrends.trending_searches(pn=country_code)
 
                 for keyword in trending_searches[0][:10]:  # 국가당 상위 10개
@@ -209,10 +209,10 @@ class TrendBasedIdeaGenerator:
                 time.sleep(2)  # 국가별 API 호출 간격
 
             except Exception as e:
-                print(f"   ⚠️ {country_name} 트렌드 수집 실패: {e}")
+                print(f"   [WARNING] {country_name} trend collection failed: {e}")
                 continue
 
-        print(f"✅ Google Trends에서 총 {len(trending_keywords)}개 키워드 수집 (5개국)")
+        print(f"[OK] Collected total {len(trending_keywords)} keywords from Google Trends (5 countries)")
 
         return trending_keywords
 
@@ -252,7 +252,7 @@ class TrendBasedIdeaGenerator:
     def generate_ideas_from_trends(self):
         """트렌드 기반 사업 아이디어 생성"""
         print("\n" + "="*80)
-        print("🔥 실시간 트렌드 기반 사업 아이디어 수집 중...")
+        print("[TREND] Collecting business ideas from real-time trends...")
         print("="*80 + "\n")
 
         all_ideas = []
@@ -291,7 +291,7 @@ class TrendBasedIdeaGenerator:
             if idea:
                 all_ideas.append(idea)
 
-        print(f"\n✅ 총 {len(all_ideas)}개 트렌드 기반 아이디어 생성 완료!\n")
+        print(f"\n[OK] Generated {len(all_ideas)} trend-based business ideas!\n")
 
         return all_ideas
 
