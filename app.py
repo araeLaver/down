@@ -858,7 +858,7 @@ def api_discovered_businesses():
                 'risk': 'low' if biz.total_score >= 80 else 'medium' if biz.total_score >= 70 else 'high',
                 'priority': 'high' if biz.total_score >= 80 else 'medium',
                 'created_at': biz.discovered_at.strftime('%Y-%m-%d %H:%M') if biz.discovered_at else None,
-                'description': f"{biz.business_name} - 시장성 {biz.market_score:.1f}점, 수익성 {biz.revenue_score:.1f}점",
+                'description': f"{biz.business_name} - 시장성 {int(biz.market_score)}점, 수익성 {int(biz.revenue_score)}점",
                 'revenue_model': 'subscription',
                 'details': {
                     'analysis_score': biz.total_score,
@@ -933,7 +933,7 @@ def api_low_score_businesses():
                 'risk': 'high',
                 'priority': 'low',
                 'created_at': row.discovered_at.strftime('%Y-%m-%d %H:%M') if row.discovered_at else None,
-                'description': f"{row.business_name} - 시장성 {row.market_score:.1f}점, 수익성 {row.revenue_score:.1f}점 (실험적 아이디어)",
+                'description': f"{row.business_name} - 시장성 {int(row.market_score)}점, 수익성 {int(row.revenue_score)}점 (실험적 아이디어)",
                 'revenue_model': 'experimental',
                 'details': {
                     'analysis_score': row.total_score,
