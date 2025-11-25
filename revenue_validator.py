@@ -1,9 +1,9 @@
 """
-수익성 검증 모듈
-- 실제 비용 계산
-- 예상 매출 시뮬레이션
-- 손익분기점 분석
-- 시나리오별 ROI 계산
+  
+-   
+-   
+-  
+-  ROI 
 """
 
 from datetime import datetime, timedelta
@@ -11,41 +11,41 @@ import json
 
 class RevenueValidator:
     def __init__(self):
-        # IT 사업 표준 비용
+        # IT   
         self.standard_costs = {
-            'domain': 15000,  # 연간
+            'domain': 15000,  # 
             'hosting': {
-                'shared': 10000,  # 월
+                'shared': 10000,  # 
                 'vps': 30000,
                 'cloud_small': 50000,
                 'cloud_medium': 150000,
                 'cloud_large': 500000
             },
-            'ssl': 0,  # Let's Encrypt 무료
-            'email': 5000,  # 월 (G Suite)
+            'ssl': 0,  # Let's Encrypt 
+            'email': 5000,  #  (G Suite)
             'tools': {
-                'design': 20000,  # Figma, Canva 등
-                'development': 30000,  # 각종 개발 도구
-                'marketing': 50000,  # 마케팅 툴
-                'analytics': 10000,  # GA, Mixpanel 등
-                'crm': 30000  # 고객 관리
+                'design': 20000,  # Figma, Canva 
+                'development': 30000,  #   
+                'marketing': 50000,  #  
+                'analytics': 10000,  # GA, Mixpanel 
+                'crm': 30000  #  
             },
             'marketing': {
-                'google_ads_cpc': 800,  # 클릭당
-                'facebook_ads_cpm': 5000,  # 1000노출당
-                'seo': 500000,  # 월 (대행사)
-                'content_marketing': 300000  # 월
+                'google_ads_cpc': 800,  # 
+                'facebook_ads_cpm': 5000,  # 1000
+                'seo': 500000,  #  ()
+                'content_marketing': 300000  # 
             },
             'outsourcing': {
-                'designer': 50000,  # 일당
-                'developer': 80000,  # 일당
-                'marketer': 40000,  # 일당
-                'writer': 30000  # 일당
+                'designer': 50000,  # 
+                'developer': 80000,  # 
+                'marketer': 40000,  # 
+                'writer': 30000  # 
             }
         }
 
     def calculate_startup_costs(self, business_type, scale='small'):
-        """초기 투자 비용 계산"""
+        """   """
         costs = {
             'development': 0,
             'infrastructure': 0,
@@ -56,26 +56,26 @@ class RevenueValidator:
 
         if business_type == 'saas':
             if scale == 'small':
-                costs['development'] = 2000000  # 노코드 또는 간단한 개발
-                costs['infrastructure'] = 100000  # 첫 달 서버
-                costs['marketing'] = 500000  # 초기 광고
-                costs['operations'] = 200000  # 기타
+                costs['development'] = 2000000  #    
+                costs['infrastructure'] = 100000  #   
+                costs['marketing'] = 500000  #  
+                costs['operations'] = 200000  # 
             elif scale == 'medium':
-                costs['development'] = 5000000  # 외주 개발
+                costs['development'] = 5000000  #  
                 costs['infrastructure'] = 300000
                 costs['marketing'] = 1500000
                 costs['operations'] = 500000
             else:  # large
-                costs['development'] = 15000000  # 풀스택 개발
+                costs['development'] = 15000000  #  
                 costs['infrastructure'] = 1000000
                 costs['marketing'] = 5000000
                 costs['operations'] = 2000000
 
         elif business_type == 'agency':
             if scale == 'small':
-                costs['development'] = 500000  # 웹사이트 + 포트폴리오
+                costs['development'] = 500000  #  + 
                 costs['infrastructure'] = 50000
-                costs['marketing'] = 1000000  # 고객 확보
+                costs['marketing'] = 1000000  #  
                 costs['operations'] = 300000
             elif scale == 'medium':
                 costs['development'] = 2000000
@@ -87,7 +87,7 @@ class RevenueValidator:
             if scale == 'small':
                 costs['development'] = 3000000
                 costs['infrastructure'] = 200000
-                costs['marketing'] = 2000000  # 양쪽 확보
+                costs['marketing'] = 2000000  #  
                 costs['operations'] = 500000
             elif scale == 'medium':
                 costs['development'] = 10000000
@@ -97,7 +97,7 @@ class RevenueValidator:
 
         elif business_type == 'tool':
             if scale == 'small':
-                costs['development'] = 1000000  # 간단한 도구
+                costs['development'] = 1000000  #  
                 costs['infrastructure'] = 50000
                 costs['marketing'] = 300000
                 costs['operations'] = 100000
@@ -106,7 +106,7 @@ class RevenueValidator:
         return costs
 
     def calculate_monthly_costs(self, business_type, scale='small', customer_count=0):
-        """월 운영 비용 계산"""
+        """   """
         costs = {
             'hosting': 0,
             'tools': 0,
@@ -116,7 +116,7 @@ class RevenueValidator:
             'total': 0
         }
 
-        # 호스팅 (고객 수에 따라 증가)
+        #  (   )
         if customer_count < 100:
             costs['hosting'] = self.standard_costs['hosting']['cloud_small']
         elif customer_count < 1000:
@@ -124,7 +124,7 @@ class RevenueValidator:
         else:
             costs['hosting'] = self.standard_costs['hosting']['cloud_large']
 
-        # SaaS 도구
+        # SaaS 
         if scale == 'small':
             costs['tools'] = 50000
         elif scale == 'medium':
@@ -132,27 +132,27 @@ class RevenueValidator:
         else:
             costs['tools'] = 500000
 
-        # 마케팅
+        # 
         if business_type == 'saas':
             costs['marketing'] = 500000 if scale == 'small' else 2000000
         elif business_type == 'agency':
             costs['marketing'] = 300000 if scale == 'small' else 1000000
 
-        # 고객 지원
-        costs['support'] = customer_count * 1000  # 고객당 월 1000원
+        #  
+        costs['support'] = customer_count * 1000  #   1000
 
         costs['total'] = sum(costs.values())
         return costs
 
     def simulate_revenue(self, business_model, pricing, target_market_size):
-        """매출 시뮬레이션 (보수적/현실적/낙관적)"""
+        """  (//)"""
         scenarios = {
             'conservative': {},
             'realistic': {},
             'optimistic': {}
         }
 
-        # 전환율 가정
+        #  
         conversion_rates = {
             'conservative': 0.01,  # 1%
             'realistic': 0.03,     # 3%
@@ -167,12 +167,12 @@ class RevenueValidator:
                 annual_revenue = monthly_revenue * 12
 
             elif business_model == 'one_time':
-                # 월 신규 고객 기준
+                #    
                 monthly_revenue = monthly_customers * pricing['one_time']
                 annual_revenue = monthly_revenue * 12
 
             elif business_model == 'commission':
-                # 거래액 기반
+                #  
                 avg_transaction = pricing['avg_transaction']
                 commission_rate = pricing['commission_rate']
                 transactions_per_customer = pricing.get('transactions_per_month', 5)
@@ -190,11 +190,11 @@ class RevenueValidator:
         return scenarios
 
     def calculate_break_even(self, startup_costs, monthly_costs, monthly_revenue):
-        """손익분기점 계산"""
+        """ """
         if monthly_revenue <= monthly_costs:
             return {
                 'break_even_possible': False,
-                'message': '월 매출이 월 비용보다 낮음. 가격이나 고객 수 조정 필요'
+                'message': '    .     '
             }
 
         monthly_profit = monthly_revenue - monthly_costs
@@ -209,7 +209,7 @@ class RevenueValidator:
         }
 
     def calculate_roi(self, startup_costs, annual_revenue, annual_costs):
-        """ROI 계산"""
+        """ROI """
         annual_profit = annual_revenue - annual_costs
         roi_percentage = (annual_profit / startup_costs) * 100
 
@@ -221,38 +221,38 @@ class RevenueValidator:
         }
 
     def _rate_roi(self, roi_percentage):
-        """ROI 등급"""
+        """ROI """
         if roi_percentage >= 200:
-            return '매우 우수'
+            return ' '
         elif roi_percentage >= 100:
-            return '우수'
+            return ''
         elif roi_percentage >= 50:
-            return '양호'
+            return ''
         elif roi_percentage >= 20:
-            return '보통'
+            return ''
         else:
-            return '미흡'
+            return ''
 
     def comprehensive_validation(self, business_config):
-        """종합 수익성 검증"""
+        """  """
         print(f"\n{'='*60}")
-        print(f"수익성 검증: {business_config['name']}")
+        print(f" : {business_config['name']}")
         print(f"{'='*60}\n")
 
-        # 1. 초기 비용
+        # 1.  
         startup_costs_detail = self.calculate_startup_costs(
             business_config['type'],
             business_config.get('scale', 'small')
         )
         startup_costs = startup_costs_detail['total']
 
-        print(f"1. 초기 투자 비용")
+        print(f"1.   ")
         for key, value in startup_costs_detail.items():
             if key != 'total':
-                print(f"   {key}: {value:,}원")
-        print(f"   총 투자: {startup_costs:,}원\n")
+                print(f"   {key}: {value:,}")
+        print(f"    : {startup_costs:,}\n")
 
-        # 2. 월 비용 (시나리오별)
+        # 2.   ()
         scenarios_costs = {}
         scenarios_revenue = self.simulate_revenue(
             business_config['revenue_model'],
@@ -260,7 +260,7 @@ class RevenueValidator:
             business_config['target_market_size']
         )
 
-        print(f"2. 시나리오별 예측\n")
+        print(f"2.  \n")
 
         results = {}
 
@@ -274,7 +274,7 @@ class RevenueValidator:
             )
             monthly_costs = monthly_costs_detail['total']
 
-            # 손익분기점
+            # 
             break_even = self.calculate_break_even(
                 startup_costs,
                 monthly_costs,
@@ -300,29 +300,29 @@ class RevenueValidator:
                 'roi': roi
             }
 
-            # 출력
+            # 
             print(f"   [{scenario_name.upper()}]")
-            print(f"   월 고객: {monthly_customers}명")
-            print(f"   월 매출: {scenario_data['monthly_revenue']:,}원")
-            print(f"   월 비용: {monthly_costs:,}원")
-            print(f"   월 순이익: {scenario_data['monthly_revenue'] - monthly_costs:,}원")
+            print(f"    : {monthly_customers}")
+            print(f"    : {scenario_data['monthly_revenue']:,}")
+            print(f"    : {monthly_costs:,}")
+            print(f"    : {scenario_data['monthly_revenue'] - monthly_costs:,}")
 
             if break_even['break_even_possible']:
-                print(f"   손익분기: {break_even['months']}개월")
+                print(f"   : {break_even['months']}")
             else:
-                print(f"   손익분기: 불가 ({break_even['message']})")
+                print(f"   :  ({break_even['message']})")
 
-            print(f"   연간 ROI: {roi['roi_percentage']}% ({roi['rating']})")
+            print(f"    ROI: {roi['roi_percentage']}% ({roi['rating']})")
             print()
 
-        # 3. 최종 판정
+        # 3.  
         realistic = results['realistic']
         verdict = self._generate_verdict(realistic)
 
-        print(f"3. 최종 평가")
-        print(f"   판정: {verdict['verdict']}")
-        print(f"   신뢰도: {verdict['confidence']}")
-        print(f"   권장사항: {verdict['recommendation']}")
+        print(f"3.  ")
+        print(f"   : {verdict['verdict']}")
+        print(f"   : {verdict['confidence']}")
+        print(f"   : {verdict['recommendation']}")
         print(f"\n{'='*60}\n")
 
         return {
@@ -334,98 +334,98 @@ class RevenueValidator:
         }
 
     def _generate_verdict(self, realistic_scenario):
-        """최종 판정"""
+        """ """
         roi = realistic_scenario['roi']['roi_percentage']
         break_even_months = realistic_scenario['break_even'].get('months', 999)
         monthly_profit = realistic_scenario['monthly_profit']
 
         if roi >= 100 and break_even_months <= 12 and monthly_profit > 1000000:
             return {
-                'verdict': '매우 유망',
-                'confidence': '높음',
-                'recommendation': '즉시 실행 권장',
+                'verdict': ' ',
+                'confidence': '',
+                'recommendation': '  ',
                 'score': 90
             }
         elif roi >= 50 and break_even_months <= 18 and monthly_profit > 500000:
             return {
-                'verdict': '유망',
-                'confidence': '중간',
-                'recommendation': '추가 검증 후 진행',
+                'verdict': '',
+                'confidence': '',
+                'recommendation': '   ',
                 'score': 70
             }
         elif roi >= 20 and break_even_months <= 24:
             return {
-                'verdict': '보통',
-                'confidence': '낮음',
-                'recommendation': '신중한 접근 필요',
+                'verdict': '',
+                'confidence': '',
+                'recommendation': '  ',
                 'score': 50
             }
         else:
             return {
-                'verdict': '비추천',
-                'confidence': '매우 낮음',
-                'recommendation': '다른 아이템 검토 권장',
+                'verdict': '',
+                'confidence': ' ',
+                'recommendation': '   ',
                 'score': 30
             }
 
     def save_validation(self, results, filename='revenue_validation.json'):
-        """검증 결과 저장"""
+        """  """
         with open(filename, 'w', encoding='utf-8') as f:
             json.dump(results, f, ensure_ascii=False, indent=2)
-        print(f"수익성 검증 결과 저장됨: {filename}")
+        print(f"   : {filename}")
 
 
-# 사용 예시
+#  
 if __name__ == "__main__":
     validator = RevenueValidator()
 
-    # 예시 1: SaaS 프로젝트 관리 도구
+    #  1: SaaS   
     saas_config = {
-        'name': 'AI 프로젝트 관리 도구',
+        'name': 'AI   ',
         'type': 'saas',
         'scale': 'small',
         'revenue_model': 'subscription',
         'pricing': {
-            'monthly': 29000  # 월 구독료
+            'monthly': 29000  #  
         },
-        'target_market_size': 10000  # 타겟 시장 크기 (월 방문자)
+        'target_market_size': 10000  #    ( )
     }
 
     result1 = validator.comprehensive_validation(saas_config)
 
-    # 예시 2: 웹 개발 에이전시
+    #  2:   
     agency_config = {
-        'name': '웹 개발 에이전시',
+        'name': '  ',
         'type': 'agency',
         'scale': 'small',
         'revenue_model': 'one_time',
         'pricing': {
-            'one_time': 3000000  # 프로젝트당 가격
+            'one_time': 3000000  #  
         },
-        'target_market_size': 100  # 월 리드
+        'target_market_size': 100  #  
     }
 
     result2 = validator.comprehensive_validation(agency_config)
 
-    # 예시 3: 프리랜서 마켓플레이스
+    #  3:  
     marketplace_config = {
-        'name': '프리랜서 마켓플레이스',
+        'name': ' ',
         'type': 'marketplace',
         'scale': 'small',
         'revenue_model': 'commission',
         'pricing': {
-            'avg_transaction': 500000,  # 평균 거래액
-            'commission_rate': 0.15,    # 15% 수수료
-            'transactions_per_month': 3  # 고객당 월 거래 횟수
+            'avg_transaction': 500000,  #  
+            'commission_rate': 0.15,    # 15% 
+            'transactions_per_month': 3  #    
         },
-        'target_market_size': 5000  # 월 방문자
+        'target_market_size': 5000  #  
     }
 
     result3 = validator.comprehensive_validation(marketplace_config)
 
-    # 종합 결과 비교
+    #   
     print("\n" + "="*60)
-    print("[COMPARISON] 수익성 비교")
+    print("[COMPARISON]  ")
     print("="*60 + "\n")
 
     all_results = [
@@ -437,9 +437,9 @@ if __name__ == "__main__":
     for name, result in all_results:
         realistic = result['scenarios']['realistic']
         print(f"{name}:")
-        print(f"  초기 투자: {result['startup_costs']['total']:,}원")
-        print(f"  월 순이익: {realistic['monthly_profit']:,}원")
-        print(f"  연간 ROI: {realistic['roi']['roi_percentage']}%")
-        print(f"  손익분기: {realistic['break_even'].get('months', 'N/A')}개월")
-        print(f"  판정: {result['verdict']['verdict']}")
+        print(f"   : {result['startup_costs']['total']:,}")
+        print(f"   : {realistic['monthly_profit']:,}")
+        print(f"   ROI: {realistic['roi']['roi_percentage']}%")
+        print(f"  : {realistic['break_even'].get('months', 'N/A')}")
+        print(f"  : {result['verdict']['verdict']}")
         print()
