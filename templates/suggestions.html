@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>   - Qhyx Inc.</title>
+    <title> 직원 건의사항 - Qhyx Inc.</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
@@ -238,13 +238,13 @@
             </a>
             <div class="d-flex">
                 <a href="/meetings" class="btn btn-outline-light me-2">
-                    <i class="fas fa-users me-1"></i>
+                    <i class="fas fa-users me-1"></i>회의록
                 </a>
                 <a href="/dashboard" class="btn btn-outline-light me-2">
-                    <i class="fas fa-chart-line me-1"></i>
+                    <i class="fas fa-chart-line me-1"></i>대시보드
                 </a>
                 <a href="/" class="btn btn-outline-light">
-                    <i class="fas fa-home me-1"></i>
+                    <i class="fas fa-home me-1"></i>홈
                 </a>
             </div>
         </div>
@@ -258,25 +258,25 @@
                         <div class="col-md-3">
                             <div class="stat-item">
                                 <div class="stat-number submitted" id="submittedCount">-</div>
-                                <div class="stat-label"></div>
+                                <div class="stat-label">제출됨</div>
                             </div>
                         </div>
                         <div class="col-md-3">
                             <div class="stat-item">
                                 <div class="stat-number reviewing" id="reviewingCount">-</div>
-                                <div class="stat-label"></div>
+                                <div class="stat-label">검토중</div>
                             </div>
                         </div>
                         <div class="col-md-3">
                             <div class="stat-item">
                                 <div class="stat-number approved" id="approvedCount">-</div>
-                                <div class="stat-label"></div>
+                                <div class="stat-label">승인됨</div>
                             </div>
                         </div>
                         <div class="col-md-3">
                             <div class="stat-item">
                                 <div class="stat-number implemented" id="implementedCount">-</div>
-                                <div class="stat-label"></div>
+                                <div class="stat-label">구현완료</div>
                             </div>
                         </div>
                     </div>
@@ -288,19 +288,19 @@
             <div class="col-12">
                 <div class="filter-buttons">
                     <button class="btn btn-outline-light filter-btn active" data-filter="all">
-                        <i class="fas fa-list me-1"></i>
+                        <i class="fas fa-list me-1"></i>전체
                     </button>
                     <button class="btn btn-outline-info filter-btn" data-filter="submitted">
-                        <i class="fas fa-paper-plane me-1"></i>
+                        <i class="fas fa-paper-plane me-1"></i>제출됨
                     </button>
                     <button class="btn btn-outline-warning filter-btn" data-filter="reviewing">
-                        <i class="fas fa-search me-1"></i>
+                        <i class="fas fa-search me-1"></i>검토중
                     </button>
                     <button class="btn btn-outline-success filter-btn" data-filter="approved">
-                        <i class="fas fa-check me-1"></i>
+                        <i class="fas fa-check me-1"></i>승인됨
                     </button>
                     <button class="btn btn-outline-secondary filter-btn" data-filter="implemented">
-                        <i class="fas fa-check-double me-1"></i>
+                        <i class="fas fa-check-double me-1"></i>구현완료
                     </button>
                 </div>
             </div>
@@ -309,10 +309,10 @@
         <div class="row">
             <div class="col-12">
                 <h2 class="text-white mb-4">
-                    <i class="fas fa-lightbulb me-2"></i>  
+                    <i class="fas fa-lightbulb me-2"></i> 직원 건의사항
                 </h2>
                 <div id="suggestionsList">
-                    <!--     -->
+                    <!-- 건의사항 목록이 여기에 로드됩니다 -->
                 </div>
             </div>
         </div>
@@ -326,13 +326,13 @@
         <i class="fas fa-plus"></i>
     </button>
 
-    <!--    -->
+    <!-- 건의사항 추가 모달 -->
     <div class="modal fade" id="addSuggestionModal" tabindex="-1">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">
-                        <i class="fas fa-lightbulb me-2"></i>  
+                        <i class="fas fa-lightbulb me-2"></i>새 건의사항 제출
                     </h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
@@ -340,70 +340,70 @@
                     <form id="suggestionForm">
                         <div class="row">
                             <div class="col-md-6 mb-3">
-                                <label for="employeeId" class="form-label"> ID</label>
+                                <label for="employeeId" class="form-label">직원 ID</label>
                                 <select class="form-select" id="employeeId" required>
-                                    <option value=""> </option>
-                                    <!--     -->
+                                    <option value="">직원을 선택하세요</option>
+                                    <!-- 직원 목록이 동적으로 로드됩니다 -->
                                 </select>
                             </div>
                             <div class="col-md-6 mb-3">
-                                <label for="category" class="form-label"></label>
+                                <label for="category" class="form-label">카테고리</label>
                                 <select class="form-select" id="category" required>
-                                    <option value=""> </option>
-                                    <option value="efficiency"> </option>
-                                    <option value="resource"> </option>
-                                    <option value="process"> </option>
-                                    <option value="idea"> </option>
-                                    <option value="concern"></option>
+                                    <option value="">카테고리 선택</option>
+                                    <option value="efficiency">효율성 개선</option>
+                                    <option value="resource">자원 관리</option>
+                                    <option value="process">프로세스 개선</option>
+                                    <option value="idea">새로운 아이디어</option>
+                                    <option value="concern">우려사항</option>
                                 </select>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-md-6 mb-3">
-                                <label for="priority" class="form-label"></label>
+                                <label for="priority" class="form-label">우선순위</label>
                                 <select class="form-select" id="priority">
-                                    <option value="low"></option>
-                                    <option value="medium" selected></option>
-                                    <option value="high"></option>
-                                    <option value="urgent"></option>
+                                    <option value="low">낮음</option>
+                                    <option value="medium" selected>보통</option>
+                                    <option value="high">높음</option>
+                                    <option value="urgent">긴급</option>
                                 </select>
                             </div>
                             <div class="col-md-6 mb-3">
-                                <label for="difficulty" class="form-label"> </label>
+                                <label for="difficulty" class="form-label">구현 난이도</label>
                                 <select class="form-select" id="difficulty">
-                                    <option value="easy"></option>
-                                    <option value="medium" selected></option>
-                                    <option value="hard"></option>
-                                    <option value="very_hard"> </option>
+                                    <option value="easy">쉬움</option>
+                                    <option value="medium" selected>보통</option>
+                                    <option value="hard">어려움</option>
+                                    <option value="very_hard">매우 어려움</option>
                                 </select>
                             </div>
                         </div>
                         <div class="mb-3">
-                            <label for="title" class="form-label"></label>
+                            <label for="title" class="form-label">제목</label>
                             <input type="text" class="form-control" id="title" required>
                         </div>
                         <div class="mb-3">
-                            <label for="description" class="form-label"> </label>
+                            <label for="description" class="form-label">상세 설명</label>
                             <textarea class="form-control" id="description" rows="4" required></textarea>
                         </div>
                         <div class="mb-3">
-                            <label for="solution" class="form-label"> </label>
+                            <label for="solution" class="form-label">제안하는 해결책</label>
                             <textarea class="form-control" id="solution" rows="3"></textarea>
                         </div>
                         <div class="mb-3">
-                            <label for="benefit" class="form-label"></label>
+                            <label for="benefit" class="form-label">기대효과</label>
                             <textarea class="form-control" id="benefit" rows="2"></textarea>
                         </div>
                         <div class="mb-3">
-                            <label for="impact" class="form-label">  (1-10)</label>
+                            <label for="impact" class="form-label">예상 영향도 (1-10)</label>
                             <input type="number" class="form-control" id="impact" min="1" max="10" value="5">
                         </div>
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"></button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
                     <button type="button" class="btn btn-primary" onclick="submitSuggestion()">
-                        <i class="fas fa-paper-plane me-1"></i> 
+                        <i class="fas fa-paper-plane me-1"></i>건의사항 제출
                     </button>
                 </div>
             </div>
@@ -417,22 +417,22 @@
 
         function formatCategory(category) {
             const categoryMap = {
-                'efficiency': '<i class="fas fa-tachometer-alt text-primary"></i>  ',
-                'resource': '<i class="fas fa-boxes text-success"></i>  ',
-                'process': '<i class="fas fa-cogs text-info"></i>  ',
-                'idea': '<i class="fas fa-lightbulb text-warning"></i>  ',
-                'concern': '<i class="fas fa-exclamation-triangle text-danger"></i> '
+                'efficiency': '<i class="fas fa-tachometer-alt text-primary"></i> 효율성 개선',
+                'resource': '<i class="fas fa-boxes text-success"></i> 자원 관리',
+                'process': '<i class="fas fa-cogs text-info"></i> 프로세스 개선',
+                'idea': '<i class="fas fa-lightbulb text-warning"></i> 새로운 아이디어',
+                'concern': '<i class="fas fa-exclamation-triangle text-danger"></i> 우려사항'
             };
             return categoryMap[category] || `<i class="fas fa-question"></i> ${category}`;
         }
 
         function formatStatus(status) {
             const statusMap = {
-                'submitted': '',
-                'reviewing': '',
-                'approved': '',
-                'rejected': '',
-                'implemented': ''
+                'submitted': '제출됨',
+                'reviewing': '검토중',
+                'approved': '승인됨',
+                'rejected': '반려됨',
+                'implemented': '구현완료'
             };
             return statusMap[status] || status;
         }
@@ -449,8 +449,8 @@
                 container.innerHTML = `
                     <div class="text-center text-white">
                         <i class="fas fa-inbox fa-3x mb-3"></i>
-                        <h4> </h4>
-                        <p>    .</p>
+                        <h4>건의사항이 없습니다</h4>
+                        <p>직원들의 건의사항이 제출되면 여기에 표시됩니다.</p>
                     </div>
                 `;
                 return;
@@ -471,7 +471,7 @@
                                     <span class="badge bg-light text-dark">${formatStatus(suggestion.status)}</span>
                                     <span class="priority-badge priority-${suggestion.priority} ms-2">${suggestion.priority.toUpperCase()}</span>
                                     <button class="btn btn-sm btn-outline-light ms-2" onclick="toggleDetail(${suggestion.id})">
-                                        <i class="fas fa-eye"></i> 
+                                        <i class="fas fa-eye"></i> 상세보기
                                     </button>
                                 </div>
                             </div>
@@ -483,18 +483,18 @@
                                     <span class="category-badge">${formatCategory(suggestion.category)}</span>
                                 </div>
                                 <div class="col-md-6 text-end">
-                                    <small class="text-muted"> :</small>
+                                    <small class="text-muted">구현 난이도:</small>
                                     <div class="difficulty-indicator ${difficultyClass} d-inline-block ms-2"></div>
                                 </div>
                             </div>
                             <div class="mt-3">
                                 <p class="mb-2">${suggestion.description}</p>
-                                ${suggestion.expected_benefit ? `<div class="alert alert-light mb-0"><strong>:</strong> ${suggestion.expected_benefit}</div>` : ''}
+                                ${suggestion.expected_benefit ? `<div class="alert alert-light mb-0"><strong>기대효과:</strong> ${suggestion.expected_benefit}</div>` : ''}
                             </div>
                         </div>
                         
                         <div class="suggestion-detail" id="detail-${suggestion.id}">
-                            <!--     -->
+                            <!-- 상세 내용이 여기에 로드됩니다 -->
                         </div>
                     </div>
                 `;
@@ -508,11 +508,11 @@
             if (detail.style.display === 'block') {
                 detail.style.display = 'none';
             } else {
-                //   
+                // 다른 디테일들은 닫기
                 document.querySelectorAll('.suggestion-detail').forEach(d => d.style.display = 'none');
                 detail.style.display = 'block';
                 
-                //   
+                // 상세 정보 로드
                 loadSuggestionDetail(suggestionId);
             }
         }
@@ -525,26 +525,26 @@
                     
                     let detailHtml = `
                         <div class="detail-section">
-                            <h6><i class="fas fa-info-circle"></i>  </h6>
+                            <h6><i class="fas fa-info-circle"></i> 상세 정보</h6>
                             <div class="row">
                                 <div class="col-md-6">
-                                    <p><strong> :</strong></p>
-                                    <p class="bg-light p-3 rounded">${data.suggested_solution || '  .'}</p>
+                                    <p><strong>제안 해결책:</strong></p>
+                                    <p class="bg-light p-3 rounded">${data.suggested_solution || '제안된 해결책이 없습니다.'}</p>
                                 </div>
                                 <div class="col-md-6">
-                                    <p><strong> :</strong></p>
-                                    <p class="bg-light p-3 rounded">${data.reviewer_notes || '  .'}</p>
+                                    <p><strong>검토 노트:</strong></p>
+                                    <p class="bg-light p-3 rounded">${data.reviewer_notes || '검토 노트가 없습니다.'}</p>
                                 </div>
                             </div>
-                            ${data.implementation_cost ? `<p><strong> :</strong> ${data.implementation_cost.toLocaleString()}</p>` : ''}
-                            ${data.estimated_impact ? `<p><strong> :</strong> ${data.estimated_impact}/10</p>` : ''}
+                            ${data.implementation_cost ? `<p><strong>구현 비용:</strong> ${data.implementation_cost.toLocaleString()}원</p>` : ''}
+                            ${data.estimated_impact ? `<p><strong>예상 영향도:</strong> ${data.estimated_impact}/10</p>` : ''}
                         </div>
                     `;
                     
                     if (data.feedbacks && data.feedbacks.length > 0) {
                         detailHtml += `
                             <div class="detail-section">
-                                <h6><i class="fas fa-comments"></i> </h6>
+                                <h6><i class="fas fa-comments"></i> 피드백</h6>
                                 ${data.feedbacks.map(feedback => `
                                     <div class="feedback-item">
                                         <div class="d-flex justify-content-between">
@@ -584,7 +584,7 @@
                     console.error('Error loading suggestions:', error);
                     document.getElementById('suggestionsList').innerHTML = `
                         <div class="alert alert-danger">
-                            <i class="fas fa-exclamation-triangle"></i>   .
+                            <i class="fas fa-exclamation-triangle"></i> 건의사항을 불러오는데 실패했습니다.
                         </div>
                     `;
                 });
@@ -595,7 +595,7 @@
                 .then(response => response.json())
                 .then(data => {
                     const select = document.getElementById('employeeId');
-                    select.innerHTML = '<option value=""> </option>';
+                    select.innerHTML = '<option value="">직원을 선택하세요</option>';
                     
                     if (data.employees) {
                         data.employees.forEach(emp => {
@@ -646,30 +646,30 @@
                     form.reset();
                     loadSuggestions();
                     
-                    //  
+                    // 성공 메시지
                     const alert = document.createElement('div');
                     alert.className = 'alert alert-success alert-dismissible fade show position-fixed';
                     alert.style.top = '20px';
                     alert.style.right = '20px';
                     alert.style.zIndex = '9999';
                     alert.innerHTML = `
-                        <i class="fas fa-check-circle me-1"></i>  !
+                        <i class="fas fa-check-circle me-1"></i>건의사항이 성공적으로 제출되었습니다!
                         <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                     `;
                     document.body.appendChild(alert);
                     
                     setTimeout(() => alert.remove(), 5000);
                 } else {
-                    alert('  : ' + data.error);
+                    alert('건의사항 제출 실패: ' + data.error);
                 }
             })
             .catch(error => {
                 console.error('Error submitting suggestion:', error);
-                alert('    .');
+                alert('건의사항 제출 중 오류가 발생했습니다.');
             });
         }
 
-        //   
+        // 필터 버튼 이벤트
         document.querySelectorAll('.filter-btn').forEach(btn => {
             btn.addEventListener('click', function() {
                 document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
@@ -679,11 +679,11 @@
             });
         });
 
-        //    
+        // 페이지 로드 시 실행
         document.addEventListener('DOMContentLoaded', function() {
             loadSuggestions();
             
-            // 30  
+            // 30초마다 자동 새로고침
             setInterval(loadSuggestions, 30000);
         });
     </script>

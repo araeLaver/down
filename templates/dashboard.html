@@ -216,57 +216,57 @@
         </header>
         
         <div class="dashboard">
-            <!--    -->
+            <!-- 동기화 상태 카드 -->
             <div class="card">
-                <h2>  </h2>
+                <h2> 동기화 상태</h2>
                 <div id="sync-status">
-                    <div class="loading"> ...</div>
+                    <div class="loading">로딩 중...</div>
                 </div>
                 <div class="control-buttons">
-                    <button onclick="controlSync('start')"></button>
-                    <button onclick="controlSync('stop')"></button>
-                    <button onclick="controlSync('sync')"> </button>
+                    <button onclick="controlSync('start')">시작</button>
+                    <button onclick="controlSync('stop')">중지</button>
+                    <button onclick="controlSync('sync')">즉시 동기화</button>
                 </div>
             </div>
             
-            <!-- Git   -->
+            <!-- Git 통계 카드 -->
             <div class="card">
-                <h2> Git </h2>
+                <h2> Git 통계</h2>
                 <div id="git-stats">
-                    <div class="loading"> ...</div>
+                    <div class="loading">로딩 중...</div>
                 </div>
             </div>
             
-            <!--    -->
+            <!-- 오늘의 활동 카드 -->
             <div class="card">
-                <h2>  </h2>
+                <h2> 오늘의 활동</h2>
                 <div id="today-stats">
-                    <div class="loading"> ...</div>
+                    <div class="loading">로딩 중...</div>
                 </div>
             </div>
         </div>
         
-        <!--   -->
+        <!-- 활동 차트 -->
         <div class="card">
-            <h2> 30  </h2>
+            <h2> 30일 활동 차트</h2>
             <div class="chart-container">
                 <canvas id="activity-chart"></canvas>
             </div>
         </div>
         
-        <!--    -->
+        <!-- 최근 활동 타임라인 -->
         <div class="card">
-            <h2>⏱  </h2>
+            <h2> 최근 활동</h2>
             <div class="activity-timeline" id="activity-timeline">
-                <div class="loading"> ...</div>
+                <div class="loading">로딩 중...</div>
             </div>
         </div>
         
-        <!--   -->
+        <!-- 실시간 로그 -->
         <div class="card">
-            <h2>   </h2>
+            <h2> 실시간 동기화 로그</h2>
             <div id="sync-logs" style="max-height: 300px; overflow-y: auto;">
-                <div class="loading"> ...</div>
+                <div class="loading">로딩 중...</div>
             </div>
         </div>
     </div>
@@ -274,65 +274,65 @@
     <script>
         let activityChart = null;
         
-        //  
+        // 상태 업데이트
         async function updateStats() {
             try {
                 const response = await fetch('/api/stats');
                 const data = await response.json();
                 
-                //   
+                // 동기화 상태 업데이트
                 const syncStatusEl = document.getElementById('sync-status');
                 syncStatusEl.innerHTML = `
                     <div class="metric">
-                        <span class="metric-label"> </span>
+                        <span class="metric-label">데몬 상태</span>
                         <span class="metric-value">
                             <span class="status-indicator ${data.sync_status.running ? 'status-running' : 'status-stopped'}"></span>
-                            ${data.sync_status.running ? ' ' : ''}
+                            ${data.sync_status.running ? '실행 중' : '중지됨'}
                         </span>
                     </div>
                     ${data.sync_status.pid ? `
                     <div class="metric">
-                        <span class="metric-label"> ID</span>
+                        <span class="metric-label">프로세스 ID</span>
                         <span class="metric-value">${data.sync_status.pid}</span>
                     </div>
                     ` : ''}
                 `;
                 
-                // Git  
+                // Git 통계 업데이트
                 const gitStatsEl = document.getElementById('git-stats');
                 if (data.git_stats.current_branch) {
                     gitStatsEl.innerHTML = `
                         <div class="metric">
-                            <span class="metric-label"> </span>
+                            <span class="metric-label">현재 브랜치</span>
                             <span class="metric-value">${data.git_stats.current_branch}</span>
                         </div>
                         <div class="metric">
-                            <span class="metric-label">  </span>
+                            <span class="metric-label">총 커밋 수</span>
                             <span class="metric-value">${data.git_stats.total_commits}</span>
                         </div>
                         <div class="metric">
-                            <span class="metric-label"></span>
+                            <span class="metric-label">변경사항</span>
                             <span class="metric-value">${data.git_stats.uncommitted_changes}</span>
                         </div>
                     `;
                 } else {
-                    gitStatsEl.innerHTML = '<div class="metric">Git   </div>';
+                    gitStatsEl.innerHTML = '<div class="metric">Git 저장소 정보 없음</div>';
                 }
                 
-                //   
+                // 오늘의 활동 업데이트
                 const todayStatsEl = document.getElementById('today-stats');
                 todayStatsEl.innerHTML = `
                     <div class="metric">
-                        <span class="metric-label"> </span>
-                        <span class="metric-value">${data.today_syncs}</span>
+                        <span class="metric-label">오늘 동기화</span>
+                        <span class="metric-value">${data.today_syncs}회</span>
                     </div>
                     <div class="metric">
-                        <span class="metric-label"> </span>
+                        <span class="metric-label">최근 커밋</span>
                         <span class="metric-value">${data.git_stats.last_commit ? data.git_stats.last_commit.hash : 'N/A'}</span>
                     </div>
                 `;
                 
-                //   
+                // 활동 타임라인 업데이트
                 const timelineEl = document.getElementById('activity-timeline');
                 if (data.recent_activities.length > 0) {
                     timelineEl.innerHTML = data.recent_activities.map(activity => `
@@ -346,7 +346,7 @@
                         </div>
                     `).join('');
                 } else {
-                    timelineEl.innerHTML = '<div class="loading">  </div>';
+                    timelineEl.innerHTML = '<div class="loading">활동 기록이 없습니다</div>';
                 }
                 
             } catch (error) {
@@ -354,7 +354,7 @@
             }
         }
         
-        //  
+        // 로그 업데이트
         async function updateLogs() {
             try {
                 const response = await fetch('/api/logs?type=sync&limit=20');
@@ -369,14 +369,14 @@
                         </div>
                     `).join('');
                 } else {
-                    logsEl.innerHTML = '<div class="loading"> </div>';
+                    logsEl.innerHTML = '<div class="loading">로그가 없습니다</div>';
                 }
             } catch (error) {
                 console.error('Logs update error:', error);
             }
         }
         
-        //  
+        // 차트 업데이트
         async function updateChart() {
             try {
                 const response = await fetch('/api/metrics');
@@ -384,7 +384,7 @@
                 
                 const ctx = document.getElementById('activity-chart').getContext('2d');
                 
-                //   ( 30)
+                // 날짜 생성 (최근 30일)
                 const dates = [];
                 const today = new Date();
                 for (let i = 29; i >= 0; i--) {
@@ -393,7 +393,7 @@
                     dates.push(date.toISOString().split('T')[0]);
                 }
                 
-                //  
+                // 데이터 정렬
                 const commitData = dates.map(date => data.daily_commits[date] || 0);
                 const syncData = dates.map(date => data.daily_syncs[date] || 0);
                 
@@ -407,14 +407,14 @@
                         labels: dates.map(d => new Date(d).toLocaleDateString('ko-KR', {month: 'short', day: 'numeric'})),
                         datasets: [
                             {
-                                label: '',
+                                label: '커밋',
                                 data: commitData,
                                 borderColor: '#667eea',
                                 backgroundColor: 'rgba(102, 126, 234, 0.1)',
                                 tension: 0.4
                             },
                             {
-                                label: '',
+                                label: '동기화',
                                 data: syncData,
                                 borderColor: '#764ba2',
                                 backgroundColor: 'rgba(118, 75, 162, 0.1)',
@@ -446,7 +446,7 @@
             }
         }
         
-        //  
+        // 동기화 제어
         async function controlSync(action) {
             try {
                 const response = await fetch('/api/sync/control', {
@@ -460,26 +460,26 @@
                 const result = await response.json();
                 
                 if (result.success) {
-                    alert(` ${action} `);
+                    alert(`동기화 ${action} 성공`);
                     updateStats();
                 } else {
-                    alert(`: ${result.error || result.output}`);
+                    alert(`오류: ${result.error || result.output}`);
                 }
             } catch (error) {
-                alert(`: ${error.message}`);
+                alert(`오류: ${error.message}`);
             }
         }
         
-        // 
+        // 초기화
         document.addEventListener('DOMContentLoaded', () => {
             updateStats();
             updateLogs();
             updateChart();
             
-            //  
-            setInterval(updateStats, 5000);  // 5
-            setInterval(updateLogs, 10000);  // 10
-            setInterval(updateChart, 60000); // 1
+            // 주기적 업데이트
+            setInterval(updateStats, 5000);  // 5초마다
+            setInterval(updateLogs, 10000);  // 10초마다
+            setInterval(updateChart, 60000); // 1분마다
         });
     </script>
 </body>

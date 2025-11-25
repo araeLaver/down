@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>  - Qhyx Inc.</title>
+    <title>회의 보고서 - Qhyx Inc.</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
@@ -53,7 +53,7 @@
 
         .nav-links a:hover { color: #1a73e8; }
 
-        /*   */
+        /* 통계 대시보드 */
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -81,7 +81,7 @@
             color: #5f6368;
         }
 
-        /*  */
+        /* 필터 */
         .filter-bar {
             background: white;
             padding: 15px 20px;
@@ -130,7 +130,7 @@
             border-color: #1a73e8;
         }
 
-        /*   */
+        /* 회의 그리드 */
         .meetings-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
@@ -219,7 +219,7 @@
             border-top: 1px solid #e1e8ed;
         }
 
-        /*  */
+        /* 모달 */
         .modal-overlay {
             display: none;
             position: fixed;
@@ -348,60 +348,60 @@
     <div class="top-bar">
         <div class="container-custom">
             <div class="header">
-                <div class="logo">Qhyx Inc.  </div>
+                <div class="logo">Qhyx Inc. 회의 보고서</div>
                 <div class="nav-links">
-                    <a href="/dashboard"></a>
-                    <a href="/suggestions"></a>
-                    <a href="/"></a>
+                    <a href="/dashboard">대시보드</a>
+                    <a href="/suggestions">건의사항</a>
+                    <a href="/">홈</a>
                 </div>
             </div>
         </div>
     </div>
 
     <div class="container-custom" style="margin-top: 20px;">
-        <!--  -->
+        <!-- 통계 -->
         <div class="stats-grid">
             <div class="stat-box">
                 <div class="stat-value" id="totalMeetings">0</div>
-                <div class="stat-label"> </div>
+                <div class="stat-label">전체 회의</div>
             </div>
             <div class="stat-box">
                 <div class="stat-value" id="todayMeetings">0</div>
-                <div class="stat-label"> </div>
+                <div class="stat-label">오늘 회의</div>
             </div>
             <div class="stat-box">
                 <div class="stat-value" id="totalDecisions">0</div>
-                <div class="stat-label"> </div>
+                <div class="stat-label">주요 결정</div>
             </div>
             <div class="stat-box">
                 <div class="stat-value" id="totalActions">0</div>
-                <div class="stat-label"> </div>
+                <div class="stat-label">실행 항목</div>
             </div>
         </div>
 
-        <!--  -->
+        <!-- 필터 -->
         <div class="filter-bar">
-            <div class="filter-chip active" data-filter="all"></div>
-            <div class="filter-chip" data-filter="today"></div>
-            <div class="filter-chip" data-filter=""></div>
-            <div class="filter-chip" data-filter=""></div>
-            <div class="filter-chip" data-filter=""></div>
-            <div class="filter-chip" data-filter=""></div>
-            <input type="text" class="search-input" id="searchInput" placeholder=" ...">
+            <div class="filter-chip active" data-filter="all">전체</div>
+            <div class="filter-chip" data-filter="today">오늘</div>
+            <div class="filter-chip" data-filter="매출">매출</div>
+            <div class="filter-chip" data-filter="개발">개발</div>
+            <div class="filter-chip" data-filter="고객">고객</div>
+            <div class="filter-chip" data-filter="마케팅">마케팅</div>
+            <input type="text" class="search-input" id="searchInput" placeholder="회의 검색...">
         </div>
 
-        <!--   -->
+        <!-- 회의 목록 -->
         <div class="meetings-grid" id="meetingsList">
             <div style="text-align: center; padding: 40px;">
-                <div style="font-size: 14px; color: #5f6368;"> ...</div>
+                <div style="font-size: 14px; color: #5f6368;">로딩 중...</div>
             </div>
         </div>
     </div>
 
-    <!--  -->
+    <!-- 모달 -->
     <div class="modal-overlay" id="modalOverlay">
         <div class="modal-content" id="modalContent">
-            <!--   -->
+            <!-- 동적으로 채워짐 -->
         </div>
     </div>
 
@@ -417,12 +417,12 @@
         }
 
         function getCategory(meetingType) {
-            if (!meetingType) return '';
-            if (meetingType.includes('') || meetingType.includes('') || meetingType.includes('')) return '';
-            if (meetingType.includes('') || meetingType.includes('') || meetingType.includes('') || meetingType.includes('')) return '';
-            if (meetingType.includes('') || meetingType.includes('CS') || meetingType.includes('')) return '';
-            if (meetingType.includes('') || meetingType.includes('ROI')) return '';
-            return '';
+            if (!meetingType) return '기타';
+            if (meetingType.includes('매출') || meetingType.includes('재무') || meetingType.includes('비용')) return '매출';
+            if (meetingType.includes('개발') || meetingType.includes('스프린트') || meetingType.includes('장애') || meetingType.includes('기능')) return '개발';
+            if (meetingType.includes('고객') || meetingType.includes('CS') || meetingType.includes('이탈')) return '고객';
+            if (meetingType.includes('마케팅') || meetingType.includes('ROI')) return '마케팅';
+            return '기타';
         }
 
         function filterMeetings() {
@@ -459,7 +459,7 @@
                 container.innerHTML = `
                     <div class="empty-state">
                         <div class="empty-icon"><i class="fas fa-calendar-times"></i></div>
-                        <div> </div>
+                        <div>회의가 없습니다</div>
                     </div>
                 `;
                 return;
@@ -469,25 +469,25 @@
                 <div class="meeting-card" onclick="openModal(${meeting.id})">
                     <div class="card-header">
                         <div class="card-type">${getCategory(meeting.meeting_type)}</div>
-                        <div class="card-title">${meeting.meeting_type || ''}</div>
+                        <div class="card-title">${meeting.meeting_type || '회의'}</div>
                         <div class="card-date">${formatDate(meeting.date)}</div>
                     </div>
                     <div class="card-body">
                         <div class="summary-row">
-                            <span class="summary-label"><i class="fas fa-list"></i> </span>
-                            <span class="summary-value">${(meeting.agenda || []).length}</span>
+                            <span class="summary-label"><i class="fas fa-list"></i> 안건</span>
+                            <span class="summary-value">${(meeting.agenda || []).length}개</span>
                         </div>
                         <div class="summary-row">
-                            <span class="summary-label"><i class="fas fa-check-circle"></i> </span>
-                            <span class="summary-value">${(meeting.key_decisions || []).length}</span>
+                            <span class="summary-label"><i class="fas fa-check-circle"></i> 결정</span>
+                            <span class="summary-value">${(meeting.key_decisions || []).length}개</span>
                         </div>
                         <div class="summary-row">
-                            <span class="summary-label"><i class="fas fa-tasks"></i> </span>
-                            <span class="summary-value">${(meeting.action_items || []).length}</span>
+                            <span class="summary-label"><i class="fas fa-tasks"></i> 실행</span>
+                            <span class="summary-value">${(meeting.action_items || []).length}개</span>
                         </div>
                     </div>
                     <div class="expand-indicator">
-                          
+                        클릭하여 자세히 보기
                     </div>
                 </div>
             `).join('');
@@ -524,7 +524,7 @@
                         if (businessTopics.length > 0) {
                             return `
                                 <div class="detail-section">
-                                    <h3><i class="fas fa-lightbulb"></i>   </h3>
+                                    <h3><i class="fas fa-lightbulb"></i> 논의된 사업 주제</h3>
                                     ${businessTopics.map((item, i) => `
                                         <div class="detail-item" style="border-left-color: #34a853; background: #e6f4ea;">${i + 1}. ${item}</div>
                                     `).join('')}
@@ -536,7 +536,7 @@
 
                     ${meeting.agenda && meeting.agenda.length > 0 ? `
                         <div class="detail-section">
-                            <h3><i class="fas fa-list"></i>  </h3>
+                            <h3><i class="fas fa-list"></i> 회의 안건</h3>
                             ${meeting.agenda.map((item, i) => `
                                 <div class="detail-item">${i + 1}. ${item}</div>
                             `).join('')}
@@ -545,7 +545,7 @@
 
                     ${meeting.key_decisions && meeting.key_decisions.length > 0 ? `
                         <div class="detail-section">
-                            <h3><i class="fas fa-check-circle"></i>  </h3>
+                            <h3><i class="fas fa-check-circle"></i> 주요 결정사항</h3>
                             ${meeting.key_decisions.map((item, i) => `
                                 <div class="detail-item decision">${i + 1}. ${item}</div>
                             `).join('')}
@@ -554,7 +554,7 @@
 
                     ${meeting.action_items && meeting.action_items.length > 0 ? `
                         <div class="detail-section">
-                            <h3><i class="fas fa-tasks"></i>  </h3>
+                            <h3><i class="fas fa-tasks"></i> 실행 항목</h3>
                             ${meeting.action_items.map((item, i) => `
                                 <div class="detail-item action">${i + 1}. ${item}</div>
                             `).join('')}
@@ -596,13 +596,13 @@
                     document.getElementById('meetingsList').innerHTML = `
                         <div class="empty-state">
                             <div class="empty-icon"><i class="fas fa-exclamation-triangle"></i></div>
-                            <div>   </div>
+                            <div>데이터를 불러올 수 없습니다</div>
                         </div>
                     `;
                 });
         }
 
-        //  
+        // 필터 클릭
         document.addEventListener('click', e => {
             if (e.target.classList.contains('filter-chip')) {
                 document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
@@ -612,18 +612,18 @@
             }
         });
 
-        // 
+        // 검색
         document.getElementById('searchInput').addEventListener('input', e => {
             currentSearch = e.target.value;
             renderMeetings();
         });
 
-        //    
+        // 모달 배경 클릭시 닫기
         document.getElementById('modalOverlay').addEventListener('click', e => {
             if (e.target.id === 'modalOverlay') closeModal();
         });
 
-        //  
+        // 초기 로드
         loadMeetings();
         setInterval(loadMeetings, 30000);
     </script>

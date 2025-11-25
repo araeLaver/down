@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>   - Qhyx Inc.</title>
+    <title>수동 사업 발굴 - Qhyx Inc.</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         * {
@@ -214,49 +214,49 @@
     {% include 'navbar.html' %}
     <div class="container">
         <div class="header">
-            <h1><i class="fas fa-robot"></i>   </h1>
-            <p>     </p>
+            <h1><i class="fas fa-robot"></i> 수동 사업 발굴</h1>
+            <p>버튼을 클릭하여 새로운 사업 아이디어를 생성하세요</p>
         </div>
 
         <button class="trigger-btn" id="triggerBtn" onclick="runDiscovery()">
-            <i class="fas fa-play-circle"></i>   
+            <i class="fas fa-play-circle"></i> 사업 발굴 시작
         </button>
 
         <div class="status-box" id="statusBox">
-            <div class="status-title"><i class="fas fa-tasks"></i>  </div>
+            <div class="status-title"><i class="fas fa-tasks"></i> 진행 상황</div>
             <div id="statusList"></div>
         </div>
 
         <div class="result-box" id="resultBox">
-            <div class="result-title"><i class="fas fa-check-circle"></i> !</div>
+            <div class="result-title"><i class="fas fa-check-circle"></i> 완료!</div>
             <div class="result-stat">
-                <span class="result-label"> </span>
+                <span class="result-label">분석된 사업</span>
                 <span class="result-value" id="analyzedCount">-</span>
             </div>
             <div class="result-stat">
-                <span class="result-label">  (80+)</span>
+                <span class="result-label">저장된 사업 (80+)</span>
                 <span class="result-value" id="savedCount">-</span>
             </div>
             <div class="result-stat">
-                <span class="result-label"> </span>
+                <span class="result-label">완료 시간</span>
                 <span class="result-value" id="timestamp">-</span>
             </div>
         </div>
 
         <div class="nav-buttons">
             <a href="/business-discovery" class="nav-btn excellent">
-                <i class="fas fa-trophy"></i><br>80+ 
+                <i class="fas fa-trophy"></i><br>80+ 사업
             </a>
             <a href="/business-review" class="nav-btn review">
-                <i class="fas fa-clipboard-check"></i><br>60-79 
+                <i class="fas fa-clipboard-check"></i><br>60-79 사업
             </a>
             <a href="/business-rejected" class="nav-btn rejected">
-                <i class="fas fa-times-circle"></i><br>60
+                <i class="fas fa-times-circle"></i><br>60미만
             </a>
         </div>
 
         <a href="/business" class="back-link">
-            <i class="fas fa-arrow-left"></i>  
+            <i class="fas fa-arrow-left"></i> 메인으로 돌아가기
         </a>
     </div>
 
@@ -285,51 +285,51 @@
             const resultBox = document.getElementById('resultBox');
             const statusList = document.getElementById('statusList');
 
-            // 
+            // 초기화
             btn.disabled = true;
-            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>  ...';
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 실행 중...';
             statusBox.classList.add('show');
             resultBox.classList.remove('show');
             statusList.innerHTML = '';
 
-            addStatus('  ...', 'loading');
-            addStatus('5 IT    ...', 'loading');
+            addStatus('사업 발굴 시작...', 'loading');
+            addStatus('5개 IT 사업 아이디어 생성 중...', 'loading');
 
             try {
                 const response = await fetch('/api/trigger-discovery');
                 const data = await response.json();
 
                 if (data.success) {
-                    addStatus('   !', 'success');
-                    addStatus(`${data.results.analyzed}   `, 'success');
-                    addStatus(`${data.results.saved}  DB  (80 )`, 'success');
-                    addStatus('    ', 'success');
+                    addStatus('사업 아이디어 생성 완료!', 'success');
+                    addStatus(`${data.results.analyzed}개 사업 분석 완료`, 'success');
+                    addStatus(`${data.results.saved}개 사업 DB 저장 (80점 이상)`, 'success');
+                    addStatus('히스토리에 모든 결과 기록 완료', 'success');
 
-                    //  
-                    document.getElementById('analyzedCount').textContent = data.results.analyzed + '';
-                    document.getElementById('savedCount').textContent = data.results.saved + '';
+                    // 결과 표시
+                    document.getElementById('analyzedCount').textContent = data.results.analyzed + '개';
+                    document.getElementById('savedCount').textContent = data.results.saved + '개';
                     document.getElementById('timestamp').textContent = new Date(data.results.timestamp).toLocaleString('ko-KR');
                     resultBox.classList.add('show');
 
-                    btn.innerHTML = '<i class="fas fa-check-circle"></i> !';
+                    btn.innerHTML = '<i class="fas fa-check-circle"></i> 완료!';
                     setTimeout(() => {
                         btn.disabled = false;
-                        btn.innerHTML = '<i class="fas fa-redo"></i>  ';
+                        btn.innerHTML = '<i class="fas fa-redo"></i> 다시 실행';
                     }, 2000);
                 } else {
-                    addStatus(' : ' + data.error, 'error');
-                    btn.innerHTML = '<i class="fas fa-exclamation-triangle"></i> ';
+                    addStatus('오류 발생: ' + data.error, 'error');
+                    btn.innerHTML = '<i class="fas fa-exclamation-triangle"></i> 실패';
                     setTimeout(() => {
                         btn.disabled = false;
-                        btn.innerHTML = '<i class="fas fa-redo"></i>  ';
+                        btn.innerHTML = '<i class="fas fa-redo"></i> 다시 시도';
                     }, 2000);
                 }
             } catch (error) {
-                addStatus(' : ' + error.message, 'error');
-                btn.innerHTML = '<i class="fas fa-exclamation-triangle"></i> ';
+                addStatus('네트워크 오류: ' + error.message, 'error');
+                btn.innerHTML = '<i class="fas fa-exclamation-triangle"></i> 실패';
                 setTimeout(() => {
                     btn.disabled = false;
-                    btn.innerHTML = '<i class="fas fa-redo"></i>  ';
+                    btn.innerHTML = '<i class="fas fa-redo"></i> 다시 시도';
                 }, 2000);
             }
         }

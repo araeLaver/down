@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>   &  - Qhyx Inc.</title>
+    <title>사업 발굴 히스토리 & 분석 - Qhyx Inc.</title>
     <style>
         :root {
             --primary: #6366f1;
@@ -88,7 +88,7 @@
             display: block;
         }
 
-        /*   */
+        /* 통계 카드 */
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -128,7 +128,7 @@
             color: var(--danger);
         }
 
-        /*   */
+        /* 필터 바 */
         .filter-bar {
             background: white;
             padding: 20px;
@@ -160,7 +160,7 @@
             font-size: 14px;
         }
 
-        /*   */
+        /* 히스토리 테이블 */
         .history-table {
             background: white;
             border-radius: 15px;
@@ -222,7 +222,7 @@
             color: #991b1b;
         }
 
-        /*   */
+        /* 차트 영역 */
         .chart-container {
             background: white;
             padding: 25px;
@@ -248,7 +248,7 @@
             color: #6b7280;
         }
 
-        /*   */
+        /* 인사이트 카드 */
         .insight-card {
             background: white;
             padding: 20px;
@@ -315,7 +315,7 @@
             color: white;
         }
 
-        /*   */
+        /* 카테고리 분포 */
         .category-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
@@ -356,7 +356,7 @@
             transition: width 0.5s;
         }
 
-        /*  */
+        /* 로딩 */
         .loading {
             text-align: center;
             padding: 50px;
@@ -378,7 +378,7 @@
             100% { transform: rotate(360deg); }
         }
 
-        /*  */
+        /* 반응형 */
         @media (max-width: 768px) {
             .stats-grid {
                 grid-template-columns: 1fr;
@@ -402,191 +402,191 @@
     {% include 'navbar.html' %}
     <div class="container">
         <header>
-            <h1>    & </h1>
-            <div class="subtitle">       </div>
+            <h1> 사업 발굴 히스토리 & 분석</h1>
+            <div class="subtitle">모든 분석 결과를 추적하고 다양한 시각으로 인사이트를 도출합니다</div>
         </header>
 
         <div class="tabs">
-            <div class="tab active" onclick="switchTab('overview')">  </div>
-            <div class="tab" onclick="switchTab('history')">  </div>
-            <div class="tab" onclick="switchTab('trends')">  </div>
-            <div class="tab" onclick="switchTab('insights')"> </div>
-            <div class="tab" onclick="switchTab('categories')">  </div>
-            <div class="tab" onclick="switchTab('timeline')">⏱  </div>
-            <div class="tab" onclick="switchTab('lowscore')">   (60 )</div>
+            <div class="tab active" onclick="switchTab('overview')"> 종합 개요</div>
+            <div class="tab" onclick="switchTab('history')"> 전체 히스토리</div>
+            <div class="tab" onclick="switchTab('trends')"> 트렌드 분석</div>
+            <div class="tab" onclick="switchTab('insights')"> 인사이트</div>
+            <div class="tab" onclick="switchTab('categories')"> 카테고리 분석</div>
+            <div class="tab" onclick="switchTab('timeline')"> 시간대별 분석</div>
+            <div class="tab" onclick="switchTab('lowscore')"> 저점수 사업 (60점 미만)</div>
         </div>
 
-        <!--    -->
+        <!-- 종합 개요 탭 -->
         <div id="overview" class="tab-content active">
             <div class="stats-grid">
                 <div class="stat-card">
-                    <div class="stat-label">  </div>
+                    <div class="stat-label">전체 분석 건수</div>
                     <div class="stat-value" id="total-analyzed">0</div>
-                    <div class="stat-trend up"> 24 </div>
+                    <div class="stat-trend up">최근 24시간 기준</div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-label">80  (DB )</div>
+                    <div class="stat-label">80점 이상 (DB 저장)</div>
                     <div class="stat-value" id="total-saved">0</div>
-                    <div class="stat-trend up">: <span id="save-rate">0%</span></div>
+                    <div class="stat-trend up">저장률: <span id="save-rate">0%</span></div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-label">  </div>
+                    <div class="stat-label">평균 종합 점수</div>
                     <div class="stat-value" id="avg-score">0</div>
-                    <div class="stat-trend"> </div>
+                    <div class="stat-trend">전체 평균</div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-label"> </div>
+                    <div class="stat-label">발견된 카테고리</div>
                     <div class="stat-value" id="total-categories">0</div>
-                    <div class="stat-trend"> </div>
+                    <div class="stat-trend">다양성 지표</div>
                 </div>
             </div>
 
             <div class="chart-container">
-                <div class="chart-title"> </div>
+                <div class="chart-title">점수대별 분포</div>
                 <canvas id="score-distribution-chart"></canvas>
             </div>
 
             <div class="chart-container">
-                <div class="chart-title">  </div>
+                <div class="chart-title">시간별 발굴 추이</div>
                 <canvas id="time-trend-chart"></canvas>
             </div>
         </div>
 
-        <!--    -->
+        <!-- 전체 히스토리 탭 -->
         <div id="history" class="tab-content">
             <div class="filter-bar">
                 <div class="filter-group">
-                    <label></label>
+                    <label>기간</label>
                     <select id="period-filter">
-                        <option value="24h"> 24</option>
-                        <option value="7d"> 7</option>
-                        <option value="30d"> 30</option>
-                        <option value="all"></option>
+                        <option value="24h">최근 24시간</option>
+                        <option value="7d">최근 7일</option>
+                        <option value="30d">최근 30일</option>
+                        <option value="all">전체</option>
                     </select>
                 </div>
                 <div class="filter-group">
-                    <label> </label>
+                    <label>점수 범위</label>
                     <select id="score-filter">
-                        <option value="all"></option>
-                        <option value="90+">90 </option>
-                        <option value="80-89">80-89</option>
-                        <option value="70-79">70-79</option>
-                        <option value="60-69">60-69</option>
-                        <option value="60-">60 </option>
+                        <option value="all">전체</option>
+                        <option value="90+">90점 이상</option>
+                        <option value="80-89">80-89점</option>
+                        <option value="70-79">70-79점</option>
+                        <option value="60-69">60-69점</option>
+                        <option value="60-">60점 미만</option>
                     </select>
                 </div>
                 <div class="filter-group">
-                    <label></label>
+                    <label>카테고리</label>
                     <select id="category-filter">
-                        <option value="all"></option>
+                        <option value="all">전체</option>
                     </select>
                 </div>
                 <div class="filter-group">
-                    <label></label>
-                    <input type="text" id="search-input" placeholder=" ...">
+                    <label>검색</label>
+                    <input type="text" id="search-input" placeholder="사업명 검색...">
                 </div>
-                <button class="action-btn" onclick="applyFilters()" style="align-self: flex-end;">  </button>
+                <button class="action-btn" onclick="applyFilters()" style="align-self: flex-end;"> 필터 적용</button>
             </div>
 
             <div class="history-table">
                 <table>
                     <thead>
                         <tr>
-                            <th> </th>
-                            <th></th>
-                            <th></th>
-                            <th> </th>
-                            <th></th>
-                            <th></th>
-                            <th>DB </th>
-                            <th> ID</th>
+                            <th>발굴 시간</th>
+                            <th>사업명</th>
+                            <th>카테고리</th>
+                            <th>종합 점수</th>
+                            <th>시장성</th>
+                            <th>수익성</th>
+                            <th>DB 저장</th>
+                            <th>배치 ID</th>
                         </tr>
                     </thead>
                     <tbody id="history-tbody">
-                        <tr><td colspan="8" class="loading"><div class="spinner"></div> ...</td></tr>
+                        <tr><td colspan="8" class="loading"><div class="spinner"></div>로딩 중...</td></tr>
                     </tbody>
                 </table>
             </div>
         </div>
 
-        <!--    -->
+        <!-- 트렌드 분석 탭 -->
         <div id="trends" class="tab-content">
             <div class="chart-container">
-                <div class="chart-title">  </div>
+                <div class="chart-title">일별 발굴 트렌드</div>
                 <canvas id="daily-trend-chart"></canvas>
             </div>
 
             <div class="chart-container">
-                <div class="chart-title">  </div>
+                <div class="chart-title">평균 점수 추이</div>
                 <canvas id="score-trend-chart"></canvas>
             </div>
         </div>
 
-        <!--   -->
+        <!-- 인사이트 탭 -->
         <div id="insights" class="tab-content">
             <div id="insights-container">
-                <div class="loading"><div class="spinner"></div>  ...</div>
+                <div class="loading"><div class="spinner"></div>인사이트 로딩 중...</div>
             </div>
         </div>
 
-        <!--    -->
+        <!-- 카테고리 분석 탭 -->
         <div id="categories" class="tab-content">
             <div class="category-grid" id="category-grid">
-                <div class="loading"><div class="spinner"></div>  ...</div>
+                <div class="loading"><div class="spinner"></div>카테고리 로딩 중...</div>
             </div>
         </div>
 
-        <!--    -->
+        <!-- 시간대별 분석 탭 -->
         <div id="timeline" class="tab-content">
             <div class="chart-container">
-                <div class="chart-title">  </div>
+                <div class="chart-title">시간대별 평균 점수</div>
                 <canvas id="hourly-chart"></canvas>
             </div>
         </div>
 
-        <!--    (60 ) -->
+        <!-- 저점수 사업 탭 (60점 미만) -->
         <div id="lowscore" class="tab-content">
             <div class="stats-grid" id="lowscore-stats-grid">
                 <div class="stat-card">
                     <div class="stat-value" id="lowscore-total">-</div>
-                    <div class="stat-label">  </div>
+                    <div class="stat-label">총 저점수 사업</div>
                 </div>
                 <div class="stat-card">
                     <div class="stat-value" id="lowscore-avg">-</div>
-                    <div class="stat-label"> </div>
+                    <div class="stat-label">평균 점수</div>
                 </div>
                 <div class="stat-card">
                     <div class="stat-value" id="lowscore-improvement">-</div>
-                    <div class="stat-label">  (%)</div>
+                    <div class="stat-label">개선 가능성 (%)</div>
                 </div>
             </div>
 
             <div class="filter-bar" style="margin-bottom: 20px;">
                 <select id="lowscore-reason-filter" onchange="loadLowScoreBusinesses()">
-                    <option value="all">  </option>
-                    <option value="low_market"> </option>
-                    <option value="low_revenue"> </option>
-                    <option value="both">+  </option>
+                    <option value="all">모든 실패 원인</option>
+                    <option value="low_market">시장성 부족</option>
+                    <option value="low_revenue">수익성 부족</option>
+                    <option value="both">시장성+수익성 모두 부족</option>
                 </select>
                 <select id="lowscore-category-filter" onchange="loadLowScoreBusinesses()">
-                    <option value="all"> </option>
+                    <option value="all">모든 카테고리</option>
                 </select>
             </div>
 
             <div class="section">
-                <h2>   </h2>
+                <h2> 실패 원인 분포</h2>
                 <div id="failure-distribution" class="chart-container" style="height: 300px;">
                     <canvas id="failure-chart"></canvas>
                 </div>
             </div>
 
             <div class="section">
-                <h2> 60   </h2>
+                <h2> 60점 미만 사업 목록</h2>
                 <div id="lowscore-businesses-list"></div>
             </div>
 
             <div class="section">
-                <h2>  </h2>
+                <h2> 개선 인사이트</h2>
                 <div id="improvement-insights"></div>
             </div>
         </div>
@@ -594,21 +594,21 @@
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
-        //  
+        // 탭 전환
         function switchTab(tabName) {
-            //   
+            // 모든 탭 비활성화
             document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
             document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
 
-            //   
+            // 선택한 탭 활성화
             event.target.classList.add('active');
             document.getElementById(tabName).classList.add('active');
 
-            //   
+            // 탭별 데이터 로드
             loadTabData(tabName);
         }
 
-        //  
+        // 데이터 로드
         async function loadTabData(tabName) {
             switch(tabName) {
                 case 'overview':
@@ -630,12 +630,12 @@
             }
         }
 
-        //  
+        // 초기 로드
         window.onload = () => {
             loadOverview();
         };
 
-        //   
+        // 종합 개요 로드
         async function loadOverview() {
             try {
                 const response = await fetch('/api/business-history/stats');
@@ -655,7 +655,7 @@
             }
         }
 
-        //  
+        // 히스토리 로드
         async function loadHistory() {
             try {
                 const response = await fetch('/api/business-history/list');
@@ -690,7 +690,7 @@
             }
         }
 
-        //  
+        // 인사이트 로드
         async function loadInsights() {
             try {
                 const response = await fetch('/api/business-history/insights');
@@ -728,7 +728,7 @@
             }
         }
 
-        //  
+        // 카테고리 로드
         async function loadCategories() {
             try {
                 const response = await fetch('/api/business-history/categories');
@@ -761,13 +761,13 @@
             }
         }
 
-        //  
+        // 트렌드 로드
         async function loadTrends() {
-            // Chart.js   (API  )
+            // Chart.js로 차트 렌더링 (API 연결 필요)
             console.log('Loading trends...');
         }
 
-        //  
+        // 필터 적용
         function applyFilters() {
             const period = document.getElementById('period-filter').value;
             const score = document.getElementById('score-filter').value;
@@ -778,7 +778,7 @@
             loadHistory();
         }
 
-        //    
+        // 저점수 사업 통계 로드
         async function loadLowScoreStats() {
             try {
                 const response = await fetch('/api/low-score-businesses/stats?days=7');
@@ -788,14 +788,14 @@
                 document.getElementById('lowscore-avg').textContent = data.avg_score || 0;
                 document.getElementById('lowscore-improvement').textContent = data.improvement_rate || 0;
 
-                //    
+                // 실패 원인 분포 차트
                 if (data.failure_distribution) {
                     const ctx = document.getElementById('failure-chart');
                     if (ctx) {
                         new Chart(ctx, {
                             type: 'pie',
                             data: {
-                                labels: [' ', ' ', ' '],
+                                labels: ['시장성 부족', '수익성 부족', '모두 부족'],
                                 datasets: [{
                                     data: [
                                         data.failure_distribution.low_market || 0,
@@ -813,7 +813,7 @@
                     }
                 }
 
-                //    
+                // 카테고리 필터 옵션 추가
                 const categoryFilter = document.getElementById('lowscore-category-filter');
                 if (data.category_failures) {
                     Object.keys(data.category_failures).forEach(cat => {
@@ -829,7 +829,7 @@
             }
         }
 
-        //    
+        // 저점수 사업 목록 로드
         async function loadLowScoreBusinesses() {
             const reasonFilter = document.getElementById('lowscore-reason-filter').value;
             const categoryFilter = document.getElementById('lowscore-category-filter').value;
@@ -846,8 +846,8 @@
                         const card = document.createElement('div');
                         card.className = 'history-card';
 
-                        const reasonBadge = biz.failure_reason === 'both' ? '+ ' :
-                                          biz.failure_reason === 'low_market' ? ' ' : ' ';
+                        const reasonBadge = biz.failure_reason === 'both' ? '시장+수익 부족' :
+                                          biz.failure_reason === 'low_market' ? '시장성 부족' : '수익성 부족';
                         const reasonColor = biz.failure_reason === 'both' ? '#dc2626' :
                                           biz.failure_reason === 'low_market' ? '#f59e0b' : '#ef4444';
 
@@ -868,13 +868,13 @@
                             </div>
                             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 15px 0;">
                                 <div>
-                                    <div style="color: #6b7280; font-size: 12px;"></div>
+                                    <div style="color: #6b7280; font-size: 12px;">시장성</div>
                                     <div style="font-weight: bold; color: ${biz.market_score < 60 ? '#ef4444' : '#10b981'};">
                                         ${biz.market_score.toFixed(1)}
                                     </div>
                                 </div>
                                 <div>
-                                    <div style="color: #6b7280; font-size: 12px;"></div>
+                                    <div style="color: #6b7280; font-size: 12px;">수익성</div>
                                     <div style="font-weight: bold; color: ${biz.revenue_score < 60 ? '#ef4444' : '#10b981'};">
                                         ${biz.revenue_score.toFixed(1)}
                                     </div>
@@ -882,24 +882,24 @@
                             </div>
                             ${biz.improvement_suggestions && biz.improvement_suggestions.length > 0 ? `
                                 <div style="background: #fef3c7; padding: 10px; border-radius: 8px; margin-top: 10px;">
-                                    <strong style="color: #92400e;">  :</strong>
+                                    <strong style="color: #92400e;"> 개선 제안:</strong>
                                     <ul style="margin: 5px 0 0 20px; color: #92400e;">
                                         ${biz.improvement_suggestions.map(s => `<li>${s.suggestion}</li>`).join('')}
                                     </ul>
                                 </div>
                             ` : ''}
                             <div style="margin-top: 10px; font-size: 12px; color: #9ca3af;">
-                                ${new Date(biz.created_at).toLocaleString('ko-KR')} |  : ${biz.analysis_duration_ms}ms
+                                ${new Date(biz.created_at).toLocaleString('ko-KR')} | 분석 시간: ${biz.analysis_duration_ms}ms
                             </div>
                         `;
 
                         list.appendChild(card);
                     });
                 } else {
-                    list.innerHTML = '<div class="loading">  .</div>';
+                    list.innerHTML = '<div class="loading">저점수 사업이 없습니다.</div>';
                 }
 
-                //   
+                // 개선 인사이트 표시
                 displayImprovementInsights(data.businesses);
 
             } catch (error) {
@@ -907,12 +907,12 @@
             }
         }
 
-        //   
+        // 개선 인사이트 표시
         function displayImprovementInsights(businesses) {
             const container = document.getElementById('improvement-insights');
             container.innerHTML = '';
 
-            //    
+            // 공통 문제 패턴 분석
             const marketIssues = businesses.filter(b => b.market_score < 60).length;
             const revenueIssues = businesses.filter(b => b.revenue_score < 60).length;
 
@@ -921,27 +921,27 @@
             if (marketIssues > revenueIssues) {
                 insights.push({
                     type: 'warning',
-                    title: '   ',
-                    description: ` ${businesses.length}  ${marketIssues}     .`,
-                    action: '   ,     .'
+                    title: '시장성 문제가 주요 원인',
+                    description: `전체 ${businesses.length}개 중 ${marketIssues}개가 시장성 부족으로 낮은 점수를 받았습니다.`,
+                    action: '더 니치한 시장을 타겟하거나, 검증된 시장의 사업 모델을 선택하세요.'
                 });
             } else if (revenueIssues > marketIssues) {
                 insights.push({
                     type: 'danger',
-                    title: '   ',
-                    description: ` ${businesses.length}  ${revenueIssues}     .`,
-                    action: '  ,   .'
+                    title: '수익성 문제가 주요 원인',
+                    description: `전체 ${businesses.length}개 중 ${revenueIssues}개가 수익성 부족으로 낮은 점수를 받았습니다.`,
+                    action: '가격 전략을 재검토하거나, 운영 비용을 최적화하세요.'
                 });
             }
 
-            // 50   (  )
+            // 50점 이상 사업 (개선 가능성 높음)
             const improvable = businesses.filter(b => b.total_score >= 50);
             if (improvable.length > 0) {
                 insights.push({
                     type: 'success',
-                    title: `${improvable.length}   `,
-                    description: '50     60   .',
-                    action: '     .'
+                    title: `${improvable.length}개 사업은 개선 가능`,
+                    description: '50점 이상의 사업은 약간의 개선으로 60점을 넘길 수 있습니다.',
+                    action: '개선 제안을 참고하여 사업 모델을 수정해보세요.'
                 });
             }
 
@@ -955,7 +955,7 @@
                             <h3 style="margin: 0 0 8px 0;">${insight.title}</h3>
                             <p style="margin: 0 0 8px 0; color: #6b7280;">${insight.description}</p>
                             <div style="background: #e0e7ff; padding: 10px; border-radius: 8px; border-left: 4px solid #6366f1;">
-                                <strong> :</strong> ${insight.action}
+                                <strong>실행 제안:</strong> ${insight.action}
                             </div>
                         </div>
                     </div>
@@ -964,11 +964,11 @@
             });
 
             if (insights.length === 0) {
-                container.innerHTML = '<div class="loading">  .</div>';
+                container.innerHTML = '<div class="loading">개선 인사이트가 없습니다.</div>';
             }
         }
 
-        //      
+        // 탭 전환 시 저점수 데이터 로드
         const originalSwitchTab = switchTab;
         switchTab = function(tabName) {
             originalSwitchTab.call(this, tabName);

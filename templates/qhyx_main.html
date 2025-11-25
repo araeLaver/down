@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Qhyx Inc. - AI    </title>
+    <title>Qhyx Inc. - AI 기반 자율 비즈니스 시스템</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
@@ -28,7 +28,7 @@
             color: #fff;
         }
 
-        /*  */
+        /* 네비게이션 */
         .navbar-custom {
             background: rgba(10, 14, 39, 0.95);
             backdrop-filter: blur(10px);
@@ -51,7 +51,7 @@
             letter-spacing: 2px;
         }
 
-        /*   */
+        /* 히어로 섹션 */
         .hero-section {
             position: relative;
             min-height: 100vh;
@@ -145,7 +145,7 @@
             transform: translateY(-3px);
         }
 
-        /*   */
+        /* 통계 섹션 */
         .stats-section {
             background: rgba(255, 255, 255, 0.02);
             backdrop-filter: blur(10px);
@@ -184,7 +184,7 @@
             margin-top: 10px;
         }
 
-        /*   */
+        /* 기능 카드 */
         .feature-card {
             background: var(--card-bg);
             border-radius: 20px;
@@ -237,7 +237,7 @@
             line-height: 1.6;
         }
 
-        /*   */
+        /* 서비스 카드 */
         .service-card {
             background: var(--card-bg);
             border-radius: 20px;
@@ -273,7 +273,7 @@
             margin: 20px 0;
         }
 
-        /*  */
+        /* 포트폴리오 */
         .portfolio-card {
             background: var(--card-bg);
             border-radius: 20px;
@@ -330,7 +330,7 @@
             50% { opacity: 0.5; box-shadow: 0 0 5px #0f0; }
         }
 
-        /* CTA  */
+        /* CTA 섹션 */
         .cta-section {
             background: var(--primary-gradient);
             padding: 100px 0;
@@ -343,7 +343,7 @@
             margin-bottom: 20px;
         }
 
-        /*  */
+        /* 푸터 */
         footer {
             background: rgba(0, 0, 0, 0.5);
             border-top: 1px solid rgba(255, 255, 255, 0.1);
@@ -368,7 +368,7 @@
             transform: translateY(-5px);
         }
 
-        /*   */
+        /* 섹션 타이틀 */
         .section-title {
             font-size: 3rem;
             font-weight: 900;
@@ -383,14 +383,14 @@
             margin-bottom: 60px;
         }
 
-        /*  */
+        /* 반응형 */
         @media (max-width: 768px) {
             .hero-title { font-size: 2.5rem; }
             .hero-subtitle { font-size: 1.2rem; }
             .section-title { font-size: 2rem; }
         }
 
-        /*   */
+        /* 스크롤 애니메이션 */
         .fade-in {
             opacity: 0;
             transform: translateY(30px);
@@ -413,13 +413,13 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto align-items-center">
-                    <li class="nav-item"><a class="nav-link" href="#home"></a></li>
-                    <li class="nav-item"><a class="nav-link" href="#features"></a></li>
-                    <li class="nav-item"><a class="nav-link" href="#services"></a></li>
-                    <li class="nav-item"><a class="nav-link" href="#portfolio"></a></li>
+                    <li class="nav-item"><a class="nav-link" href="#home">홈</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#features">기능</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#services">서비스</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#portfolio">시스템</a></li>
                     <li class="nav-item ms-3">
                         <a class="btn btn-sm btn-gradient" href="/business-discovery">
-                               
+                             사업 발굴 대시보드
                         </a>
                     </li>
                 </ul>
@@ -436,20 +436,20 @@
             <div class="row align-items-center">
                 <div class="col-lg-7">
                     <h1 class="hero-title">
-                        AI <br>
-                        <span class="gradient-text"> </span><br>
-                        
+                        AI 기반<br>
+                        <span class="gradient-text">자율 비즈니스</span><br>
+                        시스템
                     </h1>
                     <p class="hero-subtitle">
-                        24/7    .<br>
-                        80        .
+                        24/7 자동으로 사업을 발굴하고 분석합니다.<br>
+                        80점 이상 아이디어만 선별하여 즉시 실행 가능한 계획을 제공합니다.
                     </p>
                     <div class="d-flex gap-3">
                         <a href="/business-discovery" class="btn btn-gradient btn-lg">
-                            <i class="fas fa-rocket me-2"></i> 
+                            <i class="fas fa-rocket me-2"></i>지금 시작하기
                         </a>
                         <a href="#features" class="btn btn-outline-gradient btn-lg">
-                            <i class="fas fa-info-circle me-2"></i> 
+                            <i class="fas fa-info-circle me-2"></i>더 알아보기
                         </a>
                     </div>
                 </div>
@@ -469,25 +469,25 @@
                 <div class="col-md-3 mb-4">
                     <div class="stat-card">
                         <div class="stat-number" id="stat-businesses">0</div>
-                        <div class="stat-label"> </div>
+                        <div class="stat-label">발굴된 사업</div>
                     </div>
                 </div>
                 <div class="col-md-3 mb-4">
                     <div class="stat-card">
                         <div class="stat-number" id="stat-meetings">0</div>
-                        <div class="stat-label"> </div>
+                        <div class="stat-label">자동 회의</div>
                     </div>
                 </div>
                 <div class="col-md-3 mb-4">
                     <div class="stat-card">
                         <div class="stat-number" id="stat-hours">24/7</div>
-                        <div class="stat-label"> </div>
+                        <div class="stat-label">운영 시간</div>
                     </div>
                 </div>
                 <div class="col-md-3 mb-4">
                     <div class="stat-card">
                         <div class="stat-number" id="stat-employees">8</div>
-                        <div class="stat-label">AI </div>
+                        <div class="stat-label">AI 직원</div>
                     </div>
                 </div>
             </div>
@@ -497,8 +497,8 @@
     <!-- Features Section -->
     <section id="features" class="py-5" style="background: var(--dark-bg); padding: 100px 0 !important;">
         <div class="container">
-            <h2 class="section-title gradient-text fade-in"> </h2>
-            <p class="section-subtitle fade-in">   </p>
+            <h2 class="section-title gradient-text fade-in">핵심 기능</h2>
+            <p class="section-subtitle fade-in">실시간으로 작동하는 자동화 시스템</p>
 
             <div class="row">
                 <div class="col-lg-4 mb-4">
@@ -506,11 +506,11 @@
                         <div class="feature-icon">
                             <i class="fas fa-search-dollar"></i>
                         </div>
-                        <h3 class="feature-title">  </h3>
+                        <h3 class="feature-title">자동 사업 발굴</h3>
                         <p class="feature-description">
-                             5 IT    .
-                            , ,     
-                            80   .
+                            매시간 5개의 IT 사업 아이디어를 자동으로 분석합니다.
+                            크몽, 네이버, 구글에서 실시간 시장 데이터를 수집하여
+                            80점 이상 아이디어만 선별합니다.
                         </p>
                     </div>
                 </div>
@@ -519,11 +519,11 @@
                         <div class="feature-icon">
                             <i class="fas fa-chart-line"></i>
                         </div>
-                        <h3 class="feature-title"> </h3>
+                        <h3 class="feature-title">수익성 검증</h3>
                         <p class="feature-description">
-                             ,  ,    .
-                            // 3  ROI
-                               .
+                            초기 투자, 월 비용, 예상 매출을 자동 계산합니다.
+                            보수적/현실적/낙관적 3가지 시나리오로 ROI를
+                            시뮬레이션하여 실행 가능성을 검증합니다.
                         </p>
                     </div>
                 </div>
@@ -532,11 +532,11 @@
                         <div class="feature-icon">
                             <i class="fas fa-tasks"></i>
                         </div>
-                        <h3 class="feature-title">  </h3>
+                        <h3 class="feature-title">실행 계획 생성</h3>
                         <p class="feature-description">
-                            4      .
-                              ,  ,  
-                                 .
+                            4주 단위 구체적 실행 계획을 자동 생성합니다.
+                            기술 스택 추천, 예산 산출, 일별 체크리스트까지
+                            즉시 실행 가능한 모든 정보를 제공합니다.
                         </p>
                     </div>
                 </div>
@@ -547,61 +547,61 @@
     <!-- Services Section -->
     <section id="services" style="background: rgba(255, 255, 255, 0.02); padding: 100px 0;">
         <div class="container">
-            <h2 class="section-title gradient-text fade-in"> </h2>
-            <p class="section-subtitle fade-in">   AI </p>
+            <h2 class="section-title gradient-text fade-in">우리의 서비스</h2>
+            <p class="section-subtitle fade-in">실제 문제를 해결하는 AI 솔루션</p>
 
             <div class="row">
                 <div class="col-lg-4 mb-4">
                     <div class="service-card fade-in">
-                        <span class="service-badge"></span>
+                        <span class="service-badge">인기</span>
                         <div class="feature-icon">
                             <i class="fas fa-robot"></i>
                         </div>
-                        <h3 class="feature-title">AI  </h3>
+                        <h3 class="feature-title">AI 챗봇 개발</h3>
                         <p class="feature-description">
-                                 .
+                            고객 응대를 자동화하는 맞춤형 챗봇을 개발합니다.
                         </p>
-                        <div class="price-tag">150~</div>
+                        <div class="price-tag">150만원~</div>
                         <ul class="list-unstyled text-white-50">
-                            <li><i class="fas fa-check text-success me-2"></i>24/7  </li>
-                            <li><i class="fas fa-check text-success me-2"></i>FAQ </li>
-                            <li><i class="fas fa-check text-success me-2"></i>  </li>
+                            <li><i class="fas fa-check text-success me-2"></i>24/7 자동 응대</li>
+                            <li><i class="fas fa-check text-success me-2"></i>FAQ 자동화</li>
+                            <li><i class="fas fa-check text-success me-2"></i>예약 접수 봇</li>
                         </ul>
                     </div>
                 </div>
                 <div class="col-lg-4 mb-4">
                     <div class="service-card fade-in">
-                        <span class="service-badge"></span>
+                        <span class="service-badge">추천</span>
                         <div class="feature-icon">
                             <i class="fas fa-cogs"></i>
                         </div>
-                        <h3 class="feature-title"> </h3>
+                        <h3 class="feature-title">업무 자동화</h3>
                         <p class="feature-description">
-                              AI   .
+                            반복적인 업무를 AI로 자동화하여 효율을 극대화합니다.
                         </p>
-                        <div class="price-tag">200~</div>
+                        <div class="price-tag">200만원~</div>
                         <ul class="list-unstyled text-white-50">
-                            <li><i class="fas fa-check text-success me-2"></i>  </li>
-                            <li><i class="fas fa-check text-success me-2"></i>  </li>
-                            <li><i class="fas fa-check text-success me-2"></i> </li>
+                            <li><i class="fas fa-check text-success me-2"></i>데이터 자동 수집</li>
+                            <li><i class="fas fa-check text-success me-2"></i>보고서 자동 생성</li>
+                            <li><i class="fas fa-check text-success me-2"></i>이메일 자동화</li>
                         </ul>
                     </div>
                 </div>
                 <div class="col-lg-4 mb-4">
                     <div class="service-card fade-in">
-                        <span class="service-badge"></span>
+                        <span class="service-badge">신규</span>
                         <div class="feature-icon">
                             <i class="fas fa-lightbulb"></i>
                         </div>
-                        <h3 class="feature-title">  </h3>
+                        <h3 class="feature-title">사업 발굴 서비스</h3>
                         <p class="feature-description">
-                              IT   .
+                            자동으로 유망한 IT 사업 아이디어를 발굴합니다.
                         </p>
-                        <div class="price-tag"> 50</div>
+                        <div class="price-tag">월 50만원</div>
                         <ul class="list-unstyled text-white-50">
-                            <li><i class="fas fa-check text-success me-2"></i> 400 </li>
-                            <li><i class="fas fa-check text-success me-2"></i>80  </li>
-                            <li><i class="fas fa-check text-success me-2"></i>  </li>
+                            <li><i class="fas fa-check text-success me-2"></i>월 400개 분석</li>
+                            <li><i class="fas fa-check text-success me-2"></i>80점 이상 선별</li>
+                            <li><i class="fas fa-check text-success me-2"></i>실행 계획 제공</li>
                         </ul>
                     </div>
                 </div>
@@ -612,8 +612,8 @@
     <!-- Portfolio Section -->
     <section id="portfolio" style="background: var(--dark-bg); padding: 100px 0;">
         <div class="container">
-            <h2 class="section-title gradient-text fade-in">  </h2>
-            <p class="section-subtitle fade-in">24/7   AI </p>
+            <h2 class="section-title gradient-text fade-in">실시간 운영 시스템</h2>
+            <p class="section-subtitle fade-in">24/7 자율적으로 작동하는 AI 시스템</p>
 
             <div class="row">
                 <div class="col-lg-4 mb-4">
@@ -621,18 +621,18 @@
                         <div style="position: relative; z-index: 1;">
                             <span class="status-badge">
                                 <span class="status-dot"></span>
-                                  
+                                실시간 운영 중
                             </span>
                             <h3 class="feature-title mt-3">
                                 <i class="fas fa-search text-info me-2"></i>
-                                  
+                                사업 발굴 시스템
                             </h3>
                             <p class="feature-description">
-                                  IT    .
-                                   .
+                                매시간 자동으로 IT 사업 아이디어를 발굴하고 분석합니다.
+                                실시간으로 대시보드에서 확인 가능합니다.
                             </p>
                             <a href="/business-discovery" class="btn btn-sm btn-gradient mt-3">
-                                  <i class="fas fa-arrow-right ms-2"></i>
+                                대시보드 보기 <i class="fas fa-arrow-right ms-2"></i>
                             </a>
                         </div>
                     </div>
@@ -642,18 +642,18 @@
                         <div style="position: relative; z-index: 1;">
                             <span class="status-badge">
                                 <span class="status-dot"></span>
-                                  
+                                실시간 운영 중
                             </span>
                             <h3 class="feature-title mt-3">
                                 <i class="fas fa-users text-primary me-2"></i>
-                                AI  
+                                AI 직원 시스템
                             </h3>
                             <p class="feature-description">
-                                8 AI  24  
-                                 .
+                                8명의 AI 직원이 24시간 자율적으로 회의하고
+                                업무를 수행합니다.
                             </p>
                             <a href="/meetings" class="btn btn-sm btn-gradient mt-3">
-                                  <i class="fas fa-arrow-right ms-2"></i>
+                                회의록 보기 <i class="fas fa-arrow-right ms-2"></i>
                             </a>
                         </div>
                     </div>
@@ -663,18 +663,18 @@
                         <div style="position: relative; z-index: 1;">
                             <span class="status-badge">
                                 <span class="status-dot"></span>
-                                  
+                                실시간 운영 중
                             </span>
                             <h3 class="feature-title mt-3">
                                 <i class="fas fa-chart-bar text-success me-2"></i>
-                                 
+                                모니터링 시스템
                             </h3>
                             <p class="feature-description">
-                                    
-                                 .
+                                모든 활동을 실시간으로 추적하고 분석하는
+                                통합 대시보드입니다.
                             </p>
                             <a href="/dashboard" class="btn btn-sm btn-gradient mt-3">
-                                  <i class="fas fa-arrow-right ms-2"></i>
+                                모니터링 보기 <i class="fas fa-arrow-right ms-2"></i>
                             </a>
                         </div>
                     </div>
@@ -686,17 +686,17 @@
     <!-- CTA Section -->
     <section class="cta-section">
         <div class="container">
-            <h2 class="cta-title">  </h2>
+            <h2 class="cta-title">지금 바로 시작하세요</h2>
             <p class="lead mb-5">
-                24/7     .<br>
-                    .
+                24/7 자동으로 유망한 사업 아이디어를 발굴합니다.<br>
+                첫 달 무료 체험을 제공합니다.
             </p>
             <div class="d-flex gap-3 justify-content-center">
                 <a href="/business-discovery" class="btn btn-light btn-lg" style="color: #667eea; font-weight: 600;">
-                    <i class="fas fa-rocket me-2"></i> 
+                    <i class="fas fa-rocket me-2"></i>무료로 시작하기
                 </a>
                 <a href="#contact" class="btn btn-outline-light btn-lg">
-                    <i class="fas fa-phone me-2"></i> 
+                    <i class="fas fa-phone me-2"></i>상담 신청
                 </a>
             </div>
         </div>
@@ -710,20 +710,20 @@
                     <h3 class="qhyx-logo mb-3">Qhyx</h3>
                     <p class="text-white-50">
                         Quantum Hope Youth eXcellence<br>
-                        AI    
+                        AI 기반 자율 비즈니스 시스템
                     </p>
                 </div>
                 <div class="col-lg-4 mb-4">
-                    <h5 class="mb-3"></h5>
+                    <h5 class="mb-3">바로가기</h5>
                     <ul class="list-unstyled">
-                        <li><a href="/business-discovery" class="text-white-50 text-decoration-none">  </a></li>
-                        <li><a href="/meetings" class="text-white-50 text-decoration-none"></a></li>
-                        <li><a href="/dashboard" class="text-white-50 text-decoration-none"></a></li>
-                        <li><a href="/suggestions" class="text-white-50 text-decoration-none"></a></li>
+                        <li><a href="/business-discovery" class="text-white-50 text-decoration-none">사업 발굴 대시보드</a></li>
+                        <li><a href="/meetings" class="text-white-50 text-decoration-none">회의록</a></li>
+                        <li><a href="/dashboard" class="text-white-50 text-decoration-none">모니터링</a></li>
+                        <li><a href="/suggestions" class="text-white-50 text-decoration-none">건의사항</a></li>
                     </ul>
                 </div>
                 <div class="col-lg-4 mb-4">
-                    <h5 class="mb-3"></h5>
+                    <h5 class="mb-3">연락처</h5>
                     <p class="text-white-50">
                         <i class="fas fa-envelope me-2"></i>contact@qhyx.ai<br>
                         <i class="fas fa-phone me-2"></i>02-1234-5678
@@ -743,7 +743,7 @@
             </div>
             <hr style="border-color: rgba(255, 255, 255, 0.1);">
             <div class="text-center text-white-50">
-                <p>&copy; 2025 Qhyx Inc. All rights reserved. | 24/7    </p>
+                <p>&copy; 2025 Qhyx Inc. All rights reserved. | 24/7 자율 운영 중 </p>
             </div>
         </div>
     </footer>

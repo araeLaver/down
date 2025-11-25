@@ -1,4 +1,4 @@
-<!--    -->
+<!-- 공통 네비게이션 바 -->
 <style>
     .navbar {
         background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -147,33 +147,33 @@
         </a>
 
         <button class="navbar-toggle" onclick="toggleMenu()">
-            
+            ☰
         </button>
 
         <ul class="navbar-menu" id="navbarMenu">
-            <li><a href="/dashboard"></a></li>
+            <li><a href="/dashboard">대시보드</a></li>
 
             <li class="dropdown" onclick="toggleDropdown(event)">
-                <a href="javascript:void(0)">  </a>
+                <a href="javascript:void(0)">사업 발굴 ▼</a>
                 <div class="dropdown-content">
-                    <a href="/business-discovery">  </a>
-                    <a href="/business-history"> </a>
-                    <a href="/business-review">  (60-79)</a>
-                    <a href="/trigger-discovery">  </a>
+                    <a href="/business-discovery">자동 발굴 현황</a>
+                    <a href="/business-history">발굴 히스토리</a>
+                    <a href="/business-review">검토 필요 (60-79점)</a>
+                    <a href="/trigger-discovery">수동 발굴 실행</a>
                 </div>
             </li>
 
-            <li><a href="/startup-support"> </a></li>
+            <li><a href="/startup-support">창업 지원사업</a></li>
 
             <li class="dropdown" onclick="toggleDropdown(event)">
-                <a href="javascript:void(0)">/ </a>
+                <a href="javascript:void(0)">회의/제안 ▼</a>
                 <div class="dropdown-content">
-                    <a href="/meetings"></a>
-                    <a href="/suggestions"> </a>
+                    <a href="/meetings">회의록</a>
+                    <a href="/suggestions">직원 제안</a>
                 </div>
             </li>
 
-            <li><a href="/monitor"> </a></li>
+            <li><a href="/monitor">시스템 모니터</a></li>
         </ul>
     </div>
 </nav>
@@ -192,7 +192,7 @@
         }
     }
 
-    //    
+    // 현재 페이지 활성화 표시
     document.addEventListener('DOMContentLoaded', function() {
         const currentPath = window.location.pathname;
         const links = document.querySelectorAll('.navbar-menu a');
@@ -204,7 +204,7 @@
         });
     });
 
-    //     
+    // 모바일에서 링크 클릭시 메뉴 닫기
     document.querySelectorAll('.navbar-menu a').forEach(link => {
         link.addEventListener('click', function() {
             if (window.innerWidth <= 768) {
