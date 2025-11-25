@@ -14,7 +14,7 @@ class QhyxMVPPlanner:
     def create_mvp_development_plan(self):
         """MVP 개발 계획 수립"""
         
-        print("🚀 Qhyx Inc. MVP 제품 개발 계획 수립")
+        print("[MVP] Qhyx Inc. MVP 제품 개발 계획 수립")
         print("=" * 60)
         
         # MVP 기획 회의 기록
@@ -69,7 +69,7 @@ class QhyxMVPPlanner:
         # 개발 업무들 생성
         self.create_development_tasks(development_plan['tasks'])
         
-        print(f"✅ MVP 개발 계획 수립 완료: {selected_mvp['name']}")
+        print(f"[OK] MVP 개발 계획 수립 완료: {selected_mvp['name']}")
         return meeting.id, selected_mvp, development_plan
     
     def analyze_mvp_opportunities(self):

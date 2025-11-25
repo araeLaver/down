@@ -195,7 +195,7 @@ class DailyBusinessOperations:
 
                 # 고수익 테마 정보 추가
                 if high_viability_themes:
-                    notes += f"\n📊 ROI 최고 테마: {high_viability_themes[0]['idea']['name']} (ROI: {high_viability_themes[0]['roi_score']})\n"
+                    notes += f"\n[DATA] ROI 최고 테마: {high_viability_themes[0]['idea']['name']} (ROI: {high_viability_themes[0]['roi_score']})\n"
                     notes += f"상위 5개 수익성 테마 검토 완료\n"
             else:
                 decisions = [
@@ -756,7 +756,7 @@ class ContinuousBusinessSystem:
         summary = f"""
 🏢 Qhyx Inc. 일일 요약 보고서 [{today}]
 
-📅 오늘의 활동:
+[DATE] 오늘의 활동:
 - 회의: {len(meetings)}건
 - 업무: {len(tasks)}건 
 - 지표 업데이트: {len(metrics)}건
@@ -771,7 +771,7 @@ class ContinuousBusinessSystem:
 - 주간 성과 리뷰 준비
 - 새로운 기회 발굴
 
-🔄 시스템 상태: 정상 운영 중
+[REFRESH] 시스템 상태: 정상 운영 중
         """
         
         session.close()

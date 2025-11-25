@@ -582,7 +582,7 @@ if __name__ == "__main__":
         all_results.append(result)
 
         # 결과 출력
-        print(f"\n📊 {business_idea}")
+        print(f"\n[RESULT] {business_idea}")
         print(f"   키워드: {keyword}")
         print(f"   시장 점수: {result['market_score']}/100")
         print(f"   추천: {result['recommendation']['verdict']}")
@@ -595,7 +595,7 @@ if __name__ == "__main__":
     all_results.sort(key=lambda x: x['market_score'], reverse=True)
 
     print("\n" + "="*60)
-    print("🏆 TOP 3 추천 사업")
+    print("[TOP 3] 추천 사업")
     print("="*60)
 
     for i, result in enumerate(all_results[:3], 1):

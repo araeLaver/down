@@ -192,4 +192,4 @@ content = content.replace(old_load, new_load)
 with open('templates/business_discovery.html', 'w', encoding='utf-8') as f:
     f.write(content)
 
-print("✅ 탭 추가 완료!")
+print("[OK] 탭 추가 완료!")

@@ -36,4 +36,4 @@ for i, line in enumerate(lines):
 with open('templates/business_discovery.html', 'w', encoding='utf-8') as f:
     f.writelines(new_lines)
 
-print("✅ 네비게이션 메뉴 추가 완료!")
+print("[OK] 네비게이션 메뉴 추가 완료!")

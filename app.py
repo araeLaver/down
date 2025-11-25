@@ -1083,9 +1083,9 @@ def api_rejected_businesses():
     finally:
         session.close()
 
-@app.route('/api/low-score-businesses/list')
-def api_low_score_businesses():
-    """낮은 점수 사업 목록 API (60점 미만)"""
+@app.route('/api/low-score-businesses/list-old')
+def api_low_score_businesses_old():
+    """낮은 점수 사업 목록 API (60점 미만) - 구버전"""
     session = Session()
     try:
         days = int(request.args.get('days', 30))

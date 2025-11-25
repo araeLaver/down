@@ -25,21 +25,21 @@ class MeetingReportSystem:
         
         # 핵심 회의 안건 템플릿
         base_agenda = [
-            "📊 어제 사업 성과 및 진행 현황 검토",
-            "🎯 오늘의 핵심 목표 설정",
-            "💡 신규 사업 기회 발굴 현황",
-            "📈 매출 증대 전략 논의",
+            "[DATA] 어제 사업 성과 및 진행 현황 검토",
+            "[TARGET] 오늘의 핵심 목표 설정",
+            "[IDEA] 신규 사업 기회 발굴 현황",
+            "[UP] 매출 증대 전략 논의",
             "🌍 글로벌 확장 진행 상황"
         ]
         
         # 요일별 특별 안건
         weekday_agendas = {
-            0: ["🔄 주간 전략 검토", "💼 새로운 한 주 계획 수립"],  # 월요일
-            1: ["🚀 제품 개발 진행 상황", "👥 팀 협업 효율성 개선"],  # 화요일
-            2: ["💰 투자 유치 전략 업데이트", "🤝 파트너십 기회 검토"],  # 수요일
-            3: ["📊 시장 분석 결과 공유", "🎯 고객 확보 전략 논의"],  # 목요일
-            4: ["🏆 주간 성과 정리", "🎉 다음 주 도전 과제 설정"],  # 금요일
-            5: ["🔍 경쟁사 동향 분석", "💎 차별화 전략 수립"],  # 토요일
+            0: ["[REFRESH] 주간 전략 검토", "💼 새로운 한 주 계획 수립"],  # 월요일
+            1: ["[START] 제품 개발 진행 상황", "👥 팀 협업 효율성 개선"],  # 화요일
+            2: ["[MONEY] 투자 유치 전략 업데이트", "🤝 파트너십 기회 검토"],  # 수요일
+            3: ["[DATA] 시장 분석 결과 공유", "[TARGET] 고객 확보 전략 논의"],  # 목요일
+            4: ["[TOP] 주간 성과 정리", "🎉 다음 주 도전 과제 설정"],  # 금요일
+            5: ["[SEARCH] 경쟁사 동향 분석", "💎 차별화 전략 수립"],  # 토요일
             6: ["📝 주간 리뷰", "🌟 장기 비전 점검"]  # 일요일
         }
         
@@ -92,8 +92,8 @@ class MeetingReportSystem:
         
         # 핵심 결정사항 생성
         meeting_minutes['key_decisions'] = [
-            "📈 이번 주 목표: 신규 사업 영역 3개 분야 진출 결정",
-            "💰 투자 유치: 시리즈 A 라운드 준비 착수",
+            "[UP] 이번 주 목표: 신규 사업 영역 3개 분야 진출 결정",
+            "[MONEY] 투자 유치: 시리즈 A 라운드 준비 착수",
             "🌍 글로벌 진출: 일본 시장 진출 우선 추진",
             "🤝 파트너십: 주요 테크 기업과 전략적 제휴 논의",
             "👥 조직 확장: AI 개발팀 2배 확장 승인"
@@ -115,12 +115,12 @@ class MeetingReportSystem:
         
         discussion_templates = {
             "어제 사업 성과": [
-                "📊 일매출 전날 대비 12% 증가",
-                "🎯 핵심 KPI 목표 달성률 85%",
-                "💡 신규 고객 확보 47명"
+                "[DATA] 일매출 전날 대비 12% 증가",
+                "[TARGET] 핵심 KPI 목표 달성률 85%",
+                "[IDEA] 신규 고객 확보 47명"
             ],
             "신규 사업 기회": [
-                "🚀 AI 헬스케어 분야 진출 기회 발견",
+                "[START] AI 헬스케어 분야 진출 기회 발견",
                 "🌱 ESG 관련 신사업 수요 급증",
                 "💎 블록체인 기반 새로운 수익 모델"
             ],
@@ -138,9 +138,9 @@ class MeetingReportSystem:
         
         # 기본 논의 포인트
         return [
-            "✅ 현재 진행 상황 양호",
+            "[OK] 현재 진행 상황 양호",
             "⚡ 가속화 방안 논의 필요",
-            "🎯 구체적 실행 계획 수립"
+            "[TARGET] 구체적 실행 계획 수립"
         ]
     
     def generate_conclusion(self, agenda_item):
@@ -199,13 +199,13 @@ class MeetingReportSystem:
             
         except Exception as e:
             self.session.rollback()
-            print(f"❌ 회의록 저장 오류: {e}")
+            print(f"[X] 회의록 저장 오류: {e}")
             return None
     
     def generate_daily_meeting_report(self):
         """일일 회의 보고서 생성"""
         
-        print(f"📋 {datetime.now().strftime('%Y년 %m월 %d일')} 회의 보고서 생성 중...")
+        print(f"[LIST] {datetime.now().strftime('%Y년 %m월 %d일')} 회의 보고서 생성 중...")
         
         # 1. 오늘의 회의 안건 생성
         agenda_data = self.generate_daily_meeting_agenda()
@@ -234,7 +234,7 @@ class MeetingReportSystem:
 ┃                      🏢 Qhyx Inc. 일일 회의 보고서                     ┃
 ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
 
-📅 회의 정보
+[DATE] 회의 정보
 • 일시: {minutes['header']['date']} {minutes['header']['time']}
 • 회의 유형: {agenda_data['meeting_type']}
 • 참석자: {len(minutes['header']['participants'])}명
@@ -246,7 +246,7 @@ class MeetingReportSystem:
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-📋 회의 안건 및 논의 내용
+[LIST] 회의 안건 및 논의 내용
 
 {chr(10).join([
     f'''
@@ -262,13 +262,13 @@ class MeetingReportSystem:
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-🎯 핵심 결정사항
+[TARGET] 핵심 결정사항
 
 {chr(10).join([f"  {i+1}. {decision}" for i, decision in enumerate(minutes['key_decisions'])])}
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-✅ 실행 항목 (Action Items)
+[OK] 실행 항목 (Action Items)
 
 {chr(10).join([f'''  {i+1}. {item['task']}
      👤 담당자: {item['assignee']}
@@ -277,22 +277,22 @@ class MeetingReportSystem:
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-📊 회의 요약
+[DATA] 회의 요약
 
 ✨ 오늘의 핵심 성과:
-• 📈 신규 사업 기회 {len([item for item in minutes['agenda_items'] if '신규' in item['item']])}개 발굴
-• 🎯 실행 항목 {len(minutes['action_items'])}개 확정
-• 💡 핵심 결정 {len(minutes['key_decisions'])}건 도출
+• [UP] 신규 사업 기회 {len([item for item in minutes['agenda_items'] if '신규' in item['item']])}개 발굴
+• [TARGET] 실행 항목 {len(minutes['action_items'])}개 확정
+• [IDEA] 핵심 결정 {len(minutes['key_decisions'])}건 도출
 
-🚀 다음 회의: {minutes['next_meeting']}
+[START] 다음 회의: {minutes['next_meeting']}
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 🌟 Qhyx Inc. 성장 현황
-• 📊 총 사업 영역: 45개 분야 확장 중
+• [DATA] 총 사업 영역: 45개 분야 확장 중
 • 🌍 글로벌 진출: 20개국 동시 진출 계획
 • 👥 AI 직원: 12명이 24/7 자동 운영
-• 💰 예상 연매출: 1,000억원 목표
+• [MONEY] 예상 연매출: 1,000억원 목표
 
 💫 "예측불가능한 변화의 흐름으로 혁신을 이끈다"
    - Unpredictable Flow of Innovation -
@@ -317,7 +317,7 @@ class MeetingReportSystem:
             return filename
             
         except Exception as e:
-            print(f"❌ 파일 저장 오류: {e}")
+            print(f"[X] 파일 저장 오류: {e}")
             return None
     
     def run_daily_meeting_report(self):
@@ -329,7 +329,7 @@ class MeetingReportSystem:
             # 회의 보고서 생성
             report = self.generate_daily_meeting_report()
             
-            print("✅ 일일 회의 보고서 생성 완료!")
+            print("[OK] 일일 회의 보고서 생성 완료!")
             print("\n" + "="*80)
             print(report)
             print("="*80)
@@ -337,7 +337,7 @@ class MeetingReportSystem:
             return report
             
         except Exception as e:
-            print(f"❌ 일일 회의 보고서 생성 오류: {e}")
+            print(f"[X] 일일 회의 보고서 생성 오류: {e}")
             return None
     
     def start_meeting_report_scheduler(self):
@@ -352,14 +352,14 @@ class MeetingReportSystem:
         # 매일 오후 6시에 마감 회의
         schedule.every().day.at("18:00").do(self.run_daily_meeting_report)
         
-        print("📅 일일 회의 보고서 스케줄러 시작됨:")
+        print("[DATE] 일일 회의 보고서 스케줄러 시작됨:")
         print("  - 오전 9시: 일일 전략 회의 및 보고서")
         print("  - 오후 2시: 중간 점검 회의 및 보고서")
         print("  - 오후 6시: 마감 회의 및 보고서")
         print("💼 매일 3회 상세한 회의록을 받아보실 수 있습니다!")
         
         # 즉시 첫 번째 회의 보고서 생성
-        print("\n🚀 첫 번째 회의 보고서를 즉시 생성합니다...")
+        print("\n[START] 첫 번째 회의 보고서를 즉시 생성합니다...")
         self.run_daily_meeting_report()
         
         # 스케줄러 실행

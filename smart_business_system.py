@@ -33,11 +33,11 @@ class SmartBusinessSystem:
     def analyze_business_idea(self, business_idea, keyword, business_config):
         """단일 사업 아이디어 종합 분석"""
         print(f"\n{'='*80}")
-        print(f"📊 사업 아이디어 분석: {business_idea}")
+        print(f"[ANALYSIS] 사업 아이디어 분석: {business_idea}")
         print(f"{'='*80}\n")
 
         # 1단계: 시장 분석
-        print("1️⃣  실시간 시장 분석 중...")
+        print("[1] 실시간 시장 분석 중...")
         market_data = self.market_analyzer.comprehensive_analysis(business_idea, keyword)
         market_score = market_data['market_score']
 
@@ -45,7 +45,7 @@ class SmartBusinessSystem:
 
         # 점수 낮으면 조기 종료
         if market_score < 60:
-            print(f"   ❌ 시장 점수 부족 (60점 미만). 다른 아이디어 권장.\n")
+            print(f"   [X] 시장 점수 부족 (60점 미만). 다른 아이디어 권장.\n")
             return {
                 'business_idea': business_idea,
                 'passed': False,
@@ -54,7 +54,7 @@ class SmartBusinessSystem:
             }
 
         # 2단계: 수익성 검증
-        print("\n2️⃣  수익성 검증 중...")
+        print("\n[2] 수익성 검증 중...")
         revenue_data = self.revenue_validator.comprehensive_validation(business_config)
         realistic_scenario = revenue_data['scenarios']['realistic']
         verdict_score = revenue_data['verdict']['score']
@@ -64,7 +64,7 @@ class SmartBusinessSystem:
 
         # 수익성 낮으면 조기 종료
         if verdict_score < 60:
-            print(f"   ❌ 수익성 부족. 다른 아이디어 권장.\n")
+            print(f"   [X] 수익성 부족. 다른 아이디어 권장.\n")
             return {
                 'business_idea': business_idea,
                 'passed': False,
@@ -76,21 +76,21 @@ class SmartBusinessSystem:
         # 종합 점수 계산
         total_score = (market_score * 0.6) + (verdict_score * 0.4)
 
-        print(f"\n   📈 종합 점수: {total_score:.1f}/100")
+        print(f"\n   [SCORE] 종합 점수: {int(total_score)}/100")
 
         # 70점 이상이면 실행 계획 생성
         if total_score >= 70:
-            print(f"   ✅ 우수한 아이디어! 실행 계획 생성 중...\n")
+            print(f"   [OK] 우수한 아이디어! 실행 계획 생성 중...\n")
 
             # 3단계: 실행 계획 자동 생성
-            print("3️⃣  4주 실행 계획 생성 중...")
+            print("[3] 4주 실행 계획 생성 중...")
             action_plan = None
             try:
                 action_plan = self.action_planner.generate_comprehensive_plan(business_config)
-                print(f"\n   ✅ 실행 계획 완성!")
+                print(f"\n   [OK] 실행 계획 완성!")
             except Exception as e:
-                print(f"\n   ⚠️ 실행 계획 생성 실패: {e}")
-                print(f"   ℹ️ 분석 결과는 정상적으로 저장됩니다.")
+                print(f"\n   [WARN] 실행 계획 생성 실패: {e}")
+                print(f"   [INFO] 분석 결과는 정상적으로 저장됩니다.")
 
             return {
                 'business_idea': business_idea,
@@ -103,7 +103,7 @@ class SmartBusinessSystem:
             }
 
         else:
-            print(f"   ⚠️  보통 수준. 추가 검증 필요.\n")
+            print(f"   [WARN] 보통 수준. 추가 검증 필요.\n")
             return {
                 'business_idea': business_idea,
                 'passed': True,
@@ -116,7 +116,7 @@ class SmartBusinessSystem:
     def batch_analyze_ideas(self, ideas_list):
         """여러 아이디어 일괄 분석"""
         print(f"\n{'='*80}")
-        print(f"🔍 {len(ideas_list)}개 아이디어 일괄 분석 시작")
+        print(f"[BATCH] {len(ideas_list)}개 아이디어 일괄 분석 시작")
         print(f"{'='*80}\n")
 
         results = []
@@ -134,7 +134,7 @@ class SmartBusinessSystem:
 
             # API 호출 간격
             if i < len(ideas_list):
-                print("\n⏳ 5초 대기 중...")
+                print("\n[WAIT] 5초 대기 중...")
                 time.sleep(5)
 
         # 결과 정리
@@ -156,17 +156,17 @@ class SmartBusinessSystem:
     def _print_final_report(self, passed, further_validation, rejected):
         """최종 분석 리포트"""
         print(f"\n\n{'='*80}")
-        print(f"📊 최종 분석 리포트")
+        print(f"[REPORT] 최종 분석 리포트")
         print(f"{'='*80}\n")
 
         print(f"총 분석: {len(passed) + len(further_validation) + len(rejected)}개")
-        print(f"✅ 즉시 실행 권장: {len(passed)}개 (80점 이상)")
-        print(f"⚠️  추가 검증 필요: {len(further_validation)}개 (60-80점)")
-        print(f"❌ 비추천: {len(rejected)}개 (60점 미만)\n")
+        print(f"[OK] 즉시 실행 권장: {len(passed)}개 (80점 이상)")
+        print(f"[WARN] 추가 검증 필요: {len(further_validation)}개 (60-80점)")
+        print(f"[X] 비추천: {len(rejected)}개 (60점 미만)\n")
 
         if passed:
             print(f"{'='*80}")
-            print(f"🏆 즉시 실행 권장 아이디어 (TOP {len(passed)})")
+            print(f"[TOP] 즉시 실행 권장 아이디어 (TOP {len(passed)})")
             print(f"{'='*80}\n")
 
             # 점수 순 정렬
@@ -174,7 +174,7 @@ class SmartBusinessSystem:
 
             for i, idea in enumerate(passed, 1):
                 print(f"{i}. {idea['business_idea']}")
-                print(f"   종합 점수: {idea['total_score']:.1f}/100")
+                print(f"   종합 점수: {int(idea['total_score'])}/100")
 
                 # 시장 데이터
                 kmong = idea['market_data']['data_sources'].get('kmong', {})
@@ -191,18 +191,18 @@ class SmartBusinessSystem:
                 # 실행 계획
                 if 'action_plan' in idea:
                     plan = idea['action_plan']
-                    print(f"   4주 실행 계획: ✅ 생성 완료")
+                    print(f"   4주 실행 계획: [OK] 생성 완료")
                     print(f"   총 예산: {plan['total_budget']:,}원")
 
                 print()
 
         if further_validation:
             print(f"\n{'='*80}")
-            print(f"⚠️  추가 검증 필요 ({len(further_validation)}개)")
+            print(f"[WARN] 추가 검증 필요 ({len(further_validation)}개)")
             print(f"{'='*80}\n")
 
             for idea in further_validation:
-                print(f"• {idea['business_idea']} (점수: {idea['total_score']:.1f})")
+                print(f"• {idea['business_idea']} (점수: {int(idea['total_score'])})")
 
         print(f"\n{'='*80}\n")
 
@@ -248,7 +248,7 @@ class SmartBusinessSystem:
         with open(filename, 'w', encoding='utf-8') as f:
             json.dump(summary, f, ensure_ascii=False, indent=2)
 
-        print(f"✅ 분석 결과 저장됨: {filename}")
+        print(f"[OK] 분석 결과 저장됨: {filename}")
 
 
 # 사용 예시
@@ -310,19 +310,19 @@ if __name__ == "__main__":
     # 최고 점수 아이디어가 있으면 상세 실행 계획 표시
     if results['immediate_action']:
         print(f"\n{'='*80}")
-        print("💡 추천: 1순위 아이디어부터 즉시 실행하세요!")
+        print("[RECOMMEND] 추천: 1순위 아이디어부터 즉시 실행하세요!")
         print(f"{'='*80}\n")
 
         top_idea = results['immediate_action'][0]
-        print(f"🥇 {top_idea['business_idea']}")
-        print(f"   총점: {top_idea['total_score']:.1f}/100")
+        print(f"[#1] {top_idea['business_idea']}")
+        print(f"   총점: {int(top_idea['total_score'])}/100")
         print(f"   예상 월 수익: {top_idea['revenue_data']['scenarios']['realistic']['monthly_profit']:,}원")
 
         if 'action_plan' in top_idea:
             plan_file = f"plan_{top_idea['business_idea'].replace(' ', '_')}.json"
             system.action_planner.save_plan(top_idea['action_plan'], plan_file)
-            print(f"   📋 실행 계획: {plan_file}")
+            print(f"   [PLAN] 실행 계획: {plan_file}")
 
     print("\n" + "="*80)
-    print("✅ 모든 분석 완료!")
+    print("[COMPLETE] 모든 분석 완료!")
     print("="*80 + "\n")

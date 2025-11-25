@@ -293,7 +293,7 @@ class ActionPlanGenerator:
     def generate_comprehensive_plan(self, business_config):
         """4주 종합 실행 계획"""
         print(f"\n{'='*80}")
-        print(f"📋 4주 실행 계획: {business_config['name']}")
+        print(f"[PLAN] 4주 실행 계획: {business_config['name']}")
         print(f"{'='*80}\n")
 
         # 기술 스택 추천
@@ -304,7 +304,7 @@ class ActionPlanGenerator:
         )
         business_config['tech_stack'] = tech_stack
 
-        print(f"🛠️  추천 기술 스택: {tech_stack['tools'][0]}")
+        print(f"[TECH] 추천 기술 스택: {tech_stack['tools'][0]}")
         print(f"   개발 시간: {tech_stack['development_time']}")
         print(f"   필요 스킬: {tech_stack['skill_required']}")
         print(f"   월 비용: {tech_stack['cost']:,}원\n")
@@ -319,36 +319,36 @@ class ActionPlanGenerator:
 
         for week_plan in weeks:
             print(f"\n{'='*80}")
-            print(f"📅 {week_plan['week']}주차: {week_plan['goal']}")
+            print(f"[WEEK {week_plan['week']}] {week_plan['goal']}")
             print(f"{'='*80}\n")
 
             for task_group in week_plan['tasks']:
-                print(f"▶ {task_group['day']}: {task_group['title']}")
+                print(f"> {task_group['day']}: {task_group['title']}")
 
                 for task in task_group['tasks']:
-                    print(f"  □ {task}")
+                    print(f"  [ ] {task}")
 
-                print(f"\n  ✅ 산출물: {task_group['deliverable']}")
+                print(f"\n  [OUTPUT] 산출물: {task_group['deliverable']}")
 
                 if 'budget' in task_group:
-                    print(f"  💰 예산: {task_group['budget']:,}원")
+                    print(f"  [BUDGET] 예산: {task_group['budget']:,}원")
 
                 if 'time_required' in task_group:
-                    print(f"  ⏱️  소요 시간: {task_group['time_required']}")
+                    print(f"  [TIME] 소요 시간: {task_group['time_required']}")
 
                 if 'tools' in task_group:
-                    print(f"  🛠️  도구: {', '.join(task_group['tools'])}")
+                    print(f"  [TOOLS] 도구: {', '.join(task_group['tools'])}")
 
                 print()
 
-            print(f"✓ 성공 기준: {', '.join(week_plan['success_criteria'])}")
-            print(f"💰 주간 예산: {week_plan['budget']:,}원\n")
+            print(f"[SUCCESS] 성공 기준: {', '.join(week_plan['success_criteria'])}")
+            print(f"[BUDGET] 주간 예산: {week_plan['budget']:,}원\n")
 
         # 종합 요약
         total_budget = sum(w['budget'] for w in weeks)
 
         print(f"\n{'='*80}")
-        print(f"📊 종합 요약")
+        print(f"[SUMMARY] 종합 요약")
         print(f"{'='*80}\n")
         print(f"총 기간: 4주")
         print(f"총 예산: {total_budget:,}원")
@@ -392,7 +392,7 @@ class ActionPlanGenerator:
         """실행 계획 저장"""
         with open(filename, 'w', encoding='utf-8') as f:
             json.dump(plan, f, ensure_ascii=False, indent=2)
-        print(f"\n✅ 실행 계획 저장됨: {filename}")
+        print(f"\n[OK] 실행 계획 저장됨: {filename}")
 
 
 # 사용 예시

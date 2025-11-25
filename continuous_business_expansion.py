@@ -46,7 +46,7 @@ class BusinessExpansionEngine:
     def conduct_daily_expansion_meeting(self):
         """매일 사업 확장 전략 회의"""
         
-        print("🚀 Qhyx Inc. 일일 사업 확장 전략 회의")
+        print("[START] Qhyx Inc. 일일 사업 확장 전략 회의")
         print("=" * 60)
         
         # 오늘의 확장 영역 선정 (3-5개)
@@ -100,9 +100,9 @@ class BusinessExpansionEngine:
         
         self.session.commit()
         
-        print(f"✅ 확장 전략 회의 완료!")
-        print(f"📊 새로운 사업 기회: {len(expansion_opportunities)}개")
-        print(f"💰 예상 확장 매출: {sum([p['projected_revenue'] for p in expansion_opportunities]):,}원/월")
+        print(f"[OK] 확장 전략 회의 완료!")
+        print(f"[DATA] 새로운 사업 기회: {len(expansion_opportunities)}개")
+        print(f"[MONEY] 예상 확장 매출: {sum([p['projected_revenue'] for p in expansion_opportunities]):,}원/월")
         
         return meeting.id, expansion_opportunities
     
@@ -239,7 +239,7 @@ class BusinessExpansionEngine:
                 plans_created.append(opp['name'])
         
         self.session.commit()
-        print(f"📋 {len(plans_created)}개의 새로운 확장 사업 계획이 생성되었습니다.")
+        print(f"[LIST] {len(plans_created)}개의 새로운 확장 사업 계획이 생성되었습니다.")
         
         return plans_created
     
@@ -252,18 +252,18 @@ class BusinessExpansionEngine:
         notes = f"""
 === Qhyx Inc. 무한 확장 전략 회의록 ===
 
-📅 일시: {datetime.now().strftime('%Y-%m-%d %H:%M')}
-🎯 목표: 전 세계 시장 지배를 통한 무한 성장
+[DATE] 일시: {datetime.now().strftime('%Y-%m-%d %H:%M')}
+[TARGET] 목표: 전 세계 시장 지배를 통한 무한 성장
 
-🔍 탐색 영역: {len(areas)}개 분야
-{chr(10).join([f'• {area} 🚀' for area in areas])}
+[SEARCH] 탐색 영역: {len(areas)}개 분야
+{chr(10).join([f'• {area} [START]' for area in areas])}
 
-💡 발굴된 혁신 기회: {len(opportunities)}개
-💰 예상 확장 매출: {total_revenue:,}원/월 ({total_revenue * 12:,}원/년)
+[IDEA] 발굴된 혁신 기회: {len(opportunities)}개
+[MONEY] 예상 확장 매출: {total_revenue:,}원/월 ({total_revenue * 12:,}원/년)
 💸 필요 투자금: {total_investment:,}원
-📊 투자 수익률(ROI): {((total_revenue * 12) / total_investment * 100) if total_investment > 0 else 0:.1f}%
+[DATA] 투자 수익률(ROI): {((total_revenue * 12) / total_investment * 100) if total_investment > 0 else 0:.1f}%
 
-🏆 최우선 혁신 기회:
+[TOP] 최우선 혁신 기회:
         """
         
         high_priority = [opp for opp in opportunities if opp['feasibility_score'] >= 8.0]
@@ -278,10 +278,10 @@ class BusinessExpansionEngine:
 • 🇩🇪 독일: 유럽 진출 교두보 (12개월 내)
 • 🇨🇳 중국: 아시아 최대 시장 진입 (15개월 내)
 
-📈 3년 메가 비전:
-• 💰 매출 목표: 연 1,000억원 (10배 성장)
+[UP] 3년 메가 비전:
+• [MONEY] 매출 목표: 연 1,000억원 (10배 성장)
 • 👥 직원 수: 1,000명 (글로벌 팀)
-• 🌐 서비스 영역: 50개 분야 (전 산업)
+• [GLOBAL] 서비스 영역: 50개 분야 (전 산업)
 • 🏢 글로벌 오피스: 20개국 30개 도시
 • 👨‍👩‍👧‍👦 전 세계 고객: 1,000만명
 
@@ -291,19 +291,19 @@ class BusinessExpansionEngine:
 • 메타버스 가상 오피스 네트워크 개설
 • 양자컴퓨팅 기반 시장 예측 시스템 도입
 
-🚀 24시간 내 즉시 실행:
+[START] 24시간 내 즉시 실행:
 • 최우선 사업 3개 프로토타입 개발 착수
 • 글로벌 M&A 후보 리스트 100개 선정
 • 유니콘 기업 파트너십 제안서 발송
 • 투자자 미팅 스케줄 20건 확정
 
 💎 혁신 부문별 확장:
-• 🤖 AI/머신러닝: 자율 비즈니스 플랫폼
+• [AI] AI/머신러닝: 자율 비즈니스 플랫폼
 • 🔗 블록체인: 탈중앙화 기업 생태계
 • 🥽 메타버스: 가상 비즈니스 월드 구축
 • 🧬 바이오테크: AI 기반 헬스케어 솔루션
 • 🌱 그린테크: 탄소중립 비즈니스 모델
-• 🚀 우주항공: 궤도 비즈니스 인프라
+• [START] 우주항공: 궤도 비즈니스 인프라
         """
         
         return notes
@@ -360,8 +360,8 @@ class BusinessExpansionEngine:
                 total_projected_revenue += plan.projected_revenue_12m
         
         report = f"""
-📊 Qhyx Inc. 일일 사업 현황 보고서
-📅 {today.strftime('%Y년 %m월 %d일')}
+[DATA] Qhyx Inc. 일일 사업 현황 보고서
+[DATE] {today.strftime('%Y년 %m월 %d일')}
 
 🏢 전체 현황:
 • 총 사업 계획: {total_plans}개
@@ -369,7 +369,7 @@ class BusinessExpansionEngine:
 • 오늘 진행된 회의: {today_meetings}건
 • 예상 연간 매출: {total_projected_revenue:,}원
 
-📈 최근 7일 신규 사업:
+[UP] 최근 7일 신규 사업:
         """
         
         for plan in recent_plans[-5:]:  # 최근 5개
@@ -377,19 +377,19 @@ class BusinessExpansionEngine:
             report += f"• {plan.plan_name} (예상 월매출: {monthly_revenue:,}원)\n"
         
         report += f"""
-🎯 오늘의 핵심 업무:
+[TARGET] 오늘의 핵심 업무:
 • 새로운 시장 기회 발굴
 • 기존 사업 확장 방안 검토
 • 투자 유치 전략 업데이트
 • 글로벌 진출 준비
 
-🚀 내일 예정 사항:
+[START] 내일 예정 사항:
 • 확장 전략 회의 ({datetime.now() + timedelta(days=1):%m/%d})
 • 신규 사업 타당성 검토
 • 파트너십 미팅 준비
 • 시장 분석 리포트 작성
 
-💡 Qhyx Inc.는 매일 새로운 기회를 발굴하며 무한 확장해 나가고 있습니다!
+[IDEA] Qhyx Inc.는 매일 새로운 기회를 발굴하며 무한 확장해 나가고 있습니다!
         """
         
         # 활동 로그에 보고서 저장
@@ -436,10 +436,10 @@ def execute_continuous_expansion():
         
         print("\n" + "="*60)
         print("🎉 일일 사업 확장 완료!")
-        print(f"📋 회의 ID: {meeting_id}")
-        print(f"💡 발굴된 기회: {len(opportunities)}개")
+        print(f"[LIST] 회의 ID: {meeting_id}")
+        print(f"[IDEA] 발굴된 기회: {len(opportunities)}개")
         
-        print("\n📊 일일 보고서:")
+        print("\n[DATA] 일일 보고서:")
         print(report)
         
         return opportunities, report

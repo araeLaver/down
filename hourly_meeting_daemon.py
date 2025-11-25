@@ -75,11 +75,11 @@ class HourlyMeetingDaemon:
             f.write(f"생성 시간: {timestamp.strftime('%Y-%m-%d %H:%M:%S')}\n")
             f.write(f"회의 유형: {meeting_data['meeting_type']}\n\n")
 
-            f.write("📋 회의 안건:\n")
+            f.write("[LIST] 회의 안건:\n")
             for agenda in meeting_data['agenda']:
                 f.write(f"  • {agenda}\n")
 
-            f.write("\n💡 결정사항:\n")
+            f.write("\n[IDEA] 결정사항:\n")
             for decision in meeting_data['key_decisions']:
                 f.write(f"  • {decision}\n")
 
@@ -135,11 +135,11 @@ class HourlyMeetingDaemon:
 
             except KeyboardInterrupt:
                 self.running = False
-                print("\n\n✅ 회의 생성 데몬 종료")
+                print("\n\n[OK] 회의 생성 데몬 종료")
                 print(f"총 {self.meeting_count}개 회의 생성 완료")
                 break
             except Exception as e:
-                print(f"\n❌ 오류 발생: {e}")
+                print(f"\n[X] 오류 발생: {e}")
                 time.sleep(60)  # 오류 시 1분 대기
 
 def main():

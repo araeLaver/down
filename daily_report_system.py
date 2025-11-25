@@ -22,7 +22,7 @@ class DailyReportSystem:
         today = datetime.now()
         yesterday = today - timedelta(days=1)
         
-        print(f"🚀 {today.strftime('%Y년 %m월 %d일')} Qhyx Inc. 글로벌 사업 현황 보고서 생성 중...")
+        print(f"[START] {today.strftime('%Y년 %m월 %d일')} Qhyx Inc. 글로벌 사업 현황 보고서 생성 중...")
         
         # 1. 전체 현황
         overview = self.get_business_overview()
@@ -298,16 +298,16 @@ class DailyReportSystem:
         
         report = f"""
 🏢 ===== Qhyx Inc. 종합 일일 사업 보고서 =====
-📅 {today.strftime('%Y년 %m월 %d일 (%A)')} | 생성시각: {today.strftime('%H:%M')}
+[DATE] {today.strftime('%Y년 %m월 %d일 (%A)')} | 생성시각: {today.strftime('%H:%M')}
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-📊 전체 사업 현황
+[DATA] 전체 사업 현황
 • 총 사업 계획: {data['overview']['total_business_plans']}개
   ├─ 승인된 계획: {data['overview']['approved_plans']}개
   └─ 검토 중인 계획: {data['overview']['draft_plans']}개
 
-💰 재무 현황
+[MONEY] 재무 현황
 • 예상 연간 매출: {data['financial_status']['total_annual_revenue']:,.0f}원
 • 예상 월간 매출: {data['financial_status']['total_monthly_revenue']:,.0f}원
 • 필요 투자금: {data['financial_status']['total_investment_needed']:,.0f}원
@@ -320,12 +320,12 @@ class DailyReportSystem:
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-📈 오늘의 변화
+[UP] 오늘의 변화
 • 신규 사업 계획: {data['daily_changes']['new_business_plans']}개
 • 진행된 회의: {data['daily_changes']['meetings_held']}건  
 • 완료된 업무: {data['daily_changes']['tasks_completed']}건
 
-💡 최근 발굴된 사업 기회 (상위 5개)
+[IDEA] 최근 발굴된 사업 기회 (상위 5개)
         """
         
         for i, opp in enumerate(data['new_opportunities'][:5], 1):
@@ -339,7 +339,7 @@ class DailyReportSystem:
             report += f"{i}. {proj['title']} - {proj['assignee']} ({proj['priority']} 우선순위)\n"
         
         report += f"""
-🏆 AI 직원 성과 (상위 5명)
+[TOP] AI 직원 성과 (상위 5명)
         """
         
         top_performers = sorted(data['employee_activities'], 
@@ -362,7 +362,7 @@ class DailyReportSystem:
         
         # 경쟁사 모니터링 추가
         report += f"""
-🔍 경쟁사 동향
+[SEARCH] 경쟁사 동향
         """
         
         for comp in data['competitor_analysis']:
@@ -372,7 +372,7 @@ class DailyReportSystem:
         
         # 기술 혁신 트렌드 추가
         report += f"""
-🚀 기술 혁신 트렌드
+[START] 기술 혁신 트렌드
         """
         
         for tech in data['tech_innovations']:
@@ -381,7 +381,7 @@ class DailyReportSystem:
         
         # 위험 및 기회 분석 추가
         report += f"""
-⚠️ 위험 요소 분석
+[WARN] 위험 요소 분석
         """
         
         for risk in data['risk_opportunity_analysis']['risks']:
@@ -408,7 +408,7 @@ class DailyReportSystem:
             report += f"• [{issue['type']}] {issue['title']}\n  → {issue['description']}\n"
         
         report += f"""
-🎯 내일의 전략적 계획
+[TARGET] 내일의 전략적 계획
         """
         
         for i, plan in enumerate(data['tomorrow_plans'][:8], 1):
@@ -418,22 +418,22 @@ class DailyReportSystem:
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 🌟 Qhyx Inc. 전략적 성장 요약
-✅ 24/7 자동 운영으로 지속적 성장
-✅ AI 직원들의 끊임없는 사업 발굴  
-✅ 45개 분야 무한 확장 전략 실행
-✅ 글로벌 시장 동향 실시간 모니터링
-✅ 경쟁사 대비 차별화된 혁신 전략
-✅ 35가지 비즈니스 모델 다각화
-✅ 위험 관리 및 기회 극대화 시스템
+[OK] 24/7 자동 운영으로 지속적 성장
+[OK] AI 직원들의 끊임없는 사업 발굴  
+[OK] 45개 분야 무한 확장 전략 실행
+[OK] 글로벌 시장 동향 실시간 모니터링
+[OK] 경쟁사 대비 차별화된 혁신 전략
+[OK] 35가지 비즈니스 모델 다각화
+[OK] 위험 관리 및 기회 극대화 시스템
 
 💫 "예측불가능한 변화의 흐름으로 혁신을 이끈다"
    - Unpredictable Flow of Innovation -
 
-🎯 3년 목표: 연매출 1,000억원, 전세계 1,000만 고객
+[TARGET] 3년 목표: 연매출 1,000억원, 전세계 1,000만 고객
 🌍 진출 계획: 20개국 30개 도시 글로벌 네트워크
 
-📊 실시간 모니터링: http://127.0.0.1:5000/dashboard
-🌐 공식 웹사이트: http://127.0.0.1:5000
+[DATA] 실시간 모니터링: http://127.0.0.1:5000/dashboard
+[GLOBAL] 공식 웹사이트: http://127.0.0.1:5000
 
 보고서 생성 시간: {today.strftime('%Y-%m-%d %H:%M:%S')}
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -465,7 +465,7 @@ class DailyReportSystem:
             # 종합 보고서 생성
             report = self.generate_comprehensive_daily_report()
             
-            print("✅ 일일 보고서 생성 완료!")
+            print("[OK] 일일 보고서 생성 완료!")
             print("\n" + "="*60)
             print(report)
             print("="*60)
@@ -473,7 +473,7 @@ class DailyReportSystem:
             return report
             
         except Exception as e:
-            print(f"❌ 일일 보고서 생성 오류: {e}")
+            print(f"[X] 일일 보고서 생성 오류: {e}")
             return None
     
     def start_daily_scheduler(self):
@@ -485,13 +485,13 @@ class DailyReportSystem:
         # 매일 오후 6시에도 추가 보고서 생성 (저녁 브리핑)
         schedule.every().day.at("18:00").do(self.run_daily_report_generation)
         
-        print("📅 일일 보고서 스케줄러 시작됨:")
+        print("[DATE] 일일 보고서 스케줄러 시작됨:")
         print("  - 오전 8시: 일일 브리핑")
         print("  - 오후 6시: 저녁 브리핑")
         print("💤 사용자가 잠들어 있어도 매일 보고서가 생성됩니다!")
         
         # 즉시 첫 보고서 생성
-        print("\n🚀 첫 번째 보고서를 즉시 생성합니다...")
+        print("\n[START] 첫 번째 보고서를 즉시 생성합니다...")
         self.run_daily_report_generation()
         
         # 스케줄러 실행

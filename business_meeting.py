@@ -77,8 +77,8 @@ def conduct_business_review_meeting():
         session.add(milestone)
         session.commit()
         
-        print(f"\n✅ 회의 기록이 데이터베이스에 저장되었습니다. (Meeting ID: {meeting.id})")
-        print(f"📊 {len(business_plans)}개의 사업 계획이 생성되었습니다.")
+        print(f"\n[OK] 회의 기록이 데이터베이스에 저장되었습니다. (Meeting ID: {meeting.id})")
+        print(f"[DATA] {len(business_plans)}개의 사업 계획이 생성되었습니다.")
         
         return meeting.id, business_plans
         
@@ -87,11 +87,11 @@ def conduct_business_review_meeting():
 
 def conduct_meeting_discussion():
     """회의 토론 내용"""
-    print("\n📋 회의 진행")
+    print("\n[LIST] 회의 진행")
     print("-" * 40)
     
     discussion = """
-    🎯 Qhyx Inc. 사업성 검토 회의 결과
+    [TARGET] Qhyx Inc. 사업성 검토 회의 결과
     
     1. 회사 비전 및 미션
     - 비전: "예측할 수 없는 혁신으로 세상을 변화시킨다"
@@ -200,7 +200,7 @@ def create_business_plans(session):
     
     for plan in plans:
         session.add(plan)
-        print(f"📋 사업 계획 생성: {plan.plan_name}")
+        print(f"[LIST] 사업 계획 생성: {plan.plan_name}")
         print(f"   - 예상 매출: {plan.projected_revenue_12m:,}원")
         print(f"   - 투자 필요: {plan.investment_required:,}원")
         print(f"   - 실현성: {plan.feasibility_score}/10")
@@ -214,6 +214,6 @@ if __name__ == "__main__":
     
     print("\n🎉 Qhyx Inc. 사업성 검토 완료!")
     print(f"💼 회의 ID: {meeting_id}")
-    print(f"📊 총 {len(plans)}개 사업 계획 수립")
-    print(f"🎯 1년 매출 목표: 12억원")
-    print(f"💰 투자 유치 목표: 10억원")
+    print(f"[DATA] 총 {len(plans)}개 사업 계획 수립")
+    print(f"[TARGET] 1년 매출 목표: 12억원")
+    print(f"[MONEY] 투자 유치 목표: 10억원")

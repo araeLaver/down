@@ -59,7 +59,7 @@ class QhyxBusinessMonitor:
         report = f"""
 🏢 ===== Qhyx Inc. 실시간 비즈니스 현황 =====
 
-📅 오늘의 활동 [{today.strftime('%Y-%m-%d')}]:
+[DATE] 오늘의 활동 [{today.strftime('%Y-%m-%d')}]:
   • 진행된 회의: {today_meetings}건
   • 생성된 업무: {today_tasks}건  
   • 업데이트된 지표: {today_metrics}건
@@ -74,7 +74,7 @@ class QhyxBusinessMonitor:
   • 승인된 사업 계획: {approved_plans}개
   • 진행중인 사업 계획: {in_progress_plans}개
 
-🏆 최근 마일스톤:
+[TOP] 최근 마일스톤:
         """
         
         for milestone in recent_milestones:
@@ -82,13 +82,13 @@ class QhyxBusinessMonitor:
         
         report += f"""
 ⏰ 시스템 상태: 24/7 자동 운영 중
-🔄 다음 스케줄:
+[REFRESH] 다음 스케줄:
   • 오전 9시: 일일 전략 회의
   • 오후 2시: 지표 업데이트
   • 오후 6시: 일일 리뷰
   • 매시 정각: 지표 모니터링
 
-💡 Qhyx Inc.는 잠들어 있는 동안에도 계속 성장합니다!
+[IDEA] Qhyx Inc.는 잠들어 있는 동안에도 계속 성장합니다!
         """
         
         return report
@@ -108,7 +108,7 @@ class QhyxBusinessMonitor:
         ).order_by(Task.created_at.desc()).limit(10).all()
         
         activities = f"""
-📋 최근 {hours}시간 활동 내역:
+[LIST] 최근 {hours}시간 활동 내역:
 
 🏢 회의 활동:
         """
@@ -134,7 +134,7 @@ class QhyxBusinessMonitor:
         ).all()
         
         if not metrics:
-            return "📊 성과 지표: 데이터 수집 중..."
+            return "[DATA] 성과 지표: 데이터 수집 중..."
         
         # 카테고리별 최근 평균
         categories = {}
@@ -143,7 +143,7 @@ class QhyxBusinessMonitor:
                 categories[metric.category] = []
             categories[metric.category].append(metric.value)
         
-        performance = "📊 주요 성과 지표 (최근 7일 평균):\n"
+        performance = "[DATA] 주요 성과 지표 (최근 7일 평균):\n"
         
         for category, values in categories.items():
             avg_value = sum(values) / len(values)

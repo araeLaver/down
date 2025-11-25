@@ -425,7 +425,7 @@ if __name__ == "__main__":
 
     # 종합 결과 비교
     print("\n" + "="*60)
-    print("🏆 수익성 비교")
+    print("[COMPARISON] 수익성 비교")
     print("="*60 + "\n")
 
     all_results = [

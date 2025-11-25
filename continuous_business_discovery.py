@@ -19,6 +19,7 @@ import time
 import logging
 import json
 import random
+import copy
 
 # 로깅 설정
 logging.basicConfig(
@@ -50,6 +51,27 @@ class ContinuousBusinessDiscovery:
         print("[OK] 모든 분석 결과를 히스토리에 기록하여 트렌드 분석 가능\n")
 
         logging.info("Continuous Business Discovery System Started with History Tracking")
+    def create_variant_idea(self, original_opp, variant_type):
+        """동일 사업아이템을 다른 방향으로 변형"""
+        variant = copy.deepcopy(original_opp)
+        business = variant.get('business', {})
+        original_name = business.get('name', '')
+        original_desc = business.get('description', '')
+
+        variants = {
+            'B2B': {'suffix': ' (B2B 기업용)', 'desc_add': ' 기업 고객 대상.', 'revenue_mult': 1.5},
+            'Premium': {'suffix': ' (프리미엄)', 'desc_add': ' 고급 기능 포함.', 'revenue_mult': 2.0},
+            'Global': {'suffix': ' (해외진출)', 'desc_add': ' 글로벌 시장 타겟.', 'revenue_mult': 1.8},
+            'Niche': {'suffix': ' (특화버전)', 'desc_add': ' 특정 산업 맞춤.', 'revenue_mult': 1.3},
+            'Subscription': {'suffix': ' (구독형)', 'desc_add': ' 월 정액 모델.', 'revenue_mult': 1.2}
+        }
+
+        v = variants.get(variant_type, variants['B2B'])
+        business['name'] = original_name + v['suffix']
+        business['description'] = (original_desc or '') + v['desc_add']
+        variant['business'] = business
+        variant['variant_type'] = variant_type
+        return variant
 
     def get_it_business_ideas(self):
         """IT 사업 아이디어 생성 (템플릿 + 트렌드 혼합) - 중복 제거"""
@@ -77,21 +99,29 @@ class ContinuousBusinessDiscovery:
             business = opp.get('business', {})
             name = business.get('name', '')
 
-            # 이미 최근에 분석한 사업이면 스킵
-            if name in recent_names:
-                continue
-
             # IT 관련 키워드 체크
             it_keywords = ['앱', '웹', 'AI', 'IT', '사이트', '플랫폼',
                           '자동화', 'SaaS', '소프트웨어', '디지털',
                           '온라인', '챗봇', 'API', '시스템']
 
             if any(keyword in name for keyword in it_keywords):
-                it_opportunities.append(opp)
-                recent_names.add(name)  # 추가한 것도 중복 체크 목록에 추가
+                # 이미 최근에 분석한 사업이면 다른 방향으로 변형
+                if name in recent_names:
+                    for vtype in ['B2B', 'Premium', 'Global', 'Niche', 'Subscription']:
+                        variant = self.create_variant_idea(opp, vtype)
+                        variant_name = variant['business']['name']
+                        if variant_name not in recent_names:
+                            it_opportunities.append(variant)
+                            recent_names.add(variant_name)
+                            print(f"   [VARIANT] {name} -> {variant_name}")
+                            break
+                else:
+                    it_opportunities.append(opp)
+                    recent_names.add(name)
 
         # 랜덤하게 섞어서 선택
         import random
+import copy
         random.shuffle(it_opportunities)
         all_opportunities.extend(it_opportunities[:3])  # 3개 선택
 
@@ -107,6 +137,16 @@ class ContinuousBusinessDiscovery:
                 if name not in recent_names:
                     unique_trends.append(idea)
                     recent_names.add(name)
+                else:
+                    # 중복이면 변형 시도
+                    for vtype in ['B2B', 'Premium', 'Global', 'Niche', 'Subscription']:
+                        variant = self.create_variant_idea(idea, vtype)
+                        variant_name = variant['business']['name']
+                        if variant_name not in recent_names:
+                            unique_trends.append(variant)
+                            recent_names.add(variant_name)
+                            print(f"   [VARIANT] {name} -> {variant_name}")
+                            break
 
             # 트렌드 아이디어를 우선순위별로 정렬 (글로벌 트렌드 우선)
             sorted_trends = sorted(
@@ -274,9 +314,9 @@ class ContinuousBusinessDiscovery:
             revenue_score = revenue_data.get('verdict', {}).get('score', 0)
             total_score = analysis_result.get('total_score', 0)
 
-            print(f"   종합 점수: {total_score:.1f}/100")
-            print(f"   ㄴ 시장성: {market_score:.1f}/100")
-            print(f"   ㄴ 수익성: {revenue_score:.1f}/100")
+            print(f"   종합 점수: {int(total_score)}/100")
+            print(f"   ㄴ 시장성: {int(market_score)}/100")
+            print(f"   ㄴ 수익성: {int(revenue_score)}/100")
 
             # 분석 시간 계산
             analysis_duration_ms = int((time.time() - start_time) * 1000)
@@ -390,7 +430,7 @@ class ContinuousBusinessDiscovery:
                             'estimated_monthly_revenue': monthly_revenue_estimate,
                             'estimated_monthly_profit': monthly_profit,
                             'opportunity_type': opportunity.get('type', 'AI_Discovery'),
-                            'priority_reason': f"AI 분석 점수: {total_score:.1f}점",
+                            'priority_reason': f"AI 분석 점수: {int(total_score)}점",
                             'ai_analysis': {
                                 'market_analysis': market_analysis,
                                 'revenue_analysis': revenue_analysis,
@@ -519,7 +559,7 @@ class ContinuousBusinessDiscovery:
 
         key_decisions = [
             f"이번 시간 {results['saved']}개 유망 사업 발굴",
-            f"평균 점수: {sum(r['score'] for r in saved_ideas) / len(saved_ideas):.1f}/100"
+            f"평균 점수: {int(sum(r['score'] for r in saved_ideas) / len(saved_ideas))}/100"
         ]
 
         for idea in saved_ideas:
