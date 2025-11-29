@@ -395,15 +395,19 @@ class RealMarketAnalyzer:
         """종합 시장 점수 계산 (0-100) - 10개 플랫폼 통합"""
         score = 0
         error_count = 0
+        empty_data_count = 0
         total_sources = 10
 
-        # 에러 카운트 (스크래핑 실패 시 기본 점수 부여용)
+        # 에러 및 빈 데이터 카운트
         for source in data_sources.values():
             if source.get('error'):
                 error_count += 1
+            # 데이터가 비어있으면 빈 데이터로 카운트
+            elif source.get('service_count', -1) == 0 or source.get('project_count', -1) == 0:
+                empty_data_count += 1
 
-        # 스크래핑 실패가 많으면 기본 점수 75점 부여 (합리적 가정)
-        if error_count >= 4:
+        # 스크래핑 실패 또는 빈 데이터가 많으면 기본 점수 75점 부여
+        if error_count + empty_data_count >= 3:
             return 75  # 데이터 부족 시 기본 점수
 
         # 크몽 데이터 평가 (20점)
