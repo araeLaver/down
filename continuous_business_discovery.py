@@ -55,15 +55,20 @@ class ContinuousBusinessDiscovery:
         """IT 사업 아이디어 생성 (템플릿 + 트렌드 혼합) - 중복 제거"""
         all_opportunities = []
 
-        # 최근 24시간 이미 분석한 사업명 가져오기 (중복 방지) - 7일은 너무 길어서 1일로 변경
+        # 최근 30일 이미 분석한 사업명 가져오기 (중복 방지)
         from datetime import timedelta
-        one_day_ago = get_kst_now() - timedelta(days=1)
+        thirty_days_ago = get_kst_now() - timedelta(days=30)
         recent_businesses = self.session.query(BusinessDiscoveryHistory).filter(
-            BusinessDiscoveryHistory.discovered_at >= one_day_ago
+            BusinessDiscoveryHistory.discovered_at >= thirty_days_ago
         ).all()
         recent_names = set([b.business_name for b in recent_businesses])
 
-        print(f"   최근 24시간 분석된 사업: {len(recent_names)}개 (중복 방지)")
+        # DB에 이미 저장된 사업명도 중복 체크에 포함
+        existing_plans = self.session.query(BusinessPlan.plan_name).all()
+        for plan in existing_plans:
+            recent_names.add(plan[0])
+
+        print(f"   중복 방지 대상: {len(recent_names)}개 (30일 히스토리 + DB 저장 사업)")
 
         # 1. 기존 템플릿 기반 아이디어 - 매번 다른 아이디어 생성
         # 여러 번 생성해서 더 많은 옵션 확보

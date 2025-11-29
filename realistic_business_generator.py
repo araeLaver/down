@@ -419,6 +419,40 @@ class RealisticBusinessGenerator:
             }
         ]
 
+        # 동적 조합용 요소들 (수백 가지 조합 가능)
+        self.business_prefixes = [
+            "AI", "스마트", "자동", "실시간", "맞춤형", "통합", "초간편", "프리미엄",
+            "무료", "구독형", "온디맨드", "하이브리드", "올인원", "미니", "마이크로",
+            "소셜", "커뮤니티", "P2P", "B2B", "로컬", "글로벌", "모바일", "클라우드"
+        ]
+
+        self.business_domains = [
+            "헬스케어", "피트니스", "다이어트", "영양", "수면", "명상", "스트레스관리",
+            "육아", "교육", "학습", "언어", "코딩", "자격증", "취업",
+            "재테크", "투자", "가계부", "절약", "부업", "창업",
+            "반려동물", "펫케어", "펫시터", "펫푸드",
+            "여행", "숙소", "맛집", "카페", "배달",
+            "패션", "뷰티", "스타일링", "쇼핑",
+            "부동산", "인테리어", "이사", "청소",
+            "법률", "세무", "회계", "행정",
+            "결혼", "데이팅", "소개팅", "모임",
+            "취미", "운동", "게임", "독서", "음악", "그림"
+        ]
+
+        self.business_types = [
+            "플랫폼", "앱", "서비스", "솔루션", "시스템", "도구", "봇",
+            "마켓플레이스", "커뮤니티", "네트워크", "허브", "센터",
+            "매칭", "중개", "대행", "컨설팅", "코칭", "멘토링",
+            "구독박스", "정기배송", "렌탈", "공유",
+            "분석", "리포트", "대시보드", "트래커", "어시스턴트"
+        ]
+
+        self.target_audiences = [
+            "직장인", "대학생", "주부", "시니어", "MZ세대", "프리랜서",
+            "소상공인", "스타트업", "1인기업", "중소기업",
+            "신혼부부", "싱글족", "맞벌이", "워킹맘", "워킹대디"
+        ]
+
         # 추가: 마이크로 사업 아이디어 풀
         self.micro_business_ideas = [
             {
@@ -492,6 +526,66 @@ class RealisticBusinessGenerator:
                 "difficulty": "쉬움"
             }
         ]
+
+    def generate_dynamic_combination_ideas(self, exclude_names=None):
+        """동적 조합으로 새로운 사업 아이디어 생성 (수천 가지 조합 가능)"""
+        if exclude_names is None:
+            exclude_names = set()
+
+        ideas = []
+        attempts = 0
+        max_attempts = 100  # 무한 루프 방지
+
+        while len(ideas) < 10 and attempts < max_attempts:
+            attempts += 1
+
+            # 랜덤 조합 생성
+            prefix = random.choice(self.business_prefixes)
+            domain = random.choice(self.business_domains)
+            biz_type = random.choice(self.business_types)
+            target = random.choice(self.target_audiences)
+
+            # 다양한 이름 패턴
+            name_patterns = [
+                f"{prefix} {domain} {biz_type}",
+                f"{target} 전용 {domain} {biz_type}",
+                f"{prefix} {target} {domain} 앱",
+                f"{domain} {biz_type} for {target}",
+                f"{prefix} {domain} 자동화",
+                f"{target} {domain} 매칭 서비스"
+            ]
+
+            name = random.choice(name_patterns)
+
+            # 중복 체크
+            if name in exclude_names:
+                continue
+
+            exclude_names.add(name)
+
+            # 비용/수익 랜덤 생성
+            startup_costs = ["50만원", "100만원", "200만원", "300만원", "500만원"]
+            revenues = ["100-300만원", "200-500만원", "300-800만원", "500-1500만원"]
+
+            ideas.append({
+                "type": "동적 조합 아이디어",
+                "category": "IT/디지털",
+                "business": {
+                    "name": name,
+                    "description": f"{target} 대상 {domain} 분야 {biz_type}",
+                    "startup_cost": random.choice(startup_costs),
+                    "monthly_revenue": random.choice(revenues),
+                    "revenue_potential": f"월 {random.choice(revenues)}",
+                    "timeline": random.choice(["2주 내 시작", "1개월 내 시작", "2개월 내 시작"]),
+                    "difficulty": random.choice(["쉬움", "보통", "보통"]),
+                    "viability": random.choice(["높음", "높음", "매우 높음"]),
+                    "target_audience": target,
+                    "domain": domain
+                },
+                "priority": random.choice(["높음", "높음", "매우 높음"])
+            })
+
+        return ideas
 
     def generate_micro_business_ideas(self):
         """마이크로 사업 아이디어 생성"""
@@ -588,6 +682,12 @@ class RealisticBusinessGenerator:
         small_apps = self.generate_small_app_ideas()
         for app in small_apps:
             opportunities.append(app)
+
+        # 추가: 동적 조합 아이디어 (10개) - 매번 새로운 조합 생성
+        existing_names = set([o['business']['name'] for o in opportunities])
+        dynamic_ideas = self.generate_dynamic_combination_ideas(exclude_names=existing_names)
+        for idea in dynamic_ideas:
+            opportunities.append(idea)
 
         return opportunities
 
