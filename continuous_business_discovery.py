@@ -265,6 +265,7 @@ class ContinuousBusinessDiscovery:
                     discovery_batch=discovery_batch,
                     market_analysis=f"실패: {analysis_result.get('reason', 'Unknown')}",
                     revenue_analysis="N/A",
+                    action_plan=None,
                     full_analysis=json.dumps(analysis_result, ensure_ascii=False),
                     analysis_duration_ms=int((time.time() - start_time) * 1000)
                 )

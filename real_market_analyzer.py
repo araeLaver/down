@@ -402,9 +402,9 @@ class RealMarketAnalyzer:
             if source.get('error'):
                 error_count += 1
 
-        # 대부분 스크래핑 실패 시 기본 점수 70점 부여 (합리적 가정)
-        if error_count >= 7:
-            return 70  # 데이터 부족 시 기본 점수
+        # 스크래핑 실패가 많으면 기본 점수 75점 부여 (합리적 가정)
+        if error_count >= 4:
+            return 75  # 데이터 부족 시 기본 점수
 
         # 크몽 데이터 평가 (20점)
         kmong = data_sources.get('kmong', {})
