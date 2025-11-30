@@ -18,7 +18,7 @@ class BusinessDiscoveryHistory(Base):
     __table_args__ = {'schema': SCHEMA_NAME, 'extend_existing': True}
 
     id = Column(Integer, primary_key=True)
-    discovered_at = Column(DateTime, default=datetime.utcnow, nullable=False, index=True)
+    discovered_at = Column(DateTime, default=get_kst_now, nullable=False, index=True)
 
     # 사업 기본 정보
     business_name = Column(String(300), nullable=False, index=True)
@@ -63,7 +63,7 @@ class BusinessAnalysisSnapshot(Base):
     __table_args__ = {'schema': SCHEMA_NAME, 'extend_existing': True}
 
     id = Column(Integer, primary_key=True)
-    snapshot_time = Column(DateTime, default=datetime.utcnow, nullable=False, index=True)
+    snapshot_time = Column(DateTime, default=get_kst_now, nullable=False, index=True)
     snapshot_type = Column(String(50), nullable=False, index=True)  # hourly, daily, weekly
 
     # 통계 정보
@@ -101,7 +101,7 @@ class BusinessInsight(Base):
     __table_args__ = {'schema': SCHEMA_NAME, 'extend_existing': True}
 
     id = Column(Integer, primary_key=True)
-    created_at = Column(DateTime, default=datetime.utcnow, nullable=False, index=True)
+    created_at = Column(DateTime, default=get_kst_now, nullable=False, index=True)
 
     insight_type = Column(String(50), nullable=False, index=True)  # trend, opportunity, warning, recommendation
     category = Column(String(100), index=True)
@@ -206,6 +206,32 @@ class BusinessHistoryTracker:
     def __init__(self):
         self.session = Session()
 
+    def refresh_session(self):
+        """DB 세션 새로고침 (연결 오류 복구용)"""
+        import time
+        try:
+            self.session.rollback()
+            self.session.close()
+        except:
+            pass
+        self.session = Session()
+
+    def safe_commit(self, max_retries=3):
+        """안전한 커밋 (재시도 로직 포함)"""
+        import time
+        for attempt in range(max_retries):
+            try:
+                self.session.commit()
+                return True
+            except Exception as e:
+                if attempt < max_retries - 1:
+                    self.refresh_session()
+                    time.sleep(1)
+                else:
+                    print(f"   [DB_ERROR] 커밋 실패: {e}")
+                    return False
+        return False
+
     def record_analysis(self, business_name, business_type, category, keyword,
                        total_score, market_score, revenue_score,
                        market_analysis, revenue_analysis, action_plan,
@@ -231,9 +257,10 @@ class BusinessHistoryTracker:
         )
 
         self.session.add(history)
-        self.session.commit()
-
-        return history.id
+        if self.safe_commit():
+            return history.id
+        else:
+            return None
 
     def create_snapshot(self, snapshot_type='hourly'):
         """현재 상황의 스냅샷 생성"""
@@ -335,9 +362,10 @@ class BusinessHistoryTracker:
         )
 
         self.session.add(snapshot)
-        self.session.commit()
-
-        return snapshot.id
+        if self.safe_commit():
+            return snapshot.id
+        else:
+            return None
 
     def generate_insights(self):
         """인사이트 자동 생성"""
@@ -428,7 +456,7 @@ class BusinessHistoryTracker:
             self.session.add(insight)
 
         if insights:
-            self.session.commit()
+            self.safe_commit()
 
         return len(insights)
 
@@ -461,9 +489,10 @@ class BusinessHistoryTracker:
         )
 
         self.session.add(low_score)
-        self.session.commit()
-
-        return low_score.id
+        if self.safe_commit():
+            return low_score.id
+        else:
+            return None
 
     def _generate_improvement_suggestions(self, failure_reason, market_score, revenue_score, category):
         """개선 제안 생성"""

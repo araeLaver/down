@@ -51,6 +51,32 @@ class ContinuousBusinessDiscovery:
 
         logging.info("Continuous Business Discovery System Started with History Tracking")
 
+    def refresh_session(self):
+        """DB 세션 새로고침 (연결 오류 복구용)"""
+        try:
+            self.session.rollback()
+            self.session.close()
+        except:
+            pass
+        self.session = Session()
+        logging.info("Session refreshed due to connection error")
+
+    def safe_commit(self, max_retries=3):
+        """안전한 커밋 (재시도 로직 포함)"""
+        for attempt in range(max_retries):
+            try:
+                self.session.commit()
+                return True
+            except Exception as e:
+                logging.warning(f"Commit attempt {attempt + 1} failed: {e}")
+                if attempt < max_retries - 1:
+                    self.refresh_session()
+                    time.sleep(1)
+                else:
+                    print(f"   [ERROR] DB 커밋 실패 (재시도 {max_retries}회 후): {e}")
+                    return False
+        return False
+
     def get_it_business_ideas(self):
         """IT 사업 아이디어 생성 (템플릿 + 트렌드 혼합) - 중복 제거"""
         all_opportunities = []
@@ -407,8 +433,18 @@ class ContinuousBusinessDiscovery:
 
                     self.session.add(business_plan)
 
-                self.session.commit()
-                print(f"   [OK] business_plans & history 테이블에 저장 완료!")
+                if self.safe_commit():
+                    print(f"   [OK] business_plans & history 테이블에 저장 완료!")
+                else:
+                    print(f"   [WARN] DB 저장 실패, 다음 아이디어로 진행")
+                    return {
+                        'saved': False,
+                        'name': name,
+                        'score': total_score,
+                        'market_score': market_score,
+                        'revenue_score': revenue_score,
+                        'error': 'DB commit failed'
+                    }
                 logging.info(f"Saved business idea: {name} (Score: {total_score})")
 
                 return {
@@ -556,9 +592,10 @@ class ContinuousBusinessDiscovery:
         )
 
         self.session.add(meeting)
-        self.session.commit()
-
-        print(f"   [MEETING] 회의록 생성 완료!")
+        if self.safe_commit():
+            print(f"   [MEETING] 회의록 생성 완료!")
+        else:
+            print(f"   [WARN] 회의록 저장 실패")
         logging.info(f"Meeting record created with {len(saved_ideas)} ideas")
 
     def run_continuous(self):
