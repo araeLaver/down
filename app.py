@@ -1,4 +1,4 @@
-from flask import Flask, render_template, jsonify, request
+﻿from flask import Flask, render_template, jsonify, request
 from flask_cors import CORS
 from datetime import datetime, timedelta
 import subprocess
@@ -28,7 +28,7 @@ from startup_support_crawler import StartupSupportCrawler
 app = Flask(__name__)
 CORS(app, origins=["https://anonymous-kylen-untab-d30cd097.koyeb.app"])
 
-# Koyeb PostgreSQL 연결
+# Koyeb PostgreSQL ?�결
 connection_string = URL.create(
     'postgresql',
     username='unble',
@@ -40,13 +40,13 @@ connection_string = URL.create(
 engine = create_engine(
     connection_string,
     pool_pre_ping=True,
-    pool_recycle=3600,  # 연결 1시간마다 재생성 (SSL 타임아웃 방지)
-    pool_size=10,
-    max_overflow=20
+    pool_recycle=3600,  # ?�결 1?�간마다 ?�생??(SSL ?�?�아??방�?)
+    pool_size=3,  # Koyeb ���� Ƽ�� ����ȭ
+    max_overflow=5
 )
 Session = sessionmaker(bind=engine)
 
-# 데이터베이스 초기화
+# ?�이?�베?�스 초기??
 try:
     initialize_database()
     initialize_history_tables()
@@ -54,14 +54,14 @@ except Exception as e:
     print(f"Database initialization warning: {e}")
 
 
-# Git 저장소 객체
+# Git ?�?�소 객체
 try:
     repo = git.Repo('.')
 except:
     repo = None
 
 def parse_sync_log():
-    """sync.log 파일 파싱하여 데이터베이스에 저장"""
+    """sync.log ?�일 ?�싱?�여 ?�이?�베?�스???�??""
     session = Session()
     try:
         with open('sync.log', 'r') as f:
@@ -70,7 +70,7 @@ def parse_sync_log():
         for line in lines:
             if line.strip():
                 try:
-                    # 로그 포맷: [YYYY-MM-DD HH:MM:SS] [TYPE] MESSAGE
+                    # 로그 ?�맷: [YYYY-MM-DD HH:MM:SS] [TYPE] MESSAGE
                     parts = line.split(']', 2)
                     if len(parts) >= 3:
                         timestamp_str = parts[0].strip('[')
@@ -104,7 +104,7 @@ def parse_sync_log():
         session.close()
 
 def get_git_stats():
-    """Git 저장소 통계"""
+    """Git ?�?�소 ?�계"""
     if not repo:
         return {}
     
@@ -124,7 +124,7 @@ def get_git_stats():
         return {}
 
 def get_sync_status():
-    """동기화 데몬 상태 확인"""
+    """?�기???�몬 ?�태 ?�인"""
     try:
         result = subprocess.run(['./sync-control.sh', 'status'], 
                               capture_output=True, text=True)
@@ -142,47 +142,47 @@ def get_sync_status():
 
 @app.route('/')
 def index():
-    """Qhyx Inc. 메인 홈페이지"""
+    """Qhyx Inc. 메인 ?�페?��?"""
     return render_template('index.html')
 
 @app.route('/dashboard')
 def dashboard():
-    """실시간 비즈니스 모니터링 대시보드"""
+    """?�시�?비즈?�스 모니?�링 ?�?�보??""
     return render_template('business_dashboard.html')
 
 @app.route('/monitor')
 def monitor():
-    """기존 시스템 모니터링 (호환성)"""
+    """기존 ?�스??모니?�링 (?�환??"""
     return render_template('dashboard.html')
 
 @app.route('/api/stats')
 def api_stats():
-    """통계 API"""
-    parse_sync_log()  # 최신 로그 파싱
+    """?�계 API"""
+    parse_sync_log()  # 최신 로그 ?�싱
     
     session = Session()
     try:
-        # 최근 활동
+        # 최근 ?�동
         recent_activities = session.query(ActivityLog).order_by(
             ActivityLog.timestamp.desc()
         ).limit(10).all()
         
-        # 오늘의 동기화 횟수
+        # ?�늘???�기???�수
         today = datetime.utcnow().date()
         sync_count = session.query(SyncLog).filter(
             text(f"DATE({SCHEMA_NAME}.sync_logs.timestamp) = :today")
         ).params(today=today).count()
         
-        # Git 통계
+        # Git ?�계
         git_stats = get_git_stats()
         
-        # 동기화 상태
+        # ?�기???�태
         sync_status = get_sync_status()
         
-        # 마일스톤 수
+        # 마일?�톤 ??
         milestone_count = session.query(CompanyMilestone).count()
         
-        # AI 직원 수
+        # AI 직원 ??
         employee_count = session.query(Employee).filter_by(status='active').count()
         
         return jsonify({
@@ -243,20 +243,20 @@ def api_logs():
 
 @app.route('/meetings')
 def meetings():
-    """회의 보고서 페이지"""
+    """?�의 보고???�이지"""
     return render_template('meetings.html')
 
 @app.route('/suggestions')
 def suggestions():
-    """직원 건의사항 페이지"""
+    """직원 건의?�항 ?�이지"""
     return render_template('suggestions.html')
 
 @app.route('/api/meetings')
 def api_meetings():
-    """회의 보고서 API"""
+    """?�의 보고??API"""
     session = Session()
     try:
-        # 최근 회의 목록 조회
+        # 최근 ?�의 목록 조회
         meetings = session.query(BusinessMeeting).order_by(
             BusinessMeeting.meeting_date.desc()
         ).limit(10).all()
@@ -326,14 +326,14 @@ def api_meetings():
 
 @app.route('/api/meetings/<int:meeting_id>')
 def api_meeting_detail(meeting_id):
-    """특정 회의 상세 정보 API"""
+    """?�정 ?�의 ?�세 ?�보 API"""
     session = Session()
     try:
         meeting = session.query(BusinessMeeting).filter_by(id=meeting_id).first()
         if not meeting:
             return jsonify({'error': 'Meeting not found'}), 404
         
-        # 회의록 파싱
+        # ?�의�??�싱
         meeting_notes = {}
         if meeting.meeting_notes:
             try:
@@ -392,17 +392,17 @@ def api_meeting_detail(meeting_id):
 
 @app.route('/api/suggestions')
 def api_suggestions():
-    """건의사항 목록 API"""
+    """건의?�항 목록 API"""
     session = Session()
     try:
-        # 최근 건의사항 목록 조회 (상태별로 정렬)
+        # 최근 건의?�항 목록 조회 (?�태별로 ?�렬)
         suggestions = session.query(EmployeeSuggestion).order_by(
             EmployeeSuggestion.created_at.desc()
         ).limit(20).all()
         
         suggestion_list = []
         for suggestion in suggestions:
-            # 직원 정보 가져오기
+            # 직원 ?�보 가?�오�?
             employee = session.query(Employee).filter_by(employee_id=suggestion.employee_id).first()
             employee_name = employee.name if employee else suggestion.employee_id
             
@@ -426,7 +426,7 @@ def api_suggestions():
             }
             suggestion_list.append(suggestion_data)
         
-        # 상태별 통계
+        # ?�태�??�계
         stats = {
             'total': len(suggestion_list),
             'submitted': len([s for s in suggestion_list if s['status'] == 'submitted']),
@@ -444,17 +444,17 @@ def api_suggestions():
 
 @app.route('/api/suggestions/<int:suggestion_id>')
 def api_suggestion_detail(suggestion_id):
-    """특정 건의사항 상세 정보 API"""
+    """?�정 건의?�항 ?�세 ?�보 API"""
     session = Session()
     try:
         suggestion = session.query(EmployeeSuggestion).filter_by(id=suggestion_id).first()
         if not suggestion:
             return jsonify({'error': 'Suggestion not found'}), 404
         
-        # 직원 정보
+        # 직원 ?�보
         employee = session.query(Employee).filter_by(employee_id=suggestion.employee_id).first()
         
-        # 피드백 목록
+        # ?�드�?목록
         feedbacks = session.query(SuggestionFeedback).filter_by(
             suggestion_id=suggestion.suggestion_id
         ).order_by(SuggestionFeedback.created_at.desc()).all()
@@ -500,12 +500,12 @@ def api_suggestion_detail(suggestion_id):
 
 @app.route('/api/suggestions', methods=['POST'])
 def api_create_suggestion():
-    """새 건의사항 생성 API"""
+    """??건의?�항 ?�성 API"""
     data = request.json
     
     session = Session()
     try:
-        # 건의사항 ID 생성
+        # 건의?�항 ID ?�성
         from datetime import datetime
         today = datetime.now()
         suggestion_id = f"SUG_{today.strftime('%Y%m%d')}_{session.query(EmployeeSuggestion).count() + 1:03d}"
@@ -540,12 +540,12 @@ def api_create_suggestion():
 
 @app.route('/api/suggestions/<int:suggestion_id>/feedback', methods=['POST'])
 def api_add_suggestion_feedback(suggestion_id):
-    """건의사항에 피드백 추가 API"""
+    """건의?�항???�드�?추�? API"""
     data = request.json
     
     session = Session()
     try:
-        # 건의사항 존재 확인
+        # 건의?�항 존재 ?�인
         suggestion = session.query(EmployeeSuggestion).filter_by(id=suggestion_id).first()
         if not suggestion:
             return jsonify({'error': 'Suggestion not found'}), 404
@@ -570,7 +570,7 @@ def api_add_suggestion_feedback(suggestion_id):
 
 @app.route('/api/suggestions/<int:suggestion_id>/status', methods=['PUT'])
 def api_update_suggestion_status(suggestion_id):
-    """건의사항 상태 업데이트 API"""
+    """건의?�항 ?�태 ?�데?�트 API"""
     data = request.json
     
     session = Session()
@@ -583,7 +583,7 @@ def api_update_suggestion_status(suggestion_id):
         suggestion.status = data.get('status')
         suggestion.reviewer_notes = data.get('reviewer_notes')
         
-        # 상태에 따라 날짜 업데이트
+        # ?�태???�라 ?�짜 ?�데?�트
         if suggestion.status in ['approved', 'rejected'] and old_status == 'submitted':
             suggestion.reviewed_at = datetime.utcnow()
         elif suggestion.status == 'implemented':
@@ -601,7 +601,7 @@ def api_update_suggestion_status(suggestion_id):
 
 @app.route('/api/sync/control', methods=['POST'])
 def sync_control():
-    """동기화 제어 API"""
+    """?�기???�어 API"""
     action = request.json.get('action')
     
     if action not in ['start', 'stop', 'restart', 'sync']:
@@ -612,7 +612,7 @@ def sync_control():
         result = subprocess.run(['./sync-control.sh', action], 
                               capture_output=True, text=True)
         
-        # 활동 로그 기록
+        # ?�동 로그 기록
         activity = ActivityLog(
             activity_type='sync_control',
             description=f'Sync daemon {action}',
@@ -634,8 +634,8 @@ def sync_control():
 
 @app.route('/api/metrics')
 def api_metrics():
-    """회사 성장 지표 API"""
-    # 최근 30일 지표
+    """?�사 ?�장 지??API"""
+    # 최근 30??지??
     thirty_days_ago = datetime.utcnow() - timedelta(days=30)
     
     session = Session()
@@ -644,7 +644,7 @@ def api_metrics():
             CompanyMetric.date >= thirty_days_ago
         ).all()
         
-        # 일별 커밋 수
+        # ?�별 커밋 ??
         daily_commits = {}
         if repo:
             for commit in repo.iter_commits():
@@ -653,7 +653,7 @@ def api_metrics():
                     date_str = date.isoformat()
                     daily_commits[date_str] = daily_commits.get(date_str, 0) + 1
         
-        # 일별 동기화 수 (원시 SQL 사용)
+        # ?�별 ?�기????(?�시 SQL ?�용)
         result = session.execute(text(f"""
             SELECT DATE(timestamp) as date, COUNT(*) as count
             FROM {SCHEMA_NAME}.sync_logs
@@ -682,7 +682,7 @@ def api_metrics():
 
 @app.route('/api/record', methods=['POST'])
 def record_activity():
-    """활동 기록 API"""
+    """?�동 기록 API"""
     data = request.json
     
     session = Session()
@@ -703,27 +703,27 @@ def record_activity():
 
 @app.route('/api/dashboard-data')
 def api_dashboard_data():
-    """비즈니스 대시보드 데이터 API"""
+    """비즈?�스 ?�?�보???�이??API"""
     session = Session()
     try:
         today = datetime.utcnow().date()
         
-        # 오늘의 회의 수
+        # ?�늘???�의 ??
         today_meetings = session.query(BusinessMeeting).filter(
             BusinessMeeting.meeting_date >= today
         ).count()
         
-        # 진행중인 업무 수
+        # 진행중인 ?�무 ??
         active_tasks = session.query(Task).filter(
             Task.status.in_(['pending', 'in_progress'])
         ).count()
         
-        # 오늘의 지표 업데이트 수
+        # ?�늘??지???�데?�트 ??
         today_metrics = session.query(CompanyMetric).filter(
             CompanyMetric.date >= today
         ).count()
         
-        # 최근 활동들
+        # 최근 ?�동??
         recent_activities = session.query(BusinessMeeting).order_by(
             BusinessMeeting.meeting_date.desc()
         ).limit(5).all()
@@ -737,7 +737,7 @@ def api_dashboard_data():
                 'status': meeting.status
             })
         
-        # AI 직원 현황
+        # AI 직원 ?�황
         employees = session.query(Employee).filter_by(status='active').all()
         employee_data = []
         for emp in employees:
@@ -749,7 +749,7 @@ def api_dashboard_data():
                 'tasks': emp_tasks
             })
         
-        # 사업 계획 현황
+        # ?�업 계획 ?�황
         business_plans = session.query(BusinessPlan).filter(
             BusinessPlan.status.in_(['approved', 'in_progress'])
         ).all()
@@ -760,7 +760,7 @@ def api_dashboard_data():
             plan_data.append({
                 'name': plan.plan_name,
                 'status': plan.status,
-                'revenue': f'{monthly_revenue:,}원/월'
+                'revenue': f'{monthly_revenue:,}????
             })
         
         return jsonify({
@@ -776,13 +776,13 @@ def api_dashboard_data():
 
 @app.route('/api/status')
 def api_status():
-    """시스템 상태 API (메인 웹사이트용)"""
+    """?�스???�태 API (메인 ?�사?�트??"""
     session = Session()
     try:
-        # 시스템 상태 확인
+        # ?�스???�태 ?�인
         sync_status = get_sync_status()
         
-        # 오늘의 활동 수
+        # ?�늘???�동 ??
         today = datetime.utcnow().date()
         today_meetings = session.query(BusinessMeeting).filter(
             BusinessMeeting.meeting_date >= today
@@ -802,50 +802,50 @@ def api_status():
 
 @app.route('/business-discovery')
 def business_discovery():
-    """사업 발굴 대시보드 페이지"""
+    """?�업 발굴 ?�?�보???�이지"""
     return render_template('business_discovery.html')
 
 @app.route('/business-history')
 def business_history():
-    """사업 발굴 히스토리 & 분석 대시보드"""
+    """?�업 발굴 ?�스?�리 & 분석 ?�?�보??""
     return render_template('business_history.html')
 
 @app.route('/business-review')
 def business_review():
-    """검토 필요 사업 (60-79점)"""
+    """검???�요 ?�업 (60-79??"""
     return render_template('business_review.html')
 
 @app.route('/business-rejected')
 def business_rejected():
-    """부적합 사업 (60점 미만)"""
+    """부?�합 ?�업 (60??미만)"""
     return render_template('business_rejected.html')
 
 @app.route('/business')
 def business_landing():
-    """사업 분석 랜딩 페이지"""
+    """?�업 분석 ?�딩 ?�이지"""
     return render_template('business_landing.html')
 
 @app.route('/trigger-discovery')
 def trigger_discovery_page():
-    """수동 사업 발굴 페이지"""
+    """?�동 ?�업 발굴 ?�이지"""
     return render_template('trigger_discovery.html')
 
 @app.route('/api/discovered-businesses')
 def api_discovered_businesses():
-    """자동 발굴된 사업 목록 API (60점 이상 모두 포함)"""
+    """?�동 발굴???�업 목록 API (60???�상 모두 ?�함)"""
     session = Session()
     try:
-        # BusinessDiscoveryHistory에서 50점 이상 사업 모두 조회
+        # BusinessDiscoveryHistory?�서 50???�상 ?�업 모두 조회
         histories = session.query(BusinessDiscoveryHistory).filter(
             BusinessDiscoveryHistory.total_score >= 50
         ).order_by(BusinessDiscoveryHistory.discovered_at.desc()).limit(100).all()
 
         business_list = []
         for biz in histories:
-            # 월 매출 추정 (간단한 계산)
-            monthly_revenue = biz.total_score * 100000  # 점수 * 10만원
+            # ??매출 추정 (간단??계산)
+            monthly_revenue = biz.total_score * 100000  # ?�수 * 10만원
             annual_revenue = monthly_revenue * 12
-            investment = biz.total_score * 50000  # 점수 * 5만원
+            investment = biz.total_score * 50000  # ?�수 * 5만원
 
             business_list.append({
                 'id': biz.id,
@@ -858,7 +858,7 @@ def api_discovered_businesses():
                 'risk': 'low' if biz.total_score >= 80 else 'medium' if biz.total_score >= 70 else 'high',
                 'priority': 'high' if biz.total_score >= 80 else 'medium',
                 'created_at': biz.discovered_at.strftime('%Y-%m-%d %H:%M') if biz.discovered_at else None,
-                'description': f"{biz.business_name} - 시장성 {int(biz.market_score)}점, 수익성 {int(biz.revenue_score)}점",
+                'description': f"{biz.business_name} - ?�장??{int(biz.market_score)}?? ?�익??{int(biz.revenue_score)}??,
                 'revenue_model': 'subscription',
                 'details': {
                     'analysis_score': biz.total_score,
@@ -871,7 +871,7 @@ def api_discovered_businesses():
                 }
             })
 
-        # 통계
+        # ?�계
         today = datetime.utcnow().date()
         today_count = session.query(BusinessDiscoveryHistory).filter(
             BusinessDiscoveryHistory.total_score >= 50,
@@ -900,13 +900,13 @@ def api_discovered_businesses():
 
 @app.route('/api/low-score-businesses')
 def api_low_score_businesses():
-    """저점수 사업 목록 API (50점 미만)"""
+    """?�?�수 ?�업 목록 API (50??미만)"""
     session = Session()
     try:
-        # low_score_businesses 테이블에서 50점 미만 사업 조회
+        # low_score_businesses ?�이블에??50??미만 ?�업 조회
         from sqlalchemy import text
 
-        # 직접 SQL로 조회 (테이블이 존재한다면)
+        # 직접 SQL�?조회 (?�이블이 존재?�다�?
         result = session.execute(text(f"""
             SELECT id, business_name, business_type, total_score, market_score, revenue_score,
                    category, keyword, market_analysis, revenue_analysis, discovered_at
@@ -917,7 +917,7 @@ def api_low_score_businesses():
 
         business_list = []
         for row in result:
-            # 월 매출 추정
+            # ??매출 추정
             monthly_revenue = row.total_score * 100000
             annual_revenue = monthly_revenue * 12
             investment = row.total_score * 50000
@@ -933,7 +933,7 @@ def api_low_score_businesses():
                 'risk': 'high',
                 'priority': 'low',
                 'created_at': row.discovered_at.strftime('%Y-%m-%d %H:%M') if row.discovered_at else None,
-                'description': f"{row.business_name} - 시장성 {int(row.market_score)}점, 수익성 {int(row.revenue_score)}점 (실험적 아이디어)",
+                'description': f"{row.business_name} - ?�장??{int(row.market_score)}?? ?�익??{int(row.revenue_score)}??(?�험???�이?�어)",
                 'revenue_model': 'experimental',
                 'details': {
                     'analysis_score': row.total_score,
@@ -946,7 +946,7 @@ def api_low_score_businesses():
                 }
             })
 
-        # 통계
+        # ?�계
         total_count = session.execute(text(f"""
             SELECT COUNT(*) FROM {SCHEMA_NAME}.low_score_businesses
         """)).scalar()
@@ -967,7 +967,7 @@ def api_low_score_businesses():
             }
         })
     except Exception as e:
-        # 테이블이 없거나 에러가 발생하면 빈 목록 반환
+        # ?�이블이 ?�거???�러가 발생?�면 �?목록 반환
         logging.error(f"Error fetching low score businesses: {e}")
         return jsonify({
             'businesses': [],
@@ -983,13 +983,13 @@ def api_low_score_businesses():
 
 @app.route('/api/trigger-discovery', methods=['GET', 'POST'])
 def trigger_discovery():
-    """수동으로 사업 발굴 트리거 (백그라운드에서 비동기 실행)"""
+    """?�동?�로 ?�업 발굴 ?�리�?(백그?�운?�에??비동�??�행)"""
     try:
         from threading import Thread
         from continuous_business_discovery import ContinuousBusinessDiscovery
 
         def run_discovery_background():
-            """백그라운드에서 발굴 실행"""
+            """백그?�운?�에??발굴 ?�행"""
             try:
                 discovery = ContinuousBusinessDiscovery()
                 results = discovery.run_hourly_discovery()
@@ -1003,13 +1003,13 @@ def trigger_discovery():
                 logging.error(f"Background discovery error: {e}")
                 print(f"[TRIGGER ERROR] {e}")
 
-        # 백그라운드 스레드로 실행
+        # 백그?�운???�레?�로 ?�행
         thread = Thread(target=run_discovery_background, daemon=True)
         thread.start()
 
         return jsonify({
             'success': True,
-            'message': '사업 발굴이 백그라운드에서 시작되었습니다',
+            'message': '?�업 발굴??백그?�운?�에???�작?�었?�니??,
             'status': 'running',
             'timestamp': datetime.now().isoformat()
         })
@@ -1021,7 +1021,7 @@ def trigger_discovery():
 
 @app.route('/api/review-businesses')
 def api_review_businesses():
-    """검토 필요 사업 (60-79점) API"""
+    """검???�요 ?�업 (60-79?? API"""
     session = Session()
     try:
         businesses = session.query(BusinessDiscoveryHistory).filter(
@@ -1053,7 +1053,7 @@ def api_review_businesses():
 
 @app.route('/api/rejected-businesses')
 def api_rejected_businesses():
-    """부적합 사업 (60점 미만) API"""
+    """부?�합 ?�업 (60??미만) API"""
     session = Session()
     try:
         businesses = session.query(BusinessDiscoveryHistory).filter(
@@ -1085,7 +1085,7 @@ def api_rejected_businesses():
 
 @app.route('/api/low-score-businesses/list-old')
 def api_low_score_businesses_old():
-    """낮은 점수 사업 목록 API (60점 미만) - 구버전"""
+    """??? ?�수 ?�업 목록 API (60??미만) - 구버??""
     session = Session()
     try:
         days = int(request.args.get('days', 30))
@@ -1094,7 +1094,7 @@ def api_low_score_businesses_old():
         from datetime import datetime, timedelta
         start_date = datetime.utcnow() - timedelta(days=days)
 
-        # LowScoreBusiness 테이블에서 조회
+        # LowScoreBusiness ?�이블에??조회
         businesses = session.query(LowScoreBusiness).filter(
             LowScoreBusiness.created_at >= start_date
         ).order_by(LowScoreBusiness.created_at.desc()).limit(limit).all()
@@ -1119,11 +1119,11 @@ def api_low_score_businesses_old():
                 'full_data': biz.full_data
             })
 
-        # 통계
+        # ?�계
         total_count = len(business_list)
         avg_score = sum([b['total_score'] for b in business_list]) / total_count if total_count > 0 else 0
 
-        # 실패 이유별 분포
+        # ?�패 ?�유�?분포
         failure_reasons = {}
         for biz in business_list:
             reason = biz['failure_reason'] or 'unknown'
@@ -1140,11 +1140,11 @@ def api_low_score_businesses_old():
     finally:
         session.close()
 
-# ==================== 사업 발굴 히스토리 API ====================
+# ==================== ?�업 발굴 ?�스?�리 API ====================
 
 @app.route('/api/business-history/stats')
 def api_business_history_stats():
-    """히스토리 통계 API"""
+    """?�스?�리 ?�계 API"""
     session = Session()
     try:
         days = int(request.args.get('days', 7))
@@ -1156,17 +1156,17 @@ def api_business_history_stats():
 
 @app.route('/api/business-history/list')
 def api_business_history_list():
-    """전체 히스토리 목록 API"""
+    """?�체 ?�스?�리 목록 API"""
     session = Session()
     try:
-        # 필터 파라미터
+        # ?�터 ?�라미터
         period = request.args.get('period', '24h')
         score_filter = request.args.get('score', 'all')
         category_filter = request.args.get('category', 'all')
         search = request.args.get('search', '')
         limit = int(request.args.get('limit', 100))
 
-        # 기간 필터
+        # 기간 ?�터
         from datetime import datetime, timedelta
         now = datetime.utcnow()
         if period == '24h':
@@ -1178,13 +1178,13 @@ def api_business_history_list():
         else:
             start_date = None
 
-        # 쿼리 시작
+        # 쿼리 ?�작
         query = session.query(BusinessDiscoveryHistory)
 
         if start_date:
             query = query.filter(BusinessDiscoveryHistory.discovered_at >= start_date)
 
-        # 점수 필터
+        # ?�수 ?�터
         if score_filter == '90+':
             query = query.filter(BusinessDiscoveryHistory.total_score >= 90)
         elif score_filter == '80-89':
@@ -1200,18 +1200,18 @@ def api_business_history_list():
         elif score_filter == '60-':
             query = query.filter(BusinessDiscoveryHistory.total_score < 60)
 
-        # 카테고리 필터
+        # 카테고리 ?�터
         if category_filter != 'all':
             query = query.filter(BusinessDiscoveryHistory.category == category_filter)
 
-        # 검색
+        # 검??
         if search:
             query = query.filter(BusinessDiscoveryHistory.business_name.ilike(f'%{search}%'))
 
-        # 정렬 및 제한
+        # ?�렬 �??�한
         histories = query.order_by(BusinessDiscoveryHistory.discovered_at.desc()).limit(limit).all()
 
-        # 결과 변환
+        # 결과 변??
         result = []
         for h in histories:
             result.append({
@@ -1235,7 +1235,7 @@ def api_business_history_list():
 
 @app.route('/api/business-history/insights')
 def api_business_history_insights():
-    """인사이트 목록 API"""
+    """?�사?�트 목록 API"""
     session = Session()
     try:
         status = request.args.get('status', 'new')
@@ -1270,7 +1270,7 @@ def api_business_history_insights():
 
 @app.route('/api/business-history/categories')
 def api_business_history_categories():
-    """카테고리별 분포 API"""
+    """카테고리�?분포 API"""
     session = Session()
     try:
         days = int(request.args.get('days', 7))
@@ -1291,7 +1291,7 @@ def api_business_history_categories():
 
 @app.route('/api/business-history/snapshots')
 def api_business_history_snapshots():
-    """스냅샷 목록 API"""
+    """?�냅??목록 API"""
     session = Session()
     try:
         snapshot_type = request.args.get('type', 'hourly')
@@ -1324,13 +1324,13 @@ def api_business_history_snapshots():
 
 @app.route('/api/business-history/trends')
 def api_business_history_trends():
-    """트렌드 분석 API"""
+    """?�렌??분석 API"""
     session = Session()
     try:
         days = int(request.args.get('days', 30))
         start_date = datetime.utcnow() - timedelta(days=days)
 
-        # 일별 통계
+        # ?�별 ?�계
         from sqlalchemy import func, cast, Date
         daily_stats = session.query(
             cast(BusinessDiscoveryHistory.discovered_at, Date).label('date'),
@@ -1359,11 +1359,11 @@ def api_business_history_trends():
 
 @app.route('/api/low-score-businesses/list')
 def api_low_score_businesses_list():
-    """60점 미만 사업 목록 API"""
+    """60??미만 ?�업 목록 API"""
     from business_discovery_history import LowScoreBusiness
     session = Session()
     try:
-        # 필터 파라미터
+        # ?�터 ?�라미터
         days = int(request.args.get('days', 7))
         failure_reason = request.args.get('failure_reason', 'all')
         category = request.args.get('category', 'all')
@@ -1413,7 +1413,7 @@ def api_low_score_businesses_list():
 
 @app.route('/api/low-score-businesses/stats')
 def api_low_score_businesses_stats():
-    """60점 미만 사업 통계 API"""
+    """60??미만 ?�업 ?�계 API"""
     tracker = BusinessHistoryTracker()
     try:
         days = int(request.args.get('days', 7))
@@ -1425,7 +1425,7 @@ def api_low_score_businesses_stats():
 
 @app.route('/api/low-score-businesses/detail/<int:business_id>')
 def api_low_score_business_detail(business_id):
-    """60점 미만 사업 상세 정보 API"""
+    """60??미만 ?�업 ?�세 ?�보 API"""
     from business_discovery_history import LowScoreBusiness
     session = Session()
     try:
@@ -1455,20 +1455,20 @@ def api_low_score_business_detail(business_id):
     finally:
         session.close()
 
-# ==================== 백그라운드 작업 ====================
+# ==================== 백그?�운???�업 ====================
 
 def background_sync_parser():
-    """백그라운드에서 주기적으로 sync.log 파싱"""
+    """백그?�운?�에??주기?�으�?sync.log ?�싱"""
     while True:
         try:
             parse_sync_log()
         except Exception as e:
             print(f"Background parser error: {e}")
-        time.sleep(30)  # 30초마다 파싱
+        time.sleep(30)  # 30초마???�싱
 
 
 def background_meeting_generator():
-    """백그라운드에서 매시간 회의 생성"""
+    """백그?�운?�에??매시�??�의 ?�성"""
     from stable_hourly_meeting import StableHourlyMeeting
     import logging
 
@@ -1478,12 +1478,7 @@ def background_meeting_generator():
     system = StableHourlyMeeting()
     last_hour = -1
 
-    # 시작하자마자 한번 실행
-    try:
-        system.conduct_hourly_meeting()
-    except Exception as e:
-        logging.error(f"Initial meeting failed: {e}")
-        print(f"Initial meeting failed: {e}")
+    # 초기 회의 생성 제거 - 서버 시작 부하 감소
 
     while True:
         try:
@@ -1491,7 +1486,7 @@ def background_meeting_generator():
             current_hour = now.hour
             current_minute = now.minute
 
-            # 매시간 00분에 실행
+            # 매시�?00분에 ?�행
             if current_minute == 0 and current_hour != last_hour:
                 logging.info(f"[MEETING] Generating meeting at {now}")
                 print(f"[MEETING] Generating meeting at {now}")
@@ -1499,7 +1494,7 @@ def background_meeting_generator():
                 last_hour = current_hour
                 time.sleep(60)
             else:
-                # 30초마다 체크
+                # 30초마??체크
                 time.sleep(30)
         except Exception as e:
             logging.error(f"Meeting generator error: {e}")
@@ -1508,7 +1503,7 @@ def background_meeting_generator():
 
 
 def background_business_discovery():
-    """백그라운드에서 지속적으로 사업 발굴"""
+    """백그?�운?�에??지?�적?�로 ?�업 발굴"""
     import logging
     logging.info("[BACKGROUND] Starting continuous business discovery...")
     print("[BACKGROUND] Starting continuous business discovery...")
@@ -1522,7 +1517,7 @@ def background_business_discovery():
             current_hour = now.hour
             current_minute = now.minute
 
-            # 매시간 정각 근처(0~2분)에 실행, 중복 방지
+            # 매시�??�각 근처(0~2�????�행, 중복 방�?
             if current_minute <= 2 and current_hour != last_hour:
                 logging.info(f"[DISCOVERY] Running hourly discovery at {now}")
                 print(f"\n" + "="*80)
@@ -1541,9 +1536,9 @@ def background_business_discovery():
                 print(f"[NEXT] Next discovery at {(now + timedelta(hours=1)).strftime('%H:00')}")
                 print("="*80 + "\n")
 
-                time.sleep(180)  # 3분 대기 (정각 근처 중복 실행 방지)
+                time.sleep(180)  # 3�??��?(?�각 근처 중복 ?�행 방�?)
             else:
-                time.sleep(20)  # 20초마다 체크
+                time.sleep(20)  # 20초마??체크
 
         except Exception as e:
             logging.error(f"Discovery error: {e}")
@@ -1553,9 +1548,13 @@ def background_business_discovery():
             time.sleep(60)
 
 
-# 백그라운드 스레드 자동 시작 (Gunicorn에서도 작동)
+# 백그?�운???�레???�동 ?�작 (Gunicorn?�서???�동)
 def start_background_threads():
-    """백그라운드 스레드 시작"""
+    """백그라운드 스레드 시작 (30초 지연)"""
+    print("[STARTUP] Waiting 30 seconds before starting background threads...")
+    time.sleep(30)  # Koyeb 시작 안정화를 위한 지연
+    print("[STARTUP] Starting background threads now...")
+
     # Sync parser thread
     parser_thread = Thread(target=background_sync_parser, daemon=True)
     parser_thread.start()
@@ -1566,23 +1565,23 @@ def start_background_threads():
     meeting_thread.start()
     print("[STARTUP] Background meeting generator started")
 
-    # Business discovery thread - 재활성화
+    # Business discovery thread - ?�활?�화
     discovery_thread = Thread(target=background_business_discovery, daemon=True)
     discovery_thread.start()
     print("[STARTUP] Background business discovery ENABLED - Running hourly")
 
 # ============================================
-# 창업 지원사업 관련 라우트
+# 창업 지?�사??관???�우??
 # ============================================
 
 @app.route('/startup-support')
 def startup_support():
-    """1인 창업 지원사업 탐색 페이지"""
+    """1??창업 지?�사???�색 ?�이지"""
     return render_template('startup_support.html')
 
 @app.route('/api/startup-support/programs')
 def api_startup_support_programs():
-    """모든 창업 지원사업 조회"""
+    """모든 창업 지?�사??조회"""
     try:
         crawler = StartupSupportCrawler()
         programs = crawler.get_all_support_programs()
@@ -1592,7 +1591,7 @@ def api_startup_support_programs():
 
 @app.route('/api/startup-support/recommend', methods=['POST'])
 def api_startup_support_recommend():
-    """사용자 맞춤 지원사업 추천"""
+    """?�용??맞춤 지?�사??추천"""
     try:
         user_profile = request.json
         crawler = StartupSupportCrawler()
@@ -1603,7 +1602,7 @@ def api_startup_support_recommend():
 
 @app.route('/api/startup-support/search')
 def api_startup_support_search():
-    """지원사업 검색"""
+    """지?�사??검??""
     try:
         keyword = request.args.get('keyword')
         category = request.args.get('category')
@@ -1619,10 +1618,10 @@ def api_startup_support_search():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
-# Production 환경 (Gunicorn)에서도 백그라운드 스레드 시작
+# Production ?�경 (Gunicorn)?�서??백그?�운???�레???�작
 start_background_threads()
 
-# 백그라운드 스레드 시작
+# 백그?�운???�레???�작
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
     debug = os.environ.get('FLASK_ENV') != 'production'
