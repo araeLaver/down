@@ -56,7 +56,7 @@ def validate_real_demand(keyword):
 
 ## 2단계: AI 기반 실시간 시장 분석
 
-### 2.1 Claude/GPT 활용 시장 조사
+### 2.1 AI 활용 시장 조사
 ```python
 def ai_market_analysis(business_idea):
     prompt = f"""
@@ -73,7 +73,7 @@ def ai_market_analysis(business_idea):
     데이터 소스를 명시하고 최신 정보 기반 답변.
     """
 
-    response = claude_api.call(prompt)
+    response = ai_api.call(prompt)
     return parse_analysis(response)
 ```
 
@@ -293,7 +293,7 @@ def generate_improvements(metrics):
 
 ### Phase 1 (1주): 핵심 기능
 - [ ] 웹 스크래핑 (크몽/숨고 시세)
-- [ ] Claude API 연동 (시장 분석)
+- [ ] AI API 연동 (시장 분석)
 - [ ] 수익성 계산 로직
 - [ ] IT 사업 아이디어 DB 구축
 
@@ -333,7 +333,7 @@ def generate_improvements(metrics):
 
 2. **API 연동**
    - Google Trends API
-   - Claude/GPT API
+   - AI API
    - Google Analytics API
 
 3. **데이터 분석**
@@ -351,7 +351,7 @@ def generate_improvements(metrics):
 
 - **개발 비용**: 200-500만원 (외주 시) / 1-2개월 (직접 개발)
 - **월 운영 비용**:
-  - Claude API: 10-30만원
+  - AI API: 10-30만원
   - 서버: 5-10만원
   - 데이터 수집: 10-20만원
   - **총 25-60만원/월**
