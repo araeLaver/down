@@ -12,6 +12,7 @@ sys.path.append(os.path.dirname(__file__))
 from smart_business_system import SmartBusinessSystem
 from realistic_business_generator import RealisticBusinessGenerator
 from trend_based_idea_generator import TrendBasedIdeaGenerator
+from multi_source_trend_analyzer import MultiSourceTrendAnalyzer
 from database_setup import Session, BusinessPlan, BusinessMeeting, Employee, get_kst_now
 from business_discovery_history import BusinessHistoryTracker, initialize_history_tables, BusinessDiscoveryHistory
 from datetime import datetime, timedelta
@@ -32,7 +33,8 @@ class ContinuousBusinessDiscovery:
     def __init__(self):
         self.smart_system = SmartBusinessSystem()
         self.idea_generator = RealisticBusinessGenerator()
-        self.trend_generator = TrendBasedIdeaGenerator()  # 트렌드 기반 생성기 추가
+        self.trend_generator = TrendBasedIdeaGenerator()  # 트렌드 기반 생성기
+        self.multi_source = MultiSourceTrendAnalyzer()    # 다중 소스 분석기 추가
         self.session = Session()
         self.history_tracker = BusinessHistoryTracker()
 
@@ -43,13 +45,14 @@ class ContinuousBusinessDiscovery:
             print(f"History tables already exist: {e}")
 
         print("="*80)
-        print("[DISCOVERY] 지속적 사업 발굴 시스템 시작 (히스토리 추적 활성화)")
+        print("[DISCOVERY] 지속적 사업 발굴 시스템 시작 (다중 소스 분석)")
         print("="*80)
-        print("매시간 자동으로 IT 사업 아이디어 분석 및 DB 저장")
-        print("70점 이상만 선별하여 실행 가능한 사업으로 등록")
+        print("8시간마다 자동으로 IT 사업 아이디어 분석 및 DB 저장")
+        print("다중 소스: Product Hunt, GitHub, Hacker News, 네이버, 와디즈,")
+        print("          블록체인(CoinGecko, DeFi Llama), Web3, NFT 등")
         print("[OK] 모든 분석 결과를 히스토리에 기록하여 트렌드 분석 가능\n")
 
-        logging.info("Continuous Business Discovery System Started with History Tracking")
+        logging.info("Continuous Business Discovery System Started with Multi-Source Analysis")
 
     def refresh_session(self):
         """DB 세션 새로고침 (연결 오류 복구용)"""
@@ -78,7 +81,7 @@ class ContinuousBusinessDiscovery:
         return False
 
     def get_it_business_ideas(self):
-        """IT 사업 아이디어 생성 (템플릿 + 트렌드 혼합) - 중복 제거"""
+        """다중 소스 기반 IT/블록체인 사업 아이디어 생성 - 중복 제거"""
         all_opportunities = []
 
         # 최근 30일 이미 분석한 사업명 가져오기 (중복 방지)
@@ -96,62 +99,62 @@ class ContinuousBusinessDiscovery:
 
         print(f"   중복 방지 대상: {len(recent_names)}개 (30일 히스토리 + DB 저장 사업)")
 
-        # 1. 기존 템플릿 기반 아이디어 - 매번 다른 아이디어 생성
-        # 3번 생성해서 다양성 확보 (1개만 선택하므로 과도한 생성 불필요)
-        template_opportunities = []
-        for _ in range(3):  # 3번 생성
-            template_opportunities.extend(self.idea_generator.generate_monthly_opportunities())
+        # 다중 소스에서 트렌드 수집 및 아이디어 생성
+        try:
+            print("\n[MULTI-SOURCE] 다중 소스 트렌드 분석 시작...")
 
-        # IT/디지털/앱 관련만 필터 + 중복 제거
-        it_opportunities = []
-        for opp in template_opportunities:
-            business = opp.get('business', {})
-            name = business.get('name', '')
+            # 모든 소스에서 트렌드 수집
+            self.multi_source.collect_all_trends()
 
-            # 이미 최근에 분석한 사업이면 스킵
-            if name in recent_names:
-                continue
+            # 트렌드 요약 출력
+            summary = self.multi_source.get_trend_summary()
+            print("\n[SUMMARY] 수집된 트렌드 카테고리:")
+            for cat, data in summary.items():
+                print(f"   - {cat}: {data['count']}개")
 
-            # IT 관련 키워드 체크
-            it_keywords = ['앱', '웹', 'AI', 'IT', '사이트', '플랫폼',
-                          '자동화', 'SaaS', '소프트웨어', '디지털',
-                          '온라인', '챗봇', 'API', '시스템']
+            # 아이디어 생성 (3개 후보 중 중복 아닌 1개 선택)
+            candidate_ideas = self.multi_source.generate_business_ideas(num_ideas=5)
 
-            if any(keyword in name for keyword in it_keywords):
-                it_opportunities.append(opp)
-                recent_names.add(name)  # 추가한 것도 중복 체크 목록에 추가
+            for idea in candidate_ideas:
+                name = idea.get('business', {}).get('name', '')
+                if name not in recent_names:
+                    all_opportunities.append(idea)
+                    recent_names.add(name)
+                    source = idea.get('business', {}).get('source', '')
+                    category = idea.get('business', {}).get('category', '')
+                    print(f"\n[SELECTED] {name}")
+                    print(f"   출처: {source} | 카테고리: {category}")
+                    break  # 1개만 선택
 
-        # 랜덤하게 섞어서 선택 (하루 3개 = 8시간마다 1개)
-        import random
-        random.shuffle(it_opportunities)
+            if not all_opportunities:
+                print("   [WARNING] 다중 소스에서 새로운 아이디어 없음, 템플릿 사용")
+                # 폴백: 기존 템플릿 사용
+                template_ideas = self.idea_generator.generate_monthly_opportunities()
+                for opp in template_ideas:
+                    name = opp.get('business', {}).get('name', '')
+                    if name not in recent_names:
+                        all_opportunities.append(opp)
+                        print(f"   [FALLBACK] 템플릿 아이디어: {name}")
+                        break
 
-        # 템플릿 또는 트렌드 중 하나만 선택 (1개만 생성)
-        if it_opportunities:
-            all_opportunities.append(it_opportunities[0])
-            print(f"   템플릿 기반 아이디어 1개 선택")
-        else:
-            # 템플릿이 없으면 트렌드에서 1개 선택
+        except Exception as e:
+            print(f"   [ERROR] 다중 소스 분석 실패: {e}")
+            logging.error(f"Multi-source analysis failed: {e}")
+
+            # 에러 시 기존 방식으로 폴백
             try:
-                print("\n[TREND] 실시간 트렌드 수집 중...")
                 trend_ideas = self.trend_generator.generate_ideas_from_trends()
-
-                # 중복 제거 후 트렌드 아이디어 필터링
-                unique_trends = []
                 for idea in trend_ideas:
                     name = idea.get('business', {}).get('name', '')
                     if name not in recent_names:
-                        unique_trends.append(idea)
-                        break  # 1개만 필요
-
-                if unique_trends:
-                    all_opportunities.append(unique_trends[0])
-                    print(f"   트렌드 기반 아이디어 1개 선택")
-            except Exception as e:
-                print(f"   [WARNING] 트렌드 수집 실패: {e}")
-                logging.warning(f"Trend collection failed: {e}")
+                        all_opportunities.append(idea)
+                        print(f"   [FALLBACK] 트렌드 아이디어: {name}")
+                        break
+            except Exception as e2:
+                print(f"   [ERROR] 폴백도 실패: {e2}")
 
         # 하루 3개 = 8시간마다 1개
-        print(f"   최종 생성된 아이디어: {len(all_opportunities)}개\n")
+        print(f"\n   최종 생성된 아이디어: {len(all_opportunities)}개\n")
         return all_opportunities[:1]  # 1개만 반환
 
     def generate_keyword(self, business_name):
