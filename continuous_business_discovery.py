@@ -97,9 +97,9 @@ class ContinuousBusinessDiscovery:
         print(f"   중복 방지 대상: {len(recent_names)}개 (30일 히스토리 + DB 저장 사업)")
 
         # 1. 기존 템플릿 기반 아이디어 - 매번 다른 아이디어 생성
-        # 여러 번 생성해서 더 많은 옵션 확보
+        # 3번 생성해서 다양성 확보 (1개만 선택하므로 과도한 생성 불필요)
         template_opportunities = []
-        for _ in range(10):  # 10번 생성해서 더 다양한 아이디어 수집
+        for _ in range(3):  # 3번 생성
             template_opportunities.extend(self.idea_generator.generate_monthly_opportunities())
 
         # IT/디지털/앱 관련만 필터 + 중복 제거
@@ -121,43 +121,38 @@ class ContinuousBusinessDiscovery:
                 it_opportunities.append(opp)
                 recent_names.add(name)  # 추가한 것도 중복 체크 목록에 추가
 
-        # 랜덤하게 섞어서 선택
+        # 랜덤하게 섞어서 선택 (하루 3개 = 8시간마다 1개)
         import random
         random.shuffle(it_opportunities)
-        all_opportunities.extend(it_opportunities[:3])  # 3개 선택
 
-        # 2. 실시간 트렌드 기반 아이디어 (4-5개) - 글로벌 트렌드 포함
-        try:
-            print("\n[TREND] 실시간 글로벌 트렌드 수집 중...")
-            trend_ideas = self.trend_generator.generate_ideas_from_trends()
+        # 템플릿 또는 트렌드 중 하나만 선택 (1개만 생성)
+        if it_opportunities:
+            all_opportunities.append(it_opportunities[0])
+            print(f"   템플릿 기반 아이디어 1개 선택")
+        else:
+            # 템플릿이 없으면 트렌드에서 1개 선택
+            try:
+                print("\n[TREND] 실시간 트렌드 수집 중...")
+                trend_ideas = self.trend_generator.generate_ideas_from_trends()
 
-            # 중복 제거 후 트렌드 아이디어 필터링
-            unique_trends = []
-            for idea in trend_ideas:
-                name = idea.get('business', {}).get('name', '')
-                if name not in recent_names:
-                    unique_trends.append(idea)
-                    recent_names.add(name)
+                # 중복 제거 후 트렌드 아이디어 필터링
+                unique_trends = []
+                for idea in trend_ideas:
+                    name = idea.get('business', {}).get('name', '')
+                    if name not in recent_names:
+                        unique_trends.append(idea)
+                        break  # 1개만 필요
 
-            # 트렌드 아이디어를 우선순위별로 정렬 (글로벌 트렌드 우선)
-            sorted_trends = sorted(
-                unique_trends,
-                key=lambda x: (
-                    x.get('business', {}).get('global_potential', False),
-                    x.get('priority', '보통') == '높음'
-                ),
-                reverse=True
-            )
+                if unique_trends:
+                    all_opportunities.append(unique_trends[0])
+                    print(f"   트렌드 기반 아이디어 1개 선택")
+            except Exception as e:
+                print(f"   [WARNING] 트렌드 수집 실패: {e}")
+                logging.warning(f"Trend collection failed: {e}")
 
-            all_opportunities.extend(sorted_trends[:5])
-            print(f"   트렌드 기반 아이디어 {len(sorted_trends[:5])}개 추가 (글로벌 포함, 중복 제거됨)")
-        except Exception as e:
-            print(f"   [WARNING] 트렌드 수집 실패: {e}")
-            logging.warning(f"Trend collection failed: {e}")
-
-        # 최종적으로 5-8개 반환 (더 다양한 아이디어)
-        print(f"   최종 생성된 아이디어: {len(all_opportunities)}개 (모두 중복 제거됨)\n")
-        return all_opportunities[:10]  # 최대 10개까지
+        # 하루 3개 = 8시간마다 1개
+        print(f"   최종 생성된 아이디어: {len(all_opportunities)}개\n")
+        return all_opportunities[:1]  # 1개만 반환
 
     def generate_keyword(self, business_name):
         """사업 이름에서 검색 키워드 생성"""

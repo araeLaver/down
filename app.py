@@ -1502,13 +1502,16 @@ def background_meeting_generator():
 
 
 def background_business_discovery():
-    """백그라운드에서 지속적으로 사업 발굴"""
+    """백그라운드에서 8시간마다 사업 발굴 (하루 3회: 09시, 17시, 01시)"""
     import logging
-    logging.info("[BACKGROUND] Starting continuous business discovery...")
-    print("[BACKGROUND] Starting continuous business discovery...")
+    logging.info("[BACKGROUND] Starting business discovery (3x daily: 09, 17, 01)...")
+    print("[BACKGROUND] Starting business discovery (3x daily: 09, 17, 01)...")
 
     discovery = ContinuousBusinessDiscovery()
-    last_hour = -1
+    last_run_hour = -1
+
+    # 실행 시간: 09시, 17시, 01시 (8시간 간격)
+    scheduled_hours = [1, 9, 17]
 
     while True:
         try:
@@ -1516,11 +1519,11 @@ def background_business_discovery():
             current_hour = now.hour
             current_minute = now.minute
 
-            # 매시간 정각 근처(0~2분)에 실행, 중복 방지
-            if current_minute <= 2 and current_hour != last_hour:
-                logging.info(f"[DISCOVERY] Running hourly discovery at {now}")
+            # 지정된 시간 정각 근처(0~2분)에 실행, 중복 방지
+            if current_hour in scheduled_hours and current_minute <= 2 and current_hour != last_run_hour:
+                logging.info(f"[DISCOVERY] Running scheduled discovery at {now}")
                 print(f"\n" + "="*80)
-                print(f"[DISCOVERY] Running hourly discovery at {now.strftime('%Y-%m-%d %H:%M:%S')}")
+                print(f"[DISCOVERY] Running discovery at {now.strftime('%Y-%m-%d %H:%M:%S')}")
                 print("="*80)
 
                 results = discovery.run_hourly_discovery()
@@ -1531,13 +1534,17 @@ def background_business_discovery():
                 if results['saved'] > 0:
                     discovery.generate_discovery_meeting(results)
 
-                last_hour = current_hour
-                print(f"[NEXT] Next discovery at {(now + timedelta(hours=1)).strftime('%H:00')}")
+                last_run_hour = current_hour
+
+                # 다음 실행 시간 계산
+                next_hours = [h for h in scheduled_hours if h > current_hour]
+                next_hour = next_hours[0] if next_hours else scheduled_hours[0]
+                print(f"[NEXT] Next discovery at {next_hour:02d}:00")
                 print("="*80 + "\n")
 
                 time.sleep(180)  # 3분 대기 (정각 근처 중복 실행 방지)
             else:
-                time.sleep(20)  # 20초마다 체크
+                time.sleep(30)  # 30초마다 체크
 
         except Exception as e:
             logging.error(f"Discovery error: {e}")
@@ -1566,7 +1573,7 @@ def start_background_threads():
     # Business discovery thread - 재활성화
     discovery_thread = Thread(target=background_business_discovery, daemon=True)
     discovery_thread.start()
-    print("[STARTUP] Background business discovery ENABLED - Running hourly")
+    print("[STARTUP] Background business discovery ENABLED - Running 3x daily (09, 17, 01)")
 
 # ============================================
 # 창업 지원사업 관련 라우트
