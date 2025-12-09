@@ -847,6 +847,19 @@ def api_discovered_businesses():
             annual_revenue = monthly_revenue * 12
             investment = biz.total_score * 50000  # 점수 * 5만원
 
+            # 시장 분석 데이터 파싱
+            market_data = biz.market_analysis if isinstance(biz.market_analysis, dict) else {}
+            revenue_data = biz.revenue_analysis if isinstance(biz.revenue_analysis, dict) else {}
+            action_plan_data = biz.action_plan if isinstance(biz.action_plan, dict) else {}
+
+            # 실제 수익 데이터가 있으면 사용
+            if revenue_data:
+                scenarios = revenue_data.get('scenarios', {})
+                realistic = scenarios.get('realistic', scenarios.get('현실적', {}))
+                monthly_revenue = realistic.get('monthly_revenue', realistic.get('월_예상_수익', monthly_revenue))
+                annual_revenue = monthly_revenue * 12
+                investment = revenue_data.get('startup_cost', revenue_data.get('initial_investment', investment))
+
             business_list.append({
                 'id': biz.id,
                 'name': biz.business_name,
@@ -859,15 +872,17 @@ def api_discovered_businesses():
                 'priority': 'high' if biz.total_score >= 80 else 'medium',
                 'created_at': biz.discovered_at.strftime('%Y-%m-%d %H:%M') if biz.discovered_at else None,
                 'description': f"{biz.business_name} - 시장성 {int(biz.market_score)}점, 수익성 {int(biz.revenue_score)}점",
-                'revenue_model': 'subscription',
+                'revenue_model': revenue_data.get('revenue_model', 'subscription'),
                 'details': {
                     'analysis_score': biz.total_score,
                     'market_score': biz.market_score,
                     'revenue_score': biz.revenue_score,
                     'category': biz.category,
                     'keyword': biz.keyword,
-                    'market_analysis': biz.market_analysis,
-                    'revenue_analysis': biz.revenue_analysis
+                    'market_analysis': market_data,
+                    'revenue_analysis': revenue_data,
+                    'action_plan': action_plan_data,
+                    'full_analysis': biz.full_analysis if isinstance(biz.full_analysis, dict) else {}
                 }
             })
 
