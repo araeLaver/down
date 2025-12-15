@@ -1639,7 +1639,10 @@ def api_startup_support_search():
         return jsonify({'error': str(e)}), 500
 
 # Production 환경 (Gunicorn)에서도 백그라운드 스레드 시작
-start_background_threads()
+# 별도 스레드에서 실행하여 서버 시작을 블로킹하지 않도록 함
+startup_thread = Thread(target=start_background_threads, daemon=True)
+startup_thread.start()
+print("[STARTUP] Background initialization thread started (non-blocking)")
 
 # 백그라운드 스레드 시작
 if __name__ == '__main__':
