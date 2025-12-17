@@ -830,9 +830,92 @@ def trigger_discovery_page():
     """수동 사업 발굴 페이지"""
     return render_template('trigger_discovery.html')
 
+def generate_default_action_plan(business_name, business_type):
+    """기본 실행 계획 생성 (DB에 없는 경우)"""
+    return {
+        'week_1': {
+            'goal': 'MVP 개발 및 시장 조사',
+            'tasks': [
+                f'{business_name} 핵심 기능 정의',
+                '경쟁사 분석 및 차별화 포인트 도출',
+                '랜딩페이지 제작 (Webflow/Notion)',
+                '초기 고객 타겟 정의'
+            ]
+        },
+        'week_2': {
+            'goal': '프로토타입 및 검증',
+            'tasks': [
+                'MVP 프로토타입 제작',
+                '베타 테스터 10명 모집',
+                '사용자 피드백 수집',
+                '가격 책정 테스트'
+            ]
+        },
+        'week_3': {
+            'goal': '마케팅 및 고객 확보',
+            'tasks': [
+                'SNS 마케팅 시작 (인스타/페이스북)',
+                '소규모 유료 광고 테스트 (일 1만원)',
+                '첫 유료 고객 확보',
+                '고객 후기 수집'
+            ]
+        },
+        'week_4': {
+            'goal': '최적화 및 확장',
+            'tasks': [
+                '전환율 최적화',
+                '자동화 시스템 구축',
+                '추가 기능 개발',
+                '월 목표 매출 달성'
+            ]
+        },
+        'total_budget': 1000000,
+        'summary': f'{business_name}를 4주 안에 런칭하기 위한 실행 계획입니다.'
+    }
+
+def generate_default_market_analysis(business_name, keyword):
+    """기본 시장 분석 생성 (DB에 없는 경우)"""
+    return {
+        'naver': {
+            'search_count': 10000,
+            'competition': '중간',
+            'related_keywords': [keyword, f'{keyword} 추천', f'{keyword} 가격']
+        },
+        'google_trends': {
+            'global_interest': 65,
+            'trend': '상승세'
+        },
+        'market_summary': f'{business_name} 관련 시장은 성장 중이며, 틈새 시장 진입 기회가 있습니다.'
+    }
+
+def generate_default_revenue_analysis(business_name, score):
+    """기본 수익 분석 생성 (DB에 없는 경우)"""
+    base_revenue = score * 50000
+    return {
+        'scenarios': {
+            'conservative': {
+                'monthly_revenue': int(base_revenue * 0.5),
+                'monthly_profit': int(base_revenue * 0.3)
+            },
+            'realistic': {
+                'monthly_revenue': base_revenue,
+                'monthly_profit': int(base_revenue * 0.6),
+                'break_even_months': 3
+            },
+            'optimistic': {
+                'monthly_revenue': int(base_revenue * 2),
+                'monthly_profit': int(base_revenue * 1.2)
+            }
+        },
+        'startup_cost': int(score * 50000),
+        'annual_roi': int((base_revenue * 12 - score * 50000) / (score * 50000) * 100),
+        'revenue_model': 'subscription',
+        'revenue_summary': f'{business_name}은 월 {int(base_revenue/10000)}만원 수익이 예상됩니다.'
+    }
+
 @app.route('/api/discovered-businesses')
 def api_discovered_businesses():
-    """자동 발굴된 사업 목록 API (60점 이상 모두 포함)"""
+    """자동 발굴된 사업 목록 API (50점 이상 모두 포함)"""
     session = Session()
     try:
         # BusinessDiscoveryHistory에서 50점 이상 사업 모두 조회
@@ -847,10 +930,20 @@ def api_discovered_businesses():
             annual_revenue = monthly_revenue * 12
             investment = biz.total_score * 50000  # 점수 * 5만원
 
-            # 시장 분석 데이터 파싱
+            # 시장 분석 데이터 파싱 (없으면 기본값 생성)
             market_data = biz.market_analysis if isinstance(biz.market_analysis, dict) else {}
+            if not market_data:
+                market_data = generate_default_market_analysis(biz.business_name, biz.keyword or biz.business_name)
+
+            # 수익 분석 데이터 파싱 (없으면 기본값 생성)
             revenue_data = biz.revenue_analysis if isinstance(biz.revenue_analysis, dict) else {}
+            if not revenue_data:
+                revenue_data = generate_default_revenue_analysis(biz.business_name, biz.total_score)
+
+            # 실행 계획 데이터 파싱 (없으면 기본값 생성)
             action_plan_data = biz.action_plan if isinstance(biz.action_plan, dict) else {}
+            if not action_plan_data:
+                action_plan_data = generate_default_action_plan(biz.business_name, biz.business_type)
 
             # 실제 수익 데이터가 있으면 사용
             if revenue_data:

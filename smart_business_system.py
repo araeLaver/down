@@ -78,20 +78,21 @@ class SmartBusinessSystem:
 
         print(f"\n   [SCORE] 종합 점수: {int(total_score)}/100")
 
-        # 70점 이상이면 실행 계획 생성
-        if total_score >= 70:
-            print(f"   [OK] 우수한 아이디어! 실행 계획 생성 중...\n")
-
-            # 3단계: 실행 계획 자동 생성
-            print("[3] 4주 실행 계획 생성 중...")
-            action_plan = None
+        # 50점 이상이면 실행 계획 생성 (상세 정보 제공을 위해)
+        action_plan = None
+        if total_score >= 50:
+            print(f"\n[3] 4주 실행 계획 생성 중...")
             try:
                 action_plan = self.action_planner.generate_comprehensive_plan(business_config)
-                print(f"\n   [OK] 실행 계획 완성!")
+                print(f"   [OK] 실행 계획 완성!")
             except Exception as e:
-                print(f"\n   [WARN] 실행 계획 생성 실패: {e}")
-                print(f"   [INFO] 분석 결과는 정상적으로 저장됩니다.")
+                print(f"   [WARN] 실행 계획 생성 실패: {e}")
+                # 기본 실행 계획 생성
+                action_plan = self._generate_basic_action_plan(business_idea, business_config)
 
+        # 70점 이상이면 즉시 실행 권장
+        if total_score >= 70:
+            print(f"   [OK] 우수한 아이디어!\n")
             return {
                 'business_idea': business_idea,
                 'passed': True,
@@ -101,17 +102,60 @@ class SmartBusinessSystem:
                 'action_plan': action_plan,
                 'recommendation': 'IMMEDIATE_ACTION'
             }
-
         else:
-            print(f"   [WARN] 보통 수준. 추가 검증 필요.\n")
+            print(f"   [INFO] 추가 검증 필요.\n")
             return {
                 'business_idea': business_idea,
                 'passed': True,
                 'total_score': total_score,
                 'market_data': market_data,
                 'revenue_data': revenue_data,
+                'action_plan': action_plan,
                 'recommendation': 'FURTHER_VALIDATION'
             }
+
+    def _generate_basic_action_plan(self, business_idea, business_config):
+        """기본 실행 계획 생성 (action_planner 실패 시 폴백)"""
+        return {
+            'week_1': {
+                'goal': 'MVP 개발 및 시장 조사',
+                'tasks': [
+                    f'{business_idea} 핵심 기능 정의',
+                    '경쟁사 분석 및 차별화 포인트 도출',
+                    '랜딩페이지 제작 (Webflow/Notion)',
+                    '초기 고객 타겟 정의'
+                ]
+            },
+            'week_2': {
+                'goal': '프로토타입 및 검증',
+                'tasks': [
+                    'MVP 프로토타입 제작',
+                    '베타 테스터 10명 모집',
+                    '사용자 피드백 수집',
+                    '가격 책정 테스트'
+                ]
+            },
+            'week_3': {
+                'goal': '마케팅 및 고객 확보',
+                'tasks': [
+                    'SNS 마케팅 시작 (인스타/페이스북)',
+                    '소규모 유료 광고 테스트 (일 1만원)',
+                    '첫 유료 고객 확보',
+                    '고객 후기 수집'
+                ]
+            },
+            'week_4': {
+                'goal': '최적화 및 확장',
+                'tasks': [
+                    '전환율 최적화',
+                    '자동화 시스템 구축',
+                    '추가 기능 개발',
+                    '월 목표 매출 달성'
+                ]
+            },
+            'total_budget': business_config.get('budget', 1000000),
+            'summary': f'{business_idea}를 4주 안에 런칭하기 위한 실행 계획입니다.'
+        }
 
     def batch_analyze_ideas(self, ideas_list):
         """여러 아이디어 일괄 분석"""
