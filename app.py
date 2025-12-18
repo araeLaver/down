@@ -873,6 +873,152 @@ def generate_default_action_plan(business_name, business_type):
         'summary': f'{business_name}를 4주 안에 런칭하기 위한 실행 계획입니다.'
     }
 
+def generate_startup_guide(business_name, business_type, score):
+    """상세 시작 가이드 생성"""
+
+    # 사업 유형별 기술 스택 추천
+    tech_stacks = {
+        'saas': {
+            'recommended': 'No-Code / Low-Code',
+            'tools': ['Bubble.io', 'Webflow', 'Airtable', 'Zapier'],
+            'cost': '월 5-10만원',
+            'learning_time': '1-2주',
+            'reason': 'SaaS는 빠른 MVP 검증이 중요. 코딩 없이 2주 내 런칭 가능'
+        },
+        'agency': {
+            'recommended': '포트폴리오 + 프리랜서 플랫폼',
+            'tools': ['Notion', 'Figma', '크몽', '숨고', 'LinkedIn'],
+            'cost': '월 0-5만원',
+            'learning_time': '즉시 시작 가능',
+            'reason': '에이전시는 기술보다 영업력이 중요. 플랫폼 활용으로 즉시 시작'
+        },
+        'marketplace': {
+            'recommended': 'No-Code 마켓플레이스 빌더',
+            'tools': ['Sharetribe', 'Bubble.io', 'Webflow + Memberstack'],
+            'cost': '월 10-30만원',
+            'learning_time': '2-3주',
+            'reason': '마켓플레이스는 양면 시장. 빠른 런칭 후 수요/공급 테스트 필요'
+        }
+    }
+
+    tech = tech_stacks.get(business_type, tech_stacks['saas'])
+
+    return {
+        'day1_checklist': {
+            'title': 'Day 1: 오늘 당장 시작하기',
+            'tasks': [
+                {
+                    'task': '도메인 구매',
+                    'detail': f'{business_name.replace(" ", "").lower()}.com 또는 .kr',
+                    'tool': 'Namecheap, 가비아',
+                    'cost': '1-2만원/년',
+                    'time': '10분'
+                },
+                {
+                    'task': '랜딩페이지 제작',
+                    'detail': '서비스 소개 + 이메일 수집 폼',
+                    'tool': 'Notion, Webflow (무료)',
+                    'cost': '0원',
+                    'time': '2-3시간'
+                },
+                {
+                    'task': '경쟁사 5개 분석',
+                    'detail': '가격, 기능, 리뷰 정리',
+                    'tool': 'Google 스프레드시트',
+                    'cost': '0원',
+                    'time': '1-2시간'
+                },
+                {
+                    'task': 'SNS 계정 생성',
+                    'detail': '인스타그램 비즈니스 계정',
+                    'tool': 'Instagram, 페이스북',
+                    'cost': '0원',
+                    'time': '30분'
+                }
+            ]
+        },
+        'tech_stack': tech,
+        'marketing_channels': {
+            'free': [
+                {'channel': '인스타그램', 'strategy': '관련 해시태그로 일 1포스팅', 'expected': '월 100-500 팔로워'},
+                {'channel': '블로그/브런치', 'strategy': '주 2회 전문 콘텐츠 발행', 'expected': '월 1000-5000 방문자'},
+                {'channel': '커뮤니티', 'strategy': '네이버 카페, 오픈카톡 참여', 'expected': '초기 베타 테스터 확보'},
+                {'channel': '지인 네트워크', 'strategy': '카톡/링크드인으로 런칭 알림', 'expected': '첫 10명 고객'}
+            ],
+            'paid': [
+                {'channel': '페이스북/인스타 광고', 'budget': '일 1-3만원', 'expected': 'CPC 300-500원'},
+                {'channel': '네이버 검색광고', 'budget': '일 1-2만원', 'expected': '타겟 키워드 노출'},
+                {'channel': '인플루언서', 'budget': '건당 5-30만원', 'expected': '신뢰도 확보'}
+            ]
+        },
+        'first_customer_strategy': {
+            'title': '첫 10명 고객 확보 전략',
+            'steps': [
+                {
+                    'step': 1,
+                    'action': '무료/할인 제공',
+                    'detail': '첫 달 무료 또는 50% 할인으로 진입 장벽 낮추기',
+                    'target': '3명'
+                },
+                {
+                    'step': 2,
+                    'action': '지인 영업',
+                    'detail': '카톡, 인스타 DM으로 직접 연락. 솔직하게 도움 요청',
+                    'target': '3명'
+                },
+                {
+                    'step': 3,
+                    'action': '커뮤니티 활동',
+                    'detail': '관련 오픈카톡, 페이스북 그룹에서 무료 상담 제공',
+                    'target': '2명'
+                },
+                {
+                    'step': 4,
+                    'action': '콘텐츠 마케팅',
+                    'detail': '블로그 글 하단에 CTA 삽입',
+                    'target': '2명'
+                }
+            ]
+        },
+        'cost_breakdown': {
+            'essential': [
+                {'item': '도메인', 'cost': 15000, 'period': '년'},
+                {'item': '호스팅/서버', 'cost': 0, 'period': '월', 'note': 'Vercel/Netlify 무료'},
+                {'item': '이메일 서비스', 'cost': 0, 'period': '월', 'note': 'Mailchimp 무료 (500명까지)'}
+            ],
+            'recommended': [
+                {'item': 'No-Code 툴', 'cost': 50000, 'period': '월'},
+                {'item': '광고비', 'cost': 300000, 'period': '월'},
+                {'item': '디자인 툴', 'cost': 15000, 'period': '월', 'note': 'Canva Pro'}
+            ],
+            'total_minimum': 15000,
+            'total_recommended': 380000
+        },
+        'risk_management': [
+            {
+                'risk': '고객이 안 모임',
+                'solution': '가격 낮추기, 무료 체험 연장, 타겟 재설정',
+                'prevention': '런칭 전 최소 10명 사전 등록 확보'
+            },
+            {
+                'risk': '경쟁사가 너무 강함',
+                'solution': '니치 시장 집중, 특정 고객군 전문화',
+                'prevention': '차별화 포인트 3개 이상 준비'
+            },
+            {
+                'risk': '기술적 문제',
+                'solution': 'No-Code로 우회, 외주 활용',
+                'prevention': 'MVP는 최대한 단순하게'
+            }
+        ],
+        'success_metrics': {
+            'week1': {'goal': '랜딩페이지 완성 + 이메일 20개 수집', 'importance': '시장 관심도 검증'},
+            'week2': {'goal': '베타 테스터 10명 + 피드백 수집', 'importance': '제품-시장 적합성 확인'},
+            'week4': {'goal': '유료 고객 5명 + 월 50만원 매출', 'importance': '수익 모델 검증'},
+            'month3': {'goal': '월 200만원 매출 + 고객 30명', 'importance': '지속 가능성 확인'}
+        }
+    }
+
 def generate_default_market_analysis(business_name, keyword):
     """기본 시장 분석 생성 (DB에 없는 경우)"""
     return {
@@ -945,6 +1091,9 @@ def api_discovered_businesses():
             if not action_plan_data:
                 action_plan_data = generate_default_action_plan(biz.business_name, biz.business_type)
 
+            # 시작 가이드 생성
+            startup_guide = generate_startup_guide(biz.business_name, biz.business_type, biz.total_score)
+
             # 실제 수익 데이터가 있으면 사용
             if revenue_data:
                 scenarios = revenue_data.get('scenarios', {})
@@ -975,6 +1124,7 @@ def api_discovered_businesses():
                     'market_analysis': market_data,
                     'revenue_analysis': revenue_data,
                     'action_plan': action_plan_data,
+                    'startup_guide': startup_guide,
                     'full_analysis': biz.full_analysis if isinstance(biz.full_analysis, dict) else {}
                 }
             })

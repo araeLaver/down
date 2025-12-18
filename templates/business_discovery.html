@@ -817,6 +817,7 @@
             const marketAnalysis = details.market_analysis || {};
             const revenueAnalysis = details.revenue_analysis || {};
             const actionPlan = details.action_plan || {};
+            const startupGuide = details.startup_guide || {};
 
             const monthlyRevenue = biz.revenue_12m ? Math.round(biz.revenue_12m / 12) : 0;
             const roi = biz.revenue_12m && biz.investment ?
@@ -1068,18 +1069,234 @@
                 </div>
             `;
 
+            // Day 1 체크리스트 섹션
+            let day1Section = '';
+            if (startupGuide.day1_checklist) {
+                const checklist = startupGuide.day1_checklist;
+                day1Section = `
+                    <div class="detail-section">
+                        <h6><i class="fas fa-play-circle"></i> ${checklist.title || 'Day 1: 오늘 당장 시작하기'}</h6>
+                        <div style="background: #fef2f2; border-radius: 8px; padding: 1rem; border: 2px solid #ef4444;">
+                            ${(checklist.tasks || []).map((task, i) => `
+                                <div style="margin-bottom: 1rem; padding: 0.75rem; background: white; border-radius: 6px; display: flex; gap: 1rem; align-items: flex-start;">
+                                    <div style="background: #ef4444; color: white; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; flex-shrink: 0;">${i+1}</div>
+                                    <div style="flex: 1;">
+                                        <strong style="color: #111827;">${task.task}</strong>
+                                        <p style="margin: 0.25rem 0 0 0; font-size: 0.813rem; color: #6b7280;">${task.detail}</p>
+                                        <div style="margin-top: 0.5rem; display: flex; gap: 0.75rem; flex-wrap: wrap; font-size: 0.75rem;">
+                                            <span style="background: #dbeafe; color: #1e40af; padding: 0.25rem 0.5rem; border-radius: 4px;">🔧 ${task.tool}</span>
+                                            <span style="background: #d1fae5; color: #065f46; padding: 0.25rem 0.5rem; border-radius: 4px;">💰 ${task.cost}</span>
+                                            <span style="background: #fef3c7; color: #92400e; padding: 0.25rem 0.5rem; border-radius: 4px;">⏱️ ${task.time}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+            }
+
+            // 기술 스택 추천 섹션
+            let techStackSection = '';
+            if (startupGuide.tech_stack) {
+                const tech = startupGuide.tech_stack;
+                techStackSection = `
+                    <div class="detail-section">
+                        <h6><i class="fas fa-code"></i> 추천 기술 스택</h6>
+                        <div style="background: #f0f9ff; border-radius: 8px; padding: 1rem;">
+                            <div style="background: white; border-radius: 6px; padding: 1rem; margin-bottom: 0.75rem;">
+                                <div style="font-size: 1.125rem; font-weight: 700; color: #0369a1; margin-bottom: 0.5rem;">
+                                    ${tech.recommended}
+                                </div>
+                                <p style="margin: 0; font-size: 0.875rem; color: #6b7280;">${tech.reason}</p>
+                            </div>
+                            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.75rem;">
+                                <div style="background: white; border-radius: 6px; padding: 0.75rem;">
+                                    <div style="font-size: 0.75rem; color: #6b7280;">추천 도구</div>
+                                    <div style="font-weight: 600; color: #111827;">${(tech.tools || []).join(', ')}</div>
+                                </div>
+                                <div style="background: white; border-radius: 6px; padding: 0.75rem;">
+                                    <div style="font-size: 0.75rem; color: #6b7280;">예상 비용</div>
+                                    <div style="font-weight: 600; color: #111827;">${tech.cost}</div>
+                                </div>
+                                <div style="background: white; border-radius: 6px; padding: 0.75rem;">
+                                    <div style="font-size: 0.75rem; color: #6b7280;">학습 기간</div>
+                                    <div style="font-weight: 600; color: #111827;">${tech.learning_time}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            // 첫 고객 확보 전략 섹션
+            let customerSection = '';
+            if (startupGuide.first_customer_strategy) {
+                const strategy = startupGuide.first_customer_strategy;
+                customerSection = `
+                    <div class="detail-section">
+                        <h6><i class="fas fa-users"></i> ${strategy.title || '첫 10명 고객 확보 전략'}</h6>
+                        <div style="background: #f0fdf4; border-radius: 8px; padding: 1rem;">
+                            ${(strategy.steps || []).map(step => `
+                                <div style="display: flex; gap: 1rem; margin-bottom: 0.75rem; padding: 0.75rem; background: white; border-radius: 6px;">
+                                    <div style="background: #10b981; color: white; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; flex-shrink: 0;">
+                                        ${step.step}
+                                    </div>
+                                    <div style="flex: 1;">
+                                        <strong style="color: #111827;">${step.action}</strong>
+                                        <p style="margin: 0.25rem 0 0 0; font-size: 0.813rem; color: #6b7280;">${step.detail}</p>
+                                        <span style="display: inline-block; margin-top: 0.25rem; background: #d1fae5; color: #065f46; padding: 0.125rem 0.5rem; border-radius: 4px; font-size: 0.75rem;">목표: ${step.target}</span>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+            }
+
+            // 마케팅 채널 섹션
+            let marketingSection = '';
+            if (startupGuide.marketing_channels) {
+                const channels = startupGuide.marketing_channels;
+                marketingSection = `
+                    <div class="detail-section">
+                        <h6><i class="fas fa-bullhorn"></i> 마케팅 채널</h6>
+                        <div style="background: #faf5ff; border-radius: 8px; padding: 1rem;">
+                            <div style="margin-bottom: 1rem;">
+                                <strong style="color: #7c3aed;">무료 채널</strong>
+                                <div style="margin-top: 0.5rem; display: grid; gap: 0.5rem;">
+                                    ${(channels.free || []).map(ch => `
+                                        <div style="background: white; border-radius: 6px; padding: 0.75rem; display: flex; justify-content: space-between; align-items: center;">
+                                            <div>
+                                                <strong style="font-size: 0.875rem;">${ch.channel}</strong>
+                                                <p style="margin: 0.25rem 0 0 0; font-size: 0.75rem; color: #6b7280;">${ch.strategy}</p>
+                                            </div>
+                                            <span style="font-size: 0.75rem; color: #7c3aed; white-space: nowrap;">${ch.expected}</span>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            </div>
+                            <div>
+                                <strong style="color: #dc2626;">유료 채널</strong>
+                                <div style="margin-top: 0.5rem; display: grid; gap: 0.5rem;">
+                                    ${(channels.paid || []).map(ch => `
+                                        <div style="background: white; border-radius: 6px; padding: 0.75rem; display: flex; justify-content: space-between; align-items: center;">
+                                            <div>
+                                                <strong style="font-size: 0.875rem;">${ch.channel}</strong>
+                                                <span style="margin-left: 0.5rem; font-size: 0.75rem; color: #dc2626;">${ch.budget}</span>
+                                            </div>
+                                            <span style="font-size: 0.75rem; color: #6b7280;">${ch.expected}</span>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            // 비용 상세 섹션
+            let costSection = '';
+            if (startupGuide.cost_breakdown) {
+                const costs = startupGuide.cost_breakdown;
+                costSection = `
+                    <div class="detail-section">
+                        <h6><i class="fas fa-calculator"></i> 비용 상세</h6>
+                        <div style="background: #fffbeb; border-radius: 8px; padding: 1rem;">
+                            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; margin-bottom: 1rem;">
+                                <div style="background: #d1fae5; border-radius: 8px; padding: 1rem; text-align: center;">
+                                    <div style="font-size: 0.75rem; color: #065f46;">최소 시작 비용</div>
+                                    <div style="font-size: 1.5rem; font-weight: 700; color: #10b981;">${(costs.total_minimum || 0).toLocaleString()}원</div>
+                                </div>
+                                <div style="background: #dbeafe; border-radius: 8px; padding: 1rem; text-align: center;">
+                                    <div style="font-size: 0.75rem; color: #1e40af;">권장 투자 비용</div>
+                                    <div style="font-size: 1.5rem; font-weight: 700; color: #2563eb;">${(costs.total_recommended || 0).toLocaleString()}원/월</div>
+                                </div>
+                            </div>
+                            <div style="background: white; border-radius: 6px; padding: 0.75rem;">
+                                <strong style="font-size: 0.875rem;">필수 항목</strong>
+                                ${(costs.essential || []).map(item => `
+                                    <div style="display: flex; justify-content: space-between; margin-top: 0.5rem; font-size: 0.813rem;">
+                                        <span>${item.item} ${item.note ? `<span style="color: #9ca3af;">(${item.note})</span>` : ''}</span>
+                                        <span style="font-weight: 600;">${item.cost.toLocaleString()}원/${item.period}</span>
+                                    </div>
+                                `).join('')}
+                            </div>
+                            <div style="background: white; border-radius: 6px; padding: 0.75rem; margin-top: 0.5rem;">
+                                <strong style="font-size: 0.875rem;">권장 항목</strong>
+                                ${(costs.recommended || []).map(item => `
+                                    <div style="display: flex; justify-content: space-between; margin-top: 0.5rem; font-size: 0.813rem;">
+                                        <span>${item.item} ${item.note ? `<span style="color: #9ca3af;">(${item.note})</span>` : ''}</span>
+                                        <span style="font-weight: 600;">${item.cost.toLocaleString()}원/${item.period}</span>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            // 리스크 관리 섹션
+            let riskSection = '';
+            if (startupGuide.risk_management && startupGuide.risk_management.length > 0) {
+                riskSection = `
+                    <div class="detail-section">
+                        <h6><i class="fas fa-shield-alt"></i> 리스크 관리</h6>
+                        <div style="background: #fef2f2; border-radius: 8px; padding: 1rem;">
+                            ${startupGuide.risk_management.map(risk => `
+                                <div style="background: white; border-radius: 6px; padding: 0.75rem; margin-bottom: 0.75rem;">
+                                    <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
+                                        <span style="color: #dc2626;">⚠️</span>
+                                        <strong style="color: #dc2626;">${risk.risk}</strong>
+                                    </div>
+                                    <div style="font-size: 0.813rem; margin-bottom: 0.25rem;">
+                                        <span style="color: #059669;">✅ 해결책:</span> ${risk.solution}
+                                    </div>
+                                    <div style="font-size: 0.813rem;">
+                                        <span style="color: #2563eb;">🛡️ 예방:</span> ${risk.prevention}
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+            }
+
+            // 성공 지표 섹션
+            let metricsSection = '';
+            if (startupGuide.success_metrics) {
+                const metrics = startupGuide.success_metrics;
+                metricsSection = `
+                    <div class="detail-section">
+                        <h6><i class="fas fa-flag-checkered"></i> 성공 목표</h6>
+                        <div style="background: #ecfdf5; border-radius: 8px; padding: 1rem;">
+                            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.75rem;">
+                                ${Object.entries(metrics).map(([period, data]) => `
+                                    <div style="background: white; border-radius: 6px; padding: 0.75rem;">
+                                        <div style="font-size: 0.75rem; color: #6b7280; text-transform: uppercase;">${period}</div>
+                                        <div style="font-weight: 600; color: #111827; margin: 0.25rem 0;">${data.goal}</div>
+                                        <div style="font-size: 0.75rem; color: #059669;">${data.importance}</div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+
             // 모달 내용 조합
             document.getElementById('modalBody').innerHTML = `
                 ${basicInfoSection}
+                ${day1Section}
+                ${techStackSection}
                 ${marketSection}
                 ${revenueSection}
                 ${actionPlanSection}
-                ${!marketSection && !revenueSection && !actionPlanSection ? `
-                    <div class="alert alert-info" style="border-radius: 8px;">
-                        <i class="fas fa-info-circle"></i>
-                        이 사업 아이템은 상세 분석 데이터가 아직 생성되지 않았습니다. 새로 발굴되는 아이템에는 시장 분석, 수익 분석, 실행 계획이 포함됩니다.
-                    </div>
-                ` : ''}
+                ${customerSection}
+                ${marketingSection}
+                ${costSection}
+                ${riskSection}
+                ${metricsSection}
             `;
 
             new bootstrap.Modal(document.getElementById('businessModal')).show();
