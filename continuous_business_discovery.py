@@ -87,15 +87,22 @@ class ContinuousBusinessDiscovery:
         # 최근 30일 이미 분석한 사업명 가져오기 (중복 방지)
         from datetime import timedelta
         thirty_days_ago = get_kst_now() - timedelta(days=30)
-        recent_businesses = self.session.query(BusinessDiscoveryHistory).filter(
-            BusinessDiscoveryHistory.discovered_at >= thirty_days_ago
-        ).all()
-        recent_names = set([b.business_name for b in recent_businesses])
+        recent_names = set()
 
-        # DB에 이미 저장된 사업명도 중복 체크에 포함
-        existing_plans = self.session.query(BusinessPlan.plan_name).all()
-        for plan in existing_plans:
-            recent_names.add(plan[0])
+        try:
+            self.refresh_session()  # 항상 세션 새로고침
+            recent_businesses = self.session.query(BusinessDiscoveryHistory).filter(
+                BusinessDiscoveryHistory.discovered_at >= thirty_days_ago
+            ).all()
+            recent_names = set([b.business_name for b in recent_businesses])
+
+            # DB에 이미 저장된 사업명도 중복 체크에 포함
+            existing_plans = self.session.query(BusinessPlan.plan_name).all()
+            for plan in existing_plans:
+                recent_names.add(plan[0])
+        except Exception as e:
+            print(f"   [WARN] 중복 체크 DB 조회 실패, 계속 진행: {e}")
+            self.refresh_session()
 
         print(f"   중복 방지 대상: {len(recent_names)}개 (30일 히스토리 + DB 저장 사업)")
 

@@ -40,11 +40,36 @@ connection_string = URL.create(
 engine = create_engine(
     connection_string,
     pool_pre_ping=True,
-    pool_recycle=3600,  # 연결 1시간마다 재생성 (SSL 타임아웃 방지)
-    pool_size=3,
-    max_overflow=5
+    pool_recycle=300,  # 5분마다 연결 재생성 (SSL 끊김 방지)
+    pool_size=2,
+    max_overflow=3,
+    pool_timeout=30,
+    connect_args={
+        'connect_timeout': 10,
+        'keepalives': 1,
+        'keepalives_idle': 30,
+        'keepalives_interval': 10,
+        'keepalives_count': 5
+    }
 )
 Session = sessionmaker(bind=engine)
+
+def get_db_session():
+    """안전한 DB 세션 생성 (재연결 포함)"""
+    try:
+        session = Session()
+        # 연결 테스트
+        session.execute(text("SELECT 1"))
+        return session
+    except Exception as e:
+        print(f"[DB] Connection error, retrying: {e}")
+        try:
+            engine.dispose()  # 기존 연결 정리
+            session = Session()
+            return session
+        except Exception as e2:
+            print(f"[DB] Retry failed: {e2}")
+            return None
 
 # 데이터베이스 초기화
 try:
@@ -1765,8 +1790,9 @@ def background_business_discovery():
     logging.info("[BACKGROUND] Starting business discovery (3x daily: 09, 17, 01)...")
     print("[BACKGROUND] Starting business discovery (3x daily: 09, 17, 01)...")
 
-    discovery = ContinuousBusinessDiscovery()
+    discovery = None
     last_run_hour = -1
+    error_count = 0
 
     # 실행 시간: 09시, 17시, 01시 (8시간 간격)
     scheduled_hours = [1, 9, 17]
@@ -1784,13 +1810,26 @@ def background_business_discovery():
                 print(f"[DISCOVERY] Running discovery at {now.strftime('%Y-%m-%d %H:%M:%S')}")
                 print("="*80)
 
-                results = discovery.run_hourly_discovery()
+                # 매번 새로운 discovery 인스턴스 생성 (DB 연결 갱신)
+                try:
+                    discovery = ContinuousBusinessDiscovery()
+                    results = discovery.run_hourly_discovery()
 
-                logging.info(f"[DISCOVERY] Results: analyzed={results.get('analyzed', 0)}, saved={results.get('saved', 0)}")
-                print(f"\n[RESULTS] Analyzed: {results.get('analyzed', 0)}, Saved: {results.get('saved', 0)}")
+                    logging.info(f"[DISCOVERY] Results: analyzed={results.get('analyzed', 0)}, saved={results.get('saved', 0)}")
+                    print(f"\n[RESULTS] Analyzed: {results.get('analyzed', 0)}, Saved: {results.get('saved', 0)}")
 
-                if results['saved'] > 0:
-                    discovery.generate_discovery_meeting(results)
+                    if results['saved'] > 0:
+                        discovery.generate_discovery_meeting(results)
+
+                    error_count = 0  # 성공 시 에러 카운트 리셋
+                except Exception as inner_e:
+                    print(f"[DISCOVERY] Inner error: {inner_e}")
+                    error_count += 1
+                    # DB 연결 정리
+                    try:
+                        engine.dispose()
+                    except:
+                        pass
 
                 last_run_hour = current_hour
 
@@ -1807,9 +1846,11 @@ def background_business_discovery():
         except Exception as e:
             logging.error(f"Discovery error: {e}")
             print(f"\n[ERROR] Discovery error: {e}\n")
-            import traceback
-            traceback.print_exc()
-            time.sleep(60)
+            error_count += 1
+            # 연속 오류 시 더 오래 대기
+            wait_time = min(300, 60 * error_count)  # 최대 5분
+            print(f"[WAIT] Waiting {wait_time}s before retry (error count: {error_count})")
+            time.sleep(wait_time)
 
 
 # 백그라운드 스레드 자동 시작 (Gunicorn에서도 작동)
