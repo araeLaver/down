@@ -30,7 +30,7 @@ class MultiSourceTrendAnalyzer:
         try:
             # Product Hunt 인기 제품 페이지
             url = "https://www.producthunt.com"
-            response = requests.get(url, headers=self.headers, timeout=10)
+            response = requests.get(url, headers=self.headers, timeout=5)
             soup = BeautifulSoup(response.content, 'html.parser')
 
             # 제품명 추출 시도
@@ -61,7 +61,7 @@ class MultiSourceTrendAnalyzer:
         trends = []
         try:
             url = "https://github.com/trending"
-            response = requests.get(url, headers=self.headers, timeout=10)
+            response = requests.get(url, headers=self.headers, timeout=5)
             soup = BeautifulSoup(response.content, 'html.parser')
 
             # 저장소명 추출
@@ -97,7 +97,7 @@ class MultiSourceTrendAnalyzer:
         try:
             # HN API 사용
             url = "https://hacker-news.firebaseio.com/v0/topstories.json"
-            response = requests.get(url, timeout=10)
+            response = requests.get(url, timeout=5)
             story_ids = response.json()[:10]
 
             for story_id in story_ids:
@@ -131,7 +131,7 @@ class MultiSourceTrendAnalyzer:
                 url = f"https://www.reddit.com/r/{subreddit}/hot.json?limit=5"
                 response = requests.get(url, headers={
                     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
-                }, timeout=10)
+                }, timeout=5)
 
                 if response.status_code == 200:
                     data = response.json()
@@ -179,7 +179,7 @@ class MultiSourceTrendAnalyzer:
             # 네이버 트렌드 관련 키워드 (API 없이 시뮬레이션)
             # 실제로는 네이버 API 사용 권장
             url = "https://datalab.naver.com/keyword/realtimeList.naver"
-            response = requests.get(url, headers=self.headers, timeout=10)
+            response = requests.get(url, headers=self.headers, timeout=5)
 
             if response.status_code == 200:
                 soup = BeautifulSoup(response.content, 'html.parser')
@@ -209,7 +209,7 @@ class MultiSourceTrendAnalyzer:
         trends = []
         try:
             url = "https://www.wadiz.kr/web/wreward/category/308"  # 테크/가전 카테고리
-            response = requests.get(url, headers=self.headers, timeout=10)
+            response = requests.get(url, headers=self.headers, timeout=5)
             soup = BeautifulSoup(response.content, 'html.parser')
 
             projects = soup.find_all('div', class_='ProjectCardList_item', limit=10)
@@ -238,7 +238,7 @@ class MultiSourceTrendAnalyzer:
         trends = []
         try:
             url = "https://tumblbug.com/discover"
-            response = requests.get(url, headers=self.headers, timeout=10)
+            response = requests.get(url, headers=self.headers, timeout=5)
             soup = BeautifulSoup(response.content, 'html.parser')
 
             projects = soup.find_all('div', class_='project-card', limit=10)
@@ -268,7 +268,7 @@ class MultiSourceTrendAnalyzer:
         trends = []
         try:
             url = "https://www.saramin.co.kr/zf_user/jobs/list/job-category?cat_kewd=84"  # IT개발 카테고리
-            response = requests.get(url, headers=self.headers, timeout=10)
+            response = requests.get(url, headers=self.headers, timeout=5)
             soup = BeautifulSoup(response.content, 'html.parser')
 
             jobs = soup.find_all('h2', class_='job_tit', limit=10)
@@ -295,7 +295,7 @@ class MultiSourceTrendAnalyzer:
         trends = []
         try:
             url = "https://www.jobkorea.co.kr/recruit/joblist?menucode=duty"
-            response = requests.get(url, headers=self.headers, timeout=10)
+            response = requests.get(url, headers=self.headers, timeout=5)
             soup = BeautifulSoup(response.content, 'html.parser')
 
             jobs = soup.find_all('a', class_='title', limit=10)
@@ -363,7 +363,7 @@ class MultiSourceTrendAnalyzer:
         trends = []
         try:
             url = "https://api.coingecko.com/api/v3/search/trending"
-            response = requests.get(url, timeout=10)
+            response = requests.get(url, timeout=5)
             data = response.json()
 
             for coin in data.get('coins', [])[:7]:
@@ -392,7 +392,7 @@ class MultiSourceTrendAnalyzer:
         trends = []
         try:
             url = "https://api.llama.fi/protocols"
-            response = requests.get(url, timeout=10)
+            response = requests.get(url, timeout=5)
             protocols = response.json()[:10]
 
             for protocol in protocols:
@@ -471,7 +471,7 @@ class MultiSourceTrendAnalyzer:
         try:
             # CoinDesk RSS 또는 API
             url = "https://www.coindesk.com/arc/outboundfeeds/rss/"
-            response = requests.get(url, headers=self.headers, timeout=10)
+            response = requests.get(url, headers=self.headers, timeout=5)
             soup = BeautifulSoup(response.content, 'xml')
 
             items = soup.find_all('item', limit=10)
@@ -567,58 +567,38 @@ class MultiSourceTrendAnalyzer:
     # ============================================
 
     def collect_all_trends(self):
-        """모든 소스에서 트렌드 수집"""
+        """경량화된 트렌드 수집 (Koyeb free tier 최적화)"""
         print("\n" + "="*60)
-        print("[MULTI-SOURCE] 다중 소스 트렌드 수집 시작")
+        print("[MULTI-SOURCE] 경량 트렌드 수집 시작 (3개 소스)")
         print("="*60 + "\n")
 
         all_trends = []
 
-        # 글로벌 트렌드
-        print("[GLOBAL] 글로벌 트렌드 수집...")
-        all_trends.extend(self.fetch_product_hunt())
-        time.sleep(1)
-        all_trends.extend(self.fetch_github_trending())
-        time.sleep(1)
-        all_trends.extend(self.fetch_hacker_news())
-        time.sleep(1)
-        all_trends.extend(self.fetch_reddit())
-        time.sleep(1)
+        # 핵심 소스만 사용 (3개)
+        sources = [
+            ('GitHub Trending', self.fetch_github_trending),
+            ('Hacker News', self.fetch_hacker_news),
+            ('네이버', self.fetch_naver_datalab),
+        ]
 
-        # 국내 트렌드
-        print("\n[KOREA] 국내 트렌드 수집...")
-        all_trends.extend(self.fetch_naver_datalab())
-        time.sleep(1)
-        all_trends.extend(self.fetch_wadiz())
-        time.sleep(1)
-        all_trends.extend(self.fetch_tumblbug())
-        time.sleep(1)
-        all_trends.extend(self.fetch_saramin_trends())
-        time.sleep(1)
-        all_trends.extend(self.fetch_jobkorea_trends())
-        time.sleep(1)
+        for name, fetch_func in sources:
+            try:
+                print(f"[FETCH] {name} 수집 중...")
+                trends = fetch_func()
+                all_trends.extend(trends)
+                print(f"   [OK] {len(trends)}개 수집")
+            except Exception as e:
+                print(f"   [SKIP] {name} 실패: {e}")
+            time.sleep(0.5)
 
-        # 공공데이터
-        print("\n[GOVERNMENT] 공공데이터 트렌드 수집...")
-        all_trends.extend(self.fetch_public_data_portal())
-
-        # 앱 마켓
-        print("\n[APP] 앱 마켓 트렌드 수집...")
-        all_trends.extend(self.fetch_app_store_trends())
-
-        # 블록체인 / Web3
-        print("\n[BLOCKCHAIN] 블록체인/Web3 트렌드 수집...")
-        all_trends.extend(self.fetch_coingecko_trends())
-        time.sleep(1)
-        all_trends.extend(self.fetch_defillama())
-        time.sleep(1)
-        all_trends.extend(self.fetch_nft_trends())
-        all_trends.extend(self.fetch_web3_trends())
-        all_trends.extend(self.fetch_blockchain_news())
-
-        # AI 분석 (GPT)
-        print("\n[AI] GPT 기반 트렌드 분석...")
-        all_trends.extend(self.fetch_gpt_trend_analysis())
+        # 최소 트렌드 보장 (폴백 데이터)
+        if len(all_trends) < 3:
+            print("[FALLBACK] 기본 트렌드 데이터 사용")
+            all_trends.extend([
+                {'source': 'Fallback', 'keyword': 'AI 자동화 서비스', 'category': 'tech', 'type': 'idea'},
+                {'source': 'Fallback', 'keyword': 'SaaS 구독 플랫폼', 'category': 'saas', 'type': 'idea'},
+                {'source': 'Fallback', 'keyword': '노코드 앱 개발', 'category': 'tech', 'type': 'idea'},
+            ])
 
         self.all_trends = all_trends
 
