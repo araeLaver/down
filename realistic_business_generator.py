@@ -536,15 +536,19 @@ class RealisticBusinessGenerator:
         ]
 
     def generate_dynamic_combination_ideas(self, exclude_names=None):
-        """동적 조합으로 새로운 사업 아이디어 생성 (수천 가지 조합 가능)"""
+        """동적 조합으로 새로운 사업 아이디어 생성 (수만 가지 조합 가능)"""
         if exclude_names is None:
             exclude_names = set()
 
         ideas = []
         attempts = 0
-        max_attempts = 100  # 무한 루프 방지
+        max_attempts = 500  # 충분히 많은 시도
 
-        while len(ideas) < 10 and attempts < max_attempts:
+        # 추가 수식어 (더 많은 다양성)
+        modifiers = ["", "스마트", "초고속", "맞춤", "프리미엄", "무료", "간편", "전문"]
+        version_tags = ["", " 2.0", " Pro", " Lite", " Plus", " Max"]
+
+        while len(ideas) < 30 and attempts < max_attempts:
             attempts += 1
 
             # 랜덤 조합 생성
@@ -552,18 +556,26 @@ class RealisticBusinessGenerator:
             domain = random.choice(self.business_domains)
             biz_type = random.choice(self.business_types)
             target = random.choice(self.target_audiences)
+            modifier = random.choice(modifiers)
+            version = random.choice(version_tags)
 
-            # 다양한 이름 패턴
+            # 더 다양한 이름 패턴 (12가지)
             name_patterns = [
                 f"{prefix} {domain} {biz_type}",
                 f"{target} 전용 {domain} {biz_type}",
                 f"{prefix} {target} {domain} 앱",
                 f"{domain} {biz_type} for {target}",
                 f"{prefix} {domain} 자동화",
-                f"{target} {domain} 매칭 서비스"
+                f"{target} {domain} 매칭 서비스",
+                f"{modifier} {domain} {biz_type}",
+                f"{prefix} {modifier} {domain} 서비스",
+                f"{target} {domain} 솔루션{version}",
+                f"{domain} AI {biz_type}",
+                f"올인원 {domain} {biz_type}",
+                f"넥스트젠 {domain} for {target}"
             ]
 
-            name = random.choice(name_patterns)
+            name = random.choice(name_patterns).strip()
 
             # 중복 체크
             if name in exclude_names:
