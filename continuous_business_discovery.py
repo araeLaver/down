@@ -75,39 +75,65 @@ class ContinuousBusinessDiscovery:
         return False
 
     def get_it_business_ideas(self):
-        """템플릿 기반 사업 아이디어 생성 (메모리 최적화 - 외부 API 제거)"""
+        """템플릿 기반 사업 아이디어 생성 (메모리 최적화 + 다양화)"""
         all_opportunities = []
         recent_names = set()
 
-        # 최근 저장된 사업명만 간단히 조회 (메모리 절약)
+        # 최근 저장된 사업명 조회 (중복 방지)
         try:
             self.refresh_session()
-            # 최근 100개만 조회 (메모리 절약)
-            existing_plans = self.session.query(BusinessPlan.plan_name).limit(100).all()
+            existing_plans = self.session.query(BusinessPlan.plan_name).limit(200).all()
             recent_names = set([plan[0] for plan in existing_plans])
+
+            # 히스토리에서도 최근 이름 조회 (더 정확한 중복 방지)
+            recent_history = self.session.query(BusinessDiscoveryHistory.business_name).filter(
+                BusinessDiscoveryHistory.discovered_at >= datetime.now() - timedelta(days=7)
+            ).all()
+            recent_names.update([h[0] for h in recent_history])
+
             print(f"   중복 방지 대상: {len(recent_names)}개")
         except Exception as e:
             print(f"   [WARN] DB 조회 실패: {e}")
 
-        # 템플릿 기반 아이디어만 사용 (외부 API 호출 제거)
-        print("\n[TEMPLATE] 템플릿 기반 아이디어 생성...")
+        print("\n[TEMPLATE] 다양한 아이디어 생성 중...")
 
         try:
+            # 템플릿 아이디어 생성
             template_ideas = self.idea_generator.generate_monthly_opportunities()
 
-            for opp in template_ideas:
+            # 랜덤하게 섞어서 다양성 확보
+            random.shuffle(template_ideas)
+
+            # 추가로 동적 조합 아이디어 생성 (더 많은 다양성)
+            dynamic_ideas = self.idea_generator.generate_dynamic_combination_ideas(exclude_names=recent_names)
+            random.shuffle(dynamic_ideas)
+
+            # 두 소스 합치기
+            combined_ideas = template_ideas + dynamic_ideas
+            random.shuffle(combined_ideas)
+
+            # 최대 3개까지 중복되지 않은 아이디어 선택
+            selected_count = 0
+            max_select = 3
+
+            for opp in combined_ideas:
+                if selected_count >= max_select:
+                    break
+
                 name = opp.get('business', {}).get('name', '')
                 if name and name not in recent_names:
                     all_opportunities.append(opp)
                     recent_names.add(name)
-                    print(f"   [OK] 선택: {name}")
-                    break
+                    selected_count += 1
+                    print(f"   [OK] 선택 {selected_count}: {name}")
 
         except Exception as e:
-            print(f"   [ERROR] 템플릿 생성 실패: {e}")
+            print(f"   [ERROR] 아이디어 생성 실패: {e}")
+            import traceback
+            traceback.print_exc()
 
         print(f"\n   최종 아이디어: {len(all_opportunities)}개\n")
-        return all_opportunities[:1]
+        return all_opportunities
 
     def generate_keyword(self, business_name):
         """사업 이름에서 검색 키워드 생성"""
