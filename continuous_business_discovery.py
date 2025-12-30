@@ -95,22 +95,19 @@ class ContinuousBusinessDiscovery:
         except Exception as e:
             print(f"   [WARN] DB 조회 실패: {e}")
 
-        print("\n[TEMPLATE] 다양한 아이디어 생성 중...")
+        print("\n[GENERATE] 다양한 아이디어 생성 중...")
 
         try:
-            # 템플릿 아이디어 생성
-            template_ideas = self.idea_generator.generate_monthly_opportunities()
-
-            # 랜덤하게 섞어서 다양성 확보
-            random.shuffle(template_ideas)
-
-            # 추가로 동적 조합 아이디어 생성 (더 많은 다양성)
+            # 동적 조합 아이디어 우선 생성 (수천 가지 조합 가능)
             dynamic_ideas = self.idea_generator.generate_dynamic_combination_ideas(exclude_names=recent_names)
             random.shuffle(dynamic_ideas)
 
-            # 두 소스 합치기
-            combined_ideas = template_ideas + dynamic_ideas
-            random.shuffle(combined_ideas)
+            # 템플릿 아이디어도 생성 (백업용)
+            template_ideas = self.idea_generator.generate_monthly_opportunities()
+            random.shuffle(template_ideas)
+
+            # 동적 아이디어를 먼저 배치하여 우선 선택되게 함
+            combined_ideas = dynamic_ideas + template_ideas
 
             # 최대 3개까지 중복되지 않은 아이디어 선택
             selected_count = 0
