@@ -536,22 +536,83 @@ class RealisticBusinessGenerator:
         ]
 
     def generate_dynamic_combination_ideas(self, exclude_names=None):
-        """동적 조합으로 새로운 사업 아이디어 생성 (수만 가지 조합 가능)"""
+        """동적 조합으로 새로운 사업 아이디어 생성 (품질 향상 버전)"""
         if exclude_names is None:
             exclude_names = set()
 
         ideas = []
         attempts = 0
-        max_attempts = 500  # 충분히 많은 시도
+        max_attempts = 500
 
-        # 추가 수식어 (더 많은 다양성)
-        modifiers = ["", "스마트", "초고속", "맞춤", "프리미엄", "무료", "간편", "전문"]
-        version_tags = ["", " 2.0", " Pro", " Lite", " Plus", " Max"]
+        # IT 사업 유형 정의 (카테고리화)
+        it_business_types = {
+            "saas": {
+                "label": "SaaS",
+                "desc": "구독 기반 소프트웨어 서비스",
+                "revenue_models": ["월정액 구독", "프리미엄 요금제", "사용량 기반 과금"],
+                "tech_stacks": ["Bubble.io", "Webflow", "Supabase", "Vercel"],
+                "differentiators": ["자동화 기능", "실시간 동기화", "AI 분석", "맞춤 대시보드"]
+            },
+            "marketplace": {
+                "label": "마켓플레이스",
+                "desc": "수요자와 공급자를 연결하는 플랫폼",
+                "revenue_models": ["거래 수수료", "프리미엄 리스팅", "광고 수익"],
+                "tech_stacks": ["Sharetribe", "Bubble.io", "Webflow + Memberstack"],
+                "differentiators": ["신뢰 시스템", "간편 결제", "실시간 매칭", "리뷰 시스템"]
+            },
+            "agency": {
+                "label": "에이전시",
+                "desc": "전문 서비스 대행 및 컨설팅",
+                "revenue_models": ["프로젝트 단가", "리테이너 계약", "성과 수수료"],
+                "tech_stacks": ["Notion", "Figma", "Slack", "Zapier"],
+                "differentiators": ["전문 인력 네트워크", "빠른 턴어라운드", "품질 보장", "1:1 맞춤 서비스"]
+            },
+            "tools": {
+                "label": "생산성 도구",
+                "desc": "특정 작업을 효율화하는 도구",
+                "revenue_models": ["일회성 구매", "프리미엄 기능", "API 사용료"],
+                "tech_stacks": ["React", "Next.js", "Chrome Extension", "Electron"],
+                "differentiators": ["간편한 UX", "빠른 처리 속도", "오프라인 지원", "다중 플랫폼"]
+            },
+            "platform": {
+                "label": "플랫폼",
+                "desc": "커뮤니티 기반 서비스 플랫폼",
+                "revenue_models": ["멤버십", "광고", "프리미엄 기능", "데이터 API"],
+                "tech_stacks": ["Firebase", "Supabase", "Vercel", "AWS Amplify"],
+                "differentiators": ["커뮤니티 효과", "네트워크 효과", "콘텐츠 큐레이션", "개인화"]
+            }
+        }
+
+        # 핵심 기능 템플릿
+        core_features_by_domain = {
+            "헬스케어": ["건강 기록 추적", "전문가 상담 연결", "맞춤 건강 리포트", "알림 시스템"],
+            "피트니스": ["운동 루틴 관리", "진행 상황 추적", "영상 가이드", "커뮤니티 챌린지"],
+            "교육": ["진도 관리", "퀴즈/테스트", "1:1 튜터링", "학습 분석"],
+            "재테크": ["자산 관리", "투자 분석", "리스크 평가", "자동 리밸런싱"],
+            "반려동물": ["건강 기록", "예약 시스템", "커뮤니티", "위치 추적"],
+            "부동산": ["매물 검색", "시세 분석", "가상 투어", "계약 관리"],
+            "여행": ["일정 계획", "실시간 정보", "예약 통합", "여행 기록"],
+            "default": ["데이터 관리", "알림 시스템", "분석 대시보드", "사용자 맞춤화"]
+        }
+
+        # 차별화 포인트 템플릿
+        differentiator_templates = [
+            "기존 서비스 대비 {percent}% 저렴한 가격",
+            "{target} 특화 기능 제공",
+            "AI 기반 자동 {action}",
+            "5분 만에 시작 가능한 간편 온보딩",
+            "무료 플랜으로 부담 없이 시작",
+            "실시간 {domain} 데이터 제공",
+            "{target} 커뮤니티 네트워크",
+            "모바일 앱 + 웹 동시 지원"
+        ]
+
+        modifiers = ["", "스마트", "초고속", "맞춤", "프리미엄", "간편", "전문", "AI"]
+        version_tags = ["", " 2.0", " Pro", " Lite", " Plus"]
 
         while len(ideas) < 30 and attempts < max_attempts:
             attempts += 1
 
-            # 랜덤 조합 생성
             prefix = random.choice(self.business_prefixes)
             domain = random.choice(self.business_domains)
             biz_type = random.choice(self.business_types)
@@ -559,7 +620,20 @@ class RealisticBusinessGenerator:
             modifier = random.choice(modifiers)
             version = random.choice(version_tags)
 
-            # 더 다양한 이름 패턴 (12가지)
+            # IT 사업 유형 결정
+            if biz_type in ["플랫폼", "커뮤니티", "네트워크", "허브"]:
+                it_type = "platform"
+            elif biz_type in ["마켓플레이스", "매칭", "중개"]:
+                it_type = "marketplace"
+            elif biz_type in ["대행", "컨설팅", "코칭", "멘토링"]:
+                it_type = "agency"
+            elif biz_type in ["도구", "봇", "트래커", "어시스턴트", "분석"]:
+                it_type = "tools"
+            else:
+                it_type = "saas"
+
+            it_info = it_business_types[it_type]
+
             name_patterns = [
                 f"{prefix} {domain} {biz_type}",
                 f"{target} 전용 {domain} {biz_type}",
@@ -577,30 +651,57 @@ class RealisticBusinessGenerator:
 
             name = random.choice(name_patterns).strip()
 
-            # 중복 체크
             if name in exclude_names:
                 continue
-
             exclude_names.add(name)
 
-            # 비용/수익 랜덤 생성
-            startup_costs = ["50만원", "100만원", "200만원", "300만원", "500만원"]
-            revenues = ["100-300만원", "200-500만원", "300-800만원", "500-1500만원"]
+            # 핵심 기능 선택
+            domain_key = domain if domain in core_features_by_domain else "default"
+            core_features = random.sample(core_features_by_domain[domain_key], min(3, len(core_features_by_domain[domain_key])))
+
+            # 차별화 포인트 생성
+            diff_template = random.choice(differentiator_templates)
+            differentiator = diff_template.format(
+                percent=random.choice([30, 40, 50]),
+                target=target,
+                action=random.choice(["분석", "추천", "매칭", "관리"]),
+                domain=domain
+            )
+
+            # 비용/수익 설정
+            cost_ranges = {
+                "saas": {"cost": "100-300만원", "revenue": "200-800만원"},
+                "marketplace": {"cost": "300-500만원", "revenue": "300-1500만원"},
+                "agency": {"cost": "50-100만원", "revenue": "200-600만원"},
+                "tools": {"cost": "100-200만원", "revenue": "100-500만원"},
+                "platform": {"cost": "200-400만원", "revenue": "200-1000만원"}
+            }
+            cost_info = cost_ranges[it_type]
+
+            # 상세 설명 생성
+            detailed_description = f"{target}을 위한 {domain} 분야 {it_info['desc']}. {', '.join(core_features[:2])} 기능을 제공하며, {differentiator}."
 
             ideas.append({
                 "type": "동적 조합 아이디어",
                 "category": "IT/디지털",
                 "business": {
                     "name": name,
-                    "description": f"{target} 대상 {domain} 분야 {biz_type}",
-                    "startup_cost": random.choice(startup_costs),
-                    "monthly_revenue": random.choice(revenues),
-                    "revenue_potential": f"월 {random.choice(revenues)}",
+                    "description": detailed_description,
+                    "it_type": it_type,
+                    "it_type_label": it_info["label"],
+                    "startup_cost": cost_info["cost"],
+                    "monthly_revenue": cost_info["revenue"],
+                    "revenue_potential": f"월 {cost_info['revenue']}",
                     "timeline": random.choice(["2주 내 시작", "1개월 내 시작", "2개월 내 시작"]),
                     "difficulty": random.choice(["쉬움", "보통", "보통"]),
                     "viability": random.choice(["높음", "높음", "매우 높음"]),
                     "target_audience": target,
-                    "domain": domain
+                    "domain": domain,
+                    "core_features": core_features,
+                    "differentiator": differentiator,
+                    "revenue_models": random.sample(it_info["revenue_models"], min(2, len(it_info["revenue_models"]))),
+                    "tech_stack": random.sample(it_info["tech_stacks"], min(2, len(it_info["tech_stacks"]))),
+                    "competitors_hint": f"{domain} 분야 기존 서비스 대비 {target} 특화"
                 },
                 "priority": random.choice(["높음", "높음", "매우 높음"])
             })

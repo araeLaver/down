@@ -1119,6 +1119,67 @@
                 </div>
             `;
 
+            // 사업 상세 정보 섹션 (IT 유형, 핵심 기능, 차별화 포인트)
+            const fullAnalysis = details.full_analysis || {};
+            const businessInfo = fullAnalysis.business || {};
+            let businessDetailSection = '';
+
+            // IT 사업 유형 또는 핵심 정보가 있는 경우
+            const itType = businessInfo.it_type_label || fullAnalysis.type || '';
+            const coreFeatures = businessInfo.core_features || [];
+            const differentiator = businessInfo.differentiator || '';
+            const techStack = businessInfo.tech_stack || [];
+            const revenueModels = businessInfo.revenue_models || [];
+            const targetAudience = businessInfo.target_audience || '';
+
+            if (itType || coreFeatures.length > 0 || differentiator || techStack.length > 0) {
+                businessDetailSection = `
+                    <div class="detail-section">
+                        <h6><i class="fas fa-lightbulb"></i> 사업 상세 정보</h6>
+                        <div style="background: #faf5ff; border-radius: 8px; padding: 1rem;">
+                            ${itType ? `
+                                <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 0.75rem;">
+                                    <span style="padding: 0.25rem 0.75rem; background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%); color: white; border-radius: 20px; font-size: 0.813rem; font-weight: 600;">
+                                        ${itType}
+                                    </span>
+                                    ${targetAudience ? `<span style="padding: 0.25rem 0.75rem; background: #e0e7ff; color: #3730a3; border-radius: 20px; font-size: 0.813rem;">${targetAudience} 대상</span>` : ''}
+                                </div>
+                            ` : ''}
+                            ${coreFeatures.length > 0 ? `
+                                <div style="margin-bottom: 0.75rem; padding: 0.75rem; background: white; border-radius: 6px;">
+                                    <strong style="font-size: 0.813rem; color: #4c1d95;">핵심 기능</strong>
+                                    <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 0.5rem;">
+                                        ${coreFeatures.map(f => `<span style="padding: 0.25rem 0.5rem; background: #ede9fe; color: #5b21b6; border-radius: 4px; font-size: 0.75rem;">${f}</span>`).join('')}
+                                    </div>
+                                </div>
+                            ` : ''}
+                            ${differentiator ? `
+                                <div style="margin-bottom: 0.75rem; padding: 0.75rem; background: white; border-radius: 6px; border-left: 3px solid #8b5cf6;">
+                                    <strong style="font-size: 0.813rem; color: #4c1d95;">차별화 포인트</strong>
+                                    <p style="margin: 0.5rem 0 0 0; font-size: 0.875rem; color: #374151;">${differentiator}</p>
+                                </div>
+                            ` : ''}
+                            ${revenueModels.length > 0 ? `
+                                <div style="margin-bottom: 0.75rem; padding: 0.75rem; background: white; border-radius: 6px;">
+                                    <strong style="font-size: 0.813rem; color: #4c1d95;">수익 모델</strong>
+                                    <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 0.5rem;">
+                                        ${revenueModels.map(m => `<span style="padding: 0.25rem 0.5rem; background: #d1fae5; color: #065f46; border-radius: 4px; font-size: 0.75rem;">${m}</span>`).join('')}
+                                    </div>
+                                </div>
+                            ` : ''}
+                            ${techStack.length > 0 ? `
+                                <div style="padding: 0.75rem; background: white; border-radius: 6px;">
+                                    <strong style="font-size: 0.813rem; color: #4c1d95;">추천 기술 스택</strong>
+                                    <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 0.5rem;">
+                                        ${techStack.map(t => `<span style="padding: 0.25rem 0.5rem; background: #dbeafe; color: #1e40af; border-radius: 4px; font-size: 0.75rem;">${t}</span>`).join('')}
+                                    </div>
+                                </div>
+                            ` : ''}
+                        </div>
+                    </div>
+                `;
+            }
+
             // Day 1 체크리스트 섹션
             let day1Section = '';
             if (startupGuide.day1_checklist) {
@@ -1337,6 +1398,7 @@
             // 모달 내용 조합
             document.getElementById('modalBody').innerHTML = `
                 ${basicInfoSection}
+                ${businessDetailSection}
                 ${day1Section}
                 ${techStackSection}
                 ${marketSection}
