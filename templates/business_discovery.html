@@ -692,11 +692,22 @@
                 const roi = biz.revenue_12m && biz.investment ?
                     Math.round((biz.revenue_12m - biz.investment) / biz.investment * 100) : 0;
 
+                // 시장성/수익성 점수
+                const marketScore = biz.details?.market_score || 0;
+                const revenueScore = biz.details?.revenue_score || 0;
+
+                // 첫 주 핵심 액션 추출
+                const actionPlan = biz.details?.action_plan || {};
+                const week1 = actionPlan.week_1 || {};
+                const week1Tasks = week1.tasks || [];
+                const firstAction = week1Tasks[0] || '랜딩페이지 제작';
+                const secondAction = week1Tasks[1] || '경쟁사 분석';
+
                 html += `
                     <div class="business-card" data-score="${biz.score}" data-name="${biz.name.toLowerCase()}">
                         <div class="business-card-header">
                             <div class="score-circle ${scoreClass}">
-                                <div class="score-number">${biz.score}</div>
+                                <div class="score-number">${Math.round(biz.score)}</div>
                                 <div class="score-label">점수</div>
                             </div>
                             <div class="business-info">
@@ -710,24 +721,59 @@
                                     <span class="tag tag-model">${biz.revenue_model || 'subscription'}</span>
                                     <span class="tag tag-priority">${biz.priority || 'medium'}</span>
                                 </div>
+                                <!-- 시장성/수익성 점수 바 -->
+                                <div style="display: flex; gap: 1rem; margin-top: 0.75rem;">
+                                    <div style="flex: 1;">
+                                        <div style="display: flex; justify-content: space-between; font-size: 0.7rem; color: #6b7280; margin-bottom: 0.25rem;">
+                                            <span>시장성</span>
+                                            <span>${Math.round(marketScore)}점</span>
+                                        </div>
+                                        <div style="height: 4px; background: #e5e7eb; border-radius: 2px; overflow: hidden;">
+                                            <div style="width: ${marketScore}%; height: 100%; background: linear-gradient(90deg, #10b981 0%, #059669 100%);"></div>
+                                        </div>
+                                    </div>
+                                    <div style="flex: 1;">
+                                        <div style="display: flex; justify-content: space-between; font-size: 0.7rem; color: #6b7280; margin-bottom: 0.25rem;">
+                                            <span>수익성</span>
+                                            <span>${Math.round(revenueScore)}점</span>
+                                        </div>
+                                        <div style="height: 4px; background: #e5e7eb; border-radius: 2px; overflow: hidden;">
+                                            <div style="width: ${revenueScore}%; height: 100%; background: linear-gradient(90deg, #6366f1 0%, #4f46e5 100%);"></div>
+                                        </div>
+                                    </div>
+                                </div>
                                 <div class="business-date">
                                     <i class="fas fa-clock"></i>
                                     ${biz.created_at || '-'}
                                 </div>
                             </div>
                         </div>
+                        <!-- 1주차 핵심 액션 -->
+                        <div style="padding: 0.75rem 1.5rem; background: #f0f9ff; border-top: 1px solid var(--border-color);">
+                            <div style="font-size: 0.75rem; color: #0369a1; font-weight: 600; margin-bottom: 0.5rem;">
+                                <i class="fas fa-bolt"></i> 1주차 핵심 액션
+                            </div>
+                            <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                                <span style="font-size: 0.75rem; padding: 0.25rem 0.5rem; background: white; border: 1px solid #bae6fd; border-radius: 4px; color: #0c4a6e;">
+                                    ${firstAction.length > 20 ? firstAction.substring(0, 20) + '...' : firstAction}
+                                </span>
+                                <span style="font-size: 0.75rem; padding: 0.25rem 0.5rem; background: white; border: 1px solid #bae6fd; border-radius: 4px; color: #0c4a6e;">
+                                    ${secondAction.length > 20 ? secondAction.substring(0, 20) + '...' : secondAction}
+                                </span>
+                            </div>
+                        </div>
                         <div class="business-metrics">
                             <div class="metric">
                                 <div class="metric-label">월 예상 수익</div>
-                                <div class="metric-value success">${monthlyRevenue.toLocaleString()}원</div>
-                            </div>
-                            <div class="metric">
-                                <div class="metric-label">연간 수익</div>
-                                <div class="metric-value">${(biz.revenue_12m || 0).toLocaleString()}원</div>
+                                <div class="metric-value success">${(monthlyRevenue / 10000).toLocaleString()}만원</div>
                             </div>
                             <div class="metric">
                                 <div class="metric-label">초기 투자</div>
-                                <div class="metric-value">${(biz.investment || 0).toLocaleString()}원</div>
+                                <div class="metric-value">${(biz.investment / 10000 || 0).toLocaleString()}만원</div>
+                            </div>
+                            <div class="metric">
+                                <div class="metric-label">손익분기</div>
+                                <div class="metric-value">${biz.details?.revenue_analysis?.scenarios?.realistic?.break_even_months || 3}개월</div>
                             </div>
                             <div class="metric">
                                 <div class="metric-label">ROI</div>
@@ -736,7 +782,7 @@
                         </div>
                         <div class="business-actions">
                             <button class="btn-detail" onclick="showDetail(${biz.id})">
-                                <i class="fas fa-info-circle"></i> 상세 정보
+                                <i class="fas fa-info-circle"></i> 상세 정보 보기
                             </button>
                         </div>
                     </div>
@@ -823,55 +869,83 @@
             const roi = biz.revenue_12m && biz.investment ?
                 Math.round((biz.revenue_12m - biz.investment) / biz.investment * 100) : 0;
 
-            // 시장 분석 섹션 생성
+            // 시장 분석 섹션 생성 (개선된 버전)
             let marketSection = '';
-            if (Object.keys(marketAnalysis).length > 0) {
+            const marketScore = marketAnalysis.market_score || details.market_score || 0;
+            const hasDetailedData = marketAnalysis.naver || marketAnalysis.google_trends || marketAnalysis.youtube || marketAnalysis.kmong;
+
+            if (Object.keys(marketAnalysis).length > 0 || marketScore > 0) {
                 marketSection = `
                     <div class="detail-section">
                         <h6><i class="fas fa-chart-line"></i> 시장 분석</h6>
-                        <div style="background: #f0fdf4; border-radius: 8px; padding: 1rem; margin-bottom: 0.5rem;">
-                            ${marketAnalysis.naver ? `
-                                <div style="margin-bottom: 0.75rem;">
-                                    <strong style="color: #03c75a;"><i class="fas fa-search"></i> 네이버 검색</strong>
-                                    <p style="margin: 0.5rem 0 0 0; font-size: 0.875rem;">
-                                        검색량: ${(marketAnalysis.naver.search_count || marketAnalysis.naver.total_results || 0).toLocaleString()}건
-                                        ${marketAnalysis.naver.competition ? `<br>경쟁도: ${marketAnalysis.naver.competition}` : ''}
-                                        ${marketAnalysis.naver.related_keywords ? `<br>연관 키워드: ${marketAnalysis.naver.related_keywords.slice(0,5).join(', ')}` : ''}
-                                    </p>
+                        <div style="background: #f0fdf4; border-radius: 8px; padding: 1rem;">
+                            <!-- 시장 점수 표시 -->
+                            <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem; padding: 0.75rem; background: white; border-radius: 6px;">
+                                <div style="width: 60px; height: 60px; border-radius: 50%; background: linear-gradient(135deg, #10b981 0%, #059669 100%); display: flex; align-items: center; justify-content: center; color: white; font-size: 1.25rem; font-weight: 700;">
+                                    ${Math.round(marketScore)}
                                 </div>
-                            ` : ''}
-                            ${marketAnalysis.google_trends || marketAnalysis.google ? `
-                                <div style="margin-bottom: 0.75rem;">
-                                    <strong style="color: #4285f4;"><i class="fab fa-google"></i> Google 트렌드</strong>
-                                    <p style="margin: 0.5rem 0 0 0; font-size: 0.875rem;">
-                                        관심도: ${(marketAnalysis.google_trends?.global_interest || marketAnalysis.google?.interest || 0)}점
-                                        ${marketAnalysis.google_trends?.trend || marketAnalysis.google?.trend ? `<br>추세: ${marketAnalysis.google_trends?.trend || marketAnalysis.google?.trend}` : ''}
-                                    </p>
+                                <div style="flex: 1;">
+                                    <div style="font-weight: 600; color: #111827;">시장 매력도</div>
+                                    <div style="font-size: 0.813rem; color: #6b7280;">
+                                        ${marketScore >= 80 ? '매우 유망한 시장입니다' :
+                                          marketScore >= 70 ? '성장 가능성이 높은 시장입니다' :
+                                          marketScore >= 60 ? '진입 가능한 시장입니다' :
+                                          '틈새 시장 공략이 필요합니다'}
+                                    </div>
                                 </div>
-                            ` : ''}
-                            ${marketAnalysis.youtube ? `
-                                <div style="margin-bottom: 0.75rem;">
-                                    <strong style="color: #ff0000;"><i class="fab fa-youtube"></i> YouTube</strong>
-                                    <p style="margin: 0.5rem 0 0 0; font-size: 0.875rem;">
-                                        관련 영상: ${(marketAnalysis.youtube.video_count || 0).toLocaleString()}개
-                                        ${marketAnalysis.youtube.avg_views ? `<br>평균 조회수: ${marketAnalysis.youtube.avg_views.toLocaleString()}회` : ''}
-                                    </p>
+                                <div style="text-align: right;">
+                                    <span style="font-size: 0.75rem; padding: 0.25rem 0.5rem; background: ${marketScore >= 70 ? '#d1fae5' : '#fef3c7'}; color: ${marketScore >= 70 ? '#065f46' : '#92400e'}; border-radius: 4px;">
+                                        ${marketAnalysis.mode === 'lite' ? '경량 분석' : '정밀 분석'}
+                                    </span>
                                 </div>
-                            ` : ''}
-                            ${marketAnalysis.kmong ? `
-                                <div>
-                                    <strong style="color: #ff6b35;"><i class="fas fa-store"></i> 크몽 마켓</strong>
-                                    <p style="margin: 0.5rem 0 0 0; font-size: 0.875rem;">
-                                        서비스 수: ${marketAnalysis.kmong.service_count || 0}개
-                                        ${marketAnalysis.kmong.avg_price ? `<br>평균 가격: ${marketAnalysis.kmong.avg_price.toLocaleString()}원` : ''}
-                                        ${marketAnalysis.kmong.avg_reviews ? `<br>평균 평점: ${marketAnalysis.kmong.avg_reviews}점` : ''}
-                                    </p>
+                            </div>
+                            ${hasDetailedData ? `
+                                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.75rem; margin-bottom: 0.75rem;">
+                                    ${marketAnalysis.naver ? `
+                                        <div style="padding: 0.75rem; background: white; border-radius: 6px; border-left: 3px solid #03c75a;">
+                                            <strong style="color: #03c75a; font-size: 0.875rem;"><i class="fas fa-search"></i> 네이버</strong>
+                                            <p style="margin: 0.25rem 0 0 0; font-size: 0.813rem; color: #374151;">
+                                                검색량: ${(marketAnalysis.naver.search_count || 0).toLocaleString()}건
+                                                ${marketAnalysis.naver.competition ? ` / 경쟁도: ${marketAnalysis.naver.competition}` : ''}
+                                            </p>
+                                        </div>
+                                    ` : ''}
+                                    ${marketAnalysis.google_trends || marketAnalysis.google ? `
+                                        <div style="padding: 0.75rem; background: white; border-radius: 6px; border-left: 3px solid #4285f4;">
+                                            <strong style="color: #4285f4; font-size: 0.875rem;"><i class="fab fa-google"></i> Google</strong>
+                                            <p style="margin: 0.25rem 0 0 0; font-size: 0.813rem; color: #374151;">
+                                                관심도: ${marketAnalysis.google_trends?.global_interest || marketAnalysis.google?.interest || 0}점
+                                                ${marketAnalysis.google_trends?.trend ? ` / ${marketAnalysis.google_trends.trend}` : ''}
+                                            </p>
+                                        </div>
+                                    ` : ''}
+                                    ${marketAnalysis.youtube ? `
+                                        <div style="padding: 0.75rem; background: white; border-radius: 6px; border-left: 3px solid #ff0000;">
+                                            <strong style="color: #ff0000; font-size: 0.875rem;"><i class="fab fa-youtube"></i> YouTube</strong>
+                                            <p style="margin: 0.25rem 0 0 0; font-size: 0.813rem; color: #374151;">
+                                                관련 영상: ${(marketAnalysis.youtube.video_count || 0).toLocaleString()}개
+                                            </p>
+                                        </div>
+                                    ` : ''}
+                                    ${marketAnalysis.kmong ? `
+                                        <div style="padding: 0.75rem; background: white; border-radius: 6px; border-left: 3px solid #ff6b35;">
+                                            <strong style="color: #ff6b35; font-size: 0.875rem;"><i class="fas fa-store"></i> 크몽</strong>
+                                            <p style="margin: 0.25rem 0 0 0; font-size: 0.813rem; color: #374151;">
+                                                서비스: ${marketAnalysis.kmong.service_count || 0}개
+                                                ${marketAnalysis.kmong.avg_price ? ` / 평균 ${(marketAnalysis.kmong.avg_price / 10000).toFixed(0)}만원` : ''}
+                                            </p>
+                                        </div>
+                                    ` : ''}
                                 </div>
-                            ` : ''}
+                            ` : `
+                                <div style="padding: 0.75rem; background: white; border-radius: 6px; text-align: center; color: #6b7280; font-size: 0.875rem;">
+                                    <i class="fas fa-info-circle"></i> 경량 모드: 외부 API 없이 내부 분석 기반 점수입니다
+                                </div>
+                            `}
                             ${marketAnalysis.market_summary || marketAnalysis.summary ? `
-                                <div style="margin-top: 1rem; padding-top: 0.75rem; border-top: 1px solid #bbf7d0;">
-                                    <strong><i class="fas fa-clipboard-list"></i> 시장 요약</strong>
-                                    <p style="margin: 0.5rem 0 0 0; font-size: 0.875rem;">${marketAnalysis.market_summary || marketAnalysis.summary}</p>
+                                <div style="margin-top: 0.75rem; padding: 0.75rem; background: white; border-radius: 6px;">
+                                    <strong style="font-size: 0.875rem;"><i class="fas fa-clipboard-list"></i> 시장 요약</strong>
+                                    <p style="margin: 0.5rem 0 0 0; font-size: 0.875rem; color: #374151;">${marketAnalysis.market_summary || marketAnalysis.summary}</p>
                                 </div>
                             ` : ''}
                         </div>
@@ -940,72 +1014,48 @@
                 `;
             }
 
-            // 실행 계획 섹션 생성
+            // 실행 계획 섹션 생성 (간소화된 로직)
             let actionPlanSection = '';
             if (Object.keys(actionPlan).length > 0) {
-                const weeks = ['week_1', 'week_2', 'week_3', 'week_4', '1주차', '2주차', '3주차', '4주차'];
-                let hasWeeks = weeks.some(w => actionPlan[w]);
+                // 주차별 데이터 추출
+                const weekColors = ['#6366f1', '#10b981', '#f59e0b', '#ef4444'];
+                const weekLabels = ['1주차: MVP 개발', '2주차: 프로토타입 검증', '3주차: 마케팅 시작', '4주차: 최적화 및 확장'];
 
-                if (hasWeeks) {
+                let weeksHtml = '';
+                for (let i = 1; i <= 4; i++) {
+                    const weekData = actionPlan[`week_${i}`] || actionPlan[`${i}주차`];
+                    if (weekData) {
+                        const goal = weekData.goal || weekLabels[i-1];
+                        const tasks = Array.isArray(weekData) ? weekData : (weekData.tasks || []);
+                        const color = weekColors[i-1];
+                        const isLast = i === 4;
+
+                        weeksHtml += `
+                            <div style="${isLast ? '' : 'margin-bottom: 1rem;'} padding: 0.75rem; background: white; border-radius: 6px; border-left: 4px solid ${color};">
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                                    <strong style="color: ${color};">${i}주차</strong>
+                                    <span style="font-size: 0.75rem; color: #6b7280;">${goal}</span>
+                                </div>
+                                ${tasks.length > 0 ? `
+                                    <ul style="margin: 0; padding-left: 1.25rem; font-size: 0.875rem; color: #374151;">
+                                        ${tasks.map(t => `<li style="margin-bottom: 0.25rem;">${typeof t === 'string' ? t : t.task || t}</li>`).join('')}
+                                    </ul>
+                                ` : ''}
+                            </div>
+                        `;
+                    }
+                }
+
+                if (weeksHtml) {
                     actionPlanSection = `
                         <div class="detail-section">
                             <h6><i class="fas fa-tasks"></i> 4주 실행 계획</h6>
                             <div style="background: #ede9fe; border-radius: 8px; padding: 1rem;">
-                                ${['week_1', '1주차'].map((w, i) => {
-                                    const weekData = actionPlan[w] || actionPlan[`${i+1}주차`];
-                                    if (!weekData) return '';
-                                    const tasks = Array.isArray(weekData) ? weekData : (weekData.tasks || [weekData]);
-                                    return `
-                                        <div style="margin-bottom: 1rem; padding: 0.75rem; background: white; border-radius: 6px; border-left: 4px solid var(--primary-color);">
-                                            <strong style="color: var(--primary-color);">📅 ${i+1}주차</strong>
-                                            <ul style="margin: 0.5rem 0 0 0; padding-left: 1.25rem; font-size: 0.875rem;">
-                                                ${tasks.map(t => `<li>${typeof t === 'string' ? t : t.task || t}</li>`).join('')}
-                                            </ul>
-                                        </div>
-                                    `;
-                                }).join('')}
-                                ${['week_2', '2주차'].map((w, i) => {
-                                    const weekData = actionPlan[w] || actionPlan[`${i+2}주차`];
-                                    if (!weekData) return '';
-                                    const tasks = Array.isArray(weekData) ? weekData : (weekData.tasks || [weekData]);
-                                    return `
-                                        <div style="margin-bottom: 1rem; padding: 0.75rem; background: white; border-radius: 6px; border-left: 4px solid #10b981;">
-                                            <strong style="color: #10b981;">📅 ${i+2}주차</strong>
-                                            <ul style="margin: 0.5rem 0 0 0; padding-left: 1.25rem; font-size: 0.875rem;">
-                                                ${tasks.map(t => `<li>${typeof t === 'string' ? t : t.task || t}</li>`).join('')}
-                                            </ul>
-                                        </div>
-                                    `;
-                                }).join('')}
-                                ${['week_3', '3주차'].map((w, i) => {
-                                    const weekData = actionPlan[w] || actionPlan[`${i+3}주차`];
-                                    if (!weekData) return '';
-                                    const tasks = Array.isArray(weekData) ? weekData : (weekData.tasks || [weekData]);
-                                    return `
-                                        <div style="margin-bottom: 1rem; padding: 0.75rem; background: white; border-radius: 6px; border-left: 4px solid #f59e0b;">
-                                            <strong style="color: #f59e0b;">📅 ${i+3}주차</strong>
-                                            <ul style="margin: 0.5rem 0 0 0; padding-left: 1.25rem; font-size: 0.875rem;">
-                                                ${tasks.map(t => `<li>${typeof t === 'string' ? t : t.task || t}</li>`).join('')}
-                                            </ul>
-                                        </div>
-                                    `;
-                                }).join('')}
-                                ${['week_4', '4주차'].map((w, i) => {
-                                    const weekData = actionPlan[w] || actionPlan[`${i+4}주차`];
-                                    if (!weekData) return '';
-                                    const tasks = Array.isArray(weekData) ? weekData : (weekData.tasks || [weekData]);
-                                    return `
-                                        <div style="padding: 0.75rem; background: white; border-radius: 6px; border-left: 4px solid #ef4444;">
-                                            <strong style="color: #ef4444;">📅 ${i+4}주차</strong>
-                                            <ul style="margin: 0.5rem 0 0 0; padding-left: 1.25rem; font-size: 0.875rem;">
-                                                ${tasks.map(t => `<li>${typeof t === 'string' ? t : t.task || t}</li>`).join('')}
-                                            </ul>
-                                        </div>
-                                    `;
-                                }).join('')}
+                                ${actionPlan.summary ? `<p style="margin-bottom: 1rem; font-size: 0.875rem; color: #4b5563;">${actionPlan.summary}</p>` : ''}
+                                ${weeksHtml}
                                 ${actionPlan.total_budget ? `
                                     <div style="margin-top: 1rem; padding: 0.75rem; background: white; border-radius: 6px; text-align: center;">
-                                        <strong>💰 예상 총 예산: ${(actionPlan.total_budget / 10000).toLocaleString()}만원</strong>
+                                        <strong>예상 총 예산: ${(actionPlan.total_budget / 10000).toLocaleString()}만원</strong>
                                     </div>
                                 ` : ''}
                             </div>
