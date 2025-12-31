@@ -1119,6 +1119,68 @@ def api_discovered_businesses():
             # 시작 가이드 생성
             startup_guide = generate_startup_guide(biz.business_name, biz.business_type, biz.total_score)
 
+            # full_analysis에서 사업 상세 정보 추출 또는 기본값 생성
+            full_analysis_data = biz.full_analysis if isinstance(biz.full_analysis, dict) else {}
+            business_info = full_analysis_data.get('business', {})
+
+            # 새 필드가 없으면 기본값 생성
+            if not business_info.get('it_type_label'):
+                # IT 사업 유형 자동 분류
+                biz_type_lower = (biz.business_type or '').lower()
+                if any(x in biz_type_lower for x in ['플랫폼', '커뮤니티', '네트워크']):
+                    it_type = 'platform'
+                    it_label = '플랫폼'
+                elif any(x in biz_type_lower for x in ['마켓', '매칭', '중개']):
+                    it_type = 'marketplace'
+                    it_label = '마켓플레이스'
+                elif any(x in biz_type_lower for x in ['대행', '컨설팅', '에이전시']):
+                    it_type = 'agency'
+                    it_label = '에이전시'
+                elif any(x in biz_type_lower for x in ['도구', '툴', '봇', '자동화']):
+                    it_type = 'tools'
+                    it_label = '생산성 도구'
+                else:
+                    it_type = 'saas'
+                    it_label = 'SaaS'
+
+                # 기본 핵심 기능
+                default_features = {
+                    'saas': ['데이터 관리', '알림 시스템', '분석 대시보드'],
+                    'marketplace': ['실시간 매칭', '리뷰 시스템', '간편 결제'],
+                    'agency': ['프로젝트 관리', '1:1 맞춤 서비스', '품질 보장'],
+                    'tools': ['간편한 UX', '빠른 처리', '다중 플랫폼'],
+                    'platform': ['커뮤니티 기능', '콘텐츠 큐레이션', '개인화']
+                }
+
+                # 기본 기술 스택
+                default_tech = {
+                    'saas': ['Bubble.io', 'Supabase'],
+                    'marketplace': ['Sharetribe', 'Webflow'],
+                    'agency': ['Notion', 'Figma'],
+                    'tools': ['React', 'Chrome Extension'],
+                    'platform': ['Firebase', 'Vercel']
+                }
+
+                # 기본 수익 모델
+                default_revenue = {
+                    'saas': ['월정액 구독', '프리미엄 요금제'],
+                    'marketplace': ['거래 수수료', '프리미엄 리스팅'],
+                    'agency': ['프로젝트 단가', '리테이너 계약'],
+                    'tools': ['일회성 구매', '프리미엄 기능'],
+                    'platform': ['멤버십', '광고']
+                }
+
+                business_info = {
+                    'it_type': it_type,
+                    'it_type_label': it_label,
+                    'core_features': default_features.get(it_type, []),
+                    'differentiator': f"기존 서비스 대비 50% 저렴한 가격",
+                    'tech_stack': default_tech.get(it_type, []),
+                    'revenue_models': default_revenue.get(it_type, []),
+                    'target_audience': '직장인'
+                }
+                full_analysis_data['business'] = business_info
+
             # 실제 수익 데이터가 있으면 사용
             if revenue_data:
                 scenarios = revenue_data.get('scenarios', {})
@@ -1150,7 +1212,7 @@ def api_discovered_businesses():
                     'revenue_analysis': revenue_data,
                     'action_plan': action_plan_data,
                     'startup_guide': startup_guide,
-                    'full_analysis': biz.full_analysis if isinstance(biz.full_analysis, dict) else {}
+                    'full_analysis': full_analysis_data
                 }
             })
 
