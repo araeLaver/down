@@ -1246,10 +1246,15 @@ def api_discovered_businesses():
             annual_revenue = monthly_revenue * 12
             investment = biz.total_score * 50000  # 점수 * 5만원
 
-            # 시장 분석 데이터 파싱 (없으면 기본값 생성)
+            # 시장 분석 데이터 파싱 (없거나 새 필드 없으면 기본값 생성)
             market_data = biz.market_analysis if isinstance(biz.market_analysis, dict) else {}
-            if not market_data:
-                market_data = generate_default_market_analysis(biz.business_name, biz.keyword or biz.business_name)
+            if not market_data or not market_data.get('market_info'):
+                # 기존 데이터가 없거나 새로운 market_info 필드가 없으면 경량 분석으로 대체
+                default_market = generate_default_market_analysis(biz.business_name, biz.keyword or biz.business_name)
+                # 기존 데이터가 있으면 병합, 없으면 기본값 사용
+                if market_data:
+                    default_market.update({k: v for k, v in market_data.items() if v})
+                market_data = default_market
 
             # 수익 분석 데이터 파싱 (없으면 기본값 생성)
             revenue_data = biz.revenue_analysis if isinstance(biz.revenue_analysis, dict) else {}
