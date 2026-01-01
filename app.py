@@ -1339,6 +1339,25 @@ def api_discovered_businesses():
                 annual_revenue = monthly_revenue * 12
                 investment = revenue_data.get('startup_cost', revenue_data.get('initial_investment', investment))
 
+            # 경량 시장 분석 데이터 추출
+            market_info = market_data.get('market_info', {})
+            trend = market_info.get('trend', market_data.get('trend', '안정'))
+            competition_level = market_info.get('competition_level', market_data.get('competition_level', 55))
+            market_size_raw = market_info.get('market_size', market_data.get('market_size', '중형'))
+
+            # 점수 상세 분석
+            score_breakdown = market_data.get('score_breakdown', {})
+            if not score_breakdown:
+                # 기본 점수 분석 생성
+                score_breakdown = {
+                    'base_score': int(biz.total_score * 0.6),
+                    'domain_bonus': int((biz.market_score or 0) * 0.2),
+                    'trend_bonus': 5 if trend in ['급상승', '상승'] else 0,
+                    'target_bonus': 3,
+                    'revenue_bonus': int((biz.revenue_score or 0) * 0.15),
+                    'competition_penalty': -5 if competition_level > 70 else 0
+                }
+
             business_list.append({
                 'id': biz.id,
                 'name': biz.business_name,
@@ -1352,6 +1371,11 @@ def api_discovered_businesses():
                 'created_at': biz.discovered_at.strftime('%Y-%m-%d %H:%M') if biz.discovered_at else None,
                 'description': f"{biz.business_name} - 시장성 {int(biz.market_score)}점, 수익성 {int(biz.revenue_score)}점",
                 'revenue_model': revenue_data.get('revenue_model', 'subscription'),
+                # 경량 시장 분석 필드 추가
+                'trend': trend,
+                'competition_level': competition_level,
+                'market_size': market_size_raw,
+                'score_breakdown': score_breakdown,
                 'details': {
                     'analysis_score': biz.total_score,
                     'market_score': biz.market_score,
