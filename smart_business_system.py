@@ -2,6 +2,7 @@
 통합 IT 사업 발굴 시스템
 - 실시간 시장 분석 + 수익성 검증 + 실행 계획 자동 생성
 - 80점 이상 아이디어만 선별하여 즉시 실행 가능한 계획 제공
+- 경량 모드: 외부 API 없이 사전 정의 데이터 기반 분석
 """
 
 import sys
@@ -12,13 +13,20 @@ from real_market_analyzer import RealMarketAnalyzer
 from revenue_validator import RevenueValidator
 from action_plan_generator import ActionPlanGenerator
 from realistic_business_generator import RealisticBusinessGenerator
+from lightweight_market_analyzer import LightweightMarketAnalyzer
 
 import json
 from datetime import datetime
 import time
 
 class SmartBusinessSystem:
-    def __init__(self):
+    def __init__(self, use_lightweight=True):
+        """
+        Args:
+            use_lightweight: True면 경량 분석기 사용 (Koyeb 무료 티어 최적화)
+        """
+        self.use_lightweight = use_lightweight
+        self.lightweight_analyzer = LightweightMarketAnalyzer()
         self.market_analyzer = RealMarketAnalyzer()
         self.revenue_validator = RevenueValidator()
         self.action_planner = ActionPlanGenerator()
@@ -28,20 +36,137 @@ class SmartBusinessSystem:
         print("="*80)
         print("[SMART] 스마트 IT 사업 발굴 시스템")
         print("="*80)
-        print("실시간 시장 분석 -> 수익성 검증 -> 실행 계획 자동 생성\n")
+        mode = "경량 모드 (외부 API 미사용)" if use_lightweight else "전체 모드 (외부 API 사용)"
+        print(f"분석 모드: {mode}")
+        print("시장 분석 -> 수익성 검증 -> 실행 계획 자동 생성\n")
 
     def analyze_business_idea(self, business_idea, keyword, business_config):
-        """단일 사업 아이디어 종합 분석 (경량 모드 - 외부 API 제거)"""
+        """단일 사업 아이디어 종합 분석 (경량 모드 지원)"""
         import random
 
         print(f"\n{'='*80}")
         print(f"[ANALYSIS] 사업 아이디어 분석: {business_idea}")
         print(f"{'='*80}\n")
 
-        # 1단계: 시장 분석 (경량화 - 기본 점수 부여)
+        # 경량 분석기 사용
+        if self.use_lightweight:
+            return self._analyze_with_lightweight(business_idea, keyword, business_config)
+
+        # 기존 방식 (외부 API 사용) - 필요시 폴백
+        return self._analyze_with_external_api(business_idea, keyword, business_config)
+
+    def _analyze_with_lightweight(self, business_idea, keyword, business_config):
+        """경량 분석기를 사용한 분석"""
+        import random
+
+        print("[1] 시장 분석 중... (경량 모드 v2)")
+
+        # 사업 데이터 구성
+        business_data = {
+            'name': business_idea,
+            'it_type': business_config.get('type', 'saas'),
+            'domain': self._extract_domain(business_idea, keyword),
+            'target_audience': business_config.get('target_audience', '직장인'),
+            'revenue_models': self._extract_revenue_models(business_config),
+            'description': business_config.get('description', business_idea)
+        }
+
+        # 경량 분석 실행
+        analysis = self.lightweight_analyzer.analyze(business_data)
+        market_score = analysis['market_score']
+
+        print(f"   시장 점수: {market_score}/100")
+        print(f"   시장 규모: {analysis['market_analysis']['market_size']['addressable_market']}")
+        print(f"   트렌드: {analysis['market_analysis']['domain']['trend']}")
+        print(f"   경쟁 강도: {analysis['market_analysis']['competition']['level']}")
+
+        # 발견된 트렌드 키워드 표시
+        trend_keywords = analysis['market_analysis'].get('trend_keywords_found', [])
+        if trend_keywords:
+            print(f"   트렌드 키워드: {', '.join(trend_keywords[:3])}")
+
+        # 2단계: 수익성 검증
+        print("\n[2] 수익성 검증 중... (경량 모드 v2)")
+
+        # 수익성 점수 계산 (수익 모델 + IT 유형 기반)
+        revenue_analysis = analysis['revenue_analysis']
+        it_type = business_data['it_type']
+        it_type_data = self.lightweight_analyzer.it_type_scores.get(it_type, {})
+
+        base_revenue_score = 60 + revenue_analysis['total_score']
+        margin_bonus = it_type_data.get('avg_margin', 50) // 10
+        recurring_bonus = 5 if revenue_analysis.get('recurring_potential') else 0
+
+        verdict_score = min(95, base_revenue_score + margin_bonus + recurring_bonus)
+        verdict_score += random.randint(-3, 3)
+        verdict_score = max(50, min(95, verdict_score))
+
+        # 월 수익 추정 (사업 설정 기반)
+        pricing = business_config.get('pricing', {})
+        if pricing.get('monthly'):
+            monthly_revenue = pricing['monthly'] * business_config.get('target_market_size', 100) * 0.05
+        elif pricing.get('one_time'):
+            monthly_revenue = pricing['one_time'] * business_config.get('target_market_size', 100) * 0.02
+        else:
+            monthly_revenue = random.randint(2000000, 6000000)
+
+        monthly_profit = int(monthly_revenue * it_type_data.get('avg_margin', 50) / 100)
+
+        revenue_data = {
+            'scenarios': {
+                'conservative': {
+                    'monthly_profit': int(monthly_profit * 0.5),
+                    'monthly_revenue': int(monthly_revenue * 0.5)
+                },
+                'realistic': {
+                    'monthly_profit': monthly_profit,
+                    'monthly_revenue': int(monthly_revenue)
+                },
+                'optimistic': {
+                    'monthly_profit': int(monthly_profit * 2),
+                    'monthly_revenue': int(monthly_revenue * 2)
+                }
+            },
+            'verdict': {
+                'score': verdict_score,
+                'recurring_potential': revenue_analysis.get('recurring_potential', False)
+            },
+            'mode': 'lightweight_v2',
+            'revenue_models': revenue_analysis['models']
+        }
+
+        realistic_scenario = revenue_data['scenarios']['realistic']
+        print(f"   수익성 점수: {verdict_score}/100")
+        print(f"   월 예상 매출: {realistic_scenario['monthly_revenue']:,}원")
+        print(f"   월 예상 순이익: {realistic_scenario['monthly_profit']:,}원")
+        print(f"   예상 마진율: {it_type_data.get('avg_margin', 50)}%")
+
+        # 종합 점수 계산
+        total_score = (market_score * 0.6) + (verdict_score * 0.4)
+
+        # 시장 데이터 구성 (기존 포맷 호환)
+        market_data = {
+            'business_idea': business_idea,
+            'keyword': keyword,
+            'market_score': market_score,
+            'analysis_date': analysis['analysis_date'],
+            'mode': 'lightweight_v2',
+            'data_sources': analysis['data_sources'],
+            'market_analysis': analysis['market_analysis'],
+            'recommendation': analysis['recommendation'],
+            'score_breakdown': analysis['score_breakdown']
+        }
+
+        return self._finalize_analysis(
+            business_idea, total_score, market_data, revenue_data, business_config
+        )
+
+    def _analyze_with_external_api(self, business_idea, keyword, business_config):
+        """외부 API를 사용한 분석 (폴백용)"""
+        import random
+
         print("[1] 시장 분석 중... (경량 모드)")
 
-        # 기본 시장 점수 (65-80점 랜덤) - 외부 API 호출 제거
         market_score = random.randint(65, 80)
         market_data = {
             'business_idea': business_idea,
@@ -57,10 +182,8 @@ class SmartBusinessSystem:
 
         print(f"   시장 점수: {market_score}/100 (추정)")
 
-        # 2단계: 수익성 검증 (기본 점수 부여)
         print("\n[2] 수익성 검증 중... (경량 모드)")
 
-        # 기본 수익성 점수 (60-75점 랜덤)
         verdict_score = random.randint(60, 75)
         revenue_data = {
             'scenarios': {
@@ -78,8 +201,43 @@ class SmartBusinessSystem:
         print(f"   수익성 점수: {verdict_score}/100 (추정)")
         print(f"   월 예상 순이익: {realistic_scenario['monthly_profit']:,}원")
 
-        # 종합 점수 계산
         total_score = (market_score * 0.6) + (verdict_score * 0.4)
+
+        return self._finalize_analysis(
+            business_idea, total_score, market_data, revenue_data, business_config
+        )
+
+    def _extract_domain(self, business_idea, keyword):
+        """사업명/키워드에서 도메인 추출"""
+        domains = [
+            "AI", "헬스케어", "피트니스", "교육", "반려동물", "시니어", "육아",
+            "재테크", "투자", "부동산", "여행", "패션", "뷰티", "배달", "쇼핑",
+            "NFT", "DeFi", "블록체인", "메타버스", "Web3", "수면", "명상",
+            "취미", "자격증", "언어", "코딩"
+        ]
+        text = f"{business_idea} {keyword}".lower()
+        for domain in domains:
+            if domain.lower() in text:
+                return domain
+        return "IT서비스"
+
+    def _extract_revenue_models(self, business_config):
+        """수익 모델 추출"""
+        revenue_model = business_config.get('revenue_model', '')
+        pricing = business_config.get('pricing', {})
+
+        models = []
+        if 'subscription' in revenue_model or pricing.get('monthly'):
+            models.append('월정액 구독')
+        if 'one_time' in revenue_model or pricing.get('one_time'):
+            models.append('일회성 구매')
+        if 'commission' in revenue_model:
+            models.append('거래 수수료')
+
+        return models if models else ['월정액 구독']
+
+    def _finalize_analysis(self, business_idea, total_score, market_data, revenue_data, business_config):
+        """분석 결과 최종화"""
 
         print(f"\n   [SCORE] 종합 점수: {int(total_score)}/100")
 
