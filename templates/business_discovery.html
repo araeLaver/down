@@ -12,8 +12,12 @@
             --success-color: #10b981;
             --warning-color: #f59e0b;
             --danger-color: #ef4444;
-            --bg-light: #f9fafb;
-            --border-color: #e5e7eb;
+            --bg-light: #f8fafc;
+            --border-color: #e2e8f0;
+            --hot-color: #ef4444;
+            --rising-color: #f97316;
+            --stable-color: #3b82f6;
+            --declining-color: #6b7280;
         }
 
         * {
@@ -23,10 +27,49 @@
         }
 
         body {
-            background-color: var(--bg-light);
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            min-height: 100vh;
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
             color: #1f2937;
         }
+
+        /* 트렌드 태그 */
+        .trend-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+        .trend-hot { background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%); color: #dc2626; border: 1px solid #fecaca; }
+        .trend-rising { background: linear-gradient(135deg, #fff7ed 0%, #ffedd5 100%); color: #ea580c; border: 1px solid #fed7aa; }
+        .trend-stable { background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%); color: #2563eb; border: 1px solid #bfdbfe; }
+        .trend-declining { background: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%); color: #6b7280; border: 1px solid #e5e7eb; }
+
+        /* 경쟁 강도 표시 */
+        .competition-bar {
+            height: 6px;
+            background: #e5e7eb;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+        .competition-fill {
+            height: 100%;
+            border-radius: 3px;
+            transition: width 0.5s ease;
+        }
+        .competition-low { background: linear-gradient(90deg, #10b981 0%, #34d399 100%); }
+        .competition-medium { background: linear-gradient(90deg, #f59e0b 0%, #fbbf24 100%); }
+        .competition-high { background: linear-gradient(90deg, #ef4444 0%, #f87171 100%); }
+
+        /* 글로우 효과 */
+        .glow-effect {
+            box-shadow: 0 0 20px rgba(99, 102, 241, 0.15);
+        }
+        .glow-success { box-shadow: 0 0 20px rgba(16, 185, 129, 0.2); }
+        .glow-warning { box-shadow: 0 0 20px rgba(245, 158, 11, 0.2); }
 
         /* Header */
         .header {
@@ -163,15 +206,42 @@
 
         .business-card {
             background: white;
-            border-radius: 12px;
+            border-radius: 16px;
             border: 1px solid var(--border-color);
-            transition: all 0.3s;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             overflow: hidden;
+            position: relative;
+        }
+
+        .business-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-color), #8b5cf6);
+            opacity: 0;
+            transition: opacity 0.3s;
         }
 
         .business-card:hover {
-            box-shadow: 0 8px 24px rgba(0,0,0,0.1);
-            transform: translateY(-2px);
+            box-shadow: 0 12px 40px rgba(99, 102, 241, 0.15);
+            transform: translateY(-4px);
+        }
+
+        .business-card:hover::before {
+            opacity: 1;
+        }
+
+        .business-card.high-score::before {
+            background: linear-gradient(90deg, #10b981, #34d399);
+            opacity: 1;
+        }
+
+        .business-card.medium-score::before {
+            background: linear-gradient(90deg, #f59e0b, #fbbf24);
+            opacity: 1;
         }
 
         .business-card-header {
@@ -686,6 +756,7 @@
             businesses.forEach(biz => {
                 const scoreClass = biz.score >= 85 ? 'high' :
                                  biz.score >= 80 ? 'medium' : 'low';
+                const cardClass = biz.score >= 85 ? 'high-score' : biz.score >= 80 ? 'medium-score' : '';
 
                 const monthlyRevenue = biz.details?.estimated_monthly_revenue ||
                                       (biz.revenue_12m ? Math.round(biz.revenue_12m / 12) : 0);
@@ -696,6 +767,33 @@
                 const marketScore = biz.details?.market_score || 0;
                 const revenueScore = biz.details?.revenue_score || 0;
 
+                // 시장 분석 데이터 (경량 분석 v2)
+                const marketAnalysis = biz.details?.market_analysis || {};
+                const marketInfo = marketAnalysis.market_info || {};
+                const domain = marketAnalysis.domain || marketInfo.domain || {};
+                const competition = marketAnalysis.competition || {};
+                const recommendation = marketAnalysis.recommendation || {};
+
+                // 트렌드 정보
+                const trend = domain.trend || marketInfo.trend || '안정';
+                const trendClass = trend.includes('급상승') ? 'hot' :
+                                  trend.includes('상승') ? 'rising' :
+                                  trend.includes('하락') ? 'declining' : 'stable';
+                const trendIcon = trend.includes('급상승') ? 'fa-fire' :
+                                 trend.includes('상승') ? 'fa-arrow-trend-up' :
+                                 trend.includes('하락') ? 'fa-arrow-trend-down' : 'fa-minus';
+
+                // 경쟁 강도
+                const competitionLevel = competition.level || marketInfo.competition || '중간';
+                const competitionScore = competitionLevel === '낮음' ? 30 :
+                                        competitionLevel === '중간' ? 55 : 80;
+                const competitionClass = competitionLevel === '낮음' ? 'low' :
+                                         competitionLevel === '중간' ? 'medium' : 'high';
+
+                // 시장 규모
+                const marketSize = marketAnalysis.market_size?.addressable_market ||
+                                  marketInfo.market_size || '';
+
                 // 첫 주 핵심 액션 추출
                 const actionPlan = biz.details?.action_plan || {};
                 const week1 = actionPlan.week_1 || {};
@@ -703,8 +801,13 @@
                 const firstAction = week1Tasks[0] || '랜딩페이지 제작';
                 const secondAction = week1Tasks[1] || '경쟁사 분석';
 
+                // IT 유형 라벨
+                const fullAnalysis = biz.details?.full_analysis || {};
+                const bizInfo = fullAnalysis.business || {};
+                const itTypeLabel = bizInfo.it_type_label || biz.type || 'IT';
+
                 html += `
-                    <div class="business-card" data-score="${biz.score}" data-name="${biz.name.toLowerCase()}">
+                    <div class="business-card ${cardClass}" data-score="${biz.score}" data-name="${biz.name.toLowerCase()}">
                         <div class="business-card-header">
                             <div class="score-circle ${scoreClass}">
                                 <div class="score-number">${Math.round(biz.score)}</div>
@@ -716,49 +819,67 @@
                                     ${biz.name}
                                 </h3>
                                 <p class="business-description">${biz.description || '자동 발굴된 IT 사업 아이디어입니다.'}</p>
-                                <div class="business-tags">
-                                    <span class="tag tag-type">${biz.type || 'IT'}</span>
-                                    <span class="tag tag-model">${biz.revenue_model || 'subscription'}</span>
-                                    <span class="tag tag-priority">${biz.priority || 'medium'}</span>
+
+                                <!-- 태그 영역 (IT유형 + 트렌드) -->
+                                <div class="business-tags" style="margin-bottom: 0.5rem;">
+                                    <span class="tag tag-type">${itTypeLabel}</span>
+                                    <span class="trend-tag trend-${trendClass}">
+                                        <i class="fas ${trendIcon}"></i> ${trend}
+                                    </span>
+                                    ${marketSize ? `<span class="tag" style="background: #f0fdf4; color: #166534; border: 1px solid #bbf7d0;">${marketSize}</span>` : ''}
                                 </div>
+
+                                <!-- 경쟁 강도 바 -->
+                                <div style="margin-bottom: 0.75rem;">
+                                    <div style="display: flex; justify-content: space-between; font-size: 0.7rem; color: #6b7280; margin-bottom: 0.25rem;">
+                                        <span><i class="fas fa-users"></i> 경쟁 강도</span>
+                                        <span>${competitionLevel} (${competition.entry_difficulty || '보통'})</span>
+                                    </div>
+                                    <div class="competition-bar">
+                                        <div class="competition-fill competition-${competitionClass}" style="width: ${competitionScore}%;"></div>
+                                    </div>
+                                </div>
+
                                 <!-- 시장성/수익성 점수 바 -->
-                                <div style="display: flex; gap: 1rem; margin-top: 0.75rem;">
+                                <div style="display: flex; gap: 1rem;">
                                     <div style="flex: 1;">
                                         <div style="display: flex; justify-content: space-between; font-size: 0.7rem; color: #6b7280; margin-bottom: 0.25rem;">
-                                            <span>시장성</span>
+                                            <span><i class="fas fa-chart-line"></i> 시장성</span>
                                             <span>${Math.round(marketScore)}점</span>
                                         </div>
-                                        <div style="height: 4px; background: #e5e7eb; border-radius: 2px; overflow: hidden;">
-                                            <div style="width: ${marketScore}%; height: 100%; background: linear-gradient(90deg, #10b981 0%, #059669 100%);"></div>
+                                        <div style="height: 6px; background: #e5e7eb; border-radius: 3px; overflow: hidden;">
+                                            <div style="width: ${marketScore}%; height: 100%; background: linear-gradient(90deg, #10b981 0%, #059669 100%); border-radius: 3px;"></div>
                                         </div>
                                     </div>
                                     <div style="flex: 1;">
                                         <div style="display: flex; justify-content: space-between; font-size: 0.7rem; color: #6b7280; margin-bottom: 0.25rem;">
-                                            <span>수익성</span>
+                                            <span><i class="fas fa-coins"></i> 수익성</span>
                                             <span>${Math.round(revenueScore)}점</span>
                                         </div>
-                                        <div style="height: 4px; background: #e5e7eb; border-radius: 2px; overflow: hidden;">
-                                            <div style="width: ${revenueScore}%; height: 100%; background: linear-gradient(90deg, #6366f1 0%, #4f46e5 100%);"></div>
+                                        <div style="height: 6px; background: #e5e7eb; border-radius: 3px; overflow: hidden;">
+                                            <div style="width: ${revenueScore}%; height: 100%; background: linear-gradient(90deg, #6366f1 0%, #4f46e5 100%); border-radius: 3px;"></div>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="business-date">
+
+                                <div class="business-date" style="margin-top: 0.75rem;">
                                     <i class="fas fa-clock"></i>
                                     ${biz.created_at || '-'}
+                                    ${recommendation.verdict ? `<span style="margin-left: 0.5rem; padding: 2px 6px; background: ${recommendation.verdict.includes('유망') ? '#d1fae5' : '#fef3c7'}; color: ${recommendation.verdict.includes('유망') ? '#065f46' : '#92400e'}; border-radius: 4px; font-size: 0.7rem;">${recommendation.verdict}</span>` : ''}
                                 </div>
                             </div>
                         </div>
                         <!-- 1주차 핵심 액션 -->
-                        <div style="padding: 0.75rem 1.5rem; background: #f0f9ff; border-top: 1px solid var(--border-color);">
+                        <div style="padding: 0.75rem 1.5rem; background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%); border-top: 1px solid var(--border-color);">
                             <div style="font-size: 0.75rem; color: #0369a1; font-weight: 600; margin-bottom: 0.5rem;">
                                 <i class="fas fa-bolt"></i> 1주차 핵심 액션
                             </div>
                             <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
                                 <span style="font-size: 0.75rem; padding: 0.25rem 0.5rem; background: white; border: 1px solid #bae6fd; border-radius: 4px; color: #0c4a6e;">
-                                    ${firstAction.length > 20 ? firstAction.substring(0, 20) + '...' : firstAction}
+                                    ${firstAction.length > 25 ? firstAction.substring(0, 25) + '...' : firstAction}
                                 </span>
                                 <span style="font-size: 0.75rem; padding: 0.25rem 0.5rem; background: white; border: 1px solid #bae6fd; border-radius: 4px; color: #0c4a6e;">
-                                    ${secondAction.length > 20 ? secondAction.substring(0, 20) + '...' : secondAction}
+                                    ${secondAction.length > 25 ? secondAction.substring(0, 25) + '...' : secondAction}
                                 </span>
                             </div>
                         </div>
@@ -782,7 +903,7 @@
                         </div>
                         <div class="business-actions">
                             <button class="btn-detail" onclick="showDetail(${biz.id})">
-                                <i class="fas fa-info-circle"></i> 상세 정보 보기
+                                <i class="fas fa-search-plus"></i> 상세 분석 보기
                             </button>
                         </div>
                     </div>
@@ -869,11 +990,17 @@
             const roi = biz.revenue_12m && biz.investment ?
                 Math.round((biz.revenue_12m - biz.investment) / biz.investment * 100) : 0;
 
-            // 시장 분석 섹션 생성 (개선된 버전)
+            // 시장 분석 섹션 생성 (경량 분석 v2 개선)
             let marketSection = '';
             const marketScore = marketAnalysis.market_score || details.market_score || 0;
             const marketInfo = marketAnalysis.market_info || {};
-            const hasDetailedData = marketAnalysis.naver || marketAnalysis.google_trends || marketAnalysis.youtube || marketAnalysis.kmong;
+            const scoreBreakdown = marketAnalysis.score_breakdown || {};
+            const recommendation = marketAnalysis.recommendation || {};
+            const domainData = marketAnalysis.domain || {};
+            const competitionData = marketAnalysis.competition || {};
+            const targetData = marketAnalysis.target_audience || {};
+            const dataSources = marketAnalysis.data_sources || {};
+            const hasDetailedData = marketAnalysis.naver || marketAnalysis.google_trends || marketAnalysis.youtube || marketAnalysis.kmong || dataSources.naver;
 
             // 도메인 라벨 매핑
             const domainLabels = {
@@ -883,30 +1010,84 @@
             };
 
             if (Object.keys(marketAnalysis).length > 0 || marketScore > 0) {
+                // 트렌드 아이콘/색상
+                const trend = domainData.trend || marketInfo.trend || '안정';
+                const trendColor = trend.includes('급상승') ? '#dc2626' :
+                                  trend.includes('상승') ? '#ea580c' :
+                                  trend.includes('하락') ? '#6b7280' : '#2563eb';
+                const trendIcon = trend.includes('급상승') ? 'fa-fire' :
+                                 trend.includes('상승') ? 'fa-arrow-trend-up' :
+                                 trend.includes('하락') ? 'fa-arrow-trend-down' : 'fa-minus';
+
                 marketSection = `
                     <div class="detail-section">
-                        <h6><i class="fas fa-chart-line"></i> 시장 분석</h6>
-                        <div style="background: #f0fdf4; border-radius: 8px; padding: 1rem;">
+                        <h6><i class="fas fa-chart-line"></i> 시장 분석 <span style="font-size: 0.7rem; color: #6b7280; font-weight: normal;">(경량 분석 v2)</span></h6>
+                        <div style="background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%); border-radius: 12px; padding: 1rem;">
                             <!-- 시장 점수 표시 -->
-                            <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem; padding: 0.75rem; background: white; border-radius: 6px;">
-                                <div style="width: 60px; height: 60px; border-radius: 50%; background: linear-gradient(135deg, #10b981 0%, #059669 100%); display: flex; align-items: center; justify-content: center; color: white; font-size: 1.25rem; font-weight: 700;">
+                            <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem; padding: 1rem; background: white; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
+                                <div style="width: 70px; height: 70px; border-radius: 50%; background: linear-gradient(135deg, #10b981 0%, #059669 100%); display: flex; align-items: center; justify-content: center; color: white; font-size: 1.5rem; font-weight: 700; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);">
                                     ${Math.round(marketScore)}
                                 </div>
                                 <div style="flex: 1;">
-                                    <div style="font-weight: 600; color: #111827;">시장 매력도</div>
-                                    <div style="font-size: 0.813rem; color: #6b7280;">
-                                        ${marketScore >= 80 ? '매우 유망한 시장입니다' :
-                                          marketScore >= 70 ? '성장 가능성이 높은 시장입니다' :
-                                          marketScore >= 60 ? '진입 가능한 시장입니다' :
+                                    <div style="font-weight: 700; color: #111827; font-size: 1.1rem;">시장 매력도</div>
+                                    <div style="font-size: 0.875rem; color: #6b7280; margin-top: 0.25rem;">
+                                        ${marketScore >= 85 ? '매우 유망한 시장입니다' :
+                                          marketScore >= 75 ? '성장 가능성이 높은 시장입니다' :
+                                          marketScore >= 65 ? '진입 가능한 시장입니다' :
                                           '틈새 시장 공략이 필요합니다'}
                                     </div>
+                                    ${recommendation.verdict ? `<div style="margin-top: 0.5rem;"><span style="padding: 4px 10px; background: ${recommendation.verdict.includes('유망') ? 'linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%)' : '#fef3c7'}; color: ${recommendation.verdict.includes('유망') ? '#065f46' : '#92400e'}; border-radius: 6px; font-size: 0.813rem; font-weight: 600;">${recommendation.verdict}</span></div>` : ''}
                                 </div>
                                 <div style="text-align: right;">
-                                    <span style="font-size: 0.75rem; padding: 0.25rem 0.5rem; background: ${marketScore >= 70 ? '#d1fae5' : '#fef3c7'}; color: ${marketScore >= 70 ? '#065f46' : '#92400e'}; border-radius: 4px;">
-                                        ${marketInfo.domain ? domainLabels[marketInfo.domain] || marketInfo.domain : '경량 분석'}
-                                    </span>
+                                    <div style="display: flex; align-items: center; gap: 0.5rem; color: ${trendColor}; font-weight: 600;">
+                                        <i class="fas ${trendIcon}"></i> ${trend}
+                                    </div>
+                                    ${domainData.growth_rate ? `<div style="font-size: 0.75rem; color: #6b7280; margin-top: 0.25rem;">연 ${domainData.growth_rate} 성장</div>` : ''}
                                 </div>
                             </div>
+
+                            <!-- 점수 Breakdown (경량 분석 v2) -->
+                            ${Object.keys(scoreBreakdown).length > 0 ? `
+                                <div style="margin-bottom: 1rem; padding: 0.75rem; background: white; border-radius: 8px;">
+                                    <div style="font-weight: 600; font-size: 0.875rem; color: #111827; margin-bottom: 0.75rem;"><i class="fas fa-chart-bar"></i> 점수 구성</div>
+                                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.5rem;">
+                                        <div style="text-align: center; padding: 0.5rem; background: #f0fdf4; border-radius: 6px;">
+                                            <div style="font-size: 1.25rem; font-weight: 700; color: #059669;">${scoreBreakdown.base_score || 0}</div>
+                                            <div style="font-size: 0.7rem; color: #6b7280;">기본 점수</div>
+                                        </div>
+                                        <div style="text-align: center; padding: 0.5rem; background: #eff6ff; border-radius: 6px;">
+                                            <div style="font-size: 1.25rem; font-weight: 700; color: #2563eb;">+${scoreBreakdown.domain_bonus || 0}</div>
+                                            <div style="font-size: 0.7rem; color: #6b7280;">도메인</div>
+                                        </div>
+                                        <div style="text-align: center; padding: 0.5rem; background: #fef3c7; border-radius: 6px;">
+                                            <div style="font-size: 1.25rem; font-weight: 700; color: #d97706;">+${scoreBreakdown.trend_bonus || 0}</div>
+                                            <div style="font-size: 0.7rem; color: #6b7280;">트렌드</div>
+                                        </div>
+                                        <div style="text-align: center; padding: 0.5rem; background: #fce7f3; border-radius: 6px;">
+                                            <div style="font-size: 1.25rem; font-weight: 700; color: #db2777;">+${scoreBreakdown.target_bonus || 0}</div>
+                                            <div style="font-size: 0.7rem; color: #6b7280;">타겟</div>
+                                        </div>
+                                        <div style="text-align: center; padding: 0.5rem; background: #f5f3ff; border-radius: 6px;">
+                                            <div style="font-size: 1.25rem; font-weight: 700; color: #7c3aed;">+${scoreBreakdown.revenue_bonus || 0}</div>
+                                            <div style="font-size: 0.7rem; color: #6b7280;">수익모델</div>
+                                        </div>
+                                        <div style="text-align: center; padding: 0.5rem; background: ${(scoreBreakdown.competition_bonus || 0) >= 0 ? '#ecfdf5' : '#fef2f2'}; border-radius: 6px;">
+                                            <div style="font-size: 1.25rem; font-weight: 700; color: ${(scoreBreakdown.competition_bonus || 0) >= 0 ? '#059669' : '#dc2626'};">${(scoreBreakdown.competition_bonus || 0) >= 0 ? '+' : ''}${scoreBreakdown.competition_bonus || 0}</div>
+                                            <div style="font-size: 0.7rem; color: #6b7280;">경쟁</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            ` : ''}
+
+                            <!-- 핵심 성공 요소 -->
+                            ${recommendation.key_success_factors && recommendation.key_success_factors.length > 0 ? `
+                                <div style="margin-bottom: 1rem; padding: 0.75rem; background: white; border-radius: 8px;">
+                                    <div style="font-weight: 600; font-size: 0.875rem; color: #111827; margin-bottom: 0.5rem;"><i class="fas fa-key"></i> 핵심 성공 요소</div>
+                                    <div style="display: flex; flex-wrap: wrap; gap: 0.5rem;">
+                                        ${recommendation.key_success_factors.map(f => `<span style="padding: 4px 10px; background: #d1fae5; color: #065f46; border-radius: 6px; font-size: 0.75rem;">${f}</span>`).join('')}
+                                    </div>
+                                </div>
+                            ` : ''}
 
                             <!-- 시장 정보 카드 (새로 추가) -->
                             ${marketInfo.market_size ? `
