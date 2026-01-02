@@ -6,6 +6,7 @@
     <title>AI 사업 발굴 시스템 - Qhyx Inc.</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
     <style>
         :root {
             --primary-color: #6366f1;
@@ -70,6 +71,45 @@
         }
         .glow-success { box-shadow: 0 0 20px rgba(16, 185, 129, 0.2); }
         .glow-warning { box-shadow: 0 0 20px rgba(245, 158, 11, 0.2); }
+
+        /* 차트 섹션 */
+        .charts-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 1.25rem;
+            margin-bottom: 2rem;
+        }
+
+        .chart-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.25rem;
+            border: 1px solid var(--border-color);
+            transition: all 0.2s;
+        }
+
+        .chart-card:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+
+        .chart-card h3 {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .chart-card h3 i {
+            color: var(--primary-color);
+        }
+
+        .chart-container {
+            position: relative;
+            height: 200px;
+        }
 
         /* Header */
         .header {
@@ -630,6 +670,28 @@
             </div>
         </div>
 
+        <!-- Charts Section -->
+        <div class="charts-section">
+            <div class="chart-card">
+                <h3><i class="fas fa-chart-bar"></i> 점수 분포</h3>
+                <div class="chart-container">
+                    <canvas id="scoreDistChart"></canvas>
+                </div>
+            </div>
+            <div class="chart-card">
+                <h3><i class="fas fa-chart-pie"></i> 카테고리 분포</h3>
+                <div class="chart-container">
+                    <canvas id="categoryChart"></canvas>
+                </div>
+            </div>
+            <div class="chart-card">
+                <h3><i class="fas fa-fire"></i> 트렌드 현황</h3>
+                <div class="chart-container">
+                    <canvas id="trendChart"></canvas>
+                </div>
+            </div>
+        </div>
+
         <!-- Filters -->
         <div class="filter-bar">
             <div style="display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap;">
@@ -719,6 +781,9 @@
 
                 // Display businesses
                 displayBusinesses(filteredBusinesses);
+
+                // Render charts
+                renderCharts(allBusinesses);
 
                 // Update timestamp
                 document.getElementById('last-update').textContent =
@@ -1632,6 +1697,182 @@
             `;
 
             new bootstrap.Modal(document.getElementById('businessModal')).show();
+        }
+
+        // Chart instances
+        let scoreChart = null;
+        let categoryChart = null;
+        let trendChart = null;
+
+        // Render all charts
+        function renderCharts(businesses) {
+            renderScoreDistChart(businesses);
+            renderCategoryChart(businesses);
+            renderTrendChart(businesses);
+        }
+
+        // 점수 분포 차트
+        function renderScoreDistChart(businesses) {
+            const ctx = document.getElementById('scoreDistChart').getContext('2d');
+
+            // 점수 구간별 집계
+            const ranges = {
+                '50-59': 0, '60-69': 0, '70-79': 0, '80-84': 0, '85+': 0
+            };
+
+            businesses.forEach(b => {
+                const score = b.score || 0;
+                if (score >= 85) ranges['85+']++;
+                else if (score >= 80) ranges['80-84']++;
+                else if (score >= 70) ranges['70-79']++;
+                else if (score >= 60) ranges['60-69']++;
+                else ranges['50-59']++;
+            });
+
+            if (scoreChart) scoreChart.destroy();
+
+            scoreChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: Object.keys(ranges),
+                    datasets: [{
+                        label: '사업 수',
+                        data: Object.values(ranges),
+                        backgroundColor: [
+                            'rgba(239, 68, 68, 0.7)',
+                            'rgba(249, 115, 22, 0.7)',
+                            'rgba(234, 179, 8, 0.7)',
+                            'rgba(34, 197, 94, 0.7)',
+                            'rgba(16, 185, 129, 0.9)'
+                        ],
+                        borderColor: [
+                            '#ef4444', '#f97316', '#eab308', '#22c55e', '#10b981'
+                        ],
+                        borderWidth: 1,
+                        borderRadius: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: { stepSize: 5 }
+                        }
+                    }
+                }
+            });
+        }
+
+        // 카테고리 분포 차트
+        function renderCategoryChart(businesses) {
+            const ctx = document.getElementById('categoryChart').getContext('2d');
+
+            // 카테고리별 집계
+            const categories = {};
+            businesses.forEach(b => {
+                const cat = b.details?.category || 'Unknown';
+                categories[cat] = (categories[cat] || 0) + 1;
+            });
+
+            // 상위 5개만 표시, 나머지는 '기타'로
+            const sorted = Object.entries(categories).sort((a, b) => b[1] - a[1]);
+            const top5 = sorted.slice(0, 5);
+            const others = sorted.slice(5).reduce((sum, [_, v]) => sum + v, 0);
+            if (others > 0) top5.push(['기타', others]);
+
+            if (categoryChart) categoryChart.destroy();
+
+            categoryChart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: top5.map(([k]) => k),
+                    datasets: [{
+                        data: top5.map(([_, v]) => v),
+                        backgroundColor: [
+                            'rgba(99, 102, 241, 0.8)',
+                            'rgba(139, 92, 246, 0.8)',
+                            'rgba(236, 72, 153, 0.8)',
+                            'rgba(14, 165, 233, 0.8)',
+                            'rgba(20, 184, 166, 0.8)',
+                            'rgba(156, 163, 175, 0.6)'
+                        ],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'right',
+                            labels: {
+                                boxWidth: 12,
+                                padding: 8,
+                                font: { size: 11 }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // 트렌드 분포 차트
+        function renderTrendChart(businesses) {
+            const ctx = document.getElementById('trendChart').getContext('2d');
+
+            // 트렌드별 집계
+            const trends = { '급상승': 0, '상승': 0, '안정': 0, '하락': 0 };
+            businesses.forEach(b => {
+                const trend = b.trend || '안정';
+                if (trends.hasOwnProperty(trend)) {
+                    trends[trend]++;
+                } else {
+                    trends['안정']++;
+                }
+            });
+
+            if (trendChart) trendChart.destroy();
+
+            trendChart = new Chart(ctx, {
+                type: 'polarArea',
+                data: {
+                    labels: Object.keys(trends),
+                    datasets: [{
+                        data: Object.values(trends),
+                        backgroundColor: [
+                            'rgba(239, 68, 68, 0.7)',
+                            'rgba(249, 115, 22, 0.7)',
+                            'rgba(59, 130, 246, 0.7)',
+                            'rgba(107, 114, 128, 0.7)'
+                        ],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'right',
+                            labels: {
+                                boxWidth: 12,
+                                padding: 8,
+                                font: { size: 11 }
+                            }
+                        }
+                    },
+                    scales: {
+                        r: {
+                            ticks: { display: false }
+                        }
+                    }
+                }
+            });
         }
 
         // Auto refresh every 5 minutes
