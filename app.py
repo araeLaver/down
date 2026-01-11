@@ -7,7 +7,7 @@ import os
 import git
 from threading import Thread
 import time
-from sqlalchemy import create_engine, text
+from sqlalchemy import create_engine, text, func
 from sqlalchemy.engine import URL
 from sqlalchemy.orm import sessionmaker
 from database_setup import (
