@@ -18,6 +18,7 @@ from lightweight_market_analyzer import LightweightMarketAnalyzer
 from market_config import MarketConfig
 
 import json
+import random
 from datetime import datetime
 import time
 
@@ -54,8 +55,6 @@ class SmartBusinessSystem:
 
     def analyze_business_idea(self, business_idea, keyword, business_config):
         """단일 사업 아이디어 종합 분석 (경량 모드 지원)"""
-        import random
-
         print(f"\n{'='*80}")
         print(f"[ANALYSIS] 사업 아이디어 분석: {business_idea}")
         print(f"{'='*80}\n")
@@ -69,8 +68,6 @@ class SmartBusinessSystem:
 
     def _analyze_with_lightweight(self, business_idea, keyword, business_config):
         """경량 분석기를 사용한 분석"""
-        import random
-
         print("[1] 시장 분석 중... (경량 모드 v2)")
 
         # 사업 데이터 구성
@@ -175,8 +172,6 @@ class SmartBusinessSystem:
 
     def _analyze_with_external_api(self, business_idea, keyword, business_config):
         """외부 API를 사용한 분석 (폴백용)"""
-        import random
-
         print("[1] 시장 분석 중... (경량 모드)")
 
         market_score = random.randint(65, 80)

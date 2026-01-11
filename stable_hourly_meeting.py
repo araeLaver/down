@@ -8,6 +8,7 @@ import time
 import json
 import os
 import sys
+import random
 from datetime import datetime, timedelta
 from database_setup import Session, BusinessMeeting
 from realistic_business_generator import RealisticBusinessGenerator
@@ -195,7 +196,6 @@ class StableHourlyMeeting:
         ])
 
         # 회의 유형별 현실적인 결정사항 및 실행항목 생성
-        import random
         random.seed(now.day * 100 + now.hour)
 
         # 회의 타입별 결정사항과 실행항목

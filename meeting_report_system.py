@@ -5,6 +5,7 @@ Qhyx Inc. 매일 회의 안건 및 회의록 자동 보고 시스템
 
 import schedule
 import time
+import random
 from datetime import datetime, timedelta
 from database_setup import Session, BusinessMeeting, Task, Employee, CompanyMilestone
 from continuous_business_expansion import BusinessExpansionEngine
@@ -154,7 +155,6 @@ class MeetingReportSystem:
             "고객 만족도 향상을 통한 지속가능한 성장"
         ]
         
-        import random
         return random.choice(conclusions)
     
     def save_meeting_minutes_to_database(self, meeting_data, minutes):

@@ -11,18 +11,21 @@ import json
 from datetime import datetime
 import time
 from urllib.parse import quote
+from market_config import MarketConfig
 
 class RealMarketAnalyzer:
     def __init__(self):
         self.headers = {
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
         }
+        self.api_delay = MarketConfig.get_api_delay()
+        self.api_timeout = MarketConfig.get_timeout()
 
     def analyze_kmong_market(self, keyword):
         """크몽에서 실제 시장 데이터 수집"""
         try:
             url = f"https://kmong.com/search?keyword={quote(keyword)}"
-            response = requests.get(url, headers=self.headers, timeout=10)
+            response = requests.get(url, headers=self.headers, timeout=self.api_timeout)
             soup = BeautifulSoup(response.content, 'html.parser')
 
             # 서비스 개수 파악
@@ -62,11 +65,11 @@ class RealMarketAnalyzer:
         """네이버 검색량 추정"""
         try:
             url = f"https://search.naver.com/search.naver?query={quote(keyword)}"
-            response = requests.get(url, headers=self.headers, timeout=10)
+            response = requests.get(url, headers=self.headers, timeout=self.api_timeout)
 
             # 자동완성 검색어로 인기도 추정
             autocomplete_url = f"https://ac.search.naver.com/nx/ac?q={quote(keyword)}&con=0&frm=nv&ans=2&r_format=json&r_enc=UTF-8&r_unicode=0&t_koreng=1&run=2&rev=4&q_enc=UTF-8&st=100&r_lt=10000"
-            ac_response = requests.get(autocomplete_url, timeout=10)
+            ac_response = requests.get(autocomplete_url, timeout=self.api_timeout)
 
             if ac_response.status_code == 200:
                 data = ac_response.json()
@@ -86,7 +89,7 @@ class RealMarketAnalyzer:
         """구글 검색으로 경쟁사 파악"""
         try:
             url = f"https://www.google.com/search?q={quote(keyword + ' 서비스')}"
-            response = requests.get(url, headers=self.headers, timeout=10)
+            response = requests.get(url, headers=self.headers, timeout=self.api_timeout)
             soup = BeautifulSoup(response.content, 'html.parser')
 
             # 검색 결과 개수 파악
@@ -110,7 +113,7 @@ class RealMarketAnalyzer:
         """유튜브 관심도 분석"""
         try:
             url = f"https://www.youtube.com/results?search_query={quote(keyword)}"
-            response = requests.get(url, headers=self.headers, timeout=10)
+            response = requests.get(url, headers=self.headers, timeout=self.api_timeout)
 
             # 간단한 관심도 추정 (응답 크기 기반)
             content_length = len(response.content)
@@ -127,7 +130,7 @@ class RealMarketAnalyzer:
         """위시켓 프리랜서 시장 분석"""
         try:
             url = f"https://www.wishket.com/project/?q={quote(keyword)}"
-            response = requests.get(url, headers=self.headers, timeout=10)
+            response = requests.get(url, headers=self.headers, timeout=self.api_timeout)
             soup = BeautifulSoup(response.content, 'html.parser')
 
             # 프로젝트 개수 파악
@@ -159,7 +162,7 @@ class RealMarketAnalyzer:
         """숨고 서비스 시장 분석"""
         try:
             url = f"https://soomgo.com/search/pro?keyword={quote(keyword)}"
-            response = requests.get(url, headers=self.headers, timeout=10)
+            response = requests.get(url, headers=self.headers, timeout=self.api_timeout)
             soup = BeautifulSoup(response.content, 'html.parser')
 
             # 전문가 개수
@@ -192,7 +195,7 @@ class RealMarketAnalyzer:
         try:
             # 탈잉 (재능 마켓)
             taling_url = f"https://taling.me/search?keyword={quote(keyword)}"
-            response = requests.get(taling_url, headers=self.headers, timeout=10)
+            response = requests.get(taling_url, headers=self.headers, timeout=self.api_timeout)
             soup = BeautifulSoup(response.content, 'html.parser')
 
             classes = soup.find_all('div', class_='class-card') or soup.find_all('a', class_='talent-item')
@@ -211,7 +214,7 @@ class RealMarketAnalyzer:
         """쿠팡 마켓플레이스 분석"""
         try:
             url = f"https://www.coupang.com/np/search?q={quote(keyword)}"
-            response = requests.get(url, headers=self.headers, timeout=10)
+            response = requests.get(url, headers=self.headers, timeout=self.api_timeout)
             soup = BeautifulSoup(response.content, 'html.parser')
 
             # 상품 개수
@@ -242,7 +245,7 @@ class RealMarketAnalyzer:
         """네이버 블로그 트렌드 분석"""
         try:
             url = f"https://section.blog.naver.com/Search/Post.naver?keyword={quote(keyword)}"
-            response = requests.get(url, headers=self.headers, timeout=10)
+            response = requests.get(url, headers=self.headers, timeout=self.api_timeout)
             soup = BeautifulSoup(response.content, 'html.parser')
 
             # 블로그 포스트 개수
@@ -264,7 +267,7 @@ class RealMarketAnalyzer:
             # 인스타그램은 로그인 필요하므로 간접 지표 사용
             # 네이버에서 "keyword 인스타그램" 검색
             url = f"https://search.naver.com/search.naver?query={quote(keyword + ' 인스타그램')}"
-            response = requests.get(url, headers=self.headers, timeout=10)
+            response = requests.get(url, headers=self.headers, timeout=self.api_timeout)
 
             content_length = len(response.content)
 
@@ -345,7 +348,7 @@ class RealMarketAnalyzer:
         try:
             # 업비트 API로 거래량 확인 (공개 API)
             url = "https://api.upbit.com/v1/market/all"
-            response = requests.get(url, timeout=10)
+            response = requests.get(url, timeout=self.api_timeout)
 
             if response.status_code == 200:
                 markets = response.json()
@@ -399,7 +402,7 @@ class RealMarketAnalyzer:
             search_query = f"{keyword} blockchain OR web3 OR crypto"
             url = f"https://api.github.com/search/repositories?q={quote(search_query)}&sort=stars&per_page=10"
 
-            response = requests.get(url, headers=self.headers, timeout=10)
+            response = requests.get(url, headers=self.headers, timeout=self.api_timeout)
 
             if response.status_code == 200:
                 data = response.json()
@@ -430,7 +433,7 @@ class RealMarketAnalyzer:
             search_term = keyword if any(t in keyword for t in blockchain_terms) else f"블록체인 {keyword}"
 
             url = f"https://www.saramin.co.kr/zf_user/search?searchword={quote(search_term)}&searchType=search"
-            response = requests.get(url, headers=self.headers, timeout=10)
+            response = requests.get(url, headers=self.headers, timeout=self.api_timeout)
 
             if response.status_code == 200:
                 soup = BeautifulSoup(response.content, 'html.parser')
@@ -482,55 +485,55 @@ class RealMarketAnalyzer:
         print("1. 크몽 시장 분석 중...")
         kmong_data = self.analyze_kmong_market(keyword)
         results['data_sources']['kmong'] = kmong_data
-        time.sleep(2)  # API 호출 간격
+        time.sleep(self.api_delay)
 
         # 네이버 검색량
         print("2. 네이버 검색량 분석 중...")
         naver_data = self.analyze_naver_search_volume(keyword)
         results['data_sources']['naver'] = naver_data
-        time.sleep(2)
+        time.sleep(self.api_delay)
 
         # 구글 경쟁사
         print("3. 구글 경쟁사 분석 중...")
         google_data = self.analyze_competitors_google(keyword)
         results['data_sources']['google'] = google_data
-        time.sleep(2)
+        time.sleep(self.api_delay)
 
         # 유튜브 관심도
         print("4. 유튜브 관심도 분석 중...")
         youtube_data = self.analyze_youtube_interest(keyword)
         results['data_sources']['youtube'] = youtube_data
-        time.sleep(2)
+        time.sleep(self.api_delay)
 
         # 위시켓 프리랜서 시장
         print("5. 위시켓 프리랜서 시장 분석 중...")
         wishket_data = self.analyze_wishket_market(keyword)
         results['data_sources']['wishket'] = wishket_data
-        time.sleep(2)
+        time.sleep(self.api_delay)
 
         # 숨고 서비스 시장
         print("6. 숨고 서비스 시장 분석 중...")
         soomgo_data = self.analyze_soomgo_market(keyword)
         results['data_sources']['soomgo'] = soomgo_data
-        time.sleep(2)
+        time.sleep(self.api_delay)
 
         # 탈잉 교육/재능 플랫폼
         print("7. 탈잉 플랫폼 분석 중...")
         brokerage_data = self.analyze_brokerage_platforms(keyword)
         results['data_sources']['brokerage'] = brokerage_data
-        time.sleep(2)
+        time.sleep(self.api_delay)
 
         # 쿠팡 마켓플레이스
         print("8. 쿠팡 마켓플레이스 분석 중...")
         coupang_data = self.analyze_coupang_marketplace(keyword)
         results['data_sources']['coupang'] = coupang_data
-        time.sleep(2)
+        time.sleep(self.api_delay)
 
         # 네이버 블로그 트렌드
         print("9. 네이버 블로그 트렌드 분석 중...")
         blog_data = self.analyze_blog_trend(keyword)
         results['data_sources']['blog'] = blog_data
-        time.sleep(2)
+        time.sleep(self.api_delay)
 
         # 인스타그램 비즈니스
         print("10. 인스타그램 비즈니스 활성도 분석 중...")
@@ -544,22 +547,22 @@ class RealMarketAnalyzer:
             print("11. CoinMarketCap 트렌드 분석 중...")
             coinmarketcap_data = self.analyze_coinmarketcap(keyword)
             results['data_sources']['coinmarketcap'] = coinmarketcap_data
-            time.sleep(1)
+            time.sleep(self.api_delay / 2)
 
             print("12. 업비트 시장 분석 중...")
             upbit_data = self.analyze_upbit_market(keyword)
             results['data_sources']['upbit'] = upbit_data
-            time.sleep(1)
+            time.sleep(self.api_delay / 2)
 
             print("13. OpenSea NFT 시장 분석 중...")
             opensea_data = self.analyze_opensea_nft(keyword)
             results['data_sources']['opensea'] = opensea_data
-            time.sleep(1)
+            time.sleep(self.api_delay / 2)
 
             print("14. GitHub 블록체인 프로젝트 분석 중...")
             github_data = self.analyze_github_blockchain(keyword)
             results['data_sources']['github_blockchain'] = github_data
-            time.sleep(1)
+            time.sleep(self.api_delay / 2)
 
             print("15. 블록체인 채용시장 분석 중...")
             jobs_data = self.analyze_blockchain_jobs(keyword)
@@ -837,7 +840,7 @@ if __name__ == "__main__":
         print(f"   우선순위: {result['recommendation']['priority']}")
         print("-" * 60)
 
-        time.sleep(5)  # API 호출 간격
+        time.sleep(analyzer.api_delay * 2.5)  # 전체 분석 사이클 간 대기
 
     # 상위 3개 추천
     all_results.sort(key=lambda x: x['market_score'], reverse=True)
