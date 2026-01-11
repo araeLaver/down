@@ -12,27 +12,52 @@ from typing import Dict, List, Optional, Tuple
 
 class LightweightMarketAnalyzer:
     def __init__(self):
-        # IT 사업 유형별 기본 점수 및 특성
+        # IT 사업 유형별 기본 점수 및 특성 (12개 유형)
         self.it_type_scores = {
+            # 고성장/고수익 유형
             "saas": {
-                "base_score": 75,
+                "base_score": 76,
                 "market_growth": "높음",
                 "competition": "중간",
                 "entry_barrier": "낮음",
                 "scalability": "매우 높음",
                 "recurring_revenue": True,
-                "avg_margin": 70,  # %
-                "time_to_profit": "6-12개월"
+                "avg_margin": 70,
+                "time_to_profit": "6-12개월",
+                "best_domains": ["AI", "자동화", "생산성", "협업"]
+            },
+            "ai_service": {
+                "base_score": 80,
+                "market_growth": "매우 높음",
+                "competition": "중간",
+                "entry_barrier": "중간",
+                "scalability": "매우 높음",
+                "recurring_revenue": True,
+                "avg_margin": 75,
+                "time_to_profit": "3-6개월",
+                "best_domains": ["AI", "자동화", "콘텐츠", "마케팅"]
+            },
+            "mobile_app": {
+                "base_score": 72,
+                "market_growth": "보통",
+                "competition": "높음",
+                "entry_barrier": "중간",
+                "scalability": "높음",
+                "recurring_revenue": True,
+                "avg_margin": 65,
+                "time_to_profit": "6-12개월",
+                "best_domains": ["헬스케어", "피트니스", "생산성", "소셜"]
             },
             "marketplace": {
-                "base_score": 72,
+                "base_score": 71,
                 "market_growth": "높음",
                 "competition": "높음",
                 "entry_barrier": "중간",
                 "scalability": "매우 높음",
                 "recurring_revenue": False,
-                "avg_margin": 15,  # 수수료 기반
-                "time_to_profit": "12-18개월"
+                "avg_margin": 15,
+                "time_to_profit": "12-18개월",
+                "best_domains": ["프리랜서", "중고거래", "서비스매칭"]
             },
             "agency": {
                 "base_score": 68,
@@ -40,9 +65,10 @@ class LightweightMarketAnalyzer:
                 "competition": "높음",
                 "entry_barrier": "낮음",
                 "scalability": "낮음",
-                "recurring_revenue": True,  # 리테이너
+                "recurring_revenue": True,
                 "avg_margin": 40,
-                "time_to_profit": "1-3개월"
+                "time_to_profit": "1-3개월",
+                "best_domains": ["마케팅", "디자인", "개발", "컨설팅"]
             },
             "tools": {
                 "base_score": 70,
@@ -52,7 +78,8 @@ class LightweightMarketAnalyzer:
                 "scalability": "높음",
                 "recurring_revenue": False,
                 "avg_margin": 60,
-                "time_to_profit": "3-6개월"
+                "time_to_profit": "3-6개월",
+                "best_domains": ["생산성", "개발도구", "디자인", "분석"]
             },
             "platform": {
                 "base_score": 73,
@@ -62,79 +89,276 @@ class LightweightMarketAnalyzer:
                 "scalability": "매우 높음",
                 "recurring_revenue": True,
                 "avg_margin": 50,
-                "time_to_profit": "12-24개월"
+                "time_to_profit": "12-24개월",
+                "best_domains": ["교육", "커뮤니티", "콘텐츠", "커머스"]
+            },
+            # 추가 유형들
+            "chrome_extension": {
+                "base_score": 69,
+                "market_growth": "보통",
+                "competition": "낮음",
+                "entry_barrier": "매우 낮음",
+                "scalability": "높음",
+                "recurring_revenue": True,
+                "avg_margin": 80,
+                "time_to_profit": "1-3개월",
+                "best_domains": ["생산성", "AI", "SEO", "소셜미디어"]
+            },
+            "api_service": {
+                "base_score": 74,
+                "market_growth": "높음",
+                "competition": "낮음",
+                "entry_barrier": "중간",
+                "scalability": "매우 높음",
+                "recurring_revenue": True,
+                "avg_margin": 85,
+                "time_to_profit": "3-6개월",
+                "best_domains": ["AI", "데이터", "결제", "인증"]
+            },
+            "consulting": {
+                "base_score": 66,
+                "market_growth": "보통",
+                "competition": "높음",
+                "entry_barrier": "낮음",
+                "scalability": "매우 낮음",
+                "recurring_revenue": True,
+                "avg_margin": 60,
+                "time_to_profit": "즉시",
+                "best_domains": ["전략", "기술", "마케팅", "법률"]
+            },
+            "content_business": {
+                "base_score": 67,
+                "market_growth": "높음",
+                "competition": "높음",
+                "entry_barrier": "낮음",
+                "scalability": "중간",
+                "recurring_revenue": True,
+                "avg_margin": 50,
+                "time_to_profit": "3-6개월",
+                "best_domains": ["교육", "엔터테인먼트", "정보", "취미"]
+            },
+            "nocode_solution": {
+                "base_score": 75,
+                "market_growth": "매우 높음",
+                "competition": "중간",
+                "entry_barrier": "낮음",
+                "scalability": "높음",
+                "recurring_revenue": True,
+                "avg_margin": 70,
+                "time_to_profit": "1-3개월",
+                "best_domains": ["자동화", "웹사이트", "앱개발", "데이터"]
             }
         }
 
-        # 도메인별 시장 규모 및 트렌드 데이터 (한국 기준, 2024-2025)
+        # 도메인별 시장 규모 및 트렌드 데이터 (한국 기준, 2025)
         self.domain_market_data = {
-            # 성장 분야 (높은 점수)
-            "AI": {"market_size": "대형", "growth_rate": 35, "trend": "급상승", "score_bonus": 15},
-            "헬스케어": {"market_size": "대형", "growth_rate": 12, "trend": "상승", "score_bonus": 10},
-            "피트니스": {"market_size": "중형", "growth_rate": 8, "trend": "상승", "score_bonus": 8},
-            "교육": {"market_size": "대형", "growth_rate": 10, "trend": "상승", "score_bonus": 8},
-            "반려동물": {"market_size": "중형", "growth_rate": 15, "trend": "급상승", "score_bonus": 12},
-            "시니어": {"market_size": "대형", "growth_rate": 18, "trend": "급상승", "score_bonus": 12},
-            "육아": {"market_size": "중형", "growth_rate": 6, "trend": "안정", "score_bonus": 5},
-            "재테크": {"market_size": "대형", "growth_rate": 20, "trend": "급상승", "score_bonus": 12},
-            "투자": {"market_size": "대형", "growth_rate": 15, "trend": "상승", "score_bonus": 10},
+            # === AI/자동화 분야 (최고 성장) ===
+            "AI": {"market_size": "대형", "growth_rate": 40, "trend": "급상승", "score_bonus": 18, "category": "tech"},
+            "자동화": {"market_size": "대형", "growth_rate": 35, "trend": "급상승", "score_bonus": 16, "category": "tech"},
+            "생성AI": {"market_size": "대형", "growth_rate": 50, "trend": "급상승", "score_bonus": 20, "category": "tech"},
+            "챗봇": {"market_size": "중형", "growth_rate": 30, "trend": "급상승", "score_bonus": 14, "category": "tech"},
+            "RPA": {"market_size": "중형", "growth_rate": 25, "trend": "상승", "score_bonus": 12, "category": "tech"},
 
-            # 안정 분야 (중간 점수)
-            "부동산": {"market_size": "대형", "growth_rate": 3, "trend": "안정", "score_bonus": 5},
-            "여행": {"market_size": "대형", "growth_rate": 8, "trend": "회복", "score_bonus": 6},
-            "패션": {"market_size": "대형", "growth_rate": 5, "trend": "안정", "score_bonus": 4},
-            "뷰티": {"market_size": "중형", "growth_rate": 7, "trend": "안정", "score_bonus": 5},
-            "배달": {"market_size": "대형", "growth_rate": 2, "trend": "포화", "score_bonus": 2},
-            "쇼핑": {"market_size": "대형", "growth_rate": 4, "trend": "안정", "score_bonus": 3},
+            # === 헬스/웰니스 분야 ===
+            "헬스케어": {"market_size": "대형", "growth_rate": 15, "trend": "상승", "score_bonus": 12, "category": "health"},
+            "피트니스": {"market_size": "중형", "growth_rate": 10, "trend": "상승", "score_bonus": 8, "category": "health"},
+            "멘탈헬스": {"market_size": "중형", "growth_rate": 25, "trend": "급상승", "score_bonus": 14, "category": "health"},
+            "수면": {"market_size": "중형", "growth_rate": 28, "trend": "급상승", "score_bonus": 14, "category": "health"},
+            "명상": {"market_size": "소형", "growth_rate": 22, "trend": "상승", "score_bonus": 10, "category": "health"},
+            "다이어트": {"market_size": "대형", "growth_rate": 8, "trend": "안정", "score_bonus": 6, "category": "health"},
+            "영양": {"market_size": "중형", "growth_rate": 12, "trend": "상승", "score_bonus": 8, "category": "health"},
 
-            # 블록체인/Web3 분야
-            "NFT": {"market_size": "소형", "growth_rate": -10, "trend": "하락", "score_bonus": -5},
-            "DeFi": {"market_size": "소형", "growth_rate": 5, "trend": "회복", "score_bonus": 3},
-            "블록체인": {"market_size": "중형", "growth_rate": 8, "trend": "안정", "score_bonus": 5},
-            "메타버스": {"market_size": "소형", "growth_rate": -5, "trend": "하락", "score_bonus": -3},
-            "Web3": {"market_size": "소형", "growth_rate": 10, "trend": "회복", "score_bonus": 5},
+            # === 시니어/실버 분야 (고성장) ===
+            "시니어": {"market_size": "대형", "growth_rate": 22, "trend": "급상승", "score_bonus": 15, "category": "senior"},
+            "실버케어": {"market_size": "대형", "growth_rate": 20, "trend": "급상승", "score_bonus": 14, "category": "senior"},
+            "요양": {"market_size": "대형", "growth_rate": 18, "trend": "상승", "score_bonus": 12, "category": "senior"},
+            "시니어일자리": {"market_size": "중형", "growth_rate": 25, "trend": "급상승", "score_bonus": 14, "category": "senior"},
 
-            # 신규/틈새 분야
-            "수면": {"market_size": "소형", "growth_rate": 25, "trend": "급상승", "score_bonus": 10},
-            "명상": {"market_size": "소형", "growth_rate": 20, "trend": "급상승", "score_bonus": 8},
-            "취미": {"market_size": "중형", "growth_rate": 10, "trend": "상승", "score_bonus": 6},
-            "자격증": {"market_size": "중형", "growth_rate": 8, "trend": "상승", "score_bonus": 5},
-            "언어": {"market_size": "대형", "growth_rate": 6, "trend": "안정", "score_bonus": 4},
-            "코딩": {"market_size": "중형", "growth_rate": 15, "trend": "상승", "score_bonus": 8},
+            # === 반려동물 분야 (고성장) ===
+            "반려동물": {"market_size": "대형", "growth_rate": 18, "trend": "급상승", "score_bonus": 14, "category": "pet"},
+            "펫": {"market_size": "대형", "growth_rate": 18, "trend": "급상승", "score_bonus": 14, "category": "pet"},
+            "펫시터": {"market_size": "소형", "growth_rate": 25, "trend": "급상승", "score_bonus": 12, "category": "pet"},
+            "펫푸드": {"market_size": "중형", "growth_rate": 15, "trend": "상승", "score_bonus": 10, "category": "pet"},
+            "동물병원": {"market_size": "중형", "growth_rate": 12, "trend": "상승", "score_bonus": 8, "category": "pet"},
+
+            # === 교육 분야 ===
+            "교육": {"market_size": "대형", "growth_rate": 10, "trend": "상승", "score_bonus": 8, "category": "edu"},
+            "코딩교육": {"market_size": "중형", "growth_rate": 18, "trend": "상승", "score_bonus": 12, "category": "edu"},
+            "언어": {"market_size": "대형", "growth_rate": 8, "trend": "안정", "score_bonus": 6, "category": "edu"},
+            "자격증": {"market_size": "중형", "growth_rate": 10, "trend": "상승", "score_bonus": 7, "category": "edu"},
+            "취업": {"market_size": "대형", "growth_rate": 12, "trend": "상승", "score_bonus": 9, "category": "edu"},
+            "이러닝": {"market_size": "대형", "growth_rate": 15, "trend": "상승", "score_bonus": 10, "category": "edu"},
+
+            # === 금융/투자 분야 ===
+            "재테크": {"market_size": "대형", "growth_rate": 18, "trend": "급상승", "score_bonus": 12, "category": "finance"},
+            "투자": {"market_size": "대형", "growth_rate": 15, "trend": "상승", "score_bonus": 10, "category": "finance"},
+            "주식": {"market_size": "대형", "growth_rate": 10, "trend": "안정", "score_bonus": 7, "category": "finance"},
+            "부동산": {"market_size": "대형", "growth_rate": 5, "trend": "안정", "score_bonus": 5, "category": "finance"},
+            "보험": {"market_size": "대형", "growth_rate": 6, "trend": "안정", "score_bonus": 5, "category": "finance"},
+            "가계부": {"market_size": "중형", "growth_rate": 12, "trend": "상승", "score_bonus": 8, "category": "finance"},
+
+            # === 라이프스타일 분야 ===
+            "1인가구": {"market_size": "대형", "growth_rate": 15, "trend": "상승", "score_bonus": 11, "category": "lifestyle"},
+            "싱글": {"market_size": "대형", "growth_rate": 12, "trend": "상승", "score_bonus": 9, "category": "lifestyle"},
+            "육아": {"market_size": "중형", "growth_rate": 8, "trend": "안정", "score_bonus": 6, "category": "lifestyle"},
+            "신혼": {"market_size": "소형", "growth_rate": 5, "trend": "안정", "score_bonus": 4, "category": "lifestyle"},
+            "취미": {"market_size": "중형", "growth_rate": 12, "trend": "상승", "score_bonus": 8, "category": "lifestyle"},
+            "여행": {"market_size": "대형", "growth_rate": 10, "trend": "상승", "score_bonus": 7, "category": "lifestyle"},
+
+            # === 커머스/리테일 ===
+            "이커머스": {"market_size": "대형", "growth_rate": 8, "trend": "안정", "score_bonus": 5, "category": "commerce"},
+            "쇼핑": {"market_size": "대형", "growth_rate": 5, "trend": "포화", "score_bonus": 3, "category": "commerce"},
+            "배달": {"market_size": "대형", "growth_rate": 3, "trend": "포화", "score_bonus": 2, "category": "commerce"},
+            "중고거래": {"market_size": "대형", "growth_rate": 12, "trend": "상승", "score_bonus": 8, "category": "commerce"},
+            "구독커머스": {"market_size": "중형", "growth_rate": 18, "trend": "상승", "score_bonus": 11, "category": "commerce"},
+            "라이브커머스": {"market_size": "중형", "growth_rate": 20, "trend": "상승", "score_bonus": 12, "category": "commerce"},
+
+            # === 마케팅/비즈니스 ===
+            "마케팅": {"market_size": "대형", "growth_rate": 12, "trend": "상승", "score_bonus": 9, "category": "biz"},
+            "SNS마케팅": {"market_size": "중형", "growth_rate": 15, "trend": "상승", "score_bonus": 10, "category": "biz"},
+            "SEO": {"market_size": "중형", "growth_rate": 10, "trend": "상승", "score_bonus": 8, "category": "biz"},
+            "인플루언서": {"market_size": "중형", "growth_rate": 15, "trend": "상승", "score_bonus": 9, "category": "biz"},
+            "CRM": {"market_size": "중형", "growth_rate": 14, "trend": "상승", "score_bonus": 10, "category": "biz"},
+            "HR": {"market_size": "대형", "growth_rate": 12, "trend": "상승", "score_bonus": 9, "category": "biz"},
+
+            # === ESG/친환경 (신규 성장) ===
+            "ESG": {"market_size": "중형", "growth_rate": 30, "trend": "급상승", "score_bonus": 15, "category": "green"},
+            "친환경": {"market_size": "중형", "growth_rate": 22, "trend": "급상승", "score_bonus": 12, "category": "green"},
+            "탄소중립": {"market_size": "소형", "growth_rate": 35, "trend": "급상승", "score_bonus": 14, "category": "green"},
+            "리사이클": {"market_size": "소형", "growth_rate": 20, "trend": "상승", "score_bonus": 10, "category": "green"},
+
+            # === 블록체인/Web3 (회복세) ===
+            "블록체인": {"market_size": "중형", "growth_rate": 10, "trend": "회복", "score_bonus": 6, "category": "web3"},
+            "Web3": {"market_size": "소형", "growth_rate": 12, "trend": "회복", "score_bonus": 6, "category": "web3"},
+            "DeFi": {"market_size": "소형", "growth_rate": 8, "trend": "회복", "score_bonus": 4, "category": "web3"},
+            "NFT": {"market_size": "소형", "growth_rate": -5, "trend": "하락", "score_bonus": -3, "category": "web3"},
+            "메타버스": {"market_size": "소형", "growth_rate": -3, "trend": "하락", "score_bonus": -2, "category": "web3"},
+
+            # === 기타/전문 분야 ===
+            "법률": {"market_size": "중형", "growth_rate": 10, "trend": "상승", "score_bonus": 8, "category": "pro"},
+            "회계": {"market_size": "중형", "growth_rate": 8, "trend": "안정", "score_bonus": 6, "category": "pro"},
+            "디자인": {"market_size": "중형", "growth_rate": 10, "trend": "상승", "score_bonus": 7, "category": "pro"},
+            "개발": {"market_size": "대형", "growth_rate": 15, "trend": "상승", "score_bonus": 10, "category": "pro"},
+            "프리랜서": {"market_size": "대형", "growth_rate": 18, "trend": "상승", "score_bonus": 11, "category": "pro"},
+
+            # === 엔터테인먼트/콘텐츠 ===
+            "게임": {"market_size": "대형", "growth_rate": 8, "trend": "안정", "score_bonus": 5, "category": "ent"},
+            "음악": {"market_size": "중형", "growth_rate": 10, "trend": "상승", "score_bonus": 7, "category": "ent"},
+            "영상": {"market_size": "대형", "growth_rate": 15, "trend": "상승", "score_bonus": 9, "category": "ent"},
+            "웹툰": {"market_size": "중형", "growth_rate": 12, "trend": "상승", "score_bonus": 8, "category": "ent"},
+            "스트리밍": {"market_size": "대형", "growth_rate": 10, "trend": "안정", "score_bonus": 6, "category": "ent"},
         }
 
-        # 타겟 고객층별 시장 규모 (한국 기준)
+        # 도메인 시너지 매트릭스 (조합 보너스)
+        self.domain_synergy = {
+            ("AI", "헬스케어"): 8,
+            ("AI", "교육"): 7,
+            ("AI", "마케팅"): 8,
+            ("AI", "시니어"): 9,
+            ("시니어", "헬스케어"): 10,
+            ("반려동물", "헬스케어"): 6,
+            ("1인가구", "반려동물"): 7,
+            ("ESG", "이커머스"): 6,
+            ("자동화", "마케팅"): 8,
+            ("자동화", "HR"): 7,
+        }
+
+        # 타겟 고객층별 시장 규모 (한국 기준, 2025 업데이트)
         self.target_audience_data = {
-            "직장인": {"population": 2800, "digital_affinity": "높음", "spending_power": "높음", "score_bonus": 8},
-            "대학생": {"population": 300, "digital_affinity": "매우 높음", "spending_power": "낮음", "score_bonus": 3},
-            "주부": {"population": 500, "digital_affinity": "중간", "spending_power": "중간", "score_bonus": 5},
-            "시니어": {"population": 900, "digital_affinity": "낮음", "spending_power": "높음", "score_bonus": 6},
-            "MZ세대": {"population": 1700, "digital_affinity": "매우 높음", "spending_power": "중간", "score_bonus": 7},
-            "프리랜서": {"population": 200, "digital_affinity": "높음", "spending_power": "중간", "score_bonus": 5},
-            "소상공인": {"population": 600, "digital_affinity": "중간", "spending_power": "중간", "score_bonus": 6},
-            "스타트업": {"population": 50, "digital_affinity": "매우 높음", "spending_power": "낮음", "score_bonus": 4},
-            "1인기업": {"population": 100, "digital_affinity": "높음", "spending_power": "중간", "score_bonus": 5},
-            "중소기업": {"population": 400, "digital_affinity": "중간", "spending_power": "높음", "score_bonus": 7},
-            "신혼부부": {"population": 150, "digital_affinity": "높음", "spending_power": "중간", "score_bonus": 5},
-            "싱글족": {"population": 700, "digital_affinity": "높음", "spending_power": "높음", "score_bonus": 7},
-            "맞벌이": {"population": 400, "digital_affinity": "높음", "spending_power": "매우 높음", "score_bonus": 8},
-            "워킹맘": {"population": 300, "digital_affinity": "높음", "spending_power": "높음", "score_bonus": 7},
-            "워킹대디": {"population": 300, "digital_affinity": "높음", "spending_power": "높음", "score_bonus": 6},
+            # === 직업 기반 ===
+            "직장인": {"population": 2800, "digital_affinity": "높음", "spending_power": "높음", "score_bonus": 8, "category": "job"},
+            "프리랜서": {"population": 250, "digital_affinity": "매우 높음", "spending_power": "중간", "score_bonus": 7, "category": "job"},
+            "자영업자": {"population": 550, "digital_affinity": "중간", "spending_power": "중간", "score_bonus": 6, "category": "job"},
+            "소상공인": {"population": 600, "digital_affinity": "중간", "spending_power": "중간", "score_bonus": 6, "category": "job"},
+            "전문직": {"population": 200, "digital_affinity": "높음", "spending_power": "매우 높음", "score_bonus": 9, "category": "job"},
+            "크리에이터": {"population": 80, "digital_affinity": "매우 높음", "spending_power": "중간", "score_bonus": 7, "category": "job"},
+            "개발자": {"population": 150, "digital_affinity": "매우 높음", "spending_power": "높음", "score_bonus": 8, "category": "job"},
+            "마케터": {"population": 100, "digital_affinity": "매우 높음", "spending_power": "높음", "score_bonus": 8, "category": "job"},
+            "디자이너": {"population": 80, "digital_affinity": "매우 높음", "spending_power": "중간", "score_bonus": 7, "category": "job"},
+
+            # === 연령/세대 기반 ===
+            "MZ세대": {"population": 1700, "digital_affinity": "매우 높음", "spending_power": "중간", "score_bonus": 8, "category": "gen"},
+            "Z세대": {"population": 800, "digital_affinity": "매우 높음", "spending_power": "낮음", "score_bonus": 6, "category": "gen"},
+            "밀레니얼": {"population": 900, "digital_affinity": "매우 높음", "spending_power": "높음", "score_bonus": 9, "category": "gen"},
+            "X세대": {"population": 850, "digital_affinity": "높음", "spending_power": "매우 높음", "score_bonus": 8, "category": "gen"},
+            "시니어": {"population": 1200, "digital_affinity": "낮음", "spending_power": "높음", "score_bonus": 7, "category": "gen"},
+            "액티브시니어": {"population": 400, "digital_affinity": "중간", "spending_power": "매우 높음", "score_bonus": 9, "category": "gen"},
+            "대학생": {"population": 280, "digital_affinity": "매우 높음", "spending_power": "낮음", "score_bonus": 4, "category": "gen"},
+            "취준생": {"population": 150, "digital_affinity": "매우 높음", "spending_power": "낮음", "score_bonus": 5, "category": "gen"},
+
+            # === 라이프스타일 기반 ===
+            "싱글족": {"population": 750, "digital_affinity": "높음", "spending_power": "높음", "score_bonus": 8, "category": "life"},
+            "1인가구": {"population": 950, "digital_affinity": "높음", "spending_power": "높음", "score_bonus": 9, "category": "life"},
+            "맞벌이": {"population": 450, "digital_affinity": "높음", "spending_power": "매우 높음", "score_bonus": 9, "category": "life"},
+            "워킹맘": {"population": 320, "digital_affinity": "높음", "spending_power": "높음", "score_bonus": 8, "category": "life"},
+            "워킹대디": {"population": 320, "digital_affinity": "높음", "spending_power": "높음", "score_bonus": 7, "category": "life"},
+            "신혼부부": {"population": 140, "digital_affinity": "높음", "spending_power": "높음", "score_bonus": 7, "category": "life"},
+            "주부": {"population": 450, "digital_affinity": "중간", "spending_power": "중간", "score_bonus": 5, "category": "life"},
+            "펫부모": {"population": 600, "digital_affinity": "높음", "spending_power": "높음", "score_bonus": 8, "category": "life"},
+
+            # === 비즈니스 기반 ===
+            "스타트업": {"population": 60, "digital_affinity": "매우 높음", "spending_power": "중간", "score_bonus": 6, "category": "biz"},
+            "1인기업": {"population": 120, "digital_affinity": "높음", "spending_power": "중간", "score_bonus": 6, "category": "biz"},
+            "중소기업": {"population": 400, "digital_affinity": "중간", "spending_power": "높음", "score_bonus": 8, "category": "biz"},
+            "대기업": {"population": 100, "digital_affinity": "높음", "spending_power": "매우 높음", "score_bonus": 7, "category": "biz"},
+            "B2B": {"population": 500, "digital_affinity": "중간", "spending_power": "높음", "score_bonus": 8, "category": "biz"},
+            "SaaS사용자": {"population": 200, "digital_affinity": "높음", "spending_power": "높음", "score_bonus": 9, "category": "biz"},
         }
 
-        # 트렌드 키워드 (2024-2025 기준)
+        # 타겟-도메인 시너지 (특정 타겟에 특화된 도메인)
+        self.target_domain_synergy = {
+            ("시니어", "헬스케어"): 10,
+            ("시니어", "실버케어"): 12,
+            ("액티브시니어", "여행"): 8,
+            ("펫부모", "반려동물"): 10,
+            ("1인가구", "배달"): 6,
+            ("1인가구", "반려동물"): 8,
+            ("MZ세대", "재테크"): 8,
+            ("개발자", "AI"): 9,
+            ("마케터", "자동화"): 9,
+            ("크리에이터", "영상"): 10,
+            ("스타트업", "AI"): 8,
+            ("중소기업", "자동화"): 9,
+            ("B2B", "CRM"): 10,
+        }
+
+        # 트렌드 키워드 (2025년 업데이트)
         self.trending_keywords = {
-            # 매우 핫한 키워드 (+15점)
-            "hot": ["AI", "GPT", "챗봇", "자동화", "시니어", "반려동물", "펫", "1인가구", "무인", "구독"],
+            # 매우 핫한 키워드 (+18점) - 2025 메가트렌드
+            "hot": [
+                "AI", "GPT", "생성AI", "LLM", "에이전트", "자동화", "노코드",
+                "시니어케어", "실버테크", "반려동물", "펫테크",
+                "1인가구", "솔로이코노미", "구독경제", "개인화"
+            ],
 
-            # 상승 키워드 (+10점)
-            "rising": ["헬스케어", "원격", "재택", "비대면", "ESG", "친환경", "웰니스", "수면", "멘탈"],
+            # 급상승 키워드 (+12점)
+            "rising": [
+                "헬스케어", "디지털헬스", "멘탈케어", "수면테크", "웰니스",
+                "ESG", "친환경", "탄소중립", "리유저블",
+                "재택", "하이브리드", "원격협업",
+                "숏폼", "라이브커머스", "크리에이터이코노미"
+            ],
 
-            # 안정 키워드 (+5점)
-            "stable": ["교육", "투자", "부동산", "여행", "맛집", "배달", "쇼핑", "패션"],
+            # 상승 키워드 (+8점)
+            "stable": [
+                "교육", "이러닝", "에듀테크", "취업", "자격증",
+                "재테크", "투자", "핀테크", "P2P",
+                "여행", "호캉스", "워케이션",
+                "피트니스", "홈트", "다이어트"
+            ],
+
+            # 보통 키워드 (+4점)
+            "moderate": [
+                "배달", "커머스", "쇼핑", "패션", "뷰티",
+                "부동산", "인테리어", "이사",
+                "게임", "음악", "영화"
+            ],
 
             # 하락 키워드 (-5점)
-            "declining": ["NFT", "메타버스", "P2E", "코인", "암호화폐"]
+            "declining": [
+                "NFT", "메타버스", "P2E", "암호화폐",
+                "클럽하우스", "VR", "AR글래스"
+            ]
         }
 
         # 수익 모델별 점수
@@ -205,14 +429,18 @@ class LightweightMarketAnalyzer:
         competition = self._estimate_competition(domain, it_type)
         competition_score = competition['score_bonus']
 
-        # 종합 점수 계산 (가중 평균)
+        # 7. 시너지 보너스 (도메인-타겟-IT유형 조합)
+        synergy_bonus = self._calculate_synergy_bonus(domain, target, it_type)
+
+        # 종합 점수 계산 (가중 평균) - 2025 업데이트
         raw_score = (
-            base_score * 0.3 +           # IT 유형 30%
-            domain_score * 2 +           # 도메인 보너스
-            target_score * 1.5 +         # 타겟 보너스
-            trend_score * 1 +            # 트렌드 보너스
+            base_score * 0.25 +          # IT 유형 25%
+            domain_score * 1.5 +         # 도메인 보너스
+            target_score * 1.2 +         # 타겟 보너스
+            trend_score * 0.8 +          # 트렌드 보너스
             revenue_score * 0.5 +        # 수익 모델
-            competition_score * 0.5      # 경쟁 보너스
+            competition_score * 0.5 +    # 경쟁 보너스
+            synergy_bonus * 0.8          # 시너지 보너스 (신규)
         )
 
         # 점수 정규화 (50-95 범위)
@@ -241,7 +469,8 @@ class LightweightMarketAnalyzer:
                 'target_bonus': target_score,
                 'trend_bonus': trend_score,
                 'revenue_bonus': revenue_score,
-                'competition_bonus': competition_score
+                'competition_bonus': competition_score,
+                'synergy_bonus': synergy_bonus  # 신규: 조합 시너지
             },
 
             # 시장 분석
@@ -341,31 +570,54 @@ class LightweightMarketAnalyzer:
         }
 
     def _analyze_trends(self, name: str, description: str) -> int:
-        """트렌드 키워드 분석"""
+        """트렌드 키워드 분석 (2025 업데이트)"""
         text = f"{name} {description}".lower()
         score = 0
+        matched_categories = set()
 
-        for keyword in self.trending_keywords['hot']:
-            if keyword.lower() in text:
-                score += 15
-                break  # 중복 방지
+        # 각 카테고리별 점수 (중복 방지를 위해 카테고리당 최대 1회)
+        keyword_scores = {
+            'hot': 18,
+            'rising': 12,
+            'stable': 8,
+            'moderate': 4,
+            'declining': -5
+        }
 
-        for keyword in self.trending_keywords['rising']:
-            if keyword.lower() in text:
-                score += 10
-                break
-
-        for keyword in self.trending_keywords['stable']:
-            if keyword.lower() in text:
-                score += 5
-                break
-
-        for keyword in self.trending_keywords['declining']:
-            if keyword.lower() in text:
-                score -= 5
-                break
+        for category, keywords in self.trending_keywords.items():
+            if category in matched_categories:
+                continue
+            for keyword in keywords:
+                if keyword.lower() in text:
+                    score += keyword_scores.get(category, 0)
+                    matched_categories.add(category)
+                    break
 
         return score
+
+    def _calculate_synergy_bonus(self, domain: str, target: str, it_type: str) -> int:
+        """도메인-타겟-IT유형 시너지 보너스 계산"""
+        synergy_score = 0
+
+        # 도메인 시너지 체크
+        for (d1, d2), bonus in self.domain_synergy.items():
+            if d1.lower() in domain.lower() or d2.lower() in domain.lower():
+                synergy_score += bonus // 2  # 부분 매칭
+
+        # 타겟-도메인 시너지 체크
+        for (t, d), bonus in self.target_domain_synergy.items():
+            if t.lower() in target.lower() and d.lower() in domain.lower():
+                synergy_score += bonus
+
+        # IT 유형-도메인 시너지 체크
+        it_type_data = self.it_type_scores.get(it_type, {})
+        best_domains = it_type_data.get('best_domains', [])
+        for best_domain in best_domains:
+            if best_domain.lower() in domain.lower():
+                synergy_score += 5
+                break
+
+        return min(synergy_score, 20)  # 최대 20점
 
     def _find_trend_keywords(self, name: str, description: str) -> List[str]:
         """발견된 트렌드 키워드 목록"""

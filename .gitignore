@@ -6,3 +6,8 @@ __pycache__/
 *.pyc
 *.log
 daily_report_*.txt
+
+# Generated files
+*.pdf
+nul
+templates/nul
