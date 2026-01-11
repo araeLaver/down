@@ -24,6 +24,7 @@ from business_discovery_history import (
     LowScoreBusiness
 )
 from startup_support_crawler import StartupSupportCrawler
+from market_config import MarketConfig
 
 app = Flask(__name__)
 CORS(app, origins=["https://anonymous-kylen-untab-d30cd097.koyeb.app"])
@@ -840,6 +841,20 @@ def api_status():
         })
     finally:
         session.close()
+
+@app.route('/api/market-config')
+def api_market_config():
+    """시장 분석 설정 상태 API
+
+    유료 플랜 전환 후 환경변수 MARKET_ANALYSIS_MODE=full 설정하면
+    실제 외부 API를 사용한 시장 분석이 활성화됨
+    """
+    config_status = MarketConfig.get_status()
+    return jsonify({
+        'success': True,
+        'config': config_status,
+        'message': '환경변수 MARKET_ANALYSIS_MODE=full 설정 시 전체 모드 활성화'
+    })
 
 @app.route('/business-discovery')
 def business_discovery():

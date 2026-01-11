@@ -3,6 +3,7 @@
 - 실시간 시장 분석 + 수익성 검증 + 실행 계획 자동 생성
 - 80점 이상 아이디어만 선별하여 즉시 실행 가능한 계획 제공
 - 경량 모드: 외부 API 없이 사전 정의 데이터 기반 분석
+- 환경변수 MARKET_ANALYSIS_MODE로 모드 전환 가능 (lightweight/full)
 """
 
 import sys
@@ -14,18 +15,25 @@ from revenue_validator import RevenueValidator
 from action_plan_generator import ActionPlanGenerator
 from realistic_business_generator import RealisticBusinessGenerator
 from lightweight_market_analyzer import LightweightMarketAnalyzer
+from market_config import MarketConfig
 
 import json
 from datetime import datetime
 import time
 
 class SmartBusinessSystem:
-    def __init__(self, use_lightweight=True):
+    def __init__(self, use_lightweight=None):
         """
         Args:
-            use_lightweight: True면 경량 분석기 사용 (Koyeb 무료 티어 최적화)
+            use_lightweight: None이면 환경변수에서 읽음, True/False면 해당 값 사용
+                           환경변수: MARKET_ANALYSIS_MODE=full (전체 모드) 또는 lightweight (경량 모드)
         """
-        self.use_lightweight = use_lightweight
+        # 환경변수 기반 모드 결정 (명시적 파라미터가 없으면)
+        if use_lightweight is None:
+            self.use_lightweight = MarketConfig.is_lightweight()
+        else:
+            self.use_lightweight = use_lightweight
+
         self.lightweight_analyzer = LightweightMarketAnalyzer()
         self.market_analyzer = RealMarketAnalyzer()
         self.revenue_validator = RevenueValidator()
@@ -36,8 +44,12 @@ class SmartBusinessSystem:
         print("="*80)
         print("[SMART] 스마트 IT 사업 발굴 시스템")
         print("="*80)
-        mode = "경량 모드 (외부 API 미사용)" if use_lightweight else "전체 모드 (외부 API 사용)"
+        mode = "경량 모드 (외부 API 미사용)" if self.use_lightweight else "전체 모드 (외부 API 사용)"
         print(f"분석 모드: {mode}")
+        if self.use_lightweight:
+            print("전환 방법: 환경변수 MARKET_ANALYSIS_MODE=full 설정")
+        else:
+            print("전환 방법: 환경변수 MARKET_ANALYSIS_MODE=lightweight 설정 (또는 삭제)")
         print("시장 분석 -> 수익성 검증 -> 실행 계획 자동 생성\n")
 
     def analyze_business_idea(self, business_idea, keyword, business_config):
