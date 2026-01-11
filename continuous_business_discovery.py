@@ -85,10 +85,10 @@ class ContinuousBusinessDiscovery:
             existing_plans = self.session.query(BusinessPlan.plan_name).limit(200).all()
             recent_names = set([plan[0] for plan in existing_plans])
 
-            # 히스토리에서도 최근 이름 조회 (더 정확한 중복 방지)
+            # 히스토리에서도 최근 이름 조회 (더 정확한 중복 방지, LIMIT 500으로 비용 최적화)
             recent_history = self.session.query(BusinessDiscoveryHistory.business_name).filter(
                 BusinessDiscoveryHistory.discovered_at >= datetime.now() - timedelta(days=7)
-            ).all()
+            ).limit(500).all()
             recent_names.update([h[0] for h in recent_history])
 
             print(f"   중복 방지 대상: {len(recent_names)}개")

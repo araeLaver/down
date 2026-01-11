@@ -40,9 +40,9 @@ connection_string = URL.create(
 engine = create_engine(
     connection_string,
     pool_pre_ping=True,
-    pool_recycle=300,  # 5분마다 연결 재생성 (SSL 끊김 방지)
-    pool_size=2,
-    max_overflow=3,
+    pool_recycle=1800,  # 30분마다 연결 재생성 (비용 최적화: 300→1800)
+    pool_size=5,        # 동시 연결 수 증가 (비용 최적화: 2→5)
+    max_overflow=5,     # 오버플로우 허용 증가 (비용 최적화: 3→5)
     pool_timeout=30,
     connect_args={
         'connect_timeout': 10,
@@ -425,10 +425,15 @@ def api_suggestions():
             EmployeeSuggestion.created_at.desc()
         ).limit(20).all()
         
+        # 직원 정보 일괄 조회 (N+1 쿼리 제거)
+        employee_ids = list(set(s.employee_id for s in suggestions))
+        employees_dict = {e.employee_id: e for e in session.query(Employee).filter(
+            Employee.employee_id.in_(employee_ids)
+        ).all()} if employee_ids else {}
+
         suggestion_list = []
         for suggestion in suggestions:
-            # 직원 정보 가져오기
-            employee = session.query(Employee).filter_by(employee_id=suggestion.employee_id).first()
+            employee = employees_dict.get(suggestion.employee_id)
             employee_name = employee.name if employee else suggestion.employee_id
             
             suggestion_data = {
@@ -762,16 +767,27 @@ def api_dashboard_data():
                 'status': meeting.status
             })
         
-        # AI 직원 현황
-        employees = session.query(Employee).filter_by(status='active').all()
+        # AI 직원 현황 (N+1 쿼리 제거: 단일 쿼리로 태스크 수 집계)
+        task_counts = session.query(
+            Task.assigned_to,
+            func.count(Task.id).label('task_count')
+        ).group_by(Task.assigned_to).subquery()
+
+        employees_with_tasks = session.query(
+            Employee,
+            func.coalesce(task_counts.c.task_count, 0).label('task_count')
+        ).outerjoin(
+            task_counts,
+            Employee.employee_id == task_counts.c.assigned_to
+        ).filter(Employee.status == 'active').all()
+
         employee_data = []
-        for emp in employees:
-            emp_tasks = session.query(Task).filter_by(assigned_to=emp.employee_id).count()
+        for emp, task_count in employees_with_tasks:
             employee_data.append({
                 'name': emp.name,
                 'role': emp.role,
                 'status': emp.status,
-                'tasks': emp_tasks
+                'tasks': task_count
             })
         
         # 사업 계획 현황
@@ -2157,6 +2173,131 @@ def api_startup_support_search():
         return jsonify(results)
     except Exception as e:
         return jsonify({'error': str(e)}), 500
+
+# ============= 데이터 정리 API (DB 비용 최적화) =============
+
+@app.route('/api/cleanup/old-data', methods=['POST'])
+def api_cleanup_old_data():
+    """오래된 데이터 정리 (DB 비용 최적화)
+
+    정리 대상:
+    - ActivityLog: 30일 이상 된 로그
+    - SyncLog: 30일 이상 된 로그
+    - BusinessDiscoveryHistory: 90일 이상 된 히스토리
+    - BusinessAnalysisSnapshot: 90일 이상 된 스냅샷
+    """
+    session = Session()
+    try:
+        cleanup_results = {}
+        now = datetime.now()
+
+        # 1. ActivityLog 정리 (30일 이상)
+        try:
+            cutoff_30days = now - timedelta(days=30)
+            deleted_activity = session.query(ActivityLog).filter(
+                ActivityLog.timestamp < cutoff_30days
+            ).delete(synchronize_session=False)
+            cleanup_results['activity_logs'] = deleted_activity
+        except Exception as e:
+            cleanup_results['activity_logs'] = f'error: {str(e)}'
+
+        # 2. SyncLog 정리 (30일 이상)
+        try:
+            deleted_sync = session.query(SyncLog).filter(
+                SyncLog.timestamp < cutoff_30days
+            ).delete(synchronize_session=False)
+            cleanup_results['sync_logs'] = deleted_sync
+        except Exception as e:
+            cleanup_results['sync_logs'] = f'error: {str(e)}'
+
+        # 3. BusinessDiscoveryHistory 정리 (90일 이상)
+        try:
+            cutoff_90days = now - timedelta(days=90)
+            deleted_history = session.query(BusinessDiscoveryHistory).filter(
+                BusinessDiscoveryHistory.discovered_at < cutoff_90days
+            ).delete(synchronize_session=False)
+            cleanup_results['discovery_history'] = deleted_history
+        except Exception as e:
+            cleanup_results['discovery_history'] = f'error: {str(e)}'
+
+        # 4. BusinessAnalysisSnapshot 정리 (90일 이상)
+        try:
+            deleted_snapshot = session.query(BusinessAnalysisSnapshot).filter(
+                BusinessAnalysisSnapshot.created_at < cutoff_90days
+            ).delete(synchronize_session=False)
+            cleanup_results['analysis_snapshots'] = deleted_snapshot
+        except Exception as e:
+            cleanup_results['analysis_snapshots'] = f'error: {str(e)}'
+
+        session.commit()
+
+        total_deleted = sum(v for v in cleanup_results.values() if isinstance(v, int))
+        return jsonify({
+            'success': True,
+            'message': f'총 {total_deleted}개 레코드 정리 완료',
+            'details': cleanup_results,
+            'cleanup_date': now.strftime('%Y-%m-%d %H:%M:%S')
+        })
+
+    except Exception as e:
+        session.rollback()
+        return jsonify({'error': str(e)}), 500
+    finally:
+        session.close()
+
+@app.route('/api/cleanup/stats')
+def api_cleanup_stats():
+    """정리 대상 데이터 통계 조회"""
+    session = Session()
+    try:
+        now = datetime.now()
+        cutoff_30days = now - timedelta(days=30)
+        cutoff_90days = now - timedelta(days=90)
+
+        stats = {}
+
+        # 정리 대상 레코드 수 조회
+        try:
+            stats['activity_logs_30d'] = session.query(func.count(ActivityLog.id)).filter(
+                ActivityLog.timestamp < cutoff_30days
+            ).scalar() or 0
+        except:
+            stats['activity_logs_30d'] = 'N/A'
+
+        try:
+            stats['sync_logs_30d'] = session.query(func.count(SyncLog.id)).filter(
+                SyncLog.timestamp < cutoff_30days
+            ).scalar() or 0
+        except:
+            stats['sync_logs_30d'] = 'N/A'
+
+        try:
+            stats['discovery_history_90d'] = session.query(func.count(BusinessDiscoveryHistory.id)).filter(
+                BusinessDiscoveryHistory.discovered_at < cutoff_90days
+            ).scalar() or 0
+        except:
+            stats['discovery_history_90d'] = 'N/A'
+
+        try:
+            stats['analysis_snapshots_90d'] = session.query(func.count(BusinessAnalysisSnapshot.id)).filter(
+                BusinessAnalysisSnapshot.created_at < cutoff_90days
+            ).scalar() or 0
+        except:
+            stats['analysis_snapshots_90d'] = 'N/A'
+
+        # 총 정리 가능 레코드
+        total_cleanable = sum(v for v in stats.values() if isinstance(v, int))
+
+        return jsonify({
+            'cleanable_records': stats,
+            'total_cleanable': total_cleanable,
+            'note': '30일+ 로그, 90일+ 히스토리/스냅샷 정리 가능'
+        })
+
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+    finally:
+        session.close()
 
 # Production 환경 (Gunicorn)에서도 백그라운드 스레드 시작
 # 별도 스레드에서 실행하여 서버 시작을 블로킹하지 않도록 함

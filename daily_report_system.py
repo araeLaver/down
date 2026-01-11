@@ -218,21 +218,25 @@ class DailyReportSystem:
         }
     
     def get_employee_activities(self):
-        """AI 직원 활동 현황"""
-        
+        """AI 직원 활동 현황 (N+1 쿼리 제거: 단일 쿼리로 태스크 통계 집계)"""
+        from sqlalchemy import case
+
+        # 태스크 통계 일괄 조회 (N+1 쿼리 제거)
+        task_stats = self.session.query(
+            Task.assigned_to,
+            func.count(Task.id).label('assigned_tasks'),
+            func.count(case([(Task.status == 'completed', 1)])).label('completed_tasks')
+        ).group_by(Task.assigned_to).all()
+
+        task_stats_dict = {t.assigned_to: (t.assigned_tasks, t.completed_tasks) for t in task_stats}
+
         employees = self.session.query(Employee).filter_by(status='active').all()
-        
+
         activities = []
         for emp in employees:
-            # 담당 업무 수
-            assigned_tasks = self.session.query(Task).filter_by(assigned_to=emp.employee_id).count()
-            completed_tasks = self.session.query(Task).filter_by(
-                assigned_to=emp.employee_id, 
-                status='completed'
-            ).count()
-            
+            assigned_tasks, completed_tasks = task_stats_dict.get(emp.employee_id, (0, 0))
             completion_rate = (completed_tasks / assigned_tasks * 100) if assigned_tasks > 0 else 0
-            
+
             activities.append({
                 'name': emp.name,
                 'role': emp.role,
@@ -241,7 +245,7 @@ class DailyReportSystem:
                 'completion_rate': completion_rate,
                 'performance_score': emp.performance_score or 0
             })
-        
+
         return activities
     
     def generate_key_issues(self):
