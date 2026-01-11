@@ -113,6 +113,9 @@
                     <a href="#business" class="list-group-item list-group-item-action">
                         <i class="fas fa-briefcase me-2"></i>사업 계획
                     </a>
+                    <a href="#discovery" class="list-group-item list-group-item-action">
+                        <i class="fas fa-search me-2"></i>사업 발굴 현황
+                    </a>
                     <a href="/" class="list-group-item list-group-item-action text-primary">
                         <i class="fas fa-home me-2"></i>메인 사이트로
                     </a>
@@ -232,32 +235,96 @@
                     </div>
                 </section>
 
+                <!-- Business Discovery Statistics -->
+                <section id="discovery" class="mt-5">
+                    <h3 class="qhyx-text mb-4">사업 발굴 현황</h3>
+                    <div class="row mb-4">
+                        <div class="col-md-4">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h6><i class="fas fa-search me-2 qhyx-text"></i>발굴 통계</h6>
+                                </div>
+                                <div class="card-body" id="discoveryStats">
+                                    <div class="d-flex justify-content-between mb-2">
+                                        <span class="text-muted">총 발굴 사업</span>
+                                        <strong id="totalDiscovered">-</strong>
+                                    </div>
+                                    <div class="d-flex justify-content-between mb-2">
+                                        <span class="text-muted">80점 이상 (우수)</span>
+                                        <strong class="text-success" id="highScore">-</strong>
+                                    </div>
+                                    <div class="d-flex justify-content-between mb-2">
+                                        <span class="text-muted">60-79점 (양호)</span>
+                                        <strong class="text-primary" id="midScore">-</strong>
+                                    </div>
+                                    <div class="d-flex justify-content-between">
+                                        <span class="text-muted">50-59점 (보통)</span>
+                                        <strong class="text-warning" id="lowScore">-</strong>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-8">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h6><i class="fas fa-chart-bar me-2 qhyx-text"></i>점수 분포</h6>
+                                </div>
+                                <div class="card-body">
+                                    <div class="chart-container" style="height: 200px;">
+                                        <canvas id="scoreDistributionChart"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Recent Discoveries -->
+                    <div class="card">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <h6 class="mb-0"><i class="fas fa-lightbulb me-2 qhyx-text"></i>최근 발굴 사업</h6>
+                            <a href="/business-discovery" class="btn btn-outline-primary btn-sm">전체 보기</a>
+                        </div>
+                        <div class="card-body" style="max-height: 300px; overflow-y: auto;">
+                            <div id="recentDiscoveries">
+                                <div class="text-center text-muted py-3">로딩 중...</div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
                 <!-- Real-time System Status -->
                 <section id="system" class="mt-5">
                     <h3 class="qhyx-text mb-4">시스템 상태</h3>
                     <div class="card">
                         <div class="card-body">
                             <div class="row">
-                                <div class="col-md-4">
+                                <div class="col-md-3">
                                     <div class="d-flex align-items-center">
                                         <span class="status-indicator status-active"></span>
                                         <span>자율 회의 시스템</span>
                                     </div>
-                                    <small class="text-muted">다음 회의: 매일 오전 9시</small>
+                                    <small class="text-muted">매시간 자동 발굴</small>
                                 </div>
-                                <div class="col-md-4">
+                                <div class="col-md-3">
                                     <div class="d-flex align-items-center">
                                         <span class="status-indicator status-active"></span>
                                         <span>데이터베이스 연결</span>
                                     </div>
                                     <small class="text-muted">Koyeb PostgreSQL 정상</small>
                                 </div>
-                                <div class="col-md-4">
+                                <div class="col-md-3">
                                     <div class="d-flex align-items-center">
                                         <span class="status-indicator status-active"></span>
                                         <span>Git 동기화</span>
                                     </div>
                                     <small class="text-muted">자동 백업 진행 중</small>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="d-flex align-items-center" id="marketModeStatus">
+                                        <span class="status-indicator status-warning"></span>
+                                        <span>시장 분석</span>
+                                    </div>
+                                    <small class="text-muted" id="marketModeDesc">로딩 중...</small>
                                 </div>
                             </div>
                         </div>
@@ -451,13 +518,128 @@
             return colors[status] || 'secondary';
         }
 
+        // 점수 분포 차트
+        let scoreDistributionChart;
+
+        function initScoreChart() {
+            const ctx = document.getElementById('scoreDistributionChart').getContext('2d');
+            scoreDistributionChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['50-59점', '60-69점', '70-79점', '80-89점', '90점+'],
+                    datasets: [{
+                        label: '발굴 사업 수',
+                        data: [0, 0, 0, 0, 0],
+                        backgroundColor: ['#ffc107', '#17a2b8', '#667eea', '#28a745', '#764ba2']
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } }
+                }
+            });
+        }
+
+        // 사업 발굴 데이터 로드
+        function loadDiscoveryData() {
+            fetch('/api/discovered-businesses')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.businesses) {
+                        const businesses = data.businesses;
+
+                        // 통계 계산 (API는 score 필드 사용)
+                        const highScore = businesses.filter(b => b.score >= 80).length;
+                        const midScore = businesses.filter(b => b.score >= 60 && b.score < 80).length;
+                        const lowScore = businesses.filter(b => b.score >= 50 && b.score < 60).length;
+
+                        document.getElementById('totalDiscovered').textContent = businesses.length;
+                        document.getElementById('highScore').textContent = highScore;
+                        document.getElementById('midScore').textContent = midScore;
+                        document.getElementById('lowScore').textContent = lowScore;
+
+                        // 점수 분포 차트 업데이트
+                        const dist = [
+                            businesses.filter(b => b.score >= 50 && b.score < 60).length,
+                            businesses.filter(b => b.score >= 60 && b.score < 70).length,
+                            businesses.filter(b => b.score >= 70 && b.score < 80).length,
+                            businesses.filter(b => b.score >= 80 && b.score < 90).length,
+                            businesses.filter(b => b.score >= 90).length
+                        ];
+                        scoreDistributionChart.data.datasets[0].data = dist;
+                        scoreDistributionChart.update();
+
+                        // 최근 발굴 사업 표시
+                        updateRecentDiscoveries(businesses.slice(0, 10));
+                    }
+                })
+                .catch(error => {
+                    console.log('발굴 데이터 로드 실패:', error);
+                    document.getElementById('recentDiscoveries').innerHTML =
+                        '<div class="text-center text-muted py-3">데이터를 불러올 수 없습니다</div>';
+                });
+        }
+
+        function updateRecentDiscoveries(businesses) {
+            const container = document.getElementById('recentDiscoveries');
+            if (!businesses.length) {
+                container.innerHTML = '<div class="text-center text-muted py-3">발굴된 사업이 없습니다</div>';
+                return;
+            }
+
+            container.innerHTML = businesses.map(biz => {
+                const scoreClass = biz.score >= 80 ? 'success' : biz.score >= 60 ? 'primary' : 'warning';
+                return `
+                    <div class="d-flex justify-content-between align-items-center py-2 border-bottom">
+                        <div>
+                            <strong>${biz.name}</strong>
+                            <br><small class="text-muted">${biz.type || '-'}</small>
+                        </div>
+                        <div class="text-end">
+                            <span class="badge bg-${scoreClass}">${biz.score}점</span>
+                            <br><small class="text-muted">${biz.created_at || ''}</small>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // 시장 분석 모드 로드
+        function loadMarketConfig() {
+            fetch('/api/market-config')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success && data.config) {
+                        const config = data.config;
+                        const isLightweight = config.is_lightweight;
+                        const statusEl = document.getElementById('marketModeStatus');
+                        const descEl = document.getElementById('marketModeDesc');
+
+                        statusEl.innerHTML = `
+                            <span class="status-indicator ${isLightweight ? 'status-warning' : 'status-active'}"></span>
+                            <span>시장 분석</span>
+                        `;
+                        descEl.textContent = isLightweight ? '경량 모드 (내부 데이터)' : '전체 모드 (실시간 API)';
+                    }
+                })
+                .catch(error => {
+                    document.getElementById('marketModeDesc').textContent = '상태 확인 불가';
+                });
+        }
+
         // 페이지 로드 시 초기화
         document.addEventListener('DOMContentLoaded', function() {
             initCharts();
+            initScoreChart();
             loadDummyData(); // 첫 로드는 더미 데이터로
-            
+            loadDiscoveryData(); // 사업 발굴 데이터 로드
+            loadMarketConfig(); // 시장 분석 모드 로드
+
             // 30초마다 데이터 새로고침
             setInterval(refreshData, 30000);
+            setInterval(loadDiscoveryData, 60000); // 1분마다 발굴 데이터 새로고침
         });
     </script>
 </body>
