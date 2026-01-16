@@ -1264,12 +1264,16 @@ def generate_default_revenue_analysis(business_name, score):
 @app.route('/api/discovered-businesses')
 def api_discovered_businesses():
     """자동 발굴된 사업 목록 API (50점 이상 모두 포함)"""
-    session = Session()
+    session = None
     try:
+        session = get_db_session()
+
         # BusinessDiscoveryHistory에서 50점 이상 사업 모두 조회
         histories = session.query(BusinessDiscoveryHistory).filter(
             BusinessDiscoveryHistory.total_score >= 50
         ).order_by(BusinessDiscoveryHistory.discovered_at.desc()).limit(100).all()
+
+        logger.info(f"[API] discovered-businesses: {len(histories)}건 조회")
 
         business_list = []
         for biz in histories:
@@ -1446,8 +1450,16 @@ def api_discovered_businesses():
                 'high_score': high_score_count
             }
         })
+    except Exception as e:
+        logger.error(f"[API] discovered-businesses 오류: {e}")
+        return jsonify({
+            'businesses': [],
+            'stats': {'total': 0, 'today': 0, 'this_week': 0, 'high_score': 0},
+            'error': str(e)
+        }), 200  # 에러여도 200 반환하여 프론트엔드에서 처리 가능
     finally:
-        session.close()
+        if session:
+            session.close()
 
 @app.route('/api/low-score-businesses')
 def api_low_score_businesses():
