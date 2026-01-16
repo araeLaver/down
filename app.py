@@ -8,12 +8,25 @@ import git
 from threading import Thread
 import time
 from sqlalchemy import create_engine, text, func
-from sqlalchemy.engine import URL
 from sqlalchemy.orm import sessionmaker
+
+# 통합 설정 모듈
+from config import DatabaseConfig, DiscoveryConfig, APIConfig, NotificationConfig, LogConfig
+
+# 통합 로깅 시스템
+from logging_config import init_logging, get_app_logger, get_discovery_logger, LogContext
+
+# 인증 모듈
+from auth import require_api_key, optional_auth, create_auth_routes
+
+# 로깅 초기화
+app_logger = init_logging()
+logger = get_app_logger()
+
 from database_setup import (
     ActivityLog, SyncLog, CompanyMetric, GitCommit,
     Employee, Task, SystemHealth, CompanyMilestone,
-    Revenue, BusinessMeeting, BusinessPlan, EmployeeSuggestion, 
+    Revenue, BusinessMeeting, BusinessPlan, EmployeeSuggestion,
     SuggestionFeedback, SCHEMA_NAME, initialize_database
 )
 from business_monitor import QhyxBusinessMonitor
@@ -24,35 +37,13 @@ from business_discovery_history import (
     LowScoreBusiness
 )
 from startup_support_crawler import StartupSupportCrawler
-from market_config import MarketConfig
 
 app = Flask(__name__)
 CORS(app, origins=["https://anonymous-kylen-untab-d30cd097.koyeb.app"])
 
-# Koyeb PostgreSQL 연결
-connection_string = URL.create(
-    'postgresql',
-    username='unble',
-    password='npg_1kjV0mhECxqs',
-    host='ep-divine-bird-a1f4mly5.ap-southeast-1.pg.koyeb.app',
-    database='unble',
-)
-
-engine = create_engine(
-    connection_string,
-    pool_pre_ping=True,
-    pool_recycle=1800,  # 30분마다 연결 재생성 (비용 최적화: 300→1800)
-    pool_size=5,        # 동시 연결 수 증가 (비용 최적화: 2→5)
-    max_overflow=5,     # 오버플로우 허용 증가 (비용 최적화: 3→5)
-    pool_timeout=30,
-    connect_args={
-        'connect_timeout': 10,
-        'keepalives': 1,
-        'keepalives_idle': 30,
-        'keepalives_interval': 10,
-        'keepalives_count': 5
-    }
-)
+# 환경변수 기반 PostgreSQL 연결 (보안 강화)
+DATABASE_URL = DatabaseConfig.get_database_url()
+engine = create_engine(DATABASE_URL, **DatabaseConfig.get_engine_options())
 Session = sessionmaker(bind=engine)
 
 def get_db_session():
@@ -175,6 +166,16 @@ def index():
 def dashboard():
     """실시간 비즈니스 모니터링 대시보드"""
     return render_template('business_dashboard.html')
+
+@app.route('/startup-roadmap')
+def startup_roadmap():
+    """창업 로드맵 대시보드"""
+    return render_template('startup_roadmap.html')
+
+@app.route('/business-plan')
+def business_plan():
+    """TravelMate 사업계획서"""
+    return render_template('business_plan.html')
 
 @app.route('/monitor')
 def monitor():
@@ -2052,17 +2053,18 @@ def background_meeting_generator():
 
 
 def background_business_discovery():
-    """백그라운드에서 8시간마다 사업 발굴 (하루 3회: 09시, 17시, 01시)"""
+    """백그라운드에서 8시간마다 사업 발굴 (설정 기반 스케줄)"""
     import logging
-    logging.info("[BACKGROUND] Starting business discovery (3x daily: 09, 17, 01)...")
-    print("[BACKGROUND] Starting business discovery (3x daily: 09, 17, 01)...")
+
+    # 설정에서 스케줄 가져오기
+    scheduled_hours = DiscoveryConfig.get_schedule_hours()
+
+    logging.info(f"[BACKGROUND] Starting business discovery (schedule: {scheduled_hours})...")
+    print(f"[BACKGROUND] Starting business discovery (schedule: {scheduled_hours})...")
 
     discovery = None
     last_run_hour = -1
     error_count = 0
-
-    # 실행 시간: 09시, 17시, 01시 (8시간 간격)
-    scheduled_hours = [1, 9, 17]
 
     while True:
         try:
@@ -2136,10 +2138,11 @@ def start_background_threads():
     meeting_thread.start()
     print("[STARTUP] Background meeting generator started")
 
-    # Business discovery thread - 재활성화
+    # Business discovery thread - 설정 기반 스케줄
     discovery_thread = Thread(target=background_business_discovery, daemon=True)
     discovery_thread.start()
-    print("[STARTUP] Background business discovery ENABLED - Running 3x daily (09, 17, 01)")
+    schedule = DiscoveryConfig.get_schedule_hours()
+    print(f"[STARTUP] Background business discovery ENABLED - Schedule: {schedule} (KST)")
 
 # ============================================
 # 창업 지원사업 관련 라우트
@@ -2188,6 +2191,119 @@ def api_startup_support_search():
         return jsonify(results)
     except Exception as e:
         return jsonify({'error': str(e)}), 500
+
+# ============= 창업 로드맵 API =============
+
+@app.route('/api/startup-roadmap/phases')
+def api_roadmap_phases():
+    """창업 로드맵 단계 조회"""
+    phases = [
+        {
+            'id': 1,
+            'title': '아이디어 검증',
+            'description': '시장 조사 및 아이디어 검증 단계',
+            'status': 'completed',
+            'progress': 100,
+            'tasks': [
+                {'id': 1, 'title': '시장 조사 및 경쟁 분석', 'done': True},
+                {'id': 2, 'title': '타겟 고객 정의', 'done': True},
+                {'id': 3, 'title': '문제점/솔루션 가설 수립', 'done': True},
+                {'id': 4, 'title': 'AI 사업 아이디어 발굴', 'done': True}
+            ]
+        },
+        {
+            'id': 2,
+            'title': '사업 계획 수립',
+            'description': '비즈니스 모델 및 사업계획서 작성',
+            'status': 'in_progress',
+            'progress': 40,
+            'tasks': [
+                {'id': 5, 'title': '비즈니스 모델 캔버스 작성', 'done': True},
+                {'id': 6, 'title': '수익 모델 설계', 'done': True},
+                {'id': 7, 'title': '사업계획서 작성', 'done': False},
+                {'id': 8, 'title': '재무 계획 수립', 'done': False},
+                {'id': 9, 'title': '창업 지원사업 신청', 'done': False}
+            ]
+        },
+        {
+            'id': 3,
+            'title': '법인 설립 & 준비',
+            'description': '사업자 등록 및 법인 설립',
+            'status': 'pending',
+            'progress': 0,
+            'tasks': [
+                {'id': 10, 'title': '사업자 등록 (개인/법인)', 'done': False},
+                {'id': 11, 'title': '사업장 확보', 'done': False},
+                {'id': 12, 'title': '통장/카드 개설', 'done': False},
+                {'id': 13, 'title': '필요 인허가 취득', 'done': False}
+            ]
+        },
+        {
+            'id': 4,
+            'title': 'MVP 개발',
+            'description': '최소 기능 제품 개발 및 테스트',
+            'status': 'pending',
+            'progress': 0,
+            'tasks': [
+                {'id': 14, 'title': '핵심 기능 정의', 'done': False},
+                {'id': 15, 'title': '프로토타입 개발', 'done': False},
+                {'id': 16, 'title': '베타 테스트', 'done': False},
+                {'id': 17, 'title': '피드백 반영', 'done': False}
+            ]
+        },
+        {
+            'id': 5,
+            'title': '런칭 & 성장',
+            'description': '제품 출시 및 성장 전략 실행',
+            'status': 'pending',
+            'progress': 0,
+            'tasks': [
+                {'id': 18, 'title': '마케팅 전략 실행', 'done': False},
+                {'id': 19, 'title': '첫 고객 확보', 'done': False},
+                {'id': 20, 'title': '피드백 수집 및 개선', 'done': False},
+                {'id': 21, 'title': '스케일업 준비', 'done': False}
+            ]
+        }
+    ]
+    return jsonify(phases)
+
+@app.route('/api/startup-roadmap/stats')
+def api_roadmap_stats():
+    """창업 로드맵 통계"""
+    stats = {
+        'current_phase': 2,
+        'current_phase_name': '사업 계획 수립',
+        'completed_tasks': 6,
+        'total_tasks': 21,
+        'overall_progress': 29,
+        'days_elapsed': 15,
+        'next_milestone': '사업계획서 작성 완료'
+    }
+    return jsonify(stats)
+
+@app.route('/api/startup-roadmap/weekly-tasks')
+def api_roadmap_weekly_tasks():
+    """이번 주 할 일 목록"""
+    tasks = [
+        {'id': 1, 'title': '사업계획서 초안 작성', 'priority': 'high', 'done': False},
+        {'id': 2, 'title': '창업지원센터 상담 예약', 'priority': 'high', 'done': False},
+        {'id': 3, 'title': '시장 규모 조사', 'priority': 'medium', 'done': True},
+        {'id': 4, 'title': '경쟁사 분석 자료 정리', 'priority': 'medium', 'done': False},
+        {'id': 5, 'title': '예비창업패키지 지원 조건 확인', 'priority': 'low', 'done': False}
+    ]
+    return jsonify(tasks)
+
+@app.route('/api/startup-roadmap/task/<int:task_id>', methods=['PUT'])
+def api_roadmap_update_task(task_id):
+    """태스크 상태 업데이트"""
+    data = request.get_json()
+    done = data.get('done', False)
+    # 실제로는 DB에 저장하지만 현재는 더미 응답
+    return jsonify({
+        'success': True,
+        'task_id': task_id,
+        'done': done
+    })
 
 # ============= 데이터 정리 API (DB 비용 최적화) =============
 
@@ -2313,6 +2429,10 @@ def api_cleanup_stats():
         return jsonify({'error': str(e)}), 500
     finally:
         session.close()
+
+# 인증 라우트 등록
+create_auth_routes(app)
+print("[STARTUP] Auth routes registered")
 
 # Production 환경 (Gunicorn)에서도 백그라운드 스레드 시작
 # 별도 스레드에서 실행하여 서버 시작을 블로킹하지 않도록 함
