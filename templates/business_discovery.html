@@ -550,6 +550,70 @@
             color: #9ca3af;
         }
 
+        /* Pagination */
+        .pagination-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: 2rem;
+            padding: 1rem;
+            background: white;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+        }
+
+        .pagination-info {
+            color: #6b7280;
+            font-size: 0.875rem;
+            margin-right: 1rem;
+        }
+
+        .pagination-btn {
+            padding: 0.5rem 1rem;
+            border: 1px solid var(--border-color);
+            background: white;
+            color: #374151;
+            border-radius: 8px;
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .pagination-btn:hover:not(:disabled) {
+            background: var(--bg-light);
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        .pagination-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .pagination-btn.active {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+
+        .pagination-numbers {
+            display: flex;
+            gap: 0.25rem;
+        }
+
+        .page-size-select {
+            padding: 0.5rem 0.75rem;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 0.875rem;
+            margin-left: 1rem;
+            cursor: pointer;
+        }
+
         /* Empty State */
         .empty-state {
             text-align: center;
@@ -731,6 +795,9 @@
                 <p style="color: #6b7280;">사업 아이디어를 불러오는 중...</p>
             </div>
         </div>
+
+        <!-- Pagination -->
+        <div class="pagination-container" id="pagination-container" style="display: none;"></div>
     </div>
 
     <!-- Status Badge -->
@@ -763,6 +830,10 @@
         let allBusinesses = [];
         let filteredBusinesses = [];
         let currentFilter = 'all';
+
+        // Pagination state
+        let currentPage = 1;
+        let itemsPerPage = 10;
 
         // Load data
         async function loadBusinesses() {
@@ -801,9 +872,13 @@
             }
         }
 
-        // Display businesses
-        function displayBusinesses(businesses) {
+        // Display businesses with pagination
+        function displayBusinesses(businesses, resetPage = false) {
             const container = document.getElementById('business-list');
+
+            if (resetPage) {
+                currentPage = 1;
+            }
 
             if (businesses.length === 0) {
                 container.innerHTML = `
@@ -813,12 +888,20 @@
                         <p>AI가 24/7 시장을 분석하고 있습니다. 잠시만 기다려주세요.</p>
                     </div>
                 `;
+                updatePagination(0);
                 return;
             }
 
+            // Calculate pagination
+            const totalItems = businesses.length;
+            const totalPages = Math.ceil(totalItems / itemsPerPage);
+            const startIndex = (currentPage - 1) * itemsPerPage;
+            const endIndex = Math.min(startIndex + itemsPerPage, totalItems);
+            const paginatedBusinesses = businesses.slice(startIndex, endIndex);
+
             let html = '';
 
-            businesses.forEach(biz => {
+            paginatedBusinesses.forEach(biz => {
                 const scoreClass = biz.score >= 85 ? 'high' :
                                  biz.score >= 80 ? 'medium' : 'low';
                 const cardClass = biz.score >= 85 ? 'high-score' : biz.score >= 80 ? 'medium-score' : '';
@@ -976,6 +1059,96 @@
             });
 
             container.innerHTML = html;
+
+            // Update pagination UI
+            updatePagination(totalItems);
+        }
+
+        // Pagination functions
+        function updatePagination(totalItems) {
+            const paginationContainer = document.getElementById('pagination-container');
+            if (!paginationContainer) return;
+
+            const totalPages = Math.ceil(totalItems / itemsPerPage);
+
+            if (totalItems === 0) {
+                paginationContainer.style.display = 'none';
+                return;
+            }
+
+            paginationContainer.style.display = 'flex';
+
+            const startItem = (currentPage - 1) * itemsPerPage + 1;
+            const endItem = Math.min(currentPage * itemsPerPage, totalItems);
+
+            let paginationHtml = `
+                <span class="pagination-info">${startItem}-${endItem} / ${totalItems}개</span>
+                <button class="pagination-btn" onclick="goToPage(1)" ${currentPage === 1 ? 'disabled' : ''}>
+                    <i class="fas fa-angle-double-left"></i>
+                </button>
+                <button class="pagination-btn" onclick="prevPage()" ${currentPage === 1 ? 'disabled' : ''}>
+                    <i class="fas fa-angle-left"></i> 이전
+                </button>
+                <div class="pagination-numbers">
+            `;
+
+            // Calculate page range to show
+            let startPage = Math.max(1, currentPage - 2);
+            let endPage = Math.min(totalPages, startPage + 4);
+            if (endPage - startPage < 4) {
+                startPage = Math.max(1, endPage - 4);
+            }
+
+            for (let i = startPage; i <= endPage; i++) {
+                paginationHtml += `
+                    <button class="pagination-btn ${i === currentPage ? 'active' : ''}" onclick="goToPage(${i})">${i}</button>
+                `;
+            }
+
+            paginationHtml += `
+                </div>
+                <button class="pagination-btn" onclick="nextPage()" ${currentPage === totalPages ? 'disabled' : ''}>
+                    다음 <i class="fas fa-angle-right"></i>
+                </button>
+                <button class="pagination-btn" onclick="goToPage(${totalPages})" ${currentPage === totalPages ? 'disabled' : ''}>
+                    <i class="fas fa-angle-double-right"></i>
+                </button>
+                <select class="page-size-select" onchange="changePageSize(this.value)">
+                    <option value="10" ${itemsPerPage === 10 ? 'selected' : ''}>10개씩</option>
+                    <option value="20" ${itemsPerPage === 20 ? 'selected' : ''}>20개씩</option>
+                    <option value="50" ${itemsPerPage === 50 ? 'selected' : ''}>50개씩</option>
+                </select>
+            `;
+
+            paginationContainer.innerHTML = paginationHtml;
+        }
+
+        function goToPage(page) {
+            const totalPages = Math.ceil(filteredBusinesses.length / itemsPerPage);
+            if (page < 1 || page > totalPages) return;
+            currentPage = page;
+            displayBusinesses(filteredBusinesses);
+            // Scroll to top of list
+            document.getElementById('business-list').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        function prevPage() {
+            if (currentPage > 1) {
+                goToPage(currentPage - 1);
+            }
+        }
+
+        function nextPage() {
+            const totalPages = Math.ceil(filteredBusinesses.length / itemsPerPage);
+            if (currentPage < totalPages) {
+                goToPage(currentPage + 1);
+            }
+        }
+
+        function changePageSize(size) {
+            itemsPerPage = parseInt(size);
+            currentPage = 1;
+            displayBusinesses(filteredBusinesses);
         }
 
         // Filter businesses
@@ -1006,7 +1179,7 @@
                 }
             }
 
-            displayBusinesses(filteredBusinesses);
+            displayBusinesses(filteredBusinesses, true);
         }
 
         // Sort businesses
@@ -1017,7 +1190,7 @@
                 filteredBusinesses.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
             }
 
-            displayBusinesses(filteredBusinesses);
+            displayBusinesses(filteredBusinesses, true);
         }
 
         // Search businesses
@@ -1025,7 +1198,7 @@
             const query = document.getElementById('search-input').value.toLowerCase();
 
             if (query === '') {
-                displayBusinesses(filteredBusinesses);
+                displayBusinesses(filteredBusinesses, true);
                 return;
             }
 
@@ -1034,7 +1207,7 @@
                 (b.description && b.description.toLowerCase().includes(query))
             );
 
-            displayBusinesses(searched);
+            displayBusinesses(searched, true);
         }
 
         // Show detail
