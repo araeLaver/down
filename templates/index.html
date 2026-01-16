@@ -3,828 +3,369 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Qhyx - AI 기반 비즈니스 인텔리전스</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <title>Qhyx - 창업 플랫폼</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
-        :root {
-            --primary: #6366f1;
-            --primary-dark: #4f46e5;
-            --success: #10b981;
-            --warning: #f59e0b;
-            --danger: #ef4444;
-            --info: #06b6d4;
-            --purple: #a855f7;
-            --dark: #1e1e2e;
-            --darker: #11111b;
-            --card: #313244;
-            --text: #cdd6f4;
-            --subtext: #a6adc8;
-        }
-
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
-            font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: var(--darker);
-            color: var(--text);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #0a0a0b;
+            color: #e5e5e5;
             min-height: 100vh;
         }
 
-        /* 사이드바 */
-        .sidebar {
+        /* 네비게이션 */
+        nav {
             position: fixed;
-            left: 0;
             top: 0;
-            width: 260px;
-            height: 100vh;
-            background: var(--dark);
-            border-right: 1px solid rgba(255,255,255,0.1);
-            padding: 1.5rem;
+            left: 0;
+            right: 0;
+            height: 60px;
+            background: rgba(10, 10, 11, 0.9);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid #222;
+            display: flex;
+            align-items: center;
+            padding: 0 2rem;
             z-index: 100;
-            overflow-y: auto;
         }
 
         .logo {
-            font-size: 1.5rem;
-            font-weight: 800;
-            background: linear-gradient(135deg, #6366f1, #a855f7);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 2rem;
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #fff;
+            letter-spacing: -0.5px;
         }
 
-        .nav-section { margin-bottom: 1.5rem; }
-
-        .nav-section-title {
-            font-size: 0.75rem;
-            text-transform: uppercase;
-            color: var(--subtext);
-            margin-bottom: 0.75rem;
-            letter-spacing: 1px;
-        }
-
-        .nav-item {
+        .nav-links {
             display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            padding: 0.75rem 1rem;
-            color: var(--text);
+            gap: 0.5rem;
+            margin-left: 3rem;
+        }
+
+        .nav-links a {
+            color: #888;
             text-decoration: none;
-            border-radius: 8px;
-            margin-bottom: 0.25rem;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            font-size: 0.9rem;
             transition: all 0.2s;
         }
 
-        .nav-item:hover { background: rgba(99, 102, 241, 0.1); color: #fff; }
-        .nav-item.active { background: var(--primary); color: #fff; }
+        .nav-links a:hover { color: #fff; }
+        .nav-links a.active { color: #fff; background: #1a1a1b; }
 
-        .nav-item .badge {
-            margin-left: auto;
-            padding: 0.125rem 0.5rem;
-            background: var(--danger);
-            color: #fff;
-            border-radius: 10px;
-            font-size: 0.7rem;
+        /* 메인 */
+        main {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 100px 2rem 4rem;
         }
 
-        /* 메인 컨텐츠 */
-        .main-content {
-            margin-left: 260px;
-            padding: 2rem;
+        /* 히어로 */
+        .hero {
+            text-align: center;
+            padding: 4rem 0;
         }
 
-        /* 히어로 섹션 */
-        .hero-section {
-            background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(168, 85, 247, 0.2));
-            border-radius: 24px;
-            padding: 3rem;
-            margin-bottom: 2rem;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .hero-section::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            right: -10%;
-            width: 400px;
-            height: 400px;
-            background: radial-gradient(circle, rgba(99, 102, 241, 0.3) 0%, transparent 70%);
-            pointer-events: none;
-        }
-
-        .hero-title {
-            font-size: 2.5rem;
-            font-weight: 800;
+        .hero h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            letter-spacing: -1px;
             margin-bottom: 1rem;
-            background: linear-gradient(135deg, #fff, #a6adc8);
+            background: linear-gradient(135deg, #fff 0%, #888 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
 
-        .hero-subtitle {
-            color: var(--subtext);
+        .hero p {
             font-size: 1.1rem;
-            margin-bottom: 2rem;
-        }
-
-        .hero-stats {
-            display: flex;
-            gap: 3rem;
-        }
-
-        .hero-stat {
-            text-align: center;
-        }
-
-        .hero-stat .value {
-            font-size: 2.5rem;
-            font-weight: 700;
-            color: #fff;
-        }
-
-        .hero-stat .label {
-            color: var(--subtext);
-            font-size: 0.875rem;
+            color: #666;
+            max-width: 500px;
+            margin: 0 auto 2rem;
         }
 
         /* 퀵 액션 */
         .quick-actions {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
+            display: flex;
             gap: 1rem;
-            margin-bottom: 2rem;
+            justify-content: center;
+            flex-wrap: wrap;
         }
 
-        .quick-action {
-            background: var(--card);
-            border-radius: 12px;
-            padding: 1.5rem;
-            text-align: center;
-            text-decoration: none;
-            color: var(--text);
-            border: 1px solid rgba(255,255,255,0.05);
-            transition: all 0.3s;
-        }
-
-        .quick-action:hover {
-            border-color: var(--primary);
-            transform: translateY(-4px);
-            color: #fff;
-        }
-
-        .quick-action i {
-            font-size: 1.5rem;
-            margin-bottom: 0.75rem;
-            display: block;
-            color: var(--primary);
-        }
-
-        .quick-action span {
-            font-weight: 500;
-        }
-
-        /* 대시보드 그리드 */
-        .dashboard-grid {
-            display: grid;
-            grid-template-columns: 2fr 1fr;
-            gap: 1.5rem;
-        }
-
-        /* 카드 */
-        .card {
-            background: var(--card);
-            border-radius: 16px;
-            padding: 1.5rem;
-            border: 1px solid rgba(255,255,255,0.05);
-        }
-
-        .card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1.5rem;
-        }
-
-        .card-title {
-            font-size: 1.1rem;
-            font-weight: 600;
-            display: flex;
+        .btn {
+            display: inline-flex;
             align-items: center;
             gap: 0.5rem;
-        }
-
-        .card-title i {
-            color: var(--primary);
-        }
-
-        .card-action {
-            color: var(--subtext);
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 500;
             text-decoration: none;
-            font-size: 0.875rem;
-            transition: color 0.2s;
+            transition: all 0.2s;
+            border: none;
+            cursor: pointer;
         }
 
-        .card-action:hover { color: var(--primary); }
-
-        /* 사업 발굴 현황 */
-        .discovery-status {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 1rem;
-            margin-bottom: 1.5rem;
+        .btn-primary {
+            background: #fff;
+            color: #000;
         }
 
-        .status-item {
-            background: var(--dark);
-            border-radius: 12px;
-            padding: 1.25rem;
-            text-align: center;
+        .btn-primary:hover {
+            background: #e5e5e5;
+            transform: translateY(-1px);
         }
 
-        .status-item .value {
-            font-size: 1.75rem;
-            font-weight: 700;
-            margin-bottom: 0.25rem;
+        .btn-ghost {
+            background: transparent;
+            color: #888;
+            border: 1px solid #333;
         }
 
-        .status-item .label {
-            color: var(--subtext);
+        .btn-ghost:hover {
+            color: #fff;
+            border-color: #555;
+        }
+
+        /* 카드 그리드 */
+        .section-title {
             font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #555;
+            margin: 4rem 0 1.5rem;
         }
 
-        .status-item.primary .value { color: var(--primary); }
-        .status-item.success .value { color: var(--success); }
-        .status-item.warning .value { color: var(--warning); }
-
-        /* 최근 발굴 아이디어 */
-        .idea-list {
-            display: flex;
-            flex-direction: column;
-            gap: 0.75rem;
-        }
-
-        .idea-item {
-            display: flex;
-            align-items: center;
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 1rem;
-            padding: 1rem;
-            background: var(--dark);
-            border-radius: 10px;
+        }
+
+        .card {
+            background: #111;
+            border: 1px solid #222;
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-decoration: none;
+            color: inherit;
             transition: all 0.2s;
         }
 
-        .idea-item:hover {
-            background: rgba(99, 102, 241, 0.1);
+        .card:hover {
+            border-color: #333;
+            transform: translateY(-2px);
         }
 
-        .idea-score {
-            width: 48px;
-            height: 48px;
-            border-radius: 12px;
+        .card-icon {
+            width: 40px;
+            height: 40px;
+            background: #1a1a1b;
+            border-radius: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-weight: 700;
+            margin-bottom: 1rem;
             font-size: 1.1rem;
         }
 
-        .idea-score.high {
-            background: rgba(16, 185, 129, 0.2);
-            color: var(--success);
-        }
-
-        .idea-score.medium {
-            background: rgba(245, 158, 11, 0.2);
-            color: var(--warning);
-        }
-
-        .idea-info {
-            flex: 1;
-            min-width: 0;
-        }
-
-        .idea-title {
-            font-weight: 500;
-            margin-bottom: 0.25rem;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .idea-meta {
-            color: var(--subtext);
-            font-size: 0.8rem;
-        }
-
-        .idea-category {
-            padding: 0.25rem 0.5rem;
-            background: rgba(99, 102, 241, 0.2);
-            color: var(--primary);
-            border-radius: 4px;
-            font-size: 0.75rem;
-        }
-
-        /* 창업 로드맵 미니 */
-        .roadmap-mini {
-            display: flex;
-            flex-direction: column;
-            gap: 0.75rem;
-        }
-
-        .roadmap-step {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            padding: 0.75rem 1rem;
-            background: var(--dark);
-            border-radius: 8px;
-        }
-
-        .step-number {
-            width: 32px;
-            height: 32px;
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+        .card h3 {
+            font-size: 1rem;
             font-weight: 600;
-            font-size: 0.875rem;
+            margin-bottom: 0.5rem;
         }
 
-        .step-number.completed {
-            background: var(--success);
-            color: #fff;
+        .card p {
+            font-size: 0.85rem;
+            color: #666;
+            line-height: 1.5;
         }
 
-        .step-number.current {
-            background: var(--primary);
-            color: #fff;
-            animation: pulse 2s infinite;
+        .card .badge {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            background: #1a2e1a;
+            color: #4ade80;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            margin-top: 0.75rem;
         }
 
-        .step-number.pending {
-            background: var(--dark);
-            border: 2px solid var(--subtext);
-            color: var(--subtext);
+        .card .badge.warn {
+            background: #2e2a1a;
+            color: #fbbf24;
         }
 
-        @keyframes pulse {
-            0%, 100% { box-shadow: 0 0 0 0 rgba(99, 102, 241, 0.4); }
-            50% { box-shadow: 0 0 0 8px rgba(99, 102, 241, 0); }
-        }
-
-        .step-info {
-            flex: 1;
-        }
-
-        .step-title {
-            font-weight: 500;
-            font-size: 0.9rem;
-        }
-
-        .step-status {
-            color: var(--subtext);
-            font-size: 0.75rem;
-        }
-
-        /* 추천 지원사업 */
+        /* 지원사업 리스트 */
         .support-list {
             display: flex;
             flex-direction: column;
-            gap: 0.75rem;
+            gap: 0.5rem;
         }
 
         .support-item {
             display: flex;
             align-items: center;
-            gap: 1rem;
-            padding: 1rem;
-            background: var(--dark);
+            justify-content: space-between;
+            padding: 1rem 1.25rem;
+            background: #111;
+            border: 1px solid #222;
             border-radius: 10px;
             text-decoration: none;
-            color: var(--text);
+            color: inherit;
             transition: all 0.2s;
         }
 
         .support-item:hover {
-            background: rgba(99, 102, 241, 0.1);
-        }
-
-        .support-icon {
-            width: 40px;
-            height: 40px;
-            border-radius: 10px;
-            background: rgba(16, 185, 129, 0.2);
-            color: var(--success);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .support-info {
-            flex: 1;
-        }
-
-        .support-name {
-            font-weight: 500;
-            font-size: 0.9rem;
-            margin-bottom: 0.125rem;
-        }
-
-        .support-amount {
-            color: var(--success);
-            font-size: 0.8rem;
-            font-weight: 600;
-        }
-
-        .support-age {
-            font-size: 0.7rem;
-            color: var(--subtext);
-            margin-top: 0.125rem;
+            border-color: #333;
         }
 
         .support-item.eligible {
-            border-left: 3px solid var(--success);
-            background: rgba(16, 185, 129, 0.05);
+            border-left: 3px solid #4ade80;
         }
 
-        .support-item.eligible .support-age {
-            color: var(--success);
-            font-weight: 600;
-        }
-
-        .support-badge {
-            padding: 0.25rem 0.5rem;
-            background: rgba(16, 185, 129, 0.2);
-            color: var(--success);
-            border-radius: 4px;
-            font-size: 0.7rem;
-            font-weight: 600;
-        }
-
-        .support-badge.open {
-            background: rgba(16, 185, 129, 0.2);
-            color: var(--success);
-        }
-
-        .support-badge.upcoming {
-            background: rgba(245, 158, 11, 0.2);
-            color: var(--warning);
-        }
-
-        /* 버튼 */
-        .btn {
-            padding: 0.75rem 1.5rem;
-            border-radius: 8px;
+        .support-info h4 {
+            font-size: 0.95rem;
             font-weight: 500;
-            cursor: pointer;
-            transition: all 0.2s;
-            border: none;
+            margin-bottom: 0.25rem;
+        }
+
+        .support-info span {
+            font-size: 0.8rem;
+            color: #666;
+        }
+
+        .support-amount {
             font-size: 0.9rem;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
+            color: #4ade80;
+            font-weight: 500;
         }
 
-        .btn-primary {
-            background: var(--primary);
-            color: #fff;
+        /* 상태 뱃지 */
+        .status {
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 500;
         }
 
-        .btn-primary:hover { background: var(--primary-dark); color: #fff; }
+        .status.open { background: #1a2e1a; color: #4ade80; }
+        .status.soon { background: #2e2a1a; color: #fbbf24; }
 
-        .btn-outline {
-            background: transparent;
-            border: 1px solid rgba(255,255,255,0.2);
-            color: var(--text);
+        /* 푸터 */
+        footer {
+            text-align: center;
+            padding: 3rem 2rem;
+            color: #444;
+            font-size: 0.8rem;
         }
-
-        .btn-outline:hover { background: rgba(255,255,255,0.1); color: #fff; }
 
         /* 반응형 */
-        @media (max-width: 1200px) {
-            .quick-actions { grid-template-columns: repeat(2, 1fr); }
-            .dashboard-grid { grid-template-columns: 1fr; }
-            .discovery-status { grid-template-columns: repeat(3, 1fr); }
-        }
-
         @media (max-width: 768px) {
-            .sidebar { display: none; }
-            .main-content { margin-left: 0; }
-            .hero-stats { flex-wrap: wrap; gap: 1.5rem; }
-            .quick-actions { grid-template-columns: 1fr 1fr; }
+            nav { padding: 0 1rem; }
+            .nav-links { margin-left: 1.5rem; gap: 0; }
+            .nav-links a { padding: 0.5rem 0.75rem; font-size: 0.85rem; }
+            main { padding: 80px 1rem 2rem; }
+            .hero h1 { font-size: 2rem; }
+            .hero p { font-size: 1rem; }
         }
     </style>
 </head>
 <body>
-    <!-- 사이드바 -->
-    <aside class="sidebar">
-        <div class="logo">QHYX</div>
-
-        <div class="nav-section">
-            <div class="nav-section-title">메인</div>
-            <a href="/" class="nav-item active"><i class="fas fa-home"></i> 홈</a>
-            <a href="/startup-roadmap" class="nav-item"><i class="fas fa-road"></i> 창업 로드맵</a>
-            <a href="/business-plan" class="nav-item"><i class="fas fa-file-alt"></i> 사업계획서</a>
-            <a href="/business-discovery" class="nav-item"><i class="fas fa-lightbulb"></i> 사업 아이디어</a>
+    <nav>
+        <div class="logo">Qhyx</div>
+        <div class="nav-links">
+            <a href="/" class="active">홈</a>
+            <a href="/startup-roadmap">로드맵</a>
+            <a href="/business-plan">사업계획서</a>
+            <a href="/startup-support">지원사업</a>
         </div>
+    </nav>
 
-        <div class="nav-section">
-            <div class="nav-section-title">창업 지원</div>
-            <a href="/startup-support" class="nav-item"><i class="fas fa-hand-holding-usd"></i> 지원사업</a>
-            <a href="/startup-checklist" class="nav-item"><i class="fas fa-tasks"></i> 창업 체크리스트</a>
-            <a href="/business-plan" class="nav-item"><i class="fas fa-file-alt"></i> 사업계획서</a>
-        </div>
-
-        <div class="nav-section">
-            <div class="nav-section-title">관리</div>
-            <a href="/dashboard" class="nav-item"><i class="fas fa-chart-line"></i> 대시보드</a>
-            <a href="/meetings" class="nav-item"><i class="fas fa-calendar"></i> 회의록</a>
-            <a href="/suggestions" class="nav-item"><i class="fas fa-comment-dots"></i> AI 제안</a>
-        </div>
-
-        <div class="nav-section">
-            <div class="nav-section-title">시스템</div>
-            <a href="/trigger-discovery" class="nav-item"><i class="fas fa-bolt"></i> 수동 발굴</a>
-            <a href="/monitor" class="nav-item"><i class="fas fa-server"></i> 시스템 상태</a>
-        </div>
-    </aside>
-
-    <!-- 메인 컨텐츠 -->
-    <main class="main-content">
-        <!-- 히어로 섹션 -->
-        <div class="hero-section">
-            <h1 class="hero-title">AI 기반 비즈니스 인텔리전스</h1>
-            <p class="hero-subtitle">실시간 시장 분석으로 수익성 높은 사업 아이디어를 발굴하고, 창업 여정을 지원합니다.</p>
-            <div class="hero-stats">
-                <div class="hero-stat">
-                    <div class="value" id="totalBusinesses">-</div>
-                    <div class="label">발굴된 사업</div>
-                </div>
-                <div class="hero-stat">
-                    <div class="value" id="totalSupport">20+</div>
-                    <div class="label">지원사업</div>
-                </div>
-                <div class="hero-stat">
-                    <div class="value" id="totalMeetings">-</div>
-                    <div class="label">회의록</div>
-                </div>
-                <div class="hero-stat">
-                    <div class="value" id="avgScore">-</div>
-                    <div class="label">평균 점수</div>
-                </div>
+    <main>
+        <section class="hero">
+            <h1>창업을 시작하세요</h1>
+            <p>AI 기반 사업 발굴부터 정부 지원사업 매칭까지, 창업의 모든 과정을 함께합니다</p>
+            <div class="quick-actions">
+                <a href="/business-plan" class="btn btn-primary">
+                    <i class="fas fa-file-alt"></i> 사업계획서 보기
+                </a>
+                <a href="/startup-roadmap" class="btn btn-ghost">
+                    <i class="fas fa-road"></i> 창업 로드맵
+                </a>
             </div>
+        </section>
+
+        <div class="section-title">빠른 메뉴</div>
+        <div class="card-grid">
+            <a href="/business-plan" class="card">
+                <div class="card-icon"><i class="fas fa-file-alt"></i></div>
+                <h3>TravelMate 사업계획서</h3>
+                <p>여행 동행 매칭 + Web3 NFT 수집 플랫폼 사업계획서</p>
+                <span class="badge">3페이지 완성</span>
+            </a>
+            <a href="/startup-roadmap" class="card">
+                <div class="card-icon"><i class="fas fa-tasks"></i></div>
+                <h3>창업 로드맵</h3>
+                <p>단계별 창업 진행 현황 및 할 일 관리</p>
+                <span class="badge warn">진행중</span>
+            </a>
+            <a href="/startup-support" class="card">
+                <div class="card-icon"><i class="fas fa-hand-holding-usd"></i></div>
+                <h3>정부 지원사업</h3>
+                <p>맞춤형 창업 지원사업 검색 및 신청</p>
+            </a>
         </div>
 
-        <!-- 퀵 액션 -->
-        <div class="quick-actions">
-            <a href="/startup-roadmap" class="quick-action">
-                <i class="fas fa-road"></i>
-                <span>창업 로드맵</span>
+        <div class="section-title">88년생 지원 가능 프로그램</div>
+        <div class="support-list">
+            <a href="/startup-support" class="support-item eligible">
+                <div class="support-info">
+                    <h4>청년전용창업자금</h4>
+                    <span>중소벤처기업진흥공단 · 만 39세 이하</span>
+                </div>
+                <div>
+                    <span class="support-amount">최대 1억원</span>
+                    <span class="status open">모집중</span>
+                </div>
             </a>
-            <a href="/trigger-discovery" class="quick-action">
-                <i class="fas fa-bolt"></i>
-                <span>아이디어 발굴</span>
+            <a href="/startup-support" class="support-item eligible">
+                <div class="support-info">
+                    <h4>청년창업사관학교</h4>
+                    <span>중소벤처기업부 · 만 39세 이하</span>
+                </div>
+                <div>
+                    <span class="support-amount">최대 1억원</span>
+                    <span class="status soon">2월 공고</span>
+                </div>
             </a>
-            <a href="/startup-support" class="quick-action">
-                <i class="fas fa-hand-holding-usd"></i>
-                <span>지원사업 찾기</span>
+            <a href="/startup-support" class="support-item">
+                <div class="support-info">
+                    <h4>예비창업패키지</h4>
+                    <span>창업진흥원 · 나이제한 없음</span>
+                </div>
+                <div>
+                    <span class="support-amount">최대 1억원</span>
+                    <span class="status soon">3월 공고</span>
+                </div>
             </a>
-            <a href="/business-discovery" class="quick-action">
-                <i class="fas fa-search"></i>
-                <span>사업 탐색</span>
+            <a href="/startup-support" class="support-item">
+                <div class="support-info">
+                    <h4>TIPS 프로그램</h4>
+                    <span>중소벤처기업부 · 기술창업</span>
+                </div>
+                <div>
+                    <span class="support-amount">최대 5억원</span>
+                    <span class="status open">상시</span>
+                </div>
             </a>
-        </div>
-
-        <!-- 대시보드 그리드 -->
-        <div class="dashboard-grid">
-            <!-- 왼쪽: 사업 발굴 현황 -->
-            <div class="card">
-                <div class="card-header">
-                    <h3 class="card-title"><i class="fas fa-chart-pie"></i> 사업 발굴 현황</h3>
-                    <a href="/business-history" class="card-action">전체보기 <i class="fas fa-arrow-right"></i></a>
-                </div>
-
-                <div class="discovery-status">
-                    <div class="status-item primary">
-                        <div class="value" id="totalIdeas">-</div>
-                        <div class="label">전체 아이디어</div>
-                    </div>
-                    <div class="status-item success">
-                        <div class="value" id="highScoreIdeas">-</div>
-                        <div class="label">우수 아이디어 (70+)</div>
-                    </div>
-                    <div class="status-item warning">
-                        <div class="value" id="reviewIdeas">-</div>
-                        <div class="label">검토 필요 (60-69)</div>
-                    </div>
-                </div>
-
-                <h4 style="font-size: 0.9rem; color: var(--subtext); margin-bottom: 1rem;">최근 발굴 아이디어</h4>
-                <div class="idea-list" id="recentIdeas">
-                    <div style="text-align: center; padding: 2rem; color: var(--subtext);">
-                        <i class="fas fa-spinner fa-spin"></i> 로딩 중...
-                    </div>
-                </div>
-
-                <div style="margin-top: 1.5rem; text-align: center;">
-                    <a href="/business-discovery" class="btn btn-primary">
-                        <i class="fas fa-lightbulb"></i> 모든 아이디어 보기
-                    </a>
-                </div>
-            </div>
-
-            <!-- 오른쪽: 창업 진행 상황 -->
-            <div style="display: flex; flex-direction: column; gap: 1.5rem;">
-                <!-- 창업 로드맵 미니 -->
-                <div class="card">
-                    <div class="card-header">
-                        <h3 class="card-title"><i class="fas fa-road"></i> 창업 로드맵</h3>
-                        <a href="/startup-roadmap" class="card-action">상세보기 <i class="fas fa-arrow-right"></i></a>
-                    </div>
-
-                    <div class="roadmap-mini">
-                        <div class="roadmap-step">
-                            <div class="step-number completed"><i class="fas fa-check"></i></div>
-                            <div class="step-info">
-                                <div class="step-title">아이디어 검증</div>
-                                <div class="step-status">완료</div>
-                            </div>
-                        </div>
-                        <div class="roadmap-step">
-                            <div class="step-number current">2</div>
-                            <div class="step-info">
-                                <div class="step-title">사업 계획 수립</div>
-                                <div class="step-status">진행중 40%</div>
-                            </div>
-                        </div>
-                        <div class="roadmap-step">
-                            <div class="step-number pending">3</div>
-                            <div class="step-info">
-                                <div class="step-title">법인 설립</div>
-                                <div class="step-status">대기</div>
-                            </div>
-                        </div>
-                        <div class="roadmap-step">
-                            <div class="step-number pending">4</div>
-                            <div class="step-info">
-                                <div class="step-title">MVP 개발</div>
-                                <div class="step-status">대기</div>
-                            </div>
-                        </div>
-                        <div class="roadmap-step">
-                            <div class="step-number pending">5</div>
-                            <div class="step-info">
-                                <div class="step-title">런칭 & 성장</div>
-                                <div class="step-status">대기</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- 추천 지원사업 -->
-                <div class="card">
-                    <div class="card-header">
-                        <h3 class="card-title"><i class="fas fa-star"></i> 추천 지원사업</h3>
-                        <a href="/startup-support" class="card-action">전체보기 <i class="fas fa-arrow-right"></i></a>
-                    </div>
-
-                    <div class="support-list">
-                        <a href="/startup-support" class="support-item eligible">
-                            <div class="support-icon"><i class="fas fa-coins"></i></div>
-                            <div class="support-info">
-                                <div class="support-name">청년전용창업자금</div>
-                                <div class="support-amount">최대 1억원 (연 2.5%)</div>
-                                <div class="support-age">만 39세 이하 ✓</div>
-                            </div>
-                            <span class="support-badge open">모집중</span>
-                        </a>
-                        <a href="/startup-support" class="support-item eligible">
-                            <div class="support-icon"><i class="fas fa-graduation-cap"></i></div>
-                            <div class="support-info">
-                                <div class="support-name">청년창업사관학교</div>
-                                <div class="support-amount">최대 1억원</div>
-                                <div class="support-age">만 39세 이하 ✓</div>
-                            </div>
-                            <span class="support-badge upcoming">예정</span>
-                        </a>
-                        <a href="/startup-support" class="support-item">
-                            <div class="support-icon"><i class="fas fa-rocket"></i></div>
-                            <div class="support-info">
-                                <div class="support-name">예비창업패키지</div>
-                                <div class="support-amount">최대 1억원</div>
-                                <div class="support-age">나이제한 없음</div>
-                            </div>
-                            <span class="support-badge upcoming">예정</span>
-                        </a>
-                        <a href="/startup-support" class="support-item">
-                            <div class="support-icon"><i class="fas fa-lightbulb"></i></div>
-                            <div class="support-info">
-                                <div class="support-name">TIPS 프로그램</div>
-                                <div class="support-amount">최대 5억원</div>
-                                <div class="support-age">기술창업</div>
-                            </div>
-                            <span class="support-badge open">상시모집</span>
-                        </a>
-                    </div>
-                </div>
-            </div>
         </div>
     </main>
 
-    <script>
-        // 통계 로드
-        async function loadStats() {
-            try {
-                const response = await fetch('/api/discovered-businesses');
-                const data = await response.json();
-
-                const total = data.length || 0;
-                document.getElementById('totalBusinesses').textContent = total;
-                document.getElementById('totalIdeas').textContent = total;
-
-                // 점수별 분류
-                const highScore = data.filter(b => (b.score || 0) >= 70).length;
-                const reviewScore = data.filter(b => (b.score || 0) >= 60 && (b.score || 0) < 70).length;
-
-                document.getElementById('highScoreIdeas').textContent = highScore;
-                document.getElementById('reviewIdeas').textContent = reviewScore;
-
-                // 평균 점수
-                if (total > 0) {
-                    const avgScore = Math.round(data.reduce((sum, b) => sum + (b.score || 0), 0) / total);
-                    document.getElementById('avgScore').textContent = avgScore;
-                }
-
-                // 최근 아이디어 표시
-                displayRecentIdeas(data.slice(0, 5));
-            } catch (error) {
-                console.error('Error loading business stats:', error);
-                document.getElementById('recentIdeas').innerHTML = `
-                    <div style="text-align: center; padding: 2rem; color: var(--subtext);">
-                        데이터를 불러오는데 실패했습니다.
-                    </div>
-                `;
-            }
-
-            // 회의록 수
-            try {
-                const meetingsResponse = await fetch('/api/meetings');
-                const meetingsData = await meetingsResponse.json();
-                document.getElementById('totalMeetings').textContent = meetingsData.length || 0;
-            } catch (error) {
-                console.error('Error loading meetings:', error);
-            }
-        }
-
-        function displayRecentIdeas(ideas) {
-            const container = document.getElementById('recentIdeas');
-
-            if (!ideas || ideas.length === 0) {
-                container.innerHTML = `
-                    <div style="text-align: center; padding: 2rem; color: var(--subtext);">
-                        아직 발굴된 아이디어가 없습니다.
-                    </div>
-                `;
-                return;
-            }
-
-            container.innerHTML = ideas.map(idea => {
-                const score = idea.score || 0;
-                const scoreClass = score >= 70 ? 'high' : 'medium';
-
-                return `
-                    <div class="idea-item">
-                        <div class="idea-score ${scoreClass}">${score}</div>
-                        <div class="idea-info">
-                            <div class="idea-title">${idea.business_name || idea.name || '무제'}</div>
-                            <div class="idea-meta">${idea.category || 'IT'} &middot; ${formatDate(idea.discovered_at || idea.created_at)}</div>
-                        </div>
-                        <span class="idea-category">${idea.market_size || '시장분석중'}</span>
-                    </div>
-                `;
-            }).join('');
-        }
-
-        function formatDate(dateStr) {
-            if (!dateStr) return '최근';
-            const date = new Date(dateStr);
-            const now = new Date();
-            const diff = now - date;
-            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-
-            if (days === 0) return '오늘';
-            if (days === 1) return '어제';
-            if (days < 7) return `${days}일 전`;
-            return date.toLocaleDateString('ko-KR');
-        }
-
-        // 초기화
-        loadStats();
-    </script>
+    <footer>
+        <p>Qhyx Inc. · AI 기반 창업 지원 플랫폼</p>
+    </footer>
 </body>
 </html>

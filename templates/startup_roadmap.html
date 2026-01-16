@@ -3,228 +3,194 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>창업 로드맵 - Qhyx Inc.</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <title>창업 로드맵 - Qhyx</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
-        :root {
-            --primary: #6366f1;
-            --primary-dark: #4f46e5;
-            --success: #10b981;
-            --warning: #f59e0b;
-            --danger: #ef4444;
-            --dark: #1e1e2e;
-            --darker: #11111b;
-            --card: #313244;
-            --text: #cdd6f4;
-            --subtext: #a6adc8;
-        }
-
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
-            font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: var(--darker);
-            color: var(--text);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #0a0a0b;
+            color: #e5e5e5;
             min-height: 100vh;
         }
 
-        /* 사이드바 */
-        .sidebar {
+        /* 네비게이션 */
+        nav {
             position: fixed;
-            left: 0;
             top: 0;
-            width: 260px;
-            height: 100vh;
-            background: var(--dark);
-            border-right: 1px solid rgba(255,255,255,0.1);
-            padding: 1.5rem;
+            left: 0;
+            right: 0;
+            height: 60px;
+            background: rgba(10, 10, 11, 0.9);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid #222;
+            display: flex;
+            align-items: center;
+            padding: 0 2rem;
             z-index: 100;
         }
 
         .logo {
-            font-size: 1.5rem;
-            font-weight: 800;
-            background: linear-gradient(135deg, #6366f1, #a855f7);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 2rem;
-        }
-
-        .nav-section {
-            margin-bottom: 1.5rem;
-        }
-
-        .nav-section-title {
-            font-size: 0.75rem;
-            text-transform: uppercase;
-            color: var(--subtext);
-            margin-bottom: 0.75rem;
-            letter-spacing: 1px;
-        }
-
-        .nav-item {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            padding: 0.75rem 1rem;
-            color: var(--text);
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #fff;
             text-decoration: none;
-            border-radius: 8px;
-            margin-bottom: 0.25rem;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 0.5rem;
+            margin-left: 3rem;
+        }
+
+        .nav-links a {
+            color: #888;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            font-size: 0.9rem;
             transition: all 0.2s;
         }
 
-        .nav-item:hover { background: rgba(99, 102, 241, 0.1); color: #fff; }
-        .nav-item.active { background: var(--primary); color: #fff; }
+        .nav-links a:hover { color: #fff; }
+        .nav-links a.active { color: #fff; background: #1a1a1b; }
 
-        /* 메인 컨텐츠 */
-        .main-content {
-            margin-left: 260px;
-            padding: 2rem;
+        /* 메인 */
+        main {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 100px 2rem 4rem;
         }
 
         /* 헤더 */
         .page-header {
+            margin-bottom: 3rem;
+        }
+
+        .page-header h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .page-header p {
+            color: #666;
+        }
+
+        /* 진행 현황 */
+        .progress-section {
+            background: #111;
+            border: 1px solid #222;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .progress-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 2rem;
-        }
-
-        .page-title {
-            font-size: 1.75rem;
-            font-weight: 700;
-        }
-
-        /* 진행률 카드 */
-        .progress-overview {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 1.5rem;
-            margin-bottom: 2rem;
-        }
-
-        .stat-card {
-            background: var(--card);
-            border-radius: 16px;
-            padding: 1.5rem;
-            border: 1px solid rgba(255,255,255,0.05);
-        }
-
-        .stat-card .icon {
-            width: 48px;
-            height: 48px;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.25rem;
             margin-bottom: 1rem;
         }
 
-        .stat-card .icon.primary { background: rgba(99, 102, 241, 0.2); color: var(--primary); }
-        .stat-card .icon.success { background: rgba(16, 185, 129, 0.2); color: var(--success); }
-        .stat-card .icon.warning { background: rgba(245, 158, 11, 0.2); color: var(--warning); }
-        .stat-card .icon.danger { background: rgba(239, 68, 68, 0.2); color: var(--danger); }
-
-        .stat-card .value {
-            font-size: 2rem;
-            font-weight: 700;
-            margin-bottom: 0.25rem;
-        }
-
-        .stat-card .label {
-            color: var(--subtext);
-            font-size: 0.875rem;
-        }
-
-        /* 로드맵 타임라인 */
-        .roadmap-section {
-            background: var(--card);
-            border-radius: 16px;
-            padding: 2rem;
-            margin-bottom: 2rem;
-            border: 1px solid rgba(255,255,255,0.05);
-        }
-
-        .section-title {
-            font-size: 1.25rem;
+        .progress-header h3 {
+            font-size: 0.9rem;
             font-weight: 600;
-            margin-bottom: 1.5rem;
+        }
+
+        .progress-percent {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #4ade80;
+        }
+
+        .progress-bar {
+            height: 8px;
+            background: #222;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #4ade80, #22c55e);
+            border-radius: 4px;
+            transition: width 0.3s;
+        }
+
+        /* 로드맵 */
+        .roadmap {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-bottom: 3rem;
+        }
+
+        .phase {
+            background: #111;
+            border: 1px solid #222;
+            border-radius: 12px;
+            padding: 1.5rem;
             display: flex;
             align-items: center;
-            gap: 0.5rem;
+            gap: 1.5rem;
+            transition: all 0.2s;
         }
 
-        .roadmap-timeline {
-            position: relative;
+        .phase:hover {
+            border-color: #333;
         }
 
-        .roadmap-timeline::before {
-            content: '';
-            position: absolute;
-            left: 24px;
-            top: 0;
-            bottom: 0;
-            width: 2px;
-            background: linear-gradient(to bottom, var(--primary), var(--success));
+        .phase.completed {
+            border-left: 3px solid #4ade80;
         }
 
-        .roadmap-phase {
-            position: relative;
-            padding-left: 60px;
-            padding-bottom: 2rem;
+        .phase.current {
+            border-left: 3px solid #fbbf24;
+            background: rgba(251, 191, 36, 0.05);
         }
 
-        .roadmap-phase:last-child { padding-bottom: 0; }
-
-        .phase-marker {
-            position: absolute;
-            left: 12px;
-            width: 24px;
-            height: 24px;
+        .phase-number {
+            width: 40px;
+            height: 40px;
             border-radius: 50%;
-            background: var(--dark);
-            border: 3px solid var(--primary);
             display: flex;
             align-items: center;
             justify-content: center;
+            font-weight: 700;
+            font-size: 0.9rem;
+            flex-shrink: 0;
         }
 
-        .phase-marker.completed {
-            background: var(--success);
-            border-color: var(--success);
+        .phase.completed .phase-number {
+            background: #1a2e1a;
+            color: #4ade80;
         }
 
-        .phase-marker.current {
-            background: var(--primary);
-            border-color: var(--primary);
-            animation: pulse 2s infinite;
+        .phase.current .phase-number {
+            background: #2e2a1a;
+            color: #fbbf24;
         }
 
-        @keyframes pulse {
-            0%, 100% { box-shadow: 0 0 0 0 rgba(99, 102, 241, 0.4); }
-            50% { box-shadow: 0 0 0 10px rgba(99, 102, 241, 0); }
+        .phase.pending .phase-number {
+            background: #1a1a1b;
+            color: #666;
         }
 
         .phase-content {
-            background: var(--dark);
-            border-radius: 12px;
-            padding: 1.5rem;
-            border: 1px solid rgba(255,255,255,0.05);
-        }
-
-        .phase-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1rem;
+            flex: 1;
         }
 
         .phase-title {
-            font-size: 1.1rem;
+            font-size: 1rem;
             font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .phase-desc {
+            font-size: 0.85rem;
+            color: #666;
         }
 
         .phase-status {
@@ -234,557 +200,304 @@
             font-weight: 500;
         }
 
-        .phase-status.completed { background: rgba(16, 185, 129, 0.2); color: var(--success); }
-        .phase-status.in-progress { background: rgba(99, 102, 241, 0.2); color: var(--primary); }
-        .phase-status.pending { background: rgba(166, 173, 200, 0.2); color: var(--subtext); }
-
-        .phase-tasks {
-            list-style: none;
-            margin-bottom: 1rem;
+        .phase.completed .phase-status {
+            background: #1a2e1a;
+            color: #4ade80;
         }
 
-        .phase-tasks li {
+        .phase.current .phase-status {
+            background: #2e2a1a;
+            color: #fbbf24;
+        }
+
+        .phase.pending .phase-status {
+            background: #1a1a1b;
+            color: #666;
+        }
+
+        /* 섹션 타이틀 */
+        .section-title {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #555;
+            margin: 3rem 0 1.5rem;
+        }
+
+        /* 지원사업 */
+        .support-list {
             display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0.5rem 0;
-            color: var(--subtext);
-            border-bottom: 1px solid rgba(255,255,255,0.05);
+            flex-direction: column;
+            gap: 0.75rem;
         }
 
-        .phase-tasks li:last-child { border-bottom: none; }
-
-        .phase-tasks li.done { color: var(--success); }
-        .phase-tasks li.done i { color: var(--success); }
-
-        .phase-progress {
-            height: 6px;
-            background: var(--darker);
-            border-radius: 3px;
-            overflow: hidden;
-        }
-
-        .phase-progress-bar {
-            height: 100%;
-            background: linear-gradient(90deg, var(--primary), var(--success));
-            border-radius: 3px;
-            transition: width 0.3s;
-        }
-
-        /* 지원사업 섹션 */
-        .support-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 1.5rem;
-        }
-
-        .support-card {
-            background: var(--dark);
-            border-radius: 12px;
-            padding: 1.5rem;
-            border: 1px solid rgba(255,255,255,0.05);
-            transition: all 0.3s;
-        }
-
-        .support-card:hover {
-            border-color: var(--primary);
-            transform: translateY(-2px);
-        }
-
-        .support-header {
+        .support-item {
+            background: #111;
+            border: 1px solid #222;
+            border-radius: 10px;
+            padding: 1.25rem;
             display: flex;
             justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 1rem;
+            align-items: center;
+            transition: all 0.2s;
         }
 
-        .support-title {
-            font-weight: 600;
+        .support-item:hover {
+            border-color: #333;
+        }
+
+        .support-item.eligible {
+            border-left: 3px solid #4ade80;
+        }
+
+        .support-info h4 {
+            font-size: 0.95rem;
+            font-weight: 500;
             margin-bottom: 0.25rem;
         }
 
-        .support-org {
-            font-size: 0.875rem;
-            color: var(--subtext);
-        }
-
-        .support-badge {
-            padding: 0.25rem 0.5rem;
-            border-radius: 6px;
-            font-size: 0.7rem;
-            font-weight: 600;
-        }
-
-        .support-badge.open { background: rgba(16, 185, 129, 0.2); color: var(--success); }
-        .support-badge.upcoming { background: rgba(245, 158, 11, 0.2); color: var(--warning); }
-        .support-badge.closed { background: rgba(239, 68, 68, 0.2); color: var(--danger); }
-
-        .support-details {
-            display: flex;
-            gap: 1rem;
-            margin-bottom: 1rem;
-            font-size: 0.875rem;
-            color: var(--subtext);
-        }
-
-        .support-amount {
-            color: var(--success);
-            font-weight: 600;
-        }
-
-        .support-desc {
+        .support-info p {
             font-size: 0.8rem;
-            color: var(--subtext);
-            margin-bottom: 0.75rem;
-            padding: 0.5rem;
-            background: rgba(99, 102, 241, 0.1);
-            border-radius: 6px;
+            color: #666;
         }
 
-        .age-limit {
-            font-size: 0.75rem;
-            padding: 0.2rem 0.5rem;
-            border-radius: 4px;
-            background: rgba(255,255,255,0.05);
-        }
-
-        .age-limit.eligible {
-            background: rgba(16, 185, 129, 0.2);
-            color: var(--success);
-            font-weight: 600;
-        }
-
-        .support-actions {
-            display: flex;
-            gap: 0.5rem;
-        }
-
-        .btn-sm {
-            padding: 0.5rem 1rem;
-            border-radius: 8px;
-            font-size: 0.875rem;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.2s;
-            border: none;
-        }
-
-        .btn-primary {
-            background: var(--primary);
-            color: #fff;
-        }
-
-        .btn-primary:hover { background: var(--primary-dark); }
-
-        .btn-outline {
-            background: transparent;
-            border: 1px solid rgba(255,255,255,0.2);
-            color: var(--text);
-        }
-
-        .btn-outline:hover { background: rgba(255,255,255,0.1); }
-
-        /* 체크리스트 */
-        .checklist-section {
-            background: var(--card);
-            border-radius: 16px;
-            padding: 2rem;
-            border: 1px solid rgba(255,255,255,0.05);
-        }
-
-        .checklist-item {
+        .support-right {
             display: flex;
             align-items: center;
             gap: 1rem;
-            padding: 1rem;
-            background: var(--dark);
-            border-radius: 8px;
-            margin-bottom: 0.5rem;
-            cursor: pointer;
-            transition: all 0.2s;
         }
 
-        .checklist-item:hover { background: rgba(99, 102, 241, 0.1); }
+        .support-amount {
+            font-size: 0.9rem;
+            color: #4ade80;
+            font-weight: 600;
+        }
 
-        .checklist-checkbox {
-            width: 24px;
-            height: 24px;
-            border-radius: 6px;
-            border: 2px solid var(--subtext);
+        .status {
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .status.open { background: #1a2e1a; color: #4ade80; }
+        .status.soon { background: #2e2a1a; color: #fbbf24; }
+
+        /* 할일 */
+        .todo-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .todo-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem 1.25rem;
+            background: #111;
+            border: 1px solid #222;
+            border-radius: 10px;
+        }
+
+        .todo-checkbox {
+            width: 20px;
+            height: 20px;
+            border: 2px solid #333;
+            border-radius: 4px;
+            cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
             transition: all 0.2s;
         }
 
-        .checklist-item.checked .checklist-checkbox {
-            background: var(--success);
-            border-color: var(--success);
+        .todo-checkbox.checked {
+            background: #4ade80;
+            border-color: #4ade80;
         }
 
-        .checklist-text {
-            flex: 1;
-        }
-
-        .checklist-item.checked .checklist-text {
-            text-decoration: line-through;
-            color: var(--subtext);
-        }
-
-        .checklist-priority {
-            padding: 0.25rem 0.5rem;
-            border-radius: 4px;
+        .todo-checkbox.checked i {
+            color: #000;
             font-size: 0.7rem;
-            font-weight: 600;
         }
 
-        .priority-high { background: rgba(239, 68, 68, 0.2); color: var(--danger); }
-        .priority-medium { background: rgba(245, 158, 11, 0.2); color: var(--warning); }
-        .priority-low { background: rgba(99, 102, 241, 0.2); color: var(--primary); }
+        .todo-text {
+            font-size: 0.9rem;
+        }
+
+        .todo-item.done .todo-text {
+            color: #666;
+            text-decoration: line-through;
+        }
 
         /* 반응형 */
-        @media (max-width: 1200px) {
-            .progress-overview { grid-template-columns: repeat(2, 1fr); }
-            .support-grid { grid-template-columns: 1fr; }
-        }
-
         @media (max-width: 768px) {
-            .sidebar { display: none; }
-            .main-content { margin-left: 0; }
-            .progress-overview { grid-template-columns: 1fr; }
+            nav { padding: 0 1rem; }
+            .nav-links { margin-left: 1.5rem; }
+            main { padding: 80px 1rem 2rem; }
+            .phase { flex-direction: column; align-items: flex-start; gap: 1rem; }
+            .support-item { flex-direction: column; align-items: flex-start; gap: 0.75rem; }
         }
     </style>
 </head>
 <body>
-    <!-- 사이드바 -->
-    <aside class="sidebar">
-        <div class="logo">QHYX</div>
-
-        <div class="nav-section">
-            <div class="nav-section-title">메인</div>
-            <a href="/" class="nav-item"><i class="fas fa-home"></i> 홈</a>
-            <a href="/startup-roadmap" class="nav-item active"><i class="fas fa-road"></i> 창업 로드맵</a>
-            <a href="/business-plan" class="nav-item"><i class="fas fa-file-alt"></i> 사업계획서</a>
-            <a href="/business-discovery" class="nav-item"><i class="fas fa-lightbulb"></i> 사업 아이디어</a>
+    <nav>
+        <a href="/" class="logo">Qhyx</a>
+        <div class="nav-links">
+            <a href="/">홈</a>
+            <a href="/startup-roadmap" class="active">로드맵</a>
+            <a href="/business-plan">사업계획서</a>
+            <a href="/startup-support">지원사업</a>
         </div>
+    </nav>
 
-        <div class="nav-section">
-            <div class="nav-section-title">창업 지원</div>
-            <a href="/startup-support" class="nav-item"><i class="fas fa-hand-holding-usd"></i> 지원사업</a>
-            <a href="/startup-checklist" class="nav-item"><i class="fas fa-tasks"></i> 창업 체크리스트</a>
-            <a href="/business-plan" class="nav-item"><i class="fas fa-file-alt"></i> 사업계획서</a>
-        </div>
+    <main>
+        <header class="page-header">
+            <h1>창업 로드맵</h1>
+            <p>TravelMate 프로젝트 진행 현황</p>
+        </header>
 
-        <div class="nav-section">
-            <div class="nav-section-title">관리</div>
-            <a href="/dashboard" class="nav-item"><i class="fas fa-chart-line"></i> 대시보드</a>
-            <a href="/meetings" class="nav-item"><i class="fas fa-calendar"></i> 회의록</a>
-            <a href="/suggestions" class="nav-item"><i class="fas fa-comment-dots"></i> AI 제안</a>
-        </div>
-    </aside>
-
-    <!-- 메인 컨텐츠 -->
-    <main class="main-content">
-        <div class="page-header">
-            <h1 class="page-title">창업 로드맵</h1>
-            <div>
-                <button class="btn-sm btn-primary" onclick="location.href='/trigger-discovery'">
-                    <i class="fas fa-search"></i> 아이디어 발굴
-                </button>
+        <!-- 진행률 -->
+        <div class="progress-section">
+            <div class="progress-header">
+                <h3>전체 진행률</h3>
+                <span class="progress-percent">40%</span>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" style="width: 40%"></div>
             </div>
         </div>
 
-        <!-- 진행률 개요 -->
-        <div class="progress-overview">
-            <div class="stat-card">
-                <div class="icon primary"><i class="fas fa-flag"></i></div>
-                <div class="value" id="current-phase">2단계</div>
-                <div class="label">현재 단계</div>
-            </div>
-            <div class="stat-card">
-                <div class="icon success"><i class="fas fa-check-circle"></i></div>
-                <div class="value" id="completed-tasks">12</div>
-                <div class="label">완료된 작업</div>
-            </div>
-            <div class="stat-card">
-                <div class="icon warning"><i class="fas fa-clock"></i></div>
-                <div class="value" id="pending-tasks">8</div>
-                <div class="label">진행 중</div>
-            </div>
-            <div class="stat-card">
-                <div class="icon danger"><i class="fas fa-calendar-alt"></i></div>
-                <div class="value" id="days-elapsed">D+15</div>
-                <div class="label">창업 준비 기간</div>
-            </div>
-        </div>
-
-        <!-- 로드맵 타임라인 -->
-        <div class="roadmap-section">
-            <h2 class="section-title"><i class="fas fa-map-signs"></i> 창업 단계별 로드맵</h2>
-
-            <div class="roadmap-timeline">
-                <!-- 1단계: 아이디어 검증 -->
-                <div class="roadmap-phase">
-                    <div class="phase-marker completed"><i class="fas fa-check" style="font-size: 10px; color: #fff;"></i></div>
-                    <div class="phase-content">
-                        <div class="phase-header">
-                            <span class="phase-title">1단계: 아이디어 검증</span>
-                            <span class="phase-status completed">완료</span>
-                        </div>
-                        <ul class="phase-tasks">
-                            <li class="done"><i class="fas fa-check-circle"></i> 시장 조사 및 경쟁 분석</li>
-                            <li class="done"><i class="fas fa-check-circle"></i> 타겟 고객 정의</li>
-                            <li class="done"><i class="fas fa-check-circle"></i> 문제점/솔루션 가설 수립</li>
-                            <li class="done"><i class="fas fa-check-circle"></i> AI 사업 아이디어 발굴</li>
-                        </ul>
-                        <div class="phase-progress">
-                            <div class="phase-progress-bar" style="width: 100%;"></div>
-                        </div>
-                    </div>
+        <!-- 로드맵 -->
+        <div class="roadmap">
+            <div class="phase completed">
+                <div class="phase-number">1</div>
+                <div class="phase-content">
+                    <div class="phase-title">아이디어 검증</div>
+                    <div class="phase-desc">시장 조사, 경쟁사 분석, 타겟 고객 정의</div>
                 </div>
+                <span class="phase-status">완료</span>
+            </div>
 
-                <!-- 2단계: 사업 계획 -->
-                <div class="roadmap-phase">
-                    <div class="phase-marker current"></div>
-                    <div class="phase-content">
-                        <div class="phase-header">
-                            <span class="phase-title">2단계: 사업 계획 수립</span>
-                            <span class="phase-status in-progress">진행중</span>
-                        </div>
-                        <ul class="phase-tasks">
-                            <li class="done"><i class="fas fa-check-circle"></i> 비즈니스 모델 캔버스 작성</li>
-                            <li class="done"><i class="fas fa-check-circle"></i> 수익 모델 설계</li>
-                            <li><i class="far fa-circle"></i> 사업계획서 작성</li>
-                            <li><i class="far fa-circle"></i> 재무 계획 수립</li>
-                            <li><i class="far fa-circle"></i> 창업 지원사업 신청</li>
-                        </ul>
-                        <div class="phase-progress">
-                            <div class="phase-progress-bar" style="width: 40%;"></div>
-                        </div>
-                    </div>
+            <div class="phase completed">
+                <div class="phase-number">2</div>
+                <div class="phase-content">
+                    <div class="phase-title">사업 계획 수립</div>
+                    <div class="phase-desc">비즈니스 모델, 수익 구조, 3페이지 사업계획서</div>
                 </div>
+                <span class="phase-status">완료</span>
+            </div>
 
-                <!-- 3단계: 법인 설립 -->
-                <div class="roadmap-phase">
-                    <div class="phase-marker"></div>
-                    <div class="phase-content">
-                        <div class="phase-header">
-                            <span class="phase-title">3단계: 법인 설립 & 준비</span>
-                            <span class="phase-status pending">대기</span>
-                        </div>
-                        <ul class="phase-tasks">
-                            <li><i class="far fa-circle"></i> 사업자 등록 (개인/법인)</li>
-                            <li><i class="far fa-circle"></i> 사업장 확보</li>
-                            <li><i class="far fa-circle"></i> 통장/카드 개설</li>
-                            <li><i class="far fa-circle"></i> 필요 인허가 취득</li>
-                        </ul>
-                        <div class="phase-progress">
-                            <div class="phase-progress-bar" style="width: 0%;"></div>
-                        </div>
-                    </div>
+            <div class="phase current">
+                <div class="phase-number">3</div>
+                <div class="phase-content">
+                    <div class="phase-title">정부 지원사업 신청</div>
+                    <div class="phase-desc">청년전용창업자금, 예비창업패키지 신청 준비</div>
                 </div>
+                <span class="phase-status">진행중</span>
+            </div>
 
-                <!-- 4단계: MVP 개발 -->
-                <div class="roadmap-phase">
-                    <div class="phase-marker"></div>
-                    <div class="phase-content">
-                        <div class="phase-header">
-                            <span class="phase-title">4단계: MVP 개발</span>
-                            <span class="phase-status pending">대기</span>
-                        </div>
-                        <ul class="phase-tasks">
-                            <li><i class="far fa-circle"></i> 핵심 기능 정의</li>
-                            <li><i class="far fa-circle"></i> 프로토타입 개발</li>
-                            <li><i class="far fa-circle"></i> 베타 테스트</li>
-                            <li><i class="far fa-circle"></i> 피드백 반영</li>
-                        </ul>
-                        <div class="phase-progress">
-                            <div class="phase-progress-bar" style="width: 0%;"></div>
-                        </div>
-                    </div>
+            <div class="phase pending">
+                <div class="phase-number">4</div>
+                <div class="phase-content">
+                    <div class="phase-title">MVP 개발</div>
+                    <div class="phase-desc">핵심 기능 구현, 베타 테스트</div>
                 </div>
+                <span class="phase-status">예정</span>
+            </div>
 
-                <!-- 5단계: 런칭 -->
-                <div class="roadmap-phase">
-                    <div class="phase-marker"></div>
-                    <div class="phase-content">
-                        <div class="phase-header">
-                            <span class="phase-title">5단계: 런칭 & 성장</span>
-                            <span class="phase-status pending">대기</span>
-                        </div>
-                        <ul class="phase-tasks">
-                            <li><i class="far fa-circle"></i> 마케팅 전략 실행</li>
-                            <li><i class="far fa-circle"></i> 첫 고객 확보</li>
-                            <li><i class="far fa-circle"></i> 피드백 수집 및 개선</li>
-                            <li><i class="far fa-circle"></i> 스케일업 준비</li>
-                        </ul>
-                        <div class="phase-progress">
-                            <div class="phase-progress-bar" style="width: 0%;"></div>
-                        </div>
-                    </div>
+            <div class="phase pending">
+                <div class="phase-number">5</div>
+                <div class="phase-content">
+                    <div class="phase-title">서비스 출시</div>
+                    <div class="phase-desc">정식 출시, 마케팅, 사용자 확보</div>
+                </div>
+                <span class="phase-status">예정</span>
+            </div>
+        </div>
+
+        <div class="section-title">88년생 지원 가능 프로그램</div>
+        <div class="support-list">
+            <div class="support-item eligible">
+                <div class="support-info">
+                    <h4>청년전용창업자금</h4>
+                    <p>중소벤처기업진흥공단 · 만 39세 이하 · 연 2.5% 저금리 대출</p>
+                </div>
+                <div class="support-right">
+                    <span class="support-amount">최대 1억원</span>
+                    <span class="status open">모집중</span>
+                </div>
+            </div>
+            <div class="support-item eligible">
+                <div class="support-info">
+                    <h4>청년창업사관학교</h4>
+                    <p>중소벤처기업부 · 만 39세 이하 · 입주공간 + 사업화자금</p>
+                </div>
+                <div class="support-right">
+                    <span class="support-amount">최대 1억원</span>
+                    <span class="status soon">2월 공고</span>
+                </div>
+            </div>
+            <div class="support-item">
+                <div class="support-info">
+                    <h4>예비창업패키지</h4>
+                    <p>창업진흥원 · 나이제한 없음 · 예비창업자 대상</p>
+                </div>
+                <div class="support-right">
+                    <span class="support-amount">최대 1억원</span>
+                    <span class="status soon">3월 공고</span>
+                </div>
+            </div>
+            <div class="support-item">
+                <div class="support-info">
+                    <h4>TIPS 프로그램</h4>
+                    <p>중소벤처기업부 · 기술창업 · 엔젤투자 + 정부지원 매칭</p>
+                </div>
+                <div class="support-right">
+                    <span class="support-amount">최대 5억원</span>
+                    <span class="status open">상시</span>
                 </div>
             </div>
         </div>
 
-        <!-- 추천 지원사업 -->
-        <div class="roadmap-section">
-            <h2 class="section-title"><i class="fas fa-hand-holding-usd"></i> 추천 창업 지원사업</h2>
-
-            <div class="support-grid" id="support-list">
-                <!-- 동적으로 로드 -->
+        <div class="section-title">이번 주 할 일</div>
+        <div class="todo-list">
+            <div class="todo-item done">
+                <div class="todo-checkbox checked"><i class="fas fa-check"></i></div>
+                <span class="todo-text">사업계획서 3페이지 작성</span>
             </div>
-
-            <div style="text-align: center; margin-top: 1.5rem;">
-                <a href="/startup-support" class="btn-sm btn-outline">전체 지원사업 보기 <i class="fas fa-arrow-right"></i></a>
+            <div class="todo-item done">
+                <div class="todo-checkbox checked"><i class="fas fa-check"></i></div>
+                <span class="todo-text">청년창업 지원사업 조사</span>
             </div>
-        </div>
-
-        <!-- 이번 주 할 일 -->
-        <div class="checklist-section">
-            <h2 class="section-title"><i class="fas fa-tasks"></i> 이번 주 할 일</h2>
-
-            <div id="weekly-tasks">
-                <div class="checklist-item" onclick="toggleCheck(this)">
-                    <div class="checklist-checkbox"></div>
-                    <span class="checklist-text">사업계획서 초안 작성</span>
-                    <span class="checklist-priority priority-high">긴급</span>
-                </div>
-                <div class="checklist-item" onclick="toggleCheck(this)">
-                    <div class="checklist-checkbox"></div>
-                    <span class="checklist-text">창업지원센터 상담 예약</span>
-                    <span class="checklist-priority priority-high">긴급</span>
-                </div>
-                <div class="checklist-item checked" onclick="toggleCheck(this)">
-                    <div class="checklist-checkbox"><i class="fas fa-check" style="color: #fff; font-size: 12px;"></i></div>
-                    <span class="checklist-text">시장 규모 조사</span>
-                    <span class="checklist-priority priority-medium">보통</span>
-                </div>
-                <div class="checklist-item" onclick="toggleCheck(this)">
-                    <div class="checklist-checkbox"></div>
-                    <span class="checklist-text">경쟁사 분석 자료 정리</span>
-                    <span class="checklist-priority priority-medium">보통</span>
-                </div>
-                <div class="checklist-item" onclick="toggleCheck(this)">
-                    <div class="checklist-checkbox"></div>
-                    <span class="checklist-text">예비창업패키지 지원 조건 확인</span>
-                    <span class="checklist-priority priority-low">낮음</span>
-                </div>
+            <div class="todo-item">
+                <div class="todo-checkbox"></div>
+                <span class="todo-text">청년전용창업자금 신청 서류 준비</span>
+            </div>
+            <div class="todo-item">
+                <div class="todo-checkbox"></div>
+                <span class="todo-text">사업자등록증 발급</span>
+            </div>
+            <div class="todo-item">
+                <div class="todo-checkbox"></div>
+                <span class="todo-text">MVP 개발 일정 수립</span>
             </div>
         </div>
     </main>
 
     <script>
-        // 체크리스트 토글
-        function toggleCheck(item) {
-            item.classList.toggle('checked');
-            const checkbox = item.querySelector('.checklist-checkbox');
-            if (item.classList.contains('checked')) {
-                checkbox.innerHTML = '<i class="fas fa-check" style="color: #fff; font-size: 12px;"></i>';
-            } else {
-                checkbox.innerHTML = '';
-            }
-            updateStats();
-        }
-
-        // 통계 업데이트
-        function updateStats() {
-            const total = document.querySelectorAll('.checklist-item').length;
-            const checked = document.querySelectorAll('.checklist-item.checked').length;
-            document.getElementById('completed-tasks').textContent = checked;
-            document.getElementById('pending-tasks').textContent = total - checked;
-        }
-
-        // 추천 지원사업 로드
-        async function loadSupportPrograms() {
-            const container = document.getElementById('support-list');
-
-            // 2026년 청년창업 지원사업 (88년생, 만 37-38세 기준 지원가능)
-            const programs = [
-                {
-                    title: '예비창업패키지',
-                    org: '창업진흥원 (K-Startup)',
-                    amount: '최대 1억원',
-                    deadline: '2026-03-15',
-                    status: 'upcoming',
-                    ageLimit: '나이제한 없음',
-                    desc: '예비창업자 대상, 사업화 자금 + 멘토링'
-                },
-                {
-                    title: '청년전용창업자금',
-                    org: '중소벤처기업진흥공단',
-                    amount: '최대 1억원 (연 2.5%)',
-                    deadline: '2026-12-31',
-                    status: 'open',
-                    ageLimit: '만 39세 이하 ✓',
-                    desc: '저금리 정책자금 대출, 88년생 지원가능'
-                },
-                {
-                    title: '청년창업사관학교',
-                    org: '중소벤처기업부',
-                    amount: '최대 1억원',
-                    deadline: '2026-02-28',
-                    status: 'upcoming',
-                    ageLimit: '만 39세 이하 ✓',
-                    desc: '입주공간 + 사업화자금 + 전담 멘토링'
-                },
-                {
-                    title: '초기창업패키지',
-                    org: '창업진흥원 (K-Startup)',
-                    amount: '최대 3억원',
-                    deadline: '2026-03-31',
-                    status: 'upcoming',
-                    ageLimit: '업력 3년 이내',
-                    desc: '초기 스타트업 대상, 사업화 + 투자연계'
-                },
-                {
-                    title: '서울시 청년창업지원',
-                    org: '서울산업진흥원 (SBA)',
-                    amount: '최대 5천만원',
-                    deadline: '2026-03-15',
-                    status: 'upcoming',
-                    ageLimit: '만 39세 이하 ✓',
-                    desc: '서울시 거주/창업 청년 대상'
-                },
-                {
-                    title: 'TIPS 프로그램',
-                    org: '중소벤처기업부',
-                    amount: '최대 5억원',
-                    deadline: '상시모집',
-                    status: 'open',
-                    ageLimit: '나이제한 없음',
-                    desc: '엔젤투자 + 정부지원 매칭, 기술창업'
+        // 체크박스 토글
+        document.querySelectorAll('.todo-checkbox').forEach(checkbox => {
+            checkbox.addEventListener('click', function() {
+                this.classList.toggle('checked');
+                this.closest('.todo-item').classList.toggle('done');
+                if (this.classList.contains('checked')) {
+                    this.innerHTML = '<i class="fas fa-check"></i>';
+                } else {
+                    this.innerHTML = '';
                 }
-            ];
-
-            container.innerHTML = programs.map(p => `
-                <div class="support-card">
-                    <div class="support-header">
-                        <div>
-                            <div class="support-title">${p.title}</div>
-                            <div class="support-org">${p.org}</div>
-                        </div>
-                        <span class="support-badge ${p.status}">${p.status === 'open' ? '모집중' : p.status === 'upcoming' ? '예정' : '마감'}</span>
-                    </div>
-                    <div class="support-desc">${p.desc}</div>
-                    <div class="support-details">
-                        <span class="support-amount">${p.amount}</span>
-                        <span class="age-limit ${p.ageLimit.includes('✓') ? 'eligible' : ''}">${p.ageLimit}</span>
-                    </div>
-                    <div class="support-details">
-                        <span><i class="far fa-calendar"></i> ~${p.deadline}</span>
-                    </div>
-                    <div class="support-actions">
-                        <button class="btn-sm btn-primary" onclick="window.open('https://www.k-startup.go.kr', '_blank')">상세보기</button>
-                        <button class="btn-sm btn-outline">관심등록</button>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        // 초기화
-        document.addEventListener('DOMContentLoaded', () => {
-            loadSupportPrograms();
-            updateStats();
+            });
         });
     </script>
 </body>

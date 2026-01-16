@@ -3,190 +3,211 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TravelMate 사업계획서 | Qhyx Inc.</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>TravelMate 사업계획서</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
-        :root {
-            --primary: #6366f1;
-            --primary-dark: #4f46e5;
-            --success: #10b981;
-            --warning: #f59e0b;
-            --danger: #ef4444;
-            --dark: #1e1e2e;
-            --darker: #181825;
-            --surface: #313244;
-            --text: #cdd6f4;
-            --subtext: #a6adc8;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
-            font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: var(--darker);
-            color: var(--text);
-            line-height: 1.7;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #0a0a0b;
+            color: #e5e5e5;
+            line-height: 1.8;
         }
 
-        .container {
-            max-width: 900px;
-            margin: 0 auto;
-            padding: 2rem;
+        /* 네비게이션 */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 60px;
+            background: rgba(10, 10, 11, 0.9);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid #222;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 2rem;
+            z-index: 100;
         }
 
-        /* 헤더 */
-        .header {
-            text-align: center;
-            padding: 3rem 0;
-            border-bottom: 2px solid var(--primary);
-            margin-bottom: 3rem;
+        .nav-left {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
         }
 
         .logo {
-            font-size: 3rem;
-            margin-bottom: 1rem;
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #fff;
+            text-decoration: none;
         }
 
-        .company-name {
+        .nav-links a {
+            color: #666;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.2s;
+        }
+
+        .nav-links a:hover { color: #fff; }
+
+        .btn-print {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: #fff;
+            color: #000;
+            border: none;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .btn-print:hover { background: #e5e5e5; }
+
+        /* 메인 */
+        main {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 100px 2rem 4rem;
+        }
+
+        /* 헤더 */
+        .doc-header {
+            text-align: center;
+            padding: 3rem 0 4rem;
+            border-bottom: 1px solid #222;
+            margin-bottom: 3rem;
+        }
+
+        .doc-header h1 {
             font-size: 2.5rem;
             font-weight: 700;
-            background: linear-gradient(135deg, var(--primary), #8b5cf6);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
             margin-bottom: 0.5rem;
         }
 
-        .tagline {
-            font-size: 1.2rem;
-            color: var(--subtext);
+        .doc-header .tagline {
+            font-size: 1.1rem;
+            color: #666;
+            margin-bottom: 1.5rem;
         }
 
-        .doc-info {
-            margin-top: 2rem;
-            font-size: 0.9rem;
-            color: var(--subtext);
+        .doc-header .meta {
+            font-size: 0.85rem;
+            color: #555;
         }
 
         /* 페이지 */
         .page {
-            background: var(--dark);
-            border-radius: 16px;
-            padding: 3rem;
-            margin-bottom: 2rem;
-            border: 1px solid rgba(255,255,255,0.05);
-            page-break-inside: avoid;
+            margin-bottom: 4rem;
+            padding-bottom: 3rem;
+            border-bottom: 1px solid #222;
         }
 
-        .page-number {
+        .page:last-child {
+            border-bottom: none;
+        }
+
+        .page-label {
             display: inline-block;
-            background: var(--primary);
-            color: white;
-            padding: 0.5rem 1rem;
-            border-radius: 20px;
-            font-size: 0.8rem;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #555;
+            margin-bottom: 1rem;
+        }
+
+        .page h2 {
+            font-size: 1.5rem;
             font-weight: 600;
-            margin-bottom: 1.5rem;
-        }
-
-        .page-title {
-            font-size: 2rem;
-            font-weight: 700;
             margin-bottom: 2rem;
-            padding-bottom: 1rem;
-            border-bottom: 2px solid var(--surface);
         }
 
+        /* 섹션 */
         .section {
-            margin-bottom: 2rem;
+            margin-bottom: 2.5rem;
         }
 
-        .section-title {
-            font-size: 1.3rem;
+        .section h3 {
+            font-size: 1rem;
             font-weight: 600;
-            color: var(--primary);
+            color: #888;
             margin-bottom: 1rem;
             display: flex;
             align-items: center;
             gap: 0.5rem;
         }
 
-        .section-content {
-            padding-left: 0.5rem;
+        .section h3 i {
+            font-size: 0.9rem;
+        }
+
+        /* 하이라이트 박스 */
+        .highlight {
+            background: #111;
+            border: 1px solid #222;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .highlight strong {
+            color: #fff;
         }
 
         /* 카드 그리드 */
         .card-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            grid-template-columns: repeat(2, 1fr);
             gap: 1rem;
-            margin: 1rem 0;
         }
 
         .card {
-            background: var(--surface);
-            border-radius: 12px;
-            padding: 1.5rem;
+            background: #111;
+            border: 1px solid #222;
+            border-radius: 10px;
+            padding: 1.25rem;
             text-align: center;
         }
 
         .card-icon {
-            font-size: 2rem;
-            margin-bottom: 0.75rem;
-        }
-
-        .card-title {
-            font-weight: 600;
+            font-size: 1.5rem;
             margin-bottom: 0.5rem;
         }
 
-        .card-desc {
-            font-size: 0.85rem;
-            color: var(--subtext);
-        }
-
-        /* 통계 박스 */
-        .stat-box {
-            background: linear-gradient(135deg, var(--primary), #8b5cf6);
-            border-radius: 12px;
-            padding: 2rem;
-            text-align: center;
-            margin: 1.5rem 0;
-        }
-
-        .stat-number {
-            font-size: 2.5rem;
-            font-weight: 700;
-        }
-
-        .stat-label {
+        .card h4 {
             font-size: 0.9rem;
-            opacity: 0.9;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .card p {
+            font-size: 0.8rem;
+            color: #666;
         }
 
         /* 리스트 */
-        .feature-list {
+        .list {
             list-style: none;
         }
 
-        .feature-list li {
+        .list li {
             padding: 0.75rem 0;
-            border-bottom: 1px solid var(--surface);
+            border-bottom: 1px solid #1a1a1b;
             display: flex;
             align-items: flex-start;
             gap: 0.75rem;
         }
 
-        .feature-list li:last-child {
-            border-bottom: none;
-        }
+        .list li:last-child { border-bottom: none; }
 
-        .feature-list li i {
-            color: var(--success);
+        .list li i {
+            color: #4ade80;
             margin-top: 0.2rem;
         }
 
@@ -194,84 +215,107 @@
         .problem-solution {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 1.5rem;
-            margin: 1.5rem 0;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
         }
 
-        .problem-box, .solution-box {
-            border-radius: 12px;
-            padding: 1.5rem;
+        .problem, .solution {
+            padding: 1.25rem;
+            border-radius: 10px;
         }
 
-        .problem-box {
+        .problem {
             background: rgba(239, 68, 68, 0.1);
-            border: 1px solid rgba(239, 68, 68, 0.3);
+            border: 1px solid rgba(239, 68, 68, 0.2);
         }
 
-        .solution-box {
-            background: rgba(16, 185, 129, 0.1);
-            border: 1px solid rgba(16, 185, 129, 0.3);
+        .solution {
+            background: rgba(74, 222, 128, 0.1);
+            border: 1px solid rgba(74, 222, 128, 0.2);
         }
 
-        .box-title {
+        .problem h4, .solution h4 {
+            font-size: 0.8rem;
             font-weight: 600;
-            margin-bottom: 0.75rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
+            margin-bottom: 0.5rem;
         }
 
-        .problem-box .box-title { color: var(--danger); }
-        .solution-box .box-title { color: var(--success); }
+        .problem h4 { color: #f87171; }
+        .solution h4 { color: #4ade80; }
 
-        .box-content {
-            font-size: 0.9rem;
-            color: var(--subtext);
+        .problem p, .solution p {
+            font-size: 0.85rem;
+            color: #888;
         }
 
-        /* 수익 모델 */
-        .revenue-table {
+        /* 통계 */
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .stat {
+            background: #111;
+            border: 1px solid #222;
+            border-radius: 10px;
+            padding: 1.25rem;
+            text-align: center;
+        }
+
+        .stat .number {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #4ade80;
+        }
+
+        .stat .label {
+            font-size: 0.75rem;
+            color: #666;
+            margin-top: 0.25rem;
+        }
+
+        /* 테이블 */
+        .table {
             width: 100%;
             border-collapse: collapse;
-            margin: 1.5rem 0;
         }
 
-        .revenue-table th, .revenue-table td {
+        .table th, .table td {
             padding: 1rem;
             text-align: left;
-            border-bottom: 1px solid var(--surface);
+            border-bottom: 1px solid #222;
         }
 
-        .revenue-table th {
-            background: var(--surface);
-            color: var(--primary);
+        .table th {
+            font-size: 0.8rem;
             font-weight: 600;
+            color: #666;
+            text-transform: uppercase;
         }
 
-        .revenue-table tr:hover td {
-            background: rgba(99, 102, 241, 0.05);
-        }
+        .table td { font-size: 0.9rem; }
 
-        .revenue-amount {
-            color: var(--success);
+        .table .amount {
+            color: #4ade80;
             font-weight: 600;
         }
 
         /* 타임라인 */
         .timeline {
             position: relative;
-            padding-left: 2rem;
-            margin: 1.5rem 0;
+            padding-left: 1.5rem;
         }
 
         .timeline::before {
             content: '';
             position: absolute;
             left: 0;
-            top: 0;
-            bottom: 0;
+            top: 0.5rem;
+            bottom: 0.5rem;
             width: 2px;
-            background: var(--primary);
+            background: #333;
         }
 
         .timeline-item {
@@ -282,459 +326,273 @@
         .timeline-item::before {
             content: '';
             position: absolute;
-            left: -2rem;
-            top: 0.25rem;
-            width: 10px;
-            height: 10px;
-            background: var(--primary);
+            left: -1.5rem;
+            top: 0.5rem;
+            width: 8px;
+            height: 8px;
+            background: #4ade80;
             border-radius: 50%;
-            transform: translateX(-4px);
+            transform: translateX(-3px);
         }
 
-        .timeline-title {
+        .timeline-item h4 {
+            font-size: 0.9rem;
             font-weight: 600;
             margin-bottom: 0.25rem;
         }
 
-        .timeline-desc {
+        .timeline-item p {
             font-size: 0.85rem;
-            color: var(--subtext);
+            color: #666;
         }
 
-        /* 하이라이트 */
-        .highlight {
-            background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(139, 92, 246, 0.2));
-            border-radius: 8px;
-            padding: 1.5rem;
-            margin: 1rem 0;
-            border-left: 4px solid var(--primary);
-        }
-
-        /* 팀 */
-        .team-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 1rem;
-            margin: 1rem 0;
-        }
-
-        .team-member {
-            text-align: center;
-            padding: 1.5rem;
-            background: var(--surface);
-            border-radius: 12px;
-        }
-
-        .team-avatar {
-            width: 60px;
-            height: 60px;
-            background: var(--primary);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 0.75rem;
-            font-size: 1.5rem;
-        }
-
-        .team-role {
-            font-size: 0.8rem;
-            color: var(--subtext);
-        }
-
-        /* 푸터 */
-        .footer {
-            text-align: center;
-            padding: 2rem;
-            color: var(--subtext);
-            font-size: 0.9rem;
-        }
-
-        /* 프린트 스타일 */
-        @media print {
-            body {
-                background: white;
-                color: #333;
-            }
-            .page {
-                background: white;
-                border: 1px solid #ddd;
-                page-break-after: always;
-            }
-            .no-print {
-                display: none;
-            }
-        }
-
-        /* 버튼 */
-        .btn-group {
-            display: flex;
-            gap: 1rem;
-            justify-content: center;
-            margin: 2rem 0;
-        }
-
-        .btn {
-            padding: 0.75rem 1.5rem;
-            border-radius: 8px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.2s;
-            border: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            text-decoration: none;
-        }
-
-        .btn-primary {
-            background: var(--primary);
-            color: white;
-        }
-
-        .btn-primary:hover {
-            background: var(--primary-dark);
-        }
-
-        .btn-outline {
-            background: transparent;
-            border: 1px solid var(--primary);
-            color: var(--primary);
-        }
-
+        /* 반응형 */
         @media (max-width: 768px) {
-            .problem-solution {
-                grid-template-columns: 1fr;
-            }
-            .team-grid {
-                grid-template-columns: 1fr;
-            }
+            nav { padding: 0 1rem; }
+            main { padding: 80px 1rem 2rem; }
+            .doc-header h1 { font-size: 1.75rem; }
+            .card-grid, .problem-solution, .stats { grid-template-columns: 1fr; }
+        }
+
+        /* 프린트 */
+        @media print {
+            body { background: #fff; color: #000; }
+            nav { display: none; }
+            main { padding: 0; max-width: 100%; }
+            .page { page-break-after: always; border: none; }
+            .card, .highlight, .stat, .problem, .solution { border-color: #ddd; }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <!-- 헤더 -->
-        <div class="header">
-            <div class="logo">
-                <i class="fas fa-globe-asia"></i>
-            </div>
-            <div class="company-name">TravelMate</div>
-            <div class="tagline">여행 동행 매칭 + Web3 위치기반 NFT 수집 플랫폼</div>
-            <div class="doc-info">
-                <p>사업계획서 (Executive Summary)</p>
-                <p>2026년 1월</p>
+    <nav>
+        <div class="nav-left">
+            <a href="/" class="logo">Qhyx</a>
+            <div class="nav-links">
+                <a href="/">홈</a>
             </div>
         </div>
+        <button class="btn-print" onclick="window.print()">
+            <i class="fas fa-print"></i> PDF 출력
+        </button>
+    </nav>
 
-        <!-- 버튼 그룹 -->
-        <div class="btn-group no-print">
-            <button class="btn btn-primary" onclick="window.print()">
-                <i class="fas fa-print"></i> PDF 출력
-            </button>
-            <a href="/" class="btn btn-outline">
-                <i class="fas fa-home"></i> 대시보드
-            </a>
-        </div>
+    <main>
+        <header class="doc-header">
+            <h1>TravelMate</h1>
+            <p class="tagline">여행 동행 매칭 + Web3 NFT 수집 플랫폼</p>
+            <p class="meta">사업계획서 · 2026년 1월</p>
+        </header>
 
-        <!-- 페이지 1: 사업 개요 -->
-        <div class="page" id="page1">
-            <span class="page-number">Page 1 / 3</span>
-            <h1 class="page-title"><i class="fas fa-rocket"></i> 사업 개요</h1>
+        <!-- Page 1: 사업 개요 -->
+        <section class="page">
+            <span class="page-label">Page 1 of 3</span>
+            <h2>사업 개요</h2>
 
             <div class="section">
-                <h2 class="section-title"><i class="fas fa-lightbulb"></i> 비전</h2>
-                <div class="section-content">
-                    <div class="highlight">
-                        <strong>"혼자 떠나도, 함께 추억을 만드는 여행"</strong><br>
-                        TravelMate는 여행자 간 실시간 매칭과 블록체인 기반 위치 인증 NFT를 결합하여,<br>
-                        새로운 여행 경험과 디지털 수집 문화를 창출합니다.
-                    </div>
+                <h3><i class="fas fa-lightbulb"></i> 비전</h3>
+                <div class="highlight">
+                    <strong>"혼자 떠나도, 함께 추억을 만드는 여행"</strong><br><br>
+                    여행자 간 실시간 매칭과 블록체인 기반 위치 인증 NFT를 결합하여,
+                    새로운 여행 경험과 디지털 수집 문화를 창출합니다.
                 </div>
             </div>
 
             <div class="section">
-                <h2 class="section-title"><i class="fas fa-cube"></i> 핵심 서비스</h2>
+                <h3><i class="fas fa-cube"></i> 핵심 서비스</h3>
                 <div class="card-grid">
                     <div class="card">
                         <div class="card-icon">👥</div>
-                        <div class="card-title">동행 매칭</div>
-                        <div class="card-desc">관심사, 여행스타일, 일정 기반<br>AI 매칭 시스템</div>
+                        <h4>동행 매칭</h4>
+                        <p>AI 기반 취향/일정 매칭</p>
                     </div>
                     <div class="card">
                         <div class="card-icon">🗺️</div>
-                        <div class="card-title">위치기반 NFT</div>
-                        <div class="card-desc">GPS 인증 자동 수집<br>여행지 한정 NFT</div>
+                        <h4>위치 NFT</h4>
+                        <p>GPS 인증 자동 수집</p>
                     </div>
                     <div class="card">
                         <div class="card-icon">💬</div>
-                        <div class="card-title">실시간 채팅</div>
-                        <div class="card-desc">WebSocket 기반<br>그룹 채팅 & 일정 공유</div>
+                        <h4>실시간 채팅</h4>
+                        <p>그룹 채팅 & 일정 공유</p>
                     </div>
                     <div class="card">
                         <div class="card-icon">🏪</div>
-                        <div class="card-title">NFT 마켓플레이스</div>
-                        <div class="card-desc">수집한 NFT 거래<br>희귀도 기반 가치</div>
+                        <h4>NFT 마켓</h4>
+                        <p>수집 NFT 거래</p>
                     </div>
                 </div>
             </div>
 
             <div class="section">
-                <h2 class="section-title"><i class="fas fa-cogs"></i> 기술 스택</h2>
-                <div class="section-content">
-                    <ul class="feature-list">
-                        <li><i class="fas fa-check"></i> <strong>백엔드:</strong> Spring Boot 3.4, PostgreSQL, Redis, Elasticsearch</li>
-                        <li><i class="fas fa-check"></i> <strong>프론트엔드:</strong> React 18, TypeScript, TailwindCSS</li>
-                        <li><i class="fas fa-check"></i> <strong>모바일:</strong> React Native (Expo), GPS 통합</li>
-                        <li><i class="fas fa-check"></i> <strong>블록체인:</strong> Polygon (저렴한 가스비), ERC-721 NFT</li>
-                        <li><i class="fas fa-check"></i> <strong>실시간:</strong> WebSocket + STOMP, Redis Pub/Sub</li>
-                    </ul>
-                </div>
+                <h3><i class="fas fa-code"></i> 기술 스택</h3>
+                <ul class="list">
+                    <li><i class="fas fa-check"></i> <strong>백엔드:</strong> Spring Boot 3.4, PostgreSQL, Redis</li>
+                    <li><i class="fas fa-check"></i> <strong>프론트:</strong> React 18, TypeScript</li>
+                    <li><i class="fas fa-check"></i> <strong>모바일:</strong> React Native (Expo)</li>
+                    <li><i class="fas fa-check"></i> <strong>블록체인:</strong> Polygon, ERC-721</li>
+                </ul>
             </div>
+        </section>
+
+        <!-- Page 2: 시장/고객 문제 -->
+        <section class="page">
+            <span class="page-label">Page 2 of 3</span>
+            <h2>시장 / 고객 문제</h2>
 
             <div class="section">
-                <h2 class="section-title"><i class="fas fa-users"></i> 창업팀</h2>
-                <div class="team-grid">
-                    <div class="team-member">
-                        <div class="team-avatar"><i class="fas fa-user-tie"></i></div>
-                        <div class="team-name">대표이사</div>
-                        <div class="team-role">10년+ 개발 경력<br>풀스택 & 블록체인</div>
+                <h3><i class="fas fa-chart-pie"></i> 시장 규모</h3>
+                <div class="stats">
+                    <div class="stat">
+                        <div class="number">$1.2T</div>
+                        <div class="label">TAM: 글로벌 여행</div>
                     </div>
-                    <div class="team-member">
-                        <div class="team-avatar"><i class="fas fa-code"></i></div>
-                        <div class="team-name">CTO</div>
-                        <div class="team-role">시스템 아키텍처<br>& AI/ML</div>
+                    <div class="stat">
+                        <div class="number">$50B</div>
+                        <div class="label">SAM: 아시아 1인 여행</div>
                     </div>
-                    <div class="team-member">
-                        <div class="team-avatar"><i class="fas fa-palette"></i></div>
-                        <div class="team-name">CPO</div>
-                        <div class="team-role">UI/UX 디자인<br>& 제품 기획</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- 페이지 2: 시장/고객 문제 -->
-        <div class="page" id="page2">
-            <span class="page-number">Page 2 / 3</span>
-            <h1 class="page-title"><i class="fas fa-chart-line"></i> 시장 / 고객 문제</h1>
-
-            <div class="section">
-                <h2 class="section-title"><i class="fas fa-globe"></i> 시장 규모 (TAM-SAM-SOM)</h2>
-                <div class="card-grid">
-                    <div class="stat-box">
-                        <div class="stat-number">$1.2T</div>
-                        <div class="stat-label">TAM: 글로벌 여행 시장</div>
-                    </div>
-                    <div class="stat-box" style="background: linear-gradient(135deg, #10b981, #059669);">
-                        <div class="stat-number">$50B</div>
-                        <div class="stat-label">SAM: 아시아 1인 여행 시장</div>
-                    </div>
-                    <div class="stat-box" style="background: linear-gradient(135deg, #f59e0b, #d97706);">
-                        <div class="stat-number">$500M</div>
-                        <div class="stat-label">SOM: 한국 MZ 여행자</div>
+                    <div class="stat">
+                        <div class="number">$500M</div>
+                        <div class="label">SOM: 한국 MZ</div>
                     </div>
                 </div>
             </div>
 
             <div class="section">
-                <h2 class="section-title"><i class="fas fa-exclamation-triangle"></i> 고객의 문제점</h2>
+                <h3><i class="fas fa-exclamation-circle"></i> 문제 & 솔루션</h3>
+
                 <div class="problem-solution">
-                    <div class="problem-box">
-                        <div class="box-title"><i class="fas fa-times-circle"></i> 문제 1</div>
-                        <div class="box-content">
-                            <strong>혼행의 외로움</strong><br>
-                            혼자 여행하는 MZ세대 증가, 하지만 현지에서 함께할 동행자를 찾기 어려움
-                        </div>
+                    <div class="problem">
+                        <h4>문제 1: 혼행의 외로움</h4>
+                        <p>혼자 여행하는 MZ세대 증가, 현지 동행자 찾기 어려움</p>
                     </div>
-                    <div class="solution-box">
-                        <div class="box-title"><i class="fas fa-check-circle"></i> 솔루션</div>
-                        <div class="box-content">
-                            AI 기반 매칭으로 취향, 일정, 여행스타일이 맞는 동행자를 실시간 추천
-                        </div>
+                    <div class="solution">
+                        <h4>솔루션</h4>
+                        <p>AI 매칭으로 취향/일정 맞는 동행자 실시간 추천</p>
                     </div>
                 </div>
 
                 <div class="problem-solution">
-                    <div class="problem-box">
-                        <div class="box-title"><i class="fas fa-times-circle"></i> 문제 2</div>
-                        <div class="box-content">
-                            <strong>여행 기록의 휘발성</strong><br>
-                            SNS 사진은 잊혀지고, 여행 추억을 소유하고 증명할 방법이 없음
-                        </div>
+                    <div class="problem">
+                        <h4>문제 2: 기록의 휘발성</h4>
+                        <p>SNS 사진은 잊혀지고, 여행 추억 증명 방법 없음</p>
                     </div>
-                    <div class="solution-box">
-                        <div class="box-title"><i class="fas fa-check-circle"></i> 솔루션</div>
-                        <div class="box-content">
-                            GPS 인증 NFT로 "내가 그곳에 있었다"를 블록체인에 영구 기록
-                        </div>
+                    <div class="solution">
+                        <h4>솔루션</h4>
+                        <p>GPS 인증 NFT로 블록체인에 영구 기록</p>
                     </div>
                 </div>
 
                 <div class="problem-solution">
-                    <div class="problem-box">
-                        <div class="box-title"><i class="fas fa-times-circle"></i> 문제 3</div>
-                        <div class="box-content">
-                            <strong>여행의 게이미피케이션 부재</strong><br>
-                            여행을 더 재미있게 만들 수집, 도전, 보상 시스템이 없음
-                        </div>
+                    <div class="problem">
+                        <h4>문제 3: 게이미피케이션 부재</h4>
+                        <p>여행을 더 재미있게 만들 수집/보상 시스템 없음</p>
                     </div>
-                    <div class="solution-box">
-                        <div class="box-title"><i class="fas fa-check-circle"></i> 솔루션</div>
-                        <div class="box-content">
-                            희귀 NFT 수집, 리더보드, 뱃지 시스템으로 여행을 게임처럼 즐김
-                        </div>
+                    <div class="solution">
+                        <h4>솔루션</h4>
+                        <p>희귀 NFT 수집, 리더보드, 뱃지 시스템</p>
                     </div>
                 </div>
             </div>
 
             <div class="section">
-                <h2 class="section-title"><i class="fas fa-user-friends"></i> 타겟 고객</h2>
-                <div class="section-content">
-                    <ul class="feature-list">
-                        <li><i class="fas fa-check"></i> <strong>MZ세대 혼행족:</strong> 20-35세, 혼자 여행하지만 현지 교류 희망</li>
-                        <li><i class="fas fa-check"></i> <strong>NFT/디지털 수집가:</strong> 희귀 아이템 수집에 관심, 소유욕 충족</li>
-                        <li><i class="fas fa-check"></i> <strong>여행 인플루언서:</strong> 콘텐츠 생성, 팔로워와 NFT 공유</li>
-                        <li><i class="fas fa-check"></i> <strong>지자체/관광지:</strong> 관광 활성화, 방문자 데이터 확보</li>
-                    </ul>
-                </div>
+                <h3><i class="fas fa-trophy"></i> 경쟁 우위</h3>
+                <ul class="list">
+                    <li><i class="fas fa-star"></i> <strong>GPS 위치 인증:</strong> 실제 방문 증명 (타 NFT 플랫폼과 차별화)</li>
+                    <li><i class="fas fa-star"></i> <strong>여행+블록체인:</strong> 국내 최초 동행 + NFT 통합 서비스</li>
+                    <li><i class="fas fa-star"></i> <strong>Polygon:</strong> 이더리움 대비 99% 저렴한 가스비</li>
+                </ul>
             </div>
+        </section>
+
+        <!-- Page 3: 수익 모델 -->
+        <section class="page">
+            <span class="page-label">Page 3 of 3</span>
+            <h2>수익 모델</h2>
 
             <div class="section">
-                <h2 class="section-title"><i class="fas fa-trophy"></i> 경쟁 우위</h2>
-                <div class="highlight">
-                    <ul class="feature-list" style="margin: 0;">
-                        <li><i class="fas fa-star"></i> <strong>GPS 위치 인증:</strong> 실제 방문 증명 (타 NFT 플랫폼과 차별화)</li>
-                        <li><i class="fas fa-star"></i> <strong>여행+블록체인 결합:</strong> 국내 최초 여행 동행 + NFT 통합 서비스</li>
-                        <li><i class="fas fa-star"></i> <strong>Polygon 저비용:</strong> 이더리움 대비 99% 저렴한 가스비</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-
-        <!-- 페이지 3: 수익 모델 -->
-        <div class="page" id="page3">
-            <span class="page-number">Page 3 / 3</span>
-            <h1 class="page-title"><i class="fas fa-coins"></i> 수익 모델</h1>
-
-            <div class="section">
-                <h2 class="section-title"><i class="fas fa-money-bill-wave"></i> 수익원 구조</h2>
-                <table class="revenue-table">
+                <h3><i class="fas fa-coins"></i> 수익원</h3>
+                <table class="table">
                     <thead>
                         <tr>
                             <th>수익원</th>
                             <th>설명</th>
-                            <th>예상 매출 (연)</th>
+                            <th>연 매출</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
-                            <td><i class="fas fa-exchange-alt"></i> NFT 거래 수수료</td>
-                            <td>마켓플레이스 거래액의 3-5%</td>
-                            <td class="revenue-amount">5억원</td>
+                            <td>NFT 거래 수수료</td>
+                            <td>거래액의 3-5%</td>
+                            <td class="amount">5억원</td>
                         </tr>
                         <tr>
-                            <td><i class="fas fa-crown"></i> 프리미엄 구독</td>
-                            <td>월 9,900원 (무제한 매칭, 희귀 NFT 우선권)</td>
-                            <td class="revenue-amount">3억원</td>
+                            <td>프리미엄 구독</td>
+                            <td>월 9,900원</td>
+                            <td class="amount">3억원</td>
                         </tr>
                         <tr>
-                            <td><i class="fas fa-building"></i> B2B 파트너십</td>
-                            <td>지자체/관광지 한정 NFT 발행 대행</td>
-                            <td class="revenue-amount">2억원</td>
+                            <td>B2B 파트너십</td>
+                            <td>지자체 NFT 발행</td>
+                            <td class="amount">2억원</td>
                         </tr>
                         <tr>
-                            <td><i class="fas fa-ad"></i> 광고/제휴</td>
-                            <td>여행사, 숙박, 항공 제휴 마케팅</td>
-                            <td class="revenue-amount">1억원</td>
-                        </tr>
-                        <tr style="background: rgba(99, 102, 241, 0.1);">
-                            <td><strong>합계</strong></td>
-                            <td></td>
-                            <td class="revenue-amount" style="font-size: 1.2rem;">11억원</td>
+                            <td>광고/제휴</td>
+                            <td>여행사 제휴</td>
+                            <td class="amount">1억원</td>
                         </tr>
                     </tbody>
                 </table>
             </div>
 
             <div class="section">
-                <h2 class="section-title"><i class="fas fa-chart-area"></i> 예상 성장 지표</h2>
-                <div class="card-grid">
-                    <div class="card">
-                        <div class="card-icon">📈</div>
-                        <div class="card-title">1년차 MAU</div>
-                        <div class="card-desc" style="font-size: 1.5rem; color: var(--success);">50,000명</div>
+                <h3><i class="fas fa-chart-line"></i> 성장 목표</h3>
+                <div class="stats">
+                    <div class="stat">
+                        <div class="number">5만</div>
+                        <div class="label">1년차 MAU</div>
                     </div>
-                    <div class="card">
-                        <div class="card-icon">🎨</div>
-                        <div class="card-title">1년차 NFT 발행</div>
-                        <div class="card-desc" style="font-size: 1.5rem; color: var(--success);">100,000개</div>
+                    <div class="stat">
+                        <div class="number">10만</div>
+                        <div class="label">1년차 NFT 발행</div>
                     </div>
-                    <div class="card">
-                        <div class="card-icon">💰</div>
-                        <div class="card-title">3년차 매출</div>
-                        <div class="card-desc" style="font-size: 1.5rem; color: var(--success);">50억원</div>
+                    <div class="stat">
+                        <div class="number">50억</div>
+                        <div class="label">3년차 매출</div>
                     </div>
                 </div>
             </div>
 
             <div class="section">
-                <h2 class="section-title"><i class="fas fa-road"></i> 로드맵</h2>
+                <h3><i class="fas fa-road"></i> 로드맵</h3>
                 <div class="timeline">
                     <div class="timeline-item">
-                        <div class="timeline-title">2026 Q1: MVP 출시</div>
-                        <div class="timeline-desc">동행 매칭 + 기본 NFT 수집 기능, 서울/제주 시범 운영</div>
+                        <h4>2026 Q1: MVP 출시</h4>
+                        <p>동행 매칭 + NFT 수집, 서울/제주 시범 운영</p>
                     </div>
                     <div class="timeline-item">
-                        <div class="timeline-title">2026 Q2: 마켓플레이스 오픈</div>
-                        <div class="timeline-desc">NFT 거래 기능, 프리미엄 구독 서비스 시작</div>
+                        <h4>2026 Q2: 마켓플레이스</h4>
+                        <p>NFT 거래, 프리미엄 구독 서비스</p>
                     </div>
                     <div class="timeline-item">
-                        <div class="timeline-title">2026 Q3: B2B 파트너십</div>
-                        <div class="timeline-desc">지자체 연계, 지역 한정 NFT 발행</div>
+                        <h4>2026 Q3: B2B 확장</h4>
+                        <p>지자체 연계, 지역 한정 NFT</p>
                     </div>
                     <div class="timeline-item">
-                        <div class="timeline-title">2026 Q4: 아시아 확장</div>
-                        <div class="timeline-desc">일본, 태국, 베트남 서비스 확대</div>
-                    </div>
-                    <div class="timeline-item">
-                        <div class="timeline-title">2027: 시리즈A 투자 유치</div>
-                        <div class="timeline-desc">50억 투자 유치, 글로벌 확장 본격화</div>
+                        <h4>2026 Q4: 아시아 진출</h4>
+                        <p>일본, 태국, 베트남 서비스 확대</p>
                     </div>
                 </div>
             </div>
 
             <div class="section">
-                <h2 class="section-title"><i class="fas fa-hand-holding-usd"></i> 자금 조달 계획</h2>
+                <h3><i class="fas fa-hand-holding-usd"></i> 자금 조달</h3>
                 <div class="highlight">
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
-                        <div>
-                            <h4 style="color: var(--primary); margin-bottom: 0.5rem;">신청 지원사업</h4>
-                            <ul class="feature-list" style="margin: 0;">
-                                <li><i class="fas fa-check"></i> 청년전용창업자금 (1억원 대출)</li>
-                                <li><i class="fas fa-check"></i> 예비창업패키지 (1억원)</li>
-                                <li><i class="fas fa-check"></i> 청년창업사관학교</li>
-                            </ul>
-                        </div>
-                        <div>
-                            <h4 style="color: var(--primary); margin-bottom: 0.5rem;">사용 계획</h4>
-                            <ul class="feature-list" style="margin: 0;">
-                                <li><i class="fas fa-check"></i> 개발 인력 채용 (40%)</li>
-                                <li><i class="fas fa-check"></i> 마케팅/유저 확보 (30%)</li>
-                                <li><i class="fas fa-check"></i> 인프라/운영 (30%)</li>
-                            </ul>
-                        </div>
-                    </div>
+                    <strong>신청 예정 지원사업</strong><br>
+                    청년전용창업자금 (1억원) · 예비창업패키지 (1억원) · 청년창업사관학교
                 </div>
             </div>
-        </div>
-
-        <!-- 푸터 -->
-        <div class="footer">
-            <p>TravelMate | Qhyx Inc.</p>
-            <p>Generated by Qhyx AI Business Discovery System</p>
-            <p>2026년 1월</p>
-        </div>
-    </div>
+        </section>
+    </main>
 </body>
 </html>
