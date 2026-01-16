@@ -1263,7 +1263,7 @@ def generate_default_revenue_analysis(business_name, score):
 
 @app.route('/api/discovered-businesses')
 def api_discovered_businesses():
-    """자동 발굴된 사업 목록 API (50점 이상 모두 포함)"""
+    """자동 발굴된 사업 목록 API (50점 이상 모두 포함, 중복 제거)"""
     session = None
     try:
         session = get_db_session()
@@ -1271,9 +1271,19 @@ def api_discovered_businesses():
         # BusinessDiscoveryHistory에서 50점 이상 사업 모두 조회
         histories = session.query(BusinessDiscoveryHistory).filter(
             BusinessDiscoveryHistory.total_score >= 50
-        ).order_by(BusinessDiscoveryHistory.discovered_at.desc()).limit(100).all()
+        ).order_by(BusinessDiscoveryHistory.discovered_at.desc()).limit(200).all()
 
-        logger.info(f"[API] discovered-businesses: {len(histories)}건 조회")
+        # 중복 제거: 같은 이름의 사업은 가장 최신 것만 유지
+        seen_names = set()
+        unique_histories = []
+        for biz in histories:
+            if biz.business_name not in seen_names:
+                seen_names.add(biz.business_name)
+                unique_histories.append(biz)
+
+        histories = unique_histories[:100]  # 최대 100개
+
+        logger.info(f"[API] discovered-businesses: {len(histories)}건 조회 (중복 제거됨)")
 
         business_list = []
         for biz in histories:
