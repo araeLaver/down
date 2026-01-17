@@ -3,32 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>수동 사업 발굴 - Qhyx Inc.</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <title>수동 사업 발굴 - Qhyx</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #0a0a0b;
+            color: #e5e5e5;
             min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 2rem;
         }
 
         .container {
             max-width: 600px;
-            width: 100%;
-            background: white;
-            border-radius: 20px;
-            padding: 3rem;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            margin: 0 auto;
+            padding: 100px 2rem 4rem;
+        }
+
+        .card {
+            background: #111;
+            border: 1px solid #222;
+            border-radius: 12px;
+            padding: 2rem;
         }
 
         .header {
@@ -37,44 +34,49 @@
         }
 
         .header h1 {
-            font-size: 2rem;
-            color: #111827;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #fff;
             margin-bottom: 0.5rem;
         }
 
         .header p {
-            color: #6b7280;
-            font-size: 1rem;
+            color: #888;
+            font-size: 0.9rem;
         }
 
         .trigger-btn {
             width: 100%;
-            padding: 1.5rem;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
+            padding: 1rem;
+            background: #4ade80;
+            color: #000;
             border: none;
-            border-radius: 12px;
-            font-size: 1.25rem;
-            font-weight: 700;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
             cursor: pointer;
-            transition: all 0.3s;
+            transition: all 0.2s;
             margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
         }
 
         .trigger-btn:hover:not(:disabled) {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+            background: #22c55e;
         }
 
         .trigger-btn:disabled {
-            background: #9ca3af;
+            background: #333;
+            color: #666;
             cursor: not-allowed;
         }
 
         .status-box {
-            background: #f9fafb;
-            border-radius: 12px;
-            padding: 1.5rem;
+            background: #1a1a1b;
+            border-radius: 8px;
+            padding: 1rem;
             margin-bottom: 1.5rem;
             display: none;
         }
@@ -84,33 +86,34 @@
         }
 
         .status-title {
-            font-weight: 700;
-            color: #111827;
-            margin-bottom: 1rem;
-            font-size: 1.1rem;
+            font-weight: 600;
+            color: #fff;
+            margin-bottom: 0.75rem;
+            font-size: 0.9rem;
         }
 
         .status-item {
-            padding: 0.75rem;
-            background: white;
-            border-radius: 8px;
+            padding: 0.5rem 0.75rem;
+            background: #111;
+            border-radius: 6px;
             margin-bottom: 0.5rem;
             display: flex;
             align-items: center;
             gap: 0.75rem;
+            font-size: 0.85rem;
         }
 
         .status-item i {
-            font-size: 1.25rem;
+            font-size: 1rem;
         }
 
         .status-item.loading i {
-            color: #6366f1;
+            color: #60a5fa;
             animation: spin 1s linear infinite;
         }
 
         .status-item.success i {
-            color: #10b981;
+            color: #4ade80;
         }
 
         .status-item.error i {
@@ -122,10 +125,10 @@
         }
 
         .result-box {
-            background: #f0fdf4;
-            border: 2px solid #10b981;
-            border-radius: 12px;
-            padding: 1.5rem;
+            background: rgba(74, 222, 128, 0.1);
+            border: 1px solid #4ade80;
+            border-radius: 8px;
+            padding: 1rem;
             margin-bottom: 1.5rem;
             display: none;
         }
@@ -135,17 +138,18 @@
         }
 
         .result-title {
-            font-weight: 700;
-            color: #065f46;
-            margin-bottom: 1rem;
-            font-size: 1.1rem;
+            font-weight: 600;
+            color: #4ade80;
+            margin-bottom: 0.75rem;
+            font-size: 0.9rem;
         }
 
         .result-stat {
             display: flex;
             justify-content: space-between;
             padding: 0.5rem 0;
-            border-bottom: 1px solid #d1fae5;
+            border-bottom: 1px solid rgba(74, 222, 128, 0.2);
+            font-size: 0.9rem;
         }
 
         .result-stat:last-child {
@@ -153,12 +157,12 @@
         }
 
         .result-label {
-            color: #047857;
+            color: #888;
         }
 
         .result-value {
-            font-weight: 700;
-            color: #065f46;
+            font-weight: 600;
+            color: #4ade80;
         }
 
         .nav-buttons {
@@ -168,96 +172,114 @@
         }
 
         .nav-btn {
-            padding: 1rem;
+            padding: 1rem 0.5rem;
+            background: #1a1a1b;
+            border: 1px solid #222;
             border-radius: 8px;
             text-decoration: none;
             text-align: center;
-            font-weight: 600;
-            font-size: 0.875rem;
+            font-weight: 500;
+            font-size: 0.8rem;
             transition: all 0.2s;
         }
 
         .nav-btn.excellent {
-            background: #ede9fe;
-            color: #6366f1;
+            color: #4ade80;
+        }
+
+        .nav-btn.excellent:hover {
+            border-color: #4ade80;
+            background: rgba(74, 222, 128, 0.1);
         }
 
         .nav-btn.review {
-            background: #fef3c7;
-            color: #f59e0b;
+            color: #fbbf24;
+        }
+
+        .nav-btn.review:hover {
+            border-color: #fbbf24;
+            background: rgba(251, 191, 36, 0.1);
         }
 
         .nav-btn.rejected {
-            background: #fee2e2;
             color: #ef4444;
         }
 
-        .nav-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        .nav-btn.rejected:hover {
+            border-color: #ef4444;
+            background: rgba(239, 68, 68, 0.1);
+        }
+
+        .nav-btn i {
+            display: block;
+            font-size: 1.25rem;
+            margin-bottom: 0.5rem;
         }
 
         .back-link {
             display: block;
             text-align: center;
             margin-top: 1.5rem;
-            color: #6b7280;
+            color: #666;
             text-decoration: none;
+            font-size: 0.9rem;
         }
 
         .back-link:hover {
-            color: #111827;
+            color: #888;
         }
     </style>
 </head>
 <body>
     {% include 'navbar.html' %}
     <div class="container">
-        <div class="header">
-            <h1><i class="fas fa-robot"></i> 수동 사업 발굴</h1>
-            <p>버튼을 클릭하여 새로운 사업 아이디어를 생성하세요</p>
-        </div>
-
-        <button class="trigger-btn" id="triggerBtn" onclick="runDiscovery()">
-            <i class="fas fa-play-circle"></i> 사업 발굴 시작
-        </button>
-
-        <div class="status-box" id="statusBox">
-            <div class="status-title"><i class="fas fa-tasks"></i> 진행 상황</div>
-            <div id="statusList"></div>
-        </div>
-
-        <div class="result-box" id="resultBox">
-            <div class="result-title"><i class="fas fa-check-circle"></i> 완료!</div>
-            <div class="result-stat">
-                <span class="result-label">분석된 사업</span>
-                <span class="result-value" id="analyzedCount">-</span>
+        <div class="card">
+            <div class="header">
+                <h1><i class="fas fa-robot"></i> 수동 사업 발굴</h1>
+                <p>버튼을 클릭하여 새로운 사업 아이디어를 생성하세요</p>
             </div>
-            <div class="result-stat">
-                <span class="result-label">저장된 사업 (80+)</span>
-                <span class="result-value" id="savedCount">-</span>
-            </div>
-            <div class="result-stat">
-                <span class="result-label">완료 시간</span>
-                <span class="result-value" id="timestamp">-</span>
-            </div>
-        </div>
 
-        <div class="nav-buttons">
-            <a href="/business-discovery" class="nav-btn excellent">
-                <i class="fas fa-trophy"></i><br>80+ 사업
-            </a>
-            <a href="/business-review" class="nav-btn review">
-                <i class="fas fa-clipboard-check"></i><br>60-79 사업
-            </a>
-            <a href="/business-rejected" class="nav-btn rejected">
-                <i class="fas fa-times-circle"></i><br>60미만
+            <button class="trigger-btn" id="triggerBtn" onclick="runDiscovery()">
+                <i class="fas fa-play-circle"></i> 사업 발굴 시작
+            </button>
+
+            <div class="status-box" id="statusBox">
+                <div class="status-title"><i class="fas fa-tasks"></i> 진행 상황</div>
+                <div id="statusList"></div>
+            </div>
+
+            <div class="result-box" id="resultBox">
+                <div class="result-title"><i class="fas fa-check-circle"></i> 완료!</div>
+                <div class="result-stat">
+                    <span class="result-label">분석된 사업</span>
+                    <span class="result-value" id="analyzedCount">-</span>
+                </div>
+                <div class="result-stat">
+                    <span class="result-label">저장된 사업 (80+)</span>
+                    <span class="result-value" id="savedCount">-</span>
+                </div>
+                <div class="result-stat">
+                    <span class="result-label">완료 시간</span>
+                    <span class="result-value" id="timestamp">-</span>
+                </div>
+            </div>
+
+            <div class="nav-buttons">
+                <a href="/business-discovery" class="nav-btn excellent">
+                    <i class="fas fa-trophy"></i>80+ 사업
+                </a>
+                <a href="/business-review" class="nav-btn review">
+                    <i class="fas fa-clipboard-check"></i>60-79 사업
+                </a>
+                <a href="/business-rejected" class="nav-btn rejected">
+                    <i class="fas fa-times-circle"></i>60미만
+                </a>
+            </div>
+
+            <a href="/business" class="back-link">
+                <i class="fas fa-arrow-left"></i> 메인으로 돌아가기
             </a>
         </div>
-
-        <a href="/business" class="back-link">
-            <i class="fas fa-arrow-left"></i> 메인으로 돌아가기
-        </a>
     </div>
 
     <script>
@@ -285,7 +307,6 @@
             const resultBox = document.getElementById('resultBox');
             const statusList = document.getElementById('statusList');
 
-            // 초기화
             btn.disabled = true;
             btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 실행 중...';
             statusBox.classList.add('show');
@@ -305,7 +326,6 @@
                     addStatus(`${data.results.saved}개 사업 DB 저장 (80점 이상)`, 'success');
                     addStatus('히스토리에 모든 결과 기록 완료', 'success');
 
-                    // 결과 표시
                     document.getElementById('analyzedCount').textContent = data.results.analyzed + '개';
                     document.getElementById('savedCount').textContent = data.results.saved + '개';
                     document.getElementById('timestamp').textContent = new Date(data.results.timestamp).toLocaleString('ko-KR');

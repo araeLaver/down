@@ -3,340 +3,666 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Qhyx Inc. - 실시간 비즈니스 모니터링</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <title>실시간 비즈니스 모니터링 - Qhyx</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        .qhyx-gradient {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #0a0a0b;
+            color: #e5e5e5;
+            min-height: 100vh;
         }
-        .qhyx-text {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+
+        .layout {
+            display: flex;
+            min-height: 100vh;
+            padding-top: 60px;
         }
-        .metric-card {
-            transition: transform 0.2s ease;
-            border-left: 4px solid #667eea;
+
+        .sidebar {
+            width: 240px;
+            background: #111;
+            border-right: 1px solid #222;
+            position: fixed;
+            top: 60px;
+            left: 0;
+            bottom: 0;
+            padding: 1rem 0;
+            overflow-y: auto;
         }
-        .metric-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+
+        .sidebar-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1.5rem;
+            color: #888;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: all 0.2s;
         }
-        .status-indicator {
-            display: inline-block;
-            width: 10px;
-            height: 10px;
+
+        .sidebar-item:hover {
+            color: #e5e5e5;
+            background: #1a1a1b;
+        }
+
+        .sidebar-item.active {
+            color: #4ade80;
+            background: rgba(74, 222, 128, 0.1);
+            border-left: 2px solid #4ade80;
+        }
+
+        .sidebar-item i {
+            width: 20px;
+            text-align: center;
+        }
+
+        .main-content {
+            flex: 1;
+            margin-left: 240px;
+            padding: 2rem;
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .page-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        .system-status {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+            color: #888;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
             border-radius: 50%;
-            margin-right: 8px;
-        }
-        .status-active { background-color: #28a745; }
-        .status-warning { background-color: #ffc107; }
-        .status-danger { background-color: #dc3545; }
-        .live-indicator {
+            background: #4ade80;
             animation: pulse 2s infinite;
         }
+
         @keyframes pulse {
-            0% { opacity: 1; }
+            0%, 100% { opacity: 1; }
             50% { opacity: 0.5; }
-            100% { opacity: 1; }
         }
-        .activity-item {
-            border-left: 3px solid #667eea;
-            padding-left: 15px;
-            margin-bottom: 15px;
+
+        .refresh-btn {
+            padding: 0.5rem 1rem;
+            background: #111;
+            border: 1px solid #333;
+            border-radius: 8px;
+            color: #e5e5e5;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
         }
+
+        .refresh-btn:hover {
+            border-color: #4ade80;
+            color: #4ade80;
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .metric-card {
+            background: #111;
+            border: 1px solid #222;
+            border-radius: 12px;
+            padding: 1.25rem;
+            text-align: center;
+            transition: all 0.2s;
+        }
+
+        .metric-card:hover {
+            border-color: #333;
+        }
+
+        .metric-icon {
+            font-size: 1.5rem;
+            color: #4ade80;
+            margin-bottom: 0.75rem;
+        }
+
+        .metric-value {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 0.25rem;
+        }
+
+        .metric-label {
+            font-size: 0.85rem;
+            color: #888;
+        }
+
+        .charts-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .card {
+            background: #111;
+            border: 1px solid #222;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 1.25rem;
+            border-bottom: 1px solid #222;
+        }
+
+        .card-title {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .card-title i {
+            color: #4ade80;
+        }
+
+        .card-body {
+            padding: 1.25rem;
+        }
+
         .chart-container {
-            position: relative;
-            height: 300px;
+            height: 200px;
         }
-        .sidebar {
-            background-color: #f8f9fa;
-            min-height: 100vh;
-            padding-top: 20px;
+
+        .section-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #fff;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
         }
-        .main-content {
-            padding: 20px;
+
+        .section-title i {
+            color: #4ade80;
         }
-        .navbar-brand {
-            font-weight: bold;
+
+        .activity-list {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .activity-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            padding: 0.75rem;
+            border-left: 3px solid #4ade80;
+            background: #1a1a1b;
+            border-radius: 0 6px 6px 0;
+            margin-bottom: 0.5rem;
+        }
+
+        .activity-content strong {
+            color: #fff;
+            font-size: 0.9rem;
+        }
+
+        .activity-type {
+            font-size: 0.8rem;
+            color: #666;
+            margin-top: 0.25rem;
+        }
+
+        .activity-meta {
+            text-align: right;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .badge-success { background: rgba(74, 222, 128, 0.15); color: #4ade80; }
+        .badge-primary { background: rgba(96, 165, 250, 0.15); color: #60a5fa; }
+        .badge-warning { background: rgba(251, 191, 36, 0.15); color: #fbbf24; }
+        .badge-info { background: rgba(129, 140, 248, 0.15); color: #818cf8; }
+
+        .activity-time {
+            font-size: 0.75rem;
+            color: #666;
+            margin-top: 0.25rem;
+        }
+
+        .employee-grid, .business-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .employee-card, .business-plan-card {
+            background: #111;
+            border: 1px solid #222;
+            border-radius: 12px;
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .employee-info h4 {
+            color: #fff;
+            font-size: 0.95rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .employee-role {
+            color: #888;
+            font-size: 0.85rem;
+        }
+
+        .employee-status {
+            text-align: right;
+        }
+
+        .status-indicator {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            margin-right: 0.5rem;
+        }
+
+        .status-active { background: #4ade80; }
+        .status-warning { background: #fbbf24; }
+
+        .task-count {
+            font-size: 0.8rem;
+            color: #888;
+            margin-top: 0.25rem;
+        }
+
+        .discovery-section {
+            margin-top: 2rem;
+        }
+
+        .discovery-stats {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .stat-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #222;
+        }
+
+        .stat-item:last-child {
+            border-bottom: none;
+        }
+
+        .stat-label {
+            color: #888;
+            font-size: 0.9rem;
+        }
+
+        .stat-value {
+            font-weight: 600;
+            color: #fff;
+        }
+
+        .stat-value.success { color: #4ade80; }
+        .stat-value.primary { color: #60a5fa; }
+        .stat-value.warning { color: #fbbf24; }
+
+        .discovery-list {
+            max-height: 250px;
+            overflow-y: auto;
+        }
+
+        .discovery-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid #222;
+        }
+
+        .discovery-item:last-child {
+            border-bottom: none;
+        }
+
+        .discovery-name {
+            color: #fff;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        .discovery-type {
+            color: #666;
+            font-size: 0.8rem;
+        }
+
+        .discovery-meta {
+            text-align: right;
+        }
+
+        .discovery-score {
+            font-size: 0.8rem;
+            color: #888;
+            margin-top: 0.25rem;
+        }
+
+        .system-section {
+            margin-top: 2rem;
+        }
+
+        .system-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .system-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .system-name {
+            color: #e5e5e5;
+            font-size: 0.9rem;
+        }
+
+        .system-desc {
+            color: #666;
+            font-size: 0.8rem;
+            margin-top: 0.25rem;
+        }
+
+        .view-all-btn {
+            padding: 0.4rem 0.75rem;
+            background: transparent;
+            border: 1px solid #333;
+            border-radius: 6px;
+            color: #888;
+            font-size: 0.8rem;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+
+        .view-all-btn:hover {
+            border-color: #4ade80;
+            color: #4ade80;
+        }
+
+        .loading-text {
+            color: #666;
+            text-align: center;
+            padding: 2rem;
+        }
+
+        @media (max-width: 1024px) {
+            .sidebar {
+                display: none;
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .charts-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .discovery-stats {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
 <body>
-    <!-- Navigation -->
-    <nav class="navbar navbar-dark qhyx-gradient">
-        <div class="container-fluid">
-            <span class="navbar-brand">
-                <i class="fas fa-chart-line me-2"></i>
-                <span class="qhyx-text text-white">Qhyx Inc.</span> 실시간 모니터링
-            </span>
-            <div class="d-flex align-items-center text-white">
-                <a href="/suggestions" class="btn btn-outline-light btn-sm me-3">
-                    <i class="fas fa-lightbulb me-1"></i>건의사항
-                </a>
-                <a href="/meetings" class="btn btn-outline-light btn-sm me-3">
-                    <i class="fas fa-users me-1"></i>회의 보고서
-                </a>
-                <a href="/" class="btn btn-outline-light btn-sm me-3">
-                    <i class="fas fa-home me-1"></i>홈
-                </a>
-                <span class="status-indicator status-active live-indicator"></span>
-                <small>24/7 자동 운영 중</small>
-                <span class="ms-3" id="currentTime"></span>
-            </div>
-        </div>
-    </nav>
+    {% include 'navbar.html' %}
 
-    <div class="container-fluid">
-        <div class="row">
-            <!-- Sidebar -->
-            <div class="col-md-3 sidebar">
-                <div class="list-group list-group-flush">
-                    <a href="#overview" class="list-group-item list-group-item-action active">
-                        <i class="fas fa-tachometer-alt me-2"></i>종합 현황
-                    </a>
-                    <a href="#meetings" class="list-group-item list-group-item-action">
-                        <i class="fas fa-users me-2"></i>회의 현황
-                    </a>
-                    <a href="#tasks" class="list-group-item list-group-item-action">
-                        <i class="fas fa-tasks me-2"></i>업무 현황
-                    </a>
-                    <a href="#metrics" class="list-group-item list-group-item-action">
-                        <i class="fas fa-chart-bar me-2"></i>성과 지표
-                    </a>
-                    <a href="#employees" class="list-group-item list-group-item-action">
-                        <i class="fas fa-user-tie me-2"></i>AI 직원 현황
-                    </a>
-                    <a href="#business" class="list-group-item list-group-item-action">
-                        <i class="fas fa-briefcase me-2"></i>사업 계획
-                    </a>
-                    <a href="#discovery" class="list-group-item list-group-item-action">
-                        <i class="fas fa-search me-2"></i>사업 발굴 현황
-                    </a>
-                    <a href="/" class="list-group-item list-group-item-action text-primary">
-                        <i class="fas fa-home me-2"></i>메인 사이트로
-                    </a>
+    <div class="layout">
+        <aside class="sidebar">
+            <a href="#overview" class="sidebar-item active">
+                <i class="fas fa-tachometer-alt"></i> 종합 현황
+            </a>
+            <a href="#meetings" class="sidebar-item">
+                <i class="fas fa-users"></i> 회의 현황
+            </a>
+            <a href="#tasks" class="sidebar-item">
+                <i class="fas fa-tasks"></i> 업무 현황
+            </a>
+            <a href="#metrics" class="sidebar-item">
+                <i class="fas fa-chart-bar"></i> 성과 지표
+            </a>
+            <a href="#employees" class="sidebar-item">
+                <i class="fas fa-user-tie"></i> AI 직원 현황
+            </a>
+            <a href="#business" class="sidebar-item">
+                <i class="fas fa-briefcase"></i> 사업 계획
+            </a>
+            <a href="#discovery" class="sidebar-item">
+                <i class="fas fa-search"></i> 사업 발굴 현황
+            </a>
+            <a href="/" class="sidebar-item">
+                <i class="fas fa-home"></i> 메인으로
+            </a>
+        </aside>
+
+        <main class="main-content">
+            <div class="page-header">
+                <div>
+                    <h1 class="page-title">실시간 비즈니스 현황</h1>
+                    <div class="system-status">
+                        <span class="status-dot"></span>
+                        <span>24/7 자동 운영 중</span>
+                        <span id="currentTime"></span>
+                    </div>
                 </div>
+                <button class="refresh-btn" onclick="refreshData()">
+                    <i class="fas fa-sync-alt"></i> 새로고침
+                </button>
             </div>
 
-            <!-- Main Content -->
-            <div class="col-md-9 main-content">
-                <!-- Overview Section -->
-                <section id="overview">
-                    <div class="d-flex justify-content-between align-items-center mb-4">
-                        <h2 class="qhyx-text">실시간 비즈니스 현황</h2>
-                        <button class="btn btn-outline-primary" onclick="refreshData()">
-                            <i class="fas fa-sync-alt me-2"></i>새로고침
-                        </button>
+            <section id="overview">
+                <div class="metrics-grid">
+                    <div class="metric-card">
+                        <div class="metric-icon"><i class="fas fa-users"></i></div>
+                        <div class="metric-value" id="activeMeetings">-</div>
+                        <div class="metric-label">오늘 진행된 회의</div>
                     </div>
-
-                    <!-- Key Metrics Cards -->
-                    <div class="row mb-4">
-                        <div class="col-md-3 mb-3">
-                            <div class="card metric-card">
-                                <div class="card-body text-center">
-                                    <i class="fas fa-users fa-2x qhyx-text mb-2"></i>
-                                    <h4 class="card-title" id="activeMeetings">-</h4>
-                                    <p class="card-text text-muted">오늘 진행된 회의</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-3 mb-3">
-                            <div class="card metric-card">
-                                <div class="card-body text-center">
-                                    <i class="fas fa-tasks fa-2x qhyx-text mb-2"></i>
-                                    <h4 class="card-title" id="activeTasks">-</h4>
-                                    <p class="card-text text-muted">진행중인 업무</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-3 mb-3">
-                            <div class="card metric-card">
-                                <div class="card-body text-center">
-                                    <i class="fas fa-chart-line fa-2x qhyx-text mb-2"></i>
-                                    <h4 class="card-title" id="dailyMetrics">-</h4>
-                                    <p class="card-text text-muted">오늘 업데이트된 지표</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-3 mb-3">
-                            <div class="card metric-card">
-                                <div class="card-body text-center">
-                                    <i class="fas fa-user-tie fa-2x qhyx-text mb-2"></i>
-                                    <h4 class="card-title" id="activeEmployees">9</h4>
-                                    <p class="card-text text-muted">활성 AI 직원</p>
-                                </div>
-                            </div>
-                        </div>
+                    <div class="metric-card">
+                        <div class="metric-icon"><i class="fas fa-tasks"></i></div>
+                        <div class="metric-value" id="activeTasks">-</div>
+                        <div class="metric-label">진행중인 업무</div>
                     </div>
-
-                    <!-- Revenue & Performance Charts -->
-                    <div class="row mb-4">
-                        <div class="col-md-6">
-                            <div class="card">
-                                <div class="card-header">
-                                    <h5><i class="fas fa-won-sign me-2 qhyx-text"></i>일별 매출 현황</h5>
-                                </div>
-                                <div class="card-body">
-                                    <div class="chart-container">
-                                        <canvas id="revenueChart"></canvas>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="card">
-                                <div class="card-header">
-                                    <h5><i class="fas fa-chart-pie me-2 qhyx-text"></i>업무 완료율</h5>
-                                </div>
-                                <div class="card-body">
-                                    <div class="chart-container">
-                                        <canvas id="taskChart"></canvas>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                    <div class="metric-card">
+                        <div class="metric-icon"><i class="fas fa-chart-line"></i></div>
+                        <div class="metric-value" id="dailyMetrics">-</div>
+                        <div class="metric-label">오늘 업데이트된 지표</div>
                     </div>
+                    <div class="metric-card">
+                        <div class="metric-icon"><i class="fas fa-user-tie"></i></div>
+                        <div class="metric-value" id="activeEmployees">9</div>
+                        <div class="metric-label">활성 AI 직원</div>
+                    </div>
+                </div>
 
-                    <!-- Recent Activities -->
+                <div class="charts-grid">
                     <div class="card">
                         <div class="card-header">
-                            <h5><i class="fas fa-history me-2 qhyx-text"></i>최근 활동 내역</h5>
+                            <h3 class="card-title"><i class="fas fa-won-sign"></i> 일별 매출 현황</h3>
                         </div>
-                        <div class="card-body" style="max-height: 400px; overflow-y: auto;">
-                            <div id="recentActivities">
-                                <div class="activity-item">
-                                    <div class="d-flex justify-content-between">
-                                        <strong>실시간 데이터 로딩 중...</strong>
-                                        <span class="text-muted"></span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-
-                <!-- AI Employees Status -->
-                <section id="employees" class="mt-5">
-                    <h3 class="qhyx-text mb-4">AI 직원 현황</h3>
-                    <div class="row" id="employeeCards">
-                        <!-- AI 직원 카드들이 동적으로 생성됩니다 -->
-                    </div>
-                </section>
-
-                <!-- Business Plans -->
-                <section id="business" class="mt-5">
-                    <h3 class="qhyx-text mb-4">현재 사업 계획</h3>
-                    <div class="row" id="businessPlans">
-                        <!-- 사업 계획들이 동적으로 생성됩니다 -->
-                    </div>
-                </section>
-
-                <!-- Business Discovery Statistics -->
-                <section id="discovery" class="mt-5">
-                    <h3 class="qhyx-text mb-4">사업 발굴 현황</h3>
-                    <div class="row mb-4">
-                        <div class="col-md-4">
-                            <div class="card">
-                                <div class="card-header">
-                                    <h6><i class="fas fa-search me-2 qhyx-text"></i>발굴 통계</h6>
-                                </div>
-                                <div class="card-body" id="discoveryStats">
-                                    <div class="d-flex justify-content-between mb-2">
-                                        <span class="text-muted">총 발굴 사업</span>
-                                        <strong id="totalDiscovered">-</strong>
-                                    </div>
-                                    <div class="d-flex justify-content-between mb-2">
-                                        <span class="text-muted">80점 이상 (우수)</span>
-                                        <strong class="text-success" id="highScore">-</strong>
-                                    </div>
-                                    <div class="d-flex justify-content-between mb-2">
-                                        <span class="text-muted">60-79점 (양호)</span>
-                                        <strong class="text-primary" id="midScore">-</strong>
-                                    </div>
-                                    <div class="d-flex justify-content-between">
-                                        <span class="text-muted">50-59점 (보통)</span>
-                                        <strong class="text-warning" id="lowScore">-</strong>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-8">
-                            <div class="card">
-                                <div class="card-header">
-                                    <h6><i class="fas fa-chart-bar me-2 qhyx-text"></i>점수 분포</h6>
-                                </div>
-                                <div class="card-body">
-                                    <div class="chart-container" style="height: 200px;">
-                                        <canvas id="scoreDistributionChart"></canvas>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Recent Discoveries -->
-                    <div class="card">
-                        <div class="card-header d-flex justify-content-between align-items-center">
-                            <h6 class="mb-0"><i class="fas fa-lightbulb me-2 qhyx-text"></i>최근 발굴 사업</h6>
-                            <a href="/business-discovery" class="btn btn-outline-primary btn-sm">전체 보기</a>
-                        </div>
-                        <div class="card-body" style="max-height: 300px; overflow-y: auto;">
-                            <div id="recentDiscoveries">
-                                <div class="text-center text-muted py-3">로딩 중...</div>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-
-                <!-- Real-time System Status -->
-                <section id="system" class="mt-5">
-                    <h3 class="qhyx-text mb-4">시스템 상태</h3>
-                    <div class="card">
                         <div class="card-body">
-                            <div class="row">
-                                <div class="col-md-3">
-                                    <div class="d-flex align-items-center">
-                                        <span class="status-indicator status-active"></span>
-                                        <span>자율 회의 시스템</span>
-                                    </div>
-                                    <small class="text-muted">매시간 자동 발굴</small>
+                            <div class="chart-container">
+                                <canvas id="revenueChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title"><i class="fas fa-chart-pie"></i> 업무 완료율</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="chart-container">
+                                <canvas id="taskChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card" style="margin-bottom: 2rem;">
+                    <div class="card-header">
+                        <h3 class="card-title"><i class="fas fa-history"></i> 최근 활동 내역</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="activity-list" id="recentActivities">
+                            <div class="loading-text">실시간 데이터 로딩 중...</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="employees">
+                <h2 class="section-title"><i class="fas fa-user-tie"></i> AI 직원 현황</h2>
+                <div class="employee-grid" id="employeeCards"></div>
+            </section>
+
+            <section id="business">
+                <h2 class="section-title"><i class="fas fa-briefcase"></i> 현재 사업 계획</h2>
+                <div class="business-grid" id="businessPlans"></div>
+            </section>
+
+            <section id="discovery" class="discovery-section">
+                <h2 class="section-title"><i class="fas fa-search"></i> 사업 발굴 현황</h2>
+                <div class="discovery-stats">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title"><i class="fas fa-chart-bar"></i> 발굴 통계</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="stat-item">
+                                <span class="stat-label">총 발굴 사업</span>
+                                <span class="stat-value" id="totalDiscovered">-</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-label">80점 이상 (우수)</span>
+                                <span class="stat-value success" id="highScore">-</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-label">60-79점 (양호)</span>
+                                <span class="stat-value primary" id="midScore">-</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-label">50-59점 (보통)</span>
+                                <span class="stat-value warning" id="lowScore">-</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title"><i class="fas fa-chart-area"></i> 점수 분포</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="chart-container" style="height: 150px;">
+                                <canvas id="scoreDistributionChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title"><i class="fas fa-lightbulb"></i> 최근 발굴 사업</h3>
+                        <a href="/business-discovery" class="view-all-btn">전체 보기</a>
+                    </div>
+                    <div class="card-body">
+                        <div class="discovery-list" id="recentDiscoveries">
+                            <div class="loading-text">로딩 중...</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="system" class="system-section">
+                <h2 class="section-title"><i class="fas fa-server"></i> 시스템 상태</h2>
+                <div class="card">
+                    <div class="card-body">
+                        <div class="system-grid">
+                            <div class="system-item">
+                                <span class="status-indicator status-active"></span>
+                                <div>
+                                    <div class="system-name">자율 회의 시스템</div>
+                                    <div class="system-desc">매시간 자동 발굴</div>
                                 </div>
-                                <div class="col-md-3">
-                                    <div class="d-flex align-items-center">
-                                        <span class="status-indicator status-active"></span>
-                                        <span>데이터베이스 연결</span>
-                                    </div>
-                                    <small class="text-muted">Koyeb PostgreSQL 정상</small>
+                            </div>
+                            <div class="system-item">
+                                <span class="status-indicator status-active"></span>
+                                <div>
+                                    <div class="system-name">데이터베이스 연결</div>
+                                    <div class="system-desc">Koyeb PostgreSQL 정상</div>
                                 </div>
-                                <div class="col-md-3">
-                                    <div class="d-flex align-items-center">
-                                        <span class="status-indicator status-active"></span>
-                                        <span>Git 동기화</span>
-                                    </div>
-                                    <small class="text-muted">자동 백업 진행 중</small>
+                            </div>
+                            <div class="system-item">
+                                <span class="status-indicator status-active"></span>
+                                <div>
+                                    <div class="system-name">Git 동기화</div>
+                                    <div class="system-desc">자동 백업 진행 중</div>
                                 </div>
-                                <div class="col-md-3">
-                                    <div class="d-flex align-items-center" id="marketModeStatus">
-                                        <span class="status-indicator status-warning"></span>
-                                        <span>시장 분석</span>
-                                    </div>
-                                    <small class="text-muted" id="marketModeDesc">로딩 중...</small>
+                            </div>
+                            <div class="system-item" id="marketModeStatus">
+                                <span class="status-indicator status-warning"></span>
+                                <div>
+                                    <div class="system-name">시장 분석</div>
+                                    <div class="system-desc" id="marketModeDesc">로딩 중...</div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </section>
-            </div>
-        </div>
+                </div>
+            </section>
+        </main>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        // 현재 시간 업데이트
         function updateTime() {
             const now = new Date();
             document.getElementById('currentTime').textContent = now.toLocaleString('ko-KR');
@@ -344,11 +670,12 @@
         setInterval(updateTime, 1000);
         updateTime();
 
-        // 차트 초기화
-        let revenueChart, taskChart;
+        let revenueChart, taskChart, scoreDistributionChart;
 
         function initCharts() {
-            // 매출 차트
+            Chart.defaults.color = '#888';
+            Chart.defaults.borderColor = '#333';
+
             const revenueCtx = document.getElementById('revenueChart').getContext('2d');
             revenueChart = new Chart(revenueCtx, {
                 type: 'line',
@@ -357,23 +684,22 @@
                     datasets: [{
                         label: '일별 매출 (만원)',
                         data: [120, 150, 180, 160, 200, 175, 190, 220],
-                        borderColor: '#667eea',
-                        backgroundColor: 'rgba(102, 126, 234, 0.1)',
+                        borderColor: '#4ade80',
+                        backgroundColor: 'rgba(74, 222, 128, 0.1)',
                         tension: 0.4
                     }]
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
                     scales: {
-                        y: {
-                            beginAtZero: true
-                        }
+                        y: { beginAtZero: true, grid: { color: '#222' } },
+                        x: { grid: { color: '#222' } }
                     }
                 }
             });
 
-            // 업무 완료율 차트
             const taskCtx = document.getElementById('taskChart').getContext('2d');
             taskChart = new Chart(taskCtx, {
                 type: 'doughnut',
@@ -381,72 +707,82 @@
                     labels: ['완료됨', '진행중', '대기중'],
                     datasets: [{
                         data: [65, 25, 10],
-                        backgroundColor: ['#28a745', '#667eea', '#ffc107']
+                        backgroundColor: ['#4ade80', '#60a5fa', '#fbbf24']
                     }]
                 },
                 options: {
                     responsive: true,
-                    maintainAspectRatio: false
+                    maintainAspectRatio: false,
+                    plugins: { legend: { position: 'bottom' } }
+                }
+            });
+
+            const scoreCtx = document.getElementById('scoreDistributionChart').getContext('2d');
+            scoreDistributionChart = new Chart(scoreCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['50-59점', '60-69점', '70-79점', '80-89점', '90점+'],
+                    datasets: [{
+                        label: '발굴 사업 수',
+                        data: [0, 0, 0, 0, 0],
+                        backgroundColor: ['#fbbf24', '#60a5fa', '#818cf8', '#4ade80', '#22c55e']
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        y: { beginAtZero: true, ticks: { stepSize: 1 }, grid: { color: '#222' } },
+                        x: { grid: { color: '#222' } }
+                    }
                 }
             });
         }
 
-        // 실시간 데이터 로드
         function refreshData() {
             fetch('/api/dashboard-data')
                 .then(response => response.json())
                 .then(data => {
-                    // 메트릭 업데이트
                     document.getElementById('activeMeetings').textContent = data.meetings || '0';
                     document.getElementById('activeTasks').textContent = data.tasks || '0';
                     document.getElementById('dailyMetrics').textContent = data.metrics || '0';
-                    
-                    // 최근 활동 업데이트
                     updateRecentActivities(data.activities || []);
-                    
-                    // AI 직원 현황 업데이트
                     updateEmployeeCards(data.employees || []);
-                    
-                    // 사업 계획 업데이트
                     updateBusinessPlans(data.business_plans || []);
                 })
                 .catch(error => {
                     console.log('데이터 로드 실패:', error);
-                    // 더미 데이터로 대체
                     loadDummyData();
                 });
         }
 
         function loadDummyData() {
-            // 더미 데이터로 화면 채우기
             document.getElementById('activeMeetings').textContent = '3';
             document.getElementById('activeTasks').textContent = '8';
             document.getElementById('dailyMetrics').textContent = '12';
-            
+
             const activities = [
                 { time: '10:15', type: 'meeting', description: '일일 전략 회의 완료', status: 'completed' },
                 { time: '10:00', type: 'task', description: '브랜드북 제작 업무 시작', status: 'in_progress' },
                 { time: '09:45', type: 'metric', description: '고객 만족도 지표 업데이트', status: 'info' },
                 { time: '09:30', type: 'system', description: 'AI 직원 9명 활성화', status: 'success' }
             ];
-            
             updateRecentActivities(activities);
-            
+
             const employees = [
                 { name: '김창의', role: 'CCO', status: 'active', tasks: 3 },
                 { name: '박실용', role: 'CPO', status: 'active', tasks: 2 },
                 { name: '이글로벌', role: 'CGO', status: 'active', tasks: 1 },
                 { name: '정브랜드', role: 'CBO', status: 'active', tasks: 2 }
             ];
-            
             updateEmployeeCards(employees);
-            
+
             const businessPlans = [
                 { name: 'AI 비즈니스 자동화 컨설팅', status: 'approved', revenue: '200만원/월' },
                 { name: '맞춤형 챗봇 개발 서비스', status: 'approved', revenue: '300만원/월' },
                 { name: '데이터 분석 & 인사이트', status: 'approved', revenue: '150만원/월' }
             ];
-            
             updateBusinessPlans(businessPlans);
         }
 
@@ -454,15 +790,13 @@
             const container = document.getElementById('recentActivities');
             container.innerHTML = activities.map(activity => `
                 <div class="activity-item">
-                    <div class="d-flex justify-content-between align-items-start">
-                        <div>
-                            <strong>${activity.description}</strong>
-                            <br><small class="text-muted">${activity.type}</small>
-                        </div>
-                        <div class="text-end">
-                            <span class="badge bg-${getStatusColor(activity.status)}">${activity.status}</span>
-                            <br><small class="text-muted">${activity.time}</small>
-                        </div>
+                    <div class="activity-content">
+                        <strong>${activity.description}</strong>
+                        <div class="activity-type">${activity.type}</div>
+                    </div>
+                    <div class="activity-meta">
+                        <span class="badge badge-${getStatusColor(activity.status)}">${activity.status}</span>
+                        <div class="activity-time">${activity.time}</div>
                     </div>
                 </div>
             `).join('');
@@ -471,20 +805,14 @@
         function updateEmployeeCards(employees) {
             const container = document.getElementById('employeeCards');
             container.innerHTML = employees.map(employee => `
-                <div class="col-md-6 col-lg-4 mb-3">
-                    <div class="card">
-                        <div class="card-body">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div>
-                                    <h6 class="card-title">${employee.name}</h6>
-                                    <p class="card-text text-muted">${employee.role}</p>
-                                </div>
-                                <div class="text-end">
-                                    <span class="status-indicator status-${employee.status}"></span>
-                                    <br><small>${employee.tasks || 0} 업무</small>
-                                </div>
-                            </div>
-                        </div>
+                <div class="employee-card">
+                    <div class="employee-info">
+                        <h4>${employee.name}</h4>
+                        <div class="employee-role">${employee.role}</div>
+                    </div>
+                    <div class="employee-status">
+                        <span class="status-indicator status-${employee.status}"></span>
+                        <div class="task-count">${employee.tasks || 0} 업무</div>
                     </div>
                 </div>
             `).join('');
@@ -493,64 +821,31 @@
         function updateBusinessPlans(plans) {
             const container = document.getElementById('businessPlans');
             container.innerHTML = plans.map(plan => `
-                <div class="col-md-6 mb-3">
-                    <div class="card">
-                        <div class="card-body">
-                            <h6 class="card-title">${plan.name}</h6>
-                            <p class="card-text">예상 매출: ${plan.revenue}</p>
-                            <span class="badge bg-${getStatusColor(plan.status)}">${plan.status}</span>
-                        </div>
+                <div class="employee-card">
+                    <div class="employee-info">
+                        <h4>${plan.name}</h4>
+                        <div class="employee-role">예상 매출: ${plan.revenue}</div>
                     </div>
+                    <span class="badge badge-${getStatusColor(plan.status)}">${plan.status}</span>
                 </div>
             `).join('');
         }
 
         function getStatusColor(status) {
             const colors = {
-                'completed': 'success',
-                'approved': 'success',
-                'in_progress': 'primary',
-                'active': 'success',
-                'pending': 'warning',
-                'info': 'info',
-                'success': 'success'
+                'completed': 'success', 'approved': 'success',
+                'in_progress': 'primary', 'active': 'success',
+                'pending': 'warning', 'info': 'info', 'success': 'success'
             };
-            return colors[status] || 'secondary';
+            return colors[status] || 'info';
         }
 
-        // 점수 분포 차트
-        let scoreDistributionChart;
-
-        function initScoreChart() {
-            const ctx = document.getElementById('scoreDistributionChart').getContext('2d');
-            scoreDistributionChart = new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: ['50-59점', '60-69점', '70-79점', '80-89점', '90점+'],
-                    datasets: [{
-                        label: '발굴 사업 수',
-                        data: [0, 0, 0, 0, 0],
-                        backgroundColor: ['#ffc107', '#17a2b8', '#667eea', '#28a745', '#764ba2']
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: { legend: { display: false } },
-                    scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } }
-                }
-            });
-        }
-
-        // 사업 발굴 데이터 로드
         function loadDiscoveryData() {
             fetch('/api/discovered-businesses')
                 .then(response => response.json())
                 .then(data => {
                     if (data.businesses) {
                         const businesses = data.businesses;
-
-                        // 통계 계산 (API는 score 필드 사용)
                         const highScore = businesses.filter(b => b.score >= 80).length;
                         const midScore = businesses.filter(b => b.score >= 60 && b.score < 80).length;
                         const lowScore = businesses.filter(b => b.score >= 50 && b.score < 60).length;
@@ -560,7 +855,6 @@
                         document.getElementById('midScore').textContent = midScore;
                         document.getElementById('lowScore').textContent = lowScore;
 
-                        // 점수 분포 차트 업데이트
                         const dist = [
                             businesses.filter(b => b.score >= 50 && b.score < 60).length,
                             businesses.filter(b => b.score >= 60 && b.score < 70).length,
@@ -571,56 +865,51 @@
                         scoreDistributionChart.data.datasets[0].data = dist;
                         scoreDistributionChart.update();
 
-                        // 최근 발굴 사업 표시
                         updateRecentDiscoveries(businesses.slice(0, 10));
                     }
                 })
                 .catch(error => {
                     console.log('발굴 데이터 로드 실패:', error);
                     document.getElementById('recentDiscoveries').innerHTML =
-                        '<div class="text-center text-muted py-3">데이터를 불러올 수 없습니다</div>';
+                        '<div class="loading-text">데이터를 불러올 수 없습니다</div>';
                 });
         }
 
         function updateRecentDiscoveries(businesses) {
             const container = document.getElementById('recentDiscoveries');
             if (!businesses.length) {
-                container.innerHTML = '<div class="text-center text-muted py-3">발굴된 사업이 없습니다</div>';
+                container.innerHTML = '<div class="loading-text">발굴된 사업이 없습니다</div>';
                 return;
             }
 
             container.innerHTML = businesses.map(biz => {
-                const scoreClass = biz.score >= 80 ? 'success' : biz.score >= 60 ? 'primary' : 'warning';
+                const badgeClass = biz.score >= 80 ? 'success' : biz.score >= 60 ? 'primary' : 'warning';
                 return `
-                    <div class="d-flex justify-content-between align-items-center py-2 border-bottom">
+                    <div class="discovery-item">
                         <div>
-                            <strong>${biz.name}</strong>
-                            <br><small class="text-muted">${biz.type || '-'}</small>
+                            <div class="discovery-name">${biz.name}</div>
+                            <div class="discovery-type">${biz.type || '-'}</div>
                         </div>
-                        <div class="text-end">
-                            <span class="badge bg-${scoreClass}">${biz.score}점</span>
-                            <br><small class="text-muted">${biz.created_at || ''}</small>
+                        <div class="discovery-meta">
+                            <span class="badge badge-${badgeClass}">${biz.score}점</span>
+                            <div class="discovery-score">${biz.created_at || ''}</div>
                         </div>
                     </div>
                 `;
             }).join('');
         }
 
-        // 시장 분석 모드 로드
         function loadMarketConfig() {
             fetch('/api/market-config')
                 .then(response => response.json())
                 .then(data => {
                     if (data.success && data.config) {
-                        const config = data.config;
-                        const isLightweight = config.is_lightweight;
+                        const isLightweight = data.config.is_lightweight;
                         const statusEl = document.getElementById('marketModeStatus');
                         const descEl = document.getElementById('marketModeDesc');
 
-                        statusEl.innerHTML = `
-                            <span class="status-indicator ${isLightweight ? 'status-warning' : 'status-active'}"></span>
-                            <span>시장 분석</span>
-                        `;
+                        statusEl.querySelector('.status-indicator').className =
+                            `status-indicator ${isLightweight ? 'status-warning' : 'status-active'}`;
                         descEl.textContent = isLightweight ? '경량 모드 (내부 데이터)' : '전체 모드 (실시간 API)';
                     }
                 })
@@ -629,17 +918,13 @@
                 });
         }
 
-        // 페이지 로드 시 초기화
         document.addEventListener('DOMContentLoaded', function() {
             initCharts();
-            initScoreChart();
-            loadDummyData(); // 첫 로드는 더미 데이터로
-            loadDiscoveryData(); // 사업 발굴 데이터 로드
-            loadMarketConfig(); // 시장 분석 모드 로드
-
-            // 30초마다 데이터 새로고침
+            loadDummyData();
+            loadDiscoveryData();
+            loadMarketConfig();
             setInterval(refreshData, 30000);
-            setInterval(loadDiscoveryData, 60000); // 1분마다 발굴 데이터 새로고침
+            setInterval(loadDiscoveryData, 60000);
         });
     </script>
 </body>

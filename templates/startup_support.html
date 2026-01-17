@@ -3,85 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>창업 지원사업 - Qhyx Inc.</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <title>창업 지원사업 - Qhyx</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
-        :root {
-            --primary: #6366f1;
-            --primary-dark: #4f46e5;
-            --success: #10b981;
-            --warning: #f59e0b;
-            --danger: #ef4444;
-            --info: #06b6d4;
-            --dark: #1e1e2e;
-            --darker: #11111b;
-            --card: #313244;
-            --text: #cdd6f4;
-            --subtext: #a6adc8;
-        }
-
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
-            font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: var(--darker);
-            color: var(--text);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #0a0a0b;
+            color: #e5e5e5;
             min-height: 100vh;
         }
 
-        /* 사이드바 */
-        .sidebar {
-            position: fixed;
-            left: 0;
-            top: 0;
-            width: 260px;
-            height: 100vh;
-            background: var(--dark);
-            border-right: 1px solid rgba(255,255,255,0.1);
-            padding: 1.5rem;
-            z-index: 100;
-            overflow-y: auto;
-        }
-
-        .logo {
-            font-size: 1.5rem;
-            font-weight: 800;
-            background: linear-gradient(135deg, #6366f1, #a855f7);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 2rem;
-        }
-
-        .nav-section { margin-bottom: 1.5rem; }
-
-        .nav-section-title {
-            font-size: 0.75rem;
-            text-transform: uppercase;
-            color: var(--subtext);
-            margin-bottom: 0.75rem;
-            letter-spacing: 1px;
-        }
-
-        .nav-item {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            padding: 0.75rem 1rem;
-            color: var(--text);
-            text-decoration: none;
-            border-radius: 8px;
-            margin-bottom: 0.25rem;
-            transition: all 0.2s;
-        }
-
-        .nav-item:hover { background: rgba(99, 102, 241, 0.1); color: #fff; }
-        .nav-item.active { background: var(--primary); color: #fff; }
-
-        /* 메인 컨텐츠 */
-        .main-content {
-            margin-left: 260px;
-            padding: 2rem;
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 100px 2rem 4rem;
         }
 
         /* 헤더 */
@@ -92,136 +29,141 @@
             margin-bottom: 2rem;
         }
 
-        .page-title {
-            font-size: 1.75rem;
+        .page-header h1 {
+            font-size: 2rem;
             font-weight: 700;
+            margin-bottom: 0.25rem;
         }
 
-        .page-subtitle {
-            color: var(--subtext);
-            margin-top: 0.25rem;
+        .page-header p {
+            color: #666;
         }
 
         /* 통계 카드 */
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            gap: 1.5rem;
+            gap: 1rem;
             margin-bottom: 2rem;
         }
 
         .stat-card {
-            background: var(--card);
-            border-radius: 16px;
-            padding: 1.5rem;
-            border: 1px solid rgba(255,255,255,0.05);
+            background: #111;
+            border: 1px solid #222;
+            border-radius: 12px;
+            padding: 1.25rem;
         }
 
         .stat-card .icon {
-            width: 48px;
-            height: 48px;
-            border-radius: 12px;
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.25rem;
-            margin-bottom: 1rem;
+            font-size: 1.1rem;
+            margin-bottom: 0.75rem;
         }
 
-        .stat-card .icon.primary { background: rgba(99, 102, 241, 0.2); color: var(--primary); }
-        .stat-card .icon.success { background: rgba(16, 185, 129, 0.2); color: var(--success); }
-        .stat-card .icon.warning { background: rgba(245, 158, 11, 0.2); color: var(--warning); }
-        .stat-card .icon.info { background: rgba(6, 182, 212, 0.2); color: var(--info); }
+        .stat-card .icon.primary { background: rgba(74, 222, 128, 0.15); color: #4ade80; }
+        .stat-card .icon.success { background: rgba(96, 165, 250, 0.15); color: #60a5fa; }
+        .stat-card .icon.warning { background: rgba(251, 191, 36, 0.15); color: #fbbf24; }
+        .stat-card .icon.info { background: rgba(129, 140, 248, 0.15); color: #818cf8; }
 
         .stat-card .value {
-            font-size: 2rem;
+            font-size: 1.75rem;
             font-weight: 700;
             margin-bottom: 0.25rem;
+            color: #fff;
         }
 
         .stat-card .label {
-            color: var(--subtext);
-            font-size: 0.875rem;
+            color: #888;
+            font-size: 0.85rem;
         }
 
         /* 프로필 섹션 */
         .profile-section {
-            background: var(--card);
-            border-radius: 16px;
-            padding: 2rem;
+            background: #111;
+            border: 1px solid #222;
+            border-radius: 12px;
+            padding: 1.5rem;
             margin-bottom: 2rem;
-            border: 1px solid rgba(255,255,255,0.05);
         }
 
         .section-title {
-            font-size: 1.25rem;
+            font-size: 1.1rem;
             font-weight: 600;
-            margin-bottom: 1.5rem;
+            margin-bottom: 1.25rem;
             display: flex;
             align-items: center;
             gap: 0.5rem;
+            color: #fff;
+        }
+
+        .section-title i {
+            color: #4ade80;
         }
 
         .profile-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            gap: 1.5rem;
-            margin-bottom: 1.5rem;
+            gap: 1rem;
+            margin-bottom: 1.25rem;
         }
 
         .form-group label {
             display: block;
             margin-bottom: 0.5rem;
-            color: var(--subtext);
-            font-size: 0.875rem;
+            color: #888;
+            font-size: 0.85rem;
         }
 
         .form-control {
             width: 100%;
-            padding: 0.75rem 1rem;
-            background: var(--dark);
-            border: 1px solid rgba(255,255,255,0.1);
+            padding: 0.6rem 0.9rem;
+            background: #1a1a1b;
+            border: 1px solid #333;
             border-radius: 8px;
-            color: var(--text);
-            font-size: 1rem;
+            color: #e5e5e5;
+            font-size: 0.9rem;
             transition: all 0.2s;
         }
 
         .form-control:focus {
             outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+            border-color: #4ade80;
         }
 
         .form-control option {
-            background: var(--dark);
-            color: var(--text);
+            background: #1a1a1b;
+            color: #e5e5e5;
         }
 
         /* 필터 섹션 */
         .filter-section {
-            background: var(--card);
-            border-radius: 16px;
-            padding: 1.5rem;
+            background: #111;
+            border: 1px solid #222;
+            border-radius: 12px;
+            padding: 1.25rem;
             margin-bottom: 2rem;
-            border: 1px solid rgba(255,255,255,0.05);
         }
 
         .search-box {
             width: 100%;
-            padding: 1rem 1.25rem;
-            padding-left: 3rem;
-            background: var(--dark);
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 12px;
-            color: var(--text);
-            font-size: 1rem;
+            padding: 0.75rem 1rem;
+            padding-left: 2.5rem;
+            background: #1a1a1b;
+            border: 1px solid #333;
+            border-radius: 8px;
+            color: #e5e5e5;
+            font-size: 0.9rem;
             margin-bottom: 1rem;
         }
 
         .search-box:focus {
             outline: none;
-            border-color: var(--primary);
+            border-color: #4ade80;
         }
 
         .search-wrapper {
@@ -230,10 +172,10 @@
 
         .search-wrapper i {
             position: absolute;
-            left: 1rem;
+            left: 0.9rem;
             top: 50%;
             transform: translateY(-50%);
-            color: var(--subtext);
+            color: #666;
         }
 
         .filter-tags {
@@ -243,45 +185,45 @@
         }
 
         .filter-tag {
-            padding: 0.5rem 1rem;
+            padding: 0.4rem 0.9rem;
             border-radius: 20px;
-            background: var(--dark);
-            color: var(--subtext);
-            border: 1px solid rgba(255,255,255,0.1);
+            background: #1a1a1b;
+            color: #888;
+            border: 1px solid #333;
             cursor: pointer;
             transition: all 0.2s;
-            font-size: 0.875rem;
+            font-size: 0.85rem;
         }
 
         .filter-tag:hover {
-            border-color: var(--primary);
-            color: var(--text);
+            border-color: #4ade80;
+            color: #e5e5e5;
         }
 
         .filter-tag.active {
-            background: var(--primary);
-            border-color: var(--primary);
-            color: #fff;
+            background: #1a2e1a;
+            border-color: #4ade80;
+            color: #4ade80;
         }
 
         /* 프로그램 그리드 */
         .programs-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 1.5rem;
+            gap: 1rem;
         }
 
         .program-card {
-            background: var(--card);
-            border-radius: 16px;
-            padding: 1.5rem;
-            border: 1px solid rgba(255,255,255,0.05);
-            transition: all 0.3s;
+            background: #111;
+            border: 1px solid #222;
+            border-radius: 12px;
+            padding: 1.25rem;
+            transition: all 0.2s;
             position: relative;
         }
 
         .program-card:hover {
-            border-color: var(--primary);
+            border-color: #333;
             transform: translateY(-2px);
         }
 
@@ -289,60 +231,62 @@
             display: flex;
             justify-content: space-between;
             align-items: flex-start;
-            margin-bottom: 1rem;
+            margin-bottom: 0.75rem;
         }
 
         .program-title {
-            font-size: 1.1rem;
+            font-size: 1rem;
             font-weight: 600;
             margin-bottom: 0.25rem;
+            color: #fff;
         }
 
         .program-org {
-            color: var(--subtext);
-            font-size: 0.875rem;
+            color: #888;
+            font-size: 0.8rem;
         }
 
         .status-badge {
-            padding: 0.25rem 0.75rem;
+            padding: 0.2rem 0.6rem;
             border-radius: 20px;
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             font-weight: 600;
         }
 
-        .status-badge.open { background: rgba(16, 185, 129, 0.2); color: var(--success); }
-        .status-badge.upcoming { background: rgba(245, 158, 11, 0.2); color: var(--warning); }
-        .status-badge.closed { background: rgba(239, 68, 68, 0.2); color: var(--danger); }
+        .status-badge.open { background: #1a2e1a; color: #4ade80; }
+        .status-badge.upcoming { background: #2e2a1a; color: #fbbf24; }
+        .status-badge.closed { background: #2e1a1a; color: #ef4444; }
 
         .recommended-badge {
             position: absolute;
             top: -8px;
             right: 1rem;
-            background: linear-gradient(135deg, #f59e0b, #f97316);
-            color: #fff;
-            padding: 0.25rem 0.75rem;
+            background: linear-gradient(135deg, #4ade80, #22c55e);
+            color: #000;
+            padding: 0.2rem 0.6rem;
             border-radius: 4px;
-            font-size: 0.7rem;
+            font-size: 0.65rem;
             font-weight: 600;
         }
 
         .program-amount {
-            background: rgba(99, 102, 241, 0.15);
-            color: var(--primary);
-            padding: 0.75rem 1rem;
+            background: #1a2e1a;
+            color: #4ade80;
+            padding: 0.6rem 0.9rem;
             border-radius: 8px;
             font-weight: 600;
-            margin-bottom: 1rem;
+            margin-bottom: 0.75rem;
             display: flex;
             align-items: center;
             gap: 0.5rem;
+            font-size: 0.9rem;
         }
 
         .program-description {
-            color: var(--subtext);
-            font-size: 0.9rem;
-            line-height: 1.6;
-            margin-bottom: 1rem;
+            color: #888;
+            font-size: 0.85rem;
+            line-height: 1.5;
+            margin-bottom: 0.75rem;
             display: -webkit-box;
             -webkit-line-clamp: 2;
             -webkit-box-orient: vertical;
@@ -352,30 +296,30 @@
         .program-meta {
             display: flex;
             gap: 1rem;
-            margin-bottom: 1rem;
-            font-size: 0.85rem;
-            color: var(--subtext);
+            margin-bottom: 0.75rem;
+            font-size: 0.8rem;
+            color: #666;
         }
 
         .program-meta span {
             display: flex;
             align-items: center;
-            gap: 0.5rem;
+            gap: 0.4rem;
         }
 
         .program-tags {
             display: flex;
             flex-wrap: wrap;
-            gap: 0.5rem;
-            margin-bottom: 1rem;
+            gap: 0.4rem;
+            margin-bottom: 0.75rem;
         }
 
         .program-tag {
-            padding: 0.25rem 0.5rem;
-            background: var(--dark);
+            padding: 0.2rem 0.5rem;
+            background: #1a1a1b;
             border-radius: 4px;
-            font-size: 0.75rem;
-            color: var(--subtext);
+            font-size: 0.7rem;
+            color: #888;
         }
 
         .program-actions {
@@ -384,40 +328,44 @@
         }
 
         .btn {
-            padding: 0.75rem 1.5rem;
+            padding: 0.5rem 1rem;
             border-radius: 8px;
             font-weight: 500;
             cursor: pointer;
             transition: all 0.2s;
             border: none;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
         }
 
         .btn-primary {
-            background: var(--primary);
-            color: #fff;
+            background: #fff;
+            color: #000;
         }
 
-        .btn-primary:hover { background: var(--primary-dark); }
+        .btn-primary:hover { background: #e5e5e5; }
 
         .btn-outline {
             background: transparent;
-            border: 1px solid rgba(255,255,255,0.2);
-            color: var(--text);
+            border: 1px solid #333;
+            color: #888;
         }
 
-        .btn-outline:hover { background: rgba(255,255,255,0.1); }
+        .btn-outline:hover {
+            background: #1a1a1b;
+            border-color: #444;
+            color: #e5e5e5;
+        }
 
         .btn-sm {
-            padding: 0.5rem 1rem;
-            font-size: 0.85rem;
+            padding: 0.4rem 0.8rem;
+            font-size: 0.8rem;
         }
 
         /* 빈 상태 */
         .empty-state {
             text-align: center;
             padding: 4rem 2rem;
-            color: var(--subtext);
+            color: #666;
         }
 
         .empty-state i {
@@ -430,12 +378,17 @@
         .loading {
             text-align: center;
             padding: 4rem 2rem;
-            color: var(--subtext);
+            color: #666;
         }
 
-        .loading i {
-            font-size: 2rem;
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid #222;
+            border-top-color: #4ade80;
+            border-radius: 50%;
             animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
         }
 
         @keyframes spin {
@@ -453,7 +406,7 @@
             padding: 0.5rem 0;
             padding-left: 1.5rem;
             position: relative;
-            color: var(--subtext);
+            color: #888;
             font-size: 0.85rem;
         }
 
@@ -465,7 +418,7 @@
             width: 6px;
             height: 6px;
             border-radius: 50%;
-            background: var(--primary);
+            background: #4ade80;
         }
 
         /* 모달 */
@@ -485,9 +438,10 @@
         .modal-overlay.active { display: flex; }
 
         .modal-content {
-            background: var(--card);
-            border-radius: 16px;
-            padding: 2rem;
+            background: #111;
+            border: 1px solid #222;
+            border-radius: 12px;
+            padding: 1.5rem;
             max-width: 600px;
             width: 90%;
             max-height: 80vh;
@@ -498,70 +452,42 @@
             display: flex;
             justify-content: space-between;
             align-items: flex-start;
-            margin-bottom: 1.5rem;
+            margin-bottom: 1.25rem;
         }
 
         .modal-close {
             background: none;
             border: none;
-            color: var(--subtext);
+            color: #888;
             font-size: 1.5rem;
             cursor: pointer;
         }
 
-        .modal-close:hover { color: var(--text); }
+        .modal-close:hover { color: #e5e5e5; }
 
         /* 반응형 */
-        @media (max-width: 1400px) {
+        @media (max-width: 1024px) {
             .stats-grid { grid-template-columns: repeat(2, 1fr); }
             .profile-grid { grid-template-columns: repeat(2, 1fr); }
         }
 
-        @media (max-width: 992px) {
-            .programs-grid { grid-template-columns: 1fr; }
-        }
-
         @media (max-width: 768px) {
-            .sidebar { display: none; }
-            .main-content { margin-left: 0; }
-            .stats-grid { grid-template-columns: 1fr; }
+            .container { padding: 80px 1rem 2rem; }
+            .programs-grid { grid-template-columns: 1fr; }
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
             .profile-grid { grid-template-columns: 1fr; }
+            .page-header { flex-direction: column; align-items: flex-start; gap: 1rem; }
         }
     </style>
 </head>
 <body>
-    <!-- 사이드바 -->
-    <aside class="sidebar">
-        <div class="logo">QHYX</div>
+    {% include 'navbar.html' %}
 
-        <div class="nav-section">
-            <div class="nav-section-title">메인</div>
-            <a href="/" class="nav-item"><i class="fas fa-home"></i> 홈</a>
-            <a href="/startup-roadmap" class="nav-item"><i class="fas fa-road"></i> 창업 로드맵</a>
-            <a href="/business-plan" class="nav-item"><i class="fas fa-file-alt"></i> 사업계획서</a>
-            <a href="/business-discovery" class="nav-item"><i class="fas fa-lightbulb"></i> 사업 아이디어</a>
-        </div>
-
-        <div class="nav-section">
-            <div class="nav-section-title">창업 지원</div>
-            <a href="/startup-support" class="nav-item active"><i class="fas fa-hand-holding-usd"></i> 지원사업</a>
-            <a href="/startup-checklist" class="nav-item"><i class="fas fa-tasks"></i> 창업 체크리스트</a>
-        </div>
-
-        <div class="nav-section">
-            <div class="nav-section-title">관리</div>
-            <a href="/dashboard" class="nav-item"><i class="fas fa-chart-line"></i> 대시보드</a>
-            <a href="/meetings" class="nav-item"><i class="fas fa-calendar"></i> 회의록</a>
-            <a href="/suggestions" class="nav-item"><i class="fas fa-comment-dots"></i> AI 제안</a>
-        </div>
-    </aside>
-
-    <!-- 메인 컨텐츠 -->
-    <main class="main-content">
+    <div class="container">
         <div class="page-header">
             <div>
-                <h1 class="page-title">창업 지원사업</h1>
-                <p class="page-subtitle">정부 및 지자체의 모든 창업 지원 정책을 한눈에</p>
+                <h1><i class="fas fa-hand-holding-usd"></i> 창업 지원사업</h1>
+                <p>정부 및 지자체의 모든 창업 지원 정책을 한눈에</p>
             </div>
             <button class="btn btn-primary" onclick="refreshPrograms()">
                 <i class="fas fa-sync-alt"></i> 새로고침
@@ -598,7 +524,7 @@
             <div class="profile-grid">
                 <div class="form-group">
                     <label>나이</label>
-                    <input type="number" class="form-control" id="age" placeholder="만 나이" value="32">
+                    <input type="number" class="form-control" id="age" placeholder="만 나이" value="36">
                 </div>
                 <div class="form-group">
                     <label>사업 연차</label>
@@ -660,19 +586,19 @@
         <!-- 프로그램 목록 -->
         <div class="programs-grid" id="programs">
             <div class="loading">
-                <i class="fas fa-spinner"></i>
+                <div class="spinner"></div>
                 <p>지원사업 정보를 불러오는 중...</p>
             </div>
         </div>
-    </main>
+    </div>
 
     <!-- 상세 모달 -->
     <div class="modal-overlay" id="detailModal">
         <div class="modal-content">
             <div class="modal-header">
                 <div>
-                    <h3 id="modal-title">지원사업명</h3>
-                    <p id="modal-org" style="color: var(--subtext); margin-top: 0.25rem;">주관기관</p>
+                    <h3 id="modal-title" style="color: #fff; font-size: 1.1rem; margin-bottom: 0.25rem;">지원사업명</h3>
+                    <p id="modal-org" style="color: #888; font-size: 0.85rem;">주관기관</p>
                 </div>
                 <button class="modal-close" onclick="closeModal()">&times;</button>
             </div>
@@ -724,7 +650,6 @@
 
         function isOpen(period) {
             if (!period || period === '상시') return true;
-            // 간단한 날짜 체크 로직
             return true;
         }
 
@@ -789,7 +714,6 @@
             if (!period || period === '상시') {
                 return { text: '상시모집', class: 'open' };
             }
-            // 간단한 상태 판단
             return { text: '모집중', class: 'open' };
         }
 
@@ -871,26 +795,26 @@
             document.getElementById('modal-org').textContent = program.organization;
 
             let body = `
-                <div class="program-amount" style="margin-bottom: 1.5rem;">
+                <div class="program-amount" style="margin-bottom: 1.25rem;">
                     <i class="fas fa-coins"></i>
                     ${program.support_amount || '지원금액 문의'}
                 </div>
-                <p style="margin-bottom: 1.5rem; line-height: 1.8;">${program.description || ''}</p>
+                <p style="margin-bottom: 1.25rem; line-height: 1.6; color: #888;">${program.description || ''}</p>
                 <div style="display: grid; gap: 1rem;">
                     <div>
-                        <strong style="color: var(--text);">지원대상</strong>
-                        <p style="color: var(--subtext); margin-top: 0.5rem;">${program.target || '-'}</p>
+                        <strong style="color: #e5e5e5;">지원대상</strong>
+                        <p style="color: #888; margin-top: 0.5rem;">${program.target || '-'}</p>
                     </div>
                     <div>
-                        <strong style="color: var(--text);">신청기간</strong>
-                        <p style="color: var(--subtext); margin-top: 0.5rem;">${program.application_period || '상시'}</p>
+                        <strong style="color: #e5e5e5;">신청기간</strong>
+                        <p style="color: #888; margin-top: 0.5rem;">${program.application_period || '상시'}</p>
                     </div>
             `;
 
             if (program.requirements && program.requirements.length > 0) {
                 body += `
                     <div>
-                        <strong style="color: var(--text);">신청요건</strong>
+                        <strong style="color: #e5e5e5;">신청요건</strong>
                         <ul class="detail-list">
                             ${program.requirements.map(r => `<li>${r}</li>`).join('')}
                         </ul>
@@ -901,7 +825,7 @@
             if (program.benefits && program.benefits.length > 0) {
                 body += `
                     <div>
-                        <strong style="color: var(--text);">주요혜택</strong>
+                        <strong style="color: #e5e5e5;">주요혜택</strong>
                         <ul class="detail-list">
                             ${program.benefits.map(b => `<li>${b}</li>`).join('')}
                         </ul>
@@ -913,7 +837,7 @@
 
             if (program.website) {
                 body += `
-                    <div style="margin-top: 1.5rem;">
+                    <div style="margin-top: 1.25rem;">
                         <button class="btn btn-primary" onclick="window.open('${program.website}', '_blank')">
                             <i class="fas fa-external-link-alt"></i> 공식 사이트 방문
                         </button>
@@ -932,7 +856,7 @@
         function refreshPrograms() {
             document.getElementById('programs').innerHTML = `
                 <div class="loading">
-                    <i class="fas fa-spinner"></i>
+                    <div class="spinner"></div>
                     <p>지원사업 정보를 불러오는 중...</p>
                 </div>
             `;

@@ -3,206 +3,201 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ryx Dashboard</title>
+    <title>대시보드 - Qhyx</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #0a0a0b;
+            color: #e5e5e5;
             min-height: 100vh;
-            color: #333;
         }
-        
+
         .container {
-            max-width: 1400px;
+            max-width: 1200px;
             margin: 0 auto;
-            padding: 20px;
+            padding: 100px 2rem 4rem;
         }
-        
+
         header {
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 15px;
-            padding: 30px;
-            margin-bottom: 30px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
         }
-        
+
         h1 {
-            font-size: 2.5em;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 10px;
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
         }
-        
+
         .subtitle {
             color: #666;
-            font-size: 1.1em;
         }
-        
+
         .dashboard {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
-            margin-bottom: 30px;
+            gap: 1rem;
+            margin-bottom: 2rem;
         }
-        
+
         .card {
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 15px;
-            padding: 25px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
-            transition: transform 0.3s;
+            background: #111;
+            border: 1px solid #222;
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: all 0.2s;
         }
-        
+
         .card:hover {
-            transform: translateY(-5px);
+            border-color: #333;
+            transform: translateY(-2px);
         }
-        
+
         .card h2 {
-            font-size: 1.3em;
-            margin-bottom: 20px;
-            color: #667eea;
+            font-size: 1rem;
+            margin-bottom: 1rem;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
         }
-        
+
+        .card h2 i {
+            color: #4ade80;
+        }
+
         .status-indicator {
             display: inline-block;
-            width: 12px;
-            height: 12px;
+            width: 10px;
+            height: 10px;
             border-radius: 50%;
             margin-right: 8px;
             animation: pulse 2s infinite;
         }
-        
-        .status-running {
-            background: #10b981;
-        }
-        
-        .status-stopped {
-            background: #ef4444;
-        }
-        
+
+        .status-running { background: #4ade80; }
+        .status-stopped { background: #ef4444; }
+
         @keyframes pulse {
             0% { opacity: 1; }
             50% { opacity: 0.5; }
             100% { opacity: 1; }
         }
-        
+
         .metric {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 12px 0;
-            border-bottom: 1px solid #e5e7eb;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid #222;
         }
-        
+
         .metric:last-child {
             border-bottom: none;
         }
-        
+
         .metric-label {
-            color: #6b7280;
-            font-size: 0.9em;
+            color: #888;
+            font-size: 0.9rem;
         }
-        
+
         .metric-value {
-            font-size: 1.5em;
-            font-weight: bold;
-            color: #1f2937;
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #fff;
         }
-        
+
         .log-entry {
-            padding: 10px;
-            margin-bottom: 8px;
-            background: #f9fafb;
-            border-left: 3px solid #667eea;
-            border-radius: 5px;
-            font-size: 0.9em;
+            padding: 0.75rem;
+            margin-bottom: 0.5rem;
+            background: #1a1a1b;
+            border-left: 3px solid #4ade80;
+            border-radius: 6px;
+            font-size: 0.85rem;
         }
-        
+
         .log-time {
-            color: #9ca3af;
-            font-size: 0.85em;
+            color: #666;
+            font-size: 0.8rem;
+            margin-top: 0.25rem;
         }
-        
+
         .control-buttons {
             display: flex;
-            gap: 10px;
-            margin-top: 20px;
+            gap: 0.5rem;
+            margin-top: 1rem;
         }
-        
+
         button {
-            padding: 10px 20px;
-            border: none;
+            padding: 0.5rem 1rem;
+            border: 1px solid #333;
             border-radius: 8px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            font-weight: 600;
+            background: #1a1a1b;
+            color: #e5e5e5;
+            font-weight: 500;
             cursor: pointer;
-            transition: opacity 0.3s;
+            transition: all 0.2s;
         }
-        
+
         button:hover {
-            opacity: 0.9;
+            background: #222;
+            border-color: #444;
         }
-        
+
         button:disabled {
             opacity: 0.5;
             cursor: not-allowed;
         }
-        
+
         .chart-container {
             height: 200px;
-            margin-top: 20px;
+            margin-top: 1rem;
         }
-        
+
         .activity-timeline {
             max-height: 400px;
             overflow-y: auto;
         }
-        
+
         .timeline-item {
             display: flex;
-            gap: 15px;
-            padding: 15px 0;
-            border-bottom: 1px solid #e5e7eb;
+            gap: 1rem;
+            padding: 1rem 0;
+            border-bottom: 1px solid #222;
         }
-        
+
         .timeline-dot {
-            width: 40px;
-            height: 40px;
+            width: 36px;
+            height: 36px;
             border-radius: 50%;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: #1a2e1a;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: white;
+            color: #4ade80;
             flex-shrink: 0;
         }
-        
+
         .timeline-content {
             flex: 1;
         }
-        
+
         .timeline-title {
             font-weight: 600;
-            margin-bottom: 5px;
+            margin-bottom: 0.25rem;
         }
-        
+
         .timeline-desc {
-            color: #6b7280;
-            font-size: 0.9em;
+            color: #888;
+            font-size: 0.85rem;
         }
-        
+
         .loading {
             text-align: center;
-            padding: 20px;
-            color: #9ca3af;
+            padding: 2rem;
+            color: #666;
         }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -211,14 +206,13 @@
     {% include 'navbar.html' %}
     <div class="container">
         <header>
-            <h1>Ryx Dashboard</h1>
-            <p class="subtitle">Born to be Different</p>
+            <h1><i class="fas fa-chart-line"></i> 대시보드</h1>
+            <p class="subtitle">시스템 현황 모니터링</p>
         </header>
-        
+
         <div class="dashboard">
-            <!-- 동기화 상태 카드 -->
             <div class="card">
-                <h2> 동기화 상태</h2>
+                <h2><i class="fas fa-sync"></i> 동기화 상태</h2>
                 <div id="sync-status">
                     <div class="loading">로딩 중...</div>
                 </div>
@@ -228,61 +222,55 @@
                     <button onclick="controlSync('sync')">즉시 동기화</button>
                 </div>
             </div>
-            
-            <!-- Git 통계 카드 -->
+
             <div class="card">
-                <h2> Git 통계</h2>
+                <h2><i class="fab fa-git-alt"></i> Git 통계</h2>
                 <div id="git-stats">
                     <div class="loading">로딩 중...</div>
                 </div>
             </div>
-            
-            <!-- 오늘의 활동 카드 -->
+
             <div class="card">
-                <h2> 오늘의 활동</h2>
+                <h2><i class="fas fa-calendar-day"></i> 오늘의 활동</h2>
                 <div id="today-stats">
                     <div class="loading">로딩 중...</div>
                 </div>
             </div>
         </div>
-        
-        <!-- 활동 차트 -->
-        <div class="card">
-            <h2> 30일 활동 차트</h2>
+
+        <div class="card" style="margin-bottom: 1rem;">
+            <h2><i class="fas fa-chart-area"></i> 30일 활동 차트</h2>
             <div class="chart-container">
                 <canvas id="activity-chart"></canvas>
             </div>
         </div>
-        
-        <!-- 최근 활동 타임라인 -->
-        <div class="card">
-            <h2> 최근 활동</h2>
-            <div class="activity-timeline" id="activity-timeline">
-                <div class="loading">로딩 중...</div>
+
+        <div class="dashboard">
+            <div class="card">
+                <h2><i class="fas fa-history"></i> 최근 활동</h2>
+                <div class="activity-timeline" id="activity-timeline">
+                    <div class="loading">로딩 중...</div>
+                </div>
             </div>
-        </div>
-        
-        <!-- 실시간 로그 -->
-        <div class="card">
-            <h2> 실시간 동기화 로그</h2>
-            <div id="sync-logs" style="max-height: 300px; overflow-y: auto;">
-                <div class="loading">로딩 중...</div>
+
+            <div class="card">
+                <h2><i class="fas fa-terminal"></i> 실시간 로그</h2>
+                <div id="sync-logs" style="max-height: 300px; overflow-y: auto;">
+                    <div class="loading">로딩 중...</div>
+                </div>
             </div>
         </div>
     </div>
-    
+
     <script>
         let activityChart = null;
-        
-        // 상태 업데이트
+
         async function updateStats() {
             try {
                 const response = await fetch('/api/stats');
                 const data = await response.json();
-                
-                // 동기화 상태 업데이트
-                const syncStatusEl = document.getElementById('sync-status');
-                syncStatusEl.innerHTML = `
+
+                document.getElementById('sync-status').innerHTML = `
                     <div class="metric">
                         <span class="metric-label">데몬 상태</span>
                         <span class="metric-value">
@@ -297,8 +285,7 @@
                     </div>
                     ` : ''}
                 `;
-                
-                // Git 통계 업데이트
+
                 const gitStatsEl = document.getElementById('git-stats');
                 if (data.git_stats.current_branch) {
                     gitStatsEl.innerHTML = `
@@ -318,26 +305,23 @@
                 } else {
                     gitStatsEl.innerHTML = '<div class="metric">Git 저장소 정보 없음</div>';
                 }
-                
-                // 오늘의 활동 업데이트
-                const todayStatsEl = document.getElementById('today-stats');
-                todayStatsEl.innerHTML = `
+
+                document.getElementById('today-stats').innerHTML = `
                     <div class="metric">
                         <span class="metric-label">오늘 동기화</span>
                         <span class="metric-value">${data.today_syncs}회</span>
                     </div>
                     <div class="metric">
                         <span class="metric-label">최근 커밋</span>
-                        <span class="metric-value">${data.git_stats.last_commit ? data.git_stats.last_commit.hash : 'N/A'}</span>
+                        <span class="metric-value" style="font-size: 0.9rem;">${data.git_stats.last_commit ? data.git_stats.last_commit.hash.substring(0,7) : 'N/A'}</span>
                     </div>
                 `;
-                
-                // 활동 타임라인 업데이트
+
                 const timelineEl = document.getElementById('activity-timeline');
                 if (data.recent_activities.length > 0) {
                     timelineEl.innerHTML = data.recent_activities.map(activity => `
                         <div class="timeline-item">
-                            <div class="timeline-dot"></div>
+                            <div class="timeline-dot"><i class="fas fa-code-commit"></i></div>
                             <div class="timeline-content">
                                 <div class="timeline-title">${activity.type}</div>
                                 <div class="timeline-desc">${activity.description}</div>
@@ -348,18 +332,16 @@
                 } else {
                     timelineEl.innerHTML = '<div class="loading">활동 기록이 없습니다</div>';
                 }
-                
             } catch (error) {
                 console.error('Stats update error:', error);
             }
         }
-        
-        // 로그 업데이트
+
         async function updateLogs() {
             try {
                 const response = await fetch('/api/logs?type=sync&limit=20');
                 const logs = await response.json();
-                
+
                 const logsEl = document.getElementById('sync-logs');
                 if (logs.length > 0) {
                     logsEl.innerHTML = logs.map(log => `
@@ -375,16 +357,13 @@
                 console.error('Logs update error:', error);
             }
         }
-        
-        // 차트 업데이트
+
         async function updateChart() {
             try {
                 const response = await fetch('/api/metrics');
                 const data = await response.json();
-                
+
                 const ctx = document.getElementById('activity-chart').getContext('2d');
-                
-                // 날짜 생성 (최근 30일)
                 const dates = [];
                 const today = new Date();
                 for (let i = 29; i >= 0; i--) {
@@ -392,15 +371,15 @@
                     date.setDate(date.getDate() - i);
                     dates.push(date.toISOString().split('T')[0]);
                 }
-                
-                // 데이터 정렬
+
                 const commitData = dates.map(date => data.daily_commits[date] || 0);
                 const syncData = dates.map(date => data.daily_syncs[date] || 0);
-                
-                if (activityChart) {
-                    activityChart.destroy();
-                }
-                
+
+                if (activityChart) activityChart.destroy();
+
+                Chart.defaults.color = '#888';
+                Chart.defaults.borderColor = '#333';
+
                 activityChart = new Chart(ctx, {
                     type: 'line',
                     data: {
@@ -409,15 +388,15 @@
                             {
                                 label: '커밋',
                                 data: commitData,
-                                borderColor: '#667eea',
-                                backgroundColor: 'rgba(102, 126, 234, 0.1)',
+                                borderColor: '#4ade80',
+                                backgroundColor: 'rgba(74, 222, 128, 0.1)',
                                 tension: 0.4
                             },
                             {
                                 label: '동기화',
                                 data: syncData,
-                                borderColor: '#764ba2',
-                                backgroundColor: 'rgba(118, 75, 162, 0.1)',
+                                borderColor: '#60a5fa',
+                                backgroundColor: 'rgba(96, 165, 250, 0.1)',
                                 tension: 0.4
                             }
                         ]
@@ -425,19 +404,10 @@
                     options: {
                         responsive: true,
                         maintainAspectRatio: false,
-                        plugins: {
-                            legend: {
-                                display: true,
-                                position: 'top'
-                            }
-                        },
+                        plugins: { legend: { display: true, position: 'top' } },
                         scales: {
-                            y: {
-                                beginAtZero: true,
-                                ticks: {
-                                    stepSize: 1
-                                }
-                            }
+                            y: { beginAtZero: true, ticks: { stepSize: 1 }, grid: { color: '#222' } },
+                            x: { grid: { color: '#222' } }
                         }
                     }
                 });
@@ -445,20 +415,15 @@
                 console.error('Chart update error:', error);
             }
         }
-        
-        // 동기화 제어
+
         async function controlSync(action) {
             try {
                 const response = await fetch('/api/sync/control', {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ action })
                 });
-                
                 const result = await response.json();
-                
                 if (result.success) {
                     alert(`동기화 ${action} 성공`);
                     updateStats();
@@ -469,17 +434,14 @@
                 alert(`오류: ${error.message}`);
             }
         }
-        
-        // 초기화
+
         document.addEventListener('DOMContentLoaded', () => {
             updateStats();
             updateLogs();
             updateChart();
-            
-            // 주기적 업데이트
-            setInterval(updateStats, 5000);  // 5초마다
-            setInterval(updateLogs, 10000);  // 10초마다
-            setInterval(updateChart, 60000); // 1분마다
+            setInterval(updateStats, 5000);
+            setInterval(updateLogs, 10000);
+            setInterval(updateChart, 60000);
         });
     </script>
 </body>

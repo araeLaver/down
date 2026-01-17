@@ -1,36 +1,37 @@
-<!-- 공통 네비게이션 바 -->
+<!-- 공통 네비게이션 바 (다크 테마) -->
 <style>
     .navbar {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        padding: 0;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        position: sticky;
+        position: fixed;
         top: 0;
+        left: 0;
+        right: 0;
+        height: 60px;
+        background: rgba(10, 10, 11, 0.9);
+        backdrop-filter: blur(20px);
+        border-bottom: 1px solid #222;
         z-index: 1000;
     }
 
     .navbar-container {
         max-width: 1400px;
         margin: 0 auto;
+        height: 100%;
         display: flex;
         justify-content: space-between;
         align-items: center;
-        padding: 0 20px;
+        padding: 0 2rem;
     }
 
     .navbar-brand {
-        color: white;
-        font-size: 1.5em;
-        font-weight: bold;
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: #fff;
         text-decoration: none;
-        padding: 15px 0;
-        display: flex;
-        align-items: center;
-        gap: 10px;
+        letter-spacing: -0.5px;
     }
 
     .navbar-brand:hover {
-        color: #ffd700;
+        color: #fff;
     }
 
     .navbar-menu {
@@ -38,7 +39,7 @@
         list-style: none;
         margin: 0;
         padding: 0;
-        gap: 5px;
+        gap: 0.5rem;
     }
 
     .navbar-menu li {
@@ -46,23 +47,22 @@
     }
 
     .navbar-menu a {
-        color: white;
+        color: #888;
         text-decoration: none;
-        padding: 20px 20px;
+        padding: 0.5rem 1rem;
+        border-radius: 6px;
+        font-size: 0.9rem;
+        transition: all 0.2s;
         display: block;
-        font-weight: 500;
-        transition: all 0.3s;
-        border-bottom: 3px solid transparent;
     }
 
-    .navbar-menu a:hover,
+    .navbar-menu a:hover {
+        color: #fff;
+    }
+
     .navbar-menu a.active {
-        background: rgba(255,255,255,0.1);
-        border-bottom-color: #ffd700;
-    }
-
-    .navbar-menu .dropdown {
-        position: relative;
+        color: #fff;
+        background: #1a1a1b;
     }
 
     .navbar-menu .dropdown-content {
@@ -70,10 +70,12 @@
         position: absolute;
         top: 100%;
         left: 0;
-        background: white;
-        min-width: 220px;
-        box-shadow: 0 8px 16px rgba(0,0,0,0.2);
-        border-radius: 0 0 8px 8px;
+        background: #111;
+        border: 1px solid #222;
+        min-width: 200px;
+        border-radius: 8px;
+        margin-top: 0.5rem;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.5);
     }
 
     .navbar-menu .dropdown:hover .dropdown-content {
@@ -81,29 +83,36 @@
     }
 
     .navbar-menu .dropdown-content a {
-        color: #333;
-        padding: 12px 20px;
-        border-bottom: 1px solid #eee;
-        border-left: 3px solid transparent;
+        color: #888;
+        padding: 0.75rem 1rem;
+        border-bottom: 1px solid #222;
+        border-radius: 0;
+    }
+
+    .navbar-menu .dropdown-content a:last-child {
+        border-bottom: none;
     }
 
     .navbar-menu .dropdown-content a:hover {
-        background: #f8f9fa;
-        border-left-color: #667eea;
-        border-bottom-color: #eee;
+        background: #1a1a1b;
+        color: #fff;
     }
 
     .navbar-toggle {
         display: none;
         background: none;
         border: none;
-        color: white;
+        color: #fff;
         font-size: 1.5em;
         cursor: pointer;
         padding: 10px;
     }
 
     @media (max-width: 768px) {
+        .navbar {
+            padding: 0 1rem;
+        }
+
         .navbar-toggle {
             display: block;
         }
@@ -111,12 +120,14 @@
         .navbar-menu {
             display: none;
             position: absolute;
-            top: 100%;
+            top: 60px;
             left: 0;
             right: 0;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: #0a0a0b;
+            border-bottom: 1px solid #222;
             flex-direction: column;
             gap: 0;
+            padding: 0.5rem;
         }
 
         .navbar-menu.show {
@@ -124,14 +135,17 @@
         }
 
         .navbar-menu a {
-            border-bottom: 1px solid rgba(255,255,255,0.1);
+            padding: 0.75rem 1rem;
         }
 
         .navbar-menu .dropdown-content {
             position: static;
             display: none;
+            margin-top: 0;
             box-shadow: none;
-            background: rgba(0,0,0,0.1);
+            border: none;
+            background: #111;
+            margin-left: 1rem;
         }
 
         .navbar-menu .dropdown.show .dropdown-content {
@@ -142,38 +156,16 @@
 
 <nav class="navbar">
     <div class="navbar-container">
-        <a href="/" class="navbar-brand">
-             Qhyx
-        </a>
+        <a href="/" class="navbar-brand">Qhyx</a>
 
-        <button class="navbar-toggle" onclick="toggleMenu()">
-            ☰
-        </button>
+        <button class="navbar-toggle" onclick="toggleMenu()">☰</button>
 
         <ul class="navbar-menu" id="navbarMenu">
-            <li><a href="/dashboard">대시보드</a></li>
-
-            <li class="dropdown" onclick="toggleDropdown(event)">
-                <a href="javascript:void(0)">사업 발굴 ▼</a>
-                <div class="dropdown-content">
-                    <a href="/business-discovery">자동 발굴 현황</a>
-                    <a href="/business-history">발굴 히스토리</a>
-                    <a href="/business-review">검토 필요 (60-79점)</a>
-                    <a href="/trigger-discovery">수동 발굴 실행</a>
-                </div>
-            </li>
-
-            <li><a href="/startup-support">창업 지원사업</a></li>
-
-            <li class="dropdown" onclick="toggleDropdown(event)">
-                <a href="javascript:void(0)">회의/제안 ▼</a>
-                <div class="dropdown-content">
-                    <a href="/meetings">회의록</a>
-                    <a href="/suggestions">직원 제안</a>
-                </div>
-            </li>
-
-            <li><a href="/monitor">시스템 모니터</a></li>
+            <li><a href="/">홈</a></li>
+            <li><a href="/business-discovery">사업발굴</a></li>
+            <li><a href="/startup-roadmap">로드맵</a></li>
+            <li><a href="/business-plan">사업계획서</a></li>
+            <li><a href="/startup-support">지원사업</a></li>
         </ul>
     </div>
 </nav>
@@ -184,14 +176,6 @@
         menu.classList.toggle('show');
     }
 
-    function toggleDropdown(event) {
-        if (window.innerWidth <= 768) {
-            event.preventDefault();
-            const dropdown = event.currentTarget;
-            dropdown.classList.toggle('show');
-        }
-    }
-
     // 현재 페이지 활성화 표시
     document.addEventListener('DOMContentLoaded', function() {
         const currentPath = window.location.pathname;
@@ -200,15 +184,6 @@
         links.forEach(link => {
             if (link.getAttribute('href') === currentPath) {
                 link.classList.add('active');
-            }
-        });
-    });
-
-    // 모바일에서 링크 클릭시 메뉴 닫기
-    document.querySelectorAll('.navbar-menu a').forEach(link => {
-        link.addEventListener('click', function() {
-            if (window.innerWidth <= 768) {
-                document.getElementById('navbarMenu').classList.remove('show');
             }
         });
     });
