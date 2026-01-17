@@ -1,9 +1,9 @@
-name: Hourly Business Discovery
+name: Business Discovery (8-Hour Interval)
 
 on:
   schedule:
     # 매시간 정각에 실행 (UTC 기준)
-    - cron: '0 * * * *'
+    - cron: '0 0,8,16 * * *'
   workflow_dispatch:  # 수동 실행 가능
 
 jobs:
@@ -27,7 +27,7 @@ jobs:
 
       - name: Run Business Discovery
         env:
-          DATABASE_URL: postgresql://unble:npg_1kjV0mhECxqs@ep-divine-bird-a1f4mly5.ap-southeast-1.pg.koyeb.app/unble
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
         run: |
           python run_discovery.py
 
