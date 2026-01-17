@@ -1,27 +1,9 @@
-"""한 번만 사업 발굴 실행 (테스트 데이터 생성용)"""
-import sys
-import os
-sys.path.append(os.path.dirname(__file__))
+"""
+한 번만 사업 발굴 실행 (테스트용)
+run_discovery.py와 동일 - 호환성을 위해 유지
+"""
+from run_discovery import main
 
-from continuous_business_discovery import ContinuousBusinessDiscovery
-from datetime import datetime
-
-print("=" * 80)
-print("[TEST] 테스트 사업 발굴 실행 중...")
-print("=" * 80)
-
-discovery = ContinuousBusinessDiscovery()
-
-try:
-    results = discovery.run_hourly_discovery()
-
-    print(f"\n[OK] 완료!")
-    print(f"   분석: {results['analyzed']}개")
-    print(f"   저장: {results['saved']}개")
-    print(f"\n[INFO] 이제 /business 페이지에서 확인하세요!")
-
-except Exception as e:
-    print(f"\n[ERROR] 에러: {e}")
-
-finally:
-    discovery.close()
+if __name__ == "__main__":
+    import sys
+    sys.exit(main())

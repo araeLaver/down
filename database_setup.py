@@ -5,11 +5,13 @@ Koyeb PostgreSQL 연결 및 전용 스키마 생성
 """
 
 from sqlalchemy import create_engine, text, MetaData, Table, Column, Integer, String, DateTime, Float, JSON, Date, Boolean, ForeignKey, Index
-from sqlalchemy.engine import URL
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, relationship
 from datetime import datetime, timezone, timedelta
 import os
+
+# 통합 설정 모듈에서 가져오기
+from config import DatabaseConfig
 
 # 한국 시간대 (KST = UTC+9)
 KST = timezone(timedelta(hours=9))
@@ -18,22 +20,16 @@ def get_kst_now():
     """한국 시간(KST) 반환"""
     return datetime.now(KST).replace(tzinfo=None)
 
-# Koyeb PostgreSQL 연결 설정
-connection_string = URL.create(
-    'postgresql',
-    username='unble',
-    password='npg_1kjV0mhECxqs',
-    host='ep-divine-bird-a1f4mly5.ap-southeast-1.pg.koyeb.app',
-    database='unble',
-)
+# 환경변수 기반 데이터베이스 연결 (보안 강화)
+DATABASE_URL = DatabaseConfig.get_database_url()
 
-# 엔진 생성
-engine = create_engine(connection_string, pool_pre_ping=True, pool_size=10)
+# 엔진 생성 (통합 설정 사용)
+engine = create_engine(DATABASE_URL, **DatabaseConfig.get_engine_options())
 Session = sessionmaker(bind=engine)
 Base = declarative_base()
 
 # 스키마 이름 - Qhyx Inc.
-SCHEMA_NAME = 'qhyx_growth'
+SCHEMA_NAME = DatabaseConfig.SCHEMA_NAME
 
 def create_schema():
     """전용 스키마 생성"""

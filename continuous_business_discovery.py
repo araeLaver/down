@@ -1,7 +1,7 @@
 """
 지속적 사업 발굴 시스템
-- 매시간 자동으로 새로운 IT 사업 아이디어 분석
-- 80점 이상만 DB에 저장
+- 설정 기반 스케줄로 자동 IT 사업 아이디어 분석
+- 설정된 점수 이상만 DB에 저장
 - Flask 대시보드에서 실시간 확인 가능
 """
 
@@ -13,19 +13,17 @@ from smart_business_system import SmartBusinessSystem
 from realistic_business_generator import RealisticBusinessGenerator
 from database_setup import Session, BusinessPlan, BusinessMeeting, Employee, get_kst_now
 from business_discovery_history import BusinessHistoryTracker, initialize_history_tables, BusinessDiscoveryHistory
+from config import DiscoveryConfig
+from utils import DatabaseManager, clean_keyword, get_next_scheduled_time
+from notifications import notify_discovery_complete, notify_high_score_idea, notify_error
+from logging_config import get_discovery_logger
 from datetime import datetime, timedelta
 import time
-import logging
 import json
 import random
 
-# 로깅 설정
-logging.basicConfig(
-    filename='business_discovery.log',
-    level=logging.INFO,
-    format='%(asctime)s - %(levelname)s - %(message)s',
-    encoding='utf-8'
-)
+# 통합 로깅 시스템 사용
+logger = get_discovery_logger()
 
 class ContinuousBusinessDiscovery:
     def __init__(self):
@@ -40,13 +38,20 @@ class ContinuousBusinessDiscovery:
         except Exception as e:
             print(f"History tables already exist: {e}")
 
+        # 설정 정보
+        self.min_score = DiscoveryConfig.get_min_score()
+        self.schedule_hours = DiscoveryConfig.get_schedule_hours()
+        self.ideas_per_run = DiscoveryConfig.get_ideas_per_run()
+
         print("="*80)
         print("[DISCOVERY] 사업 발굴 시스템 시작 (경량 모드)")
         print("="*80)
-        print("8시간마다 자동으로 IT 사업 아이디어 분석 및 DB 저장")
+        print(f"스케줄: {self.schedule_hours} (KST)")
+        print(f"최소 저장 점수: {self.min_score}점")
+        print(f"실행당 아이디어: {self.ideas_per_run}개")
         print("[OK] 템플릿 기반 아이디어 생성 (메모리 최적화)\n")
 
-        logging.info("Continuous Business Discovery System Started (Lite Mode)")
+        logger.info(f"Discovery System Started - Schedule: {self.schedule_hours}, Min Score: {self.min_score}")
 
     def refresh_session(self):
         """DB 세션 새로고침 (연결 오류 복구용)"""
@@ -56,7 +61,7 @@ class ContinuousBusinessDiscovery:
         except:
             pass
         self.session = Session()
-        logging.info("Session refreshed due to connection error")
+        logger.info("Session refreshed due to connection error")
 
     def safe_commit(self, max_retries=3):
         """안전한 커밋 (재시도 로직 포함)"""
@@ -65,7 +70,7 @@ class ContinuousBusinessDiscovery:
                 self.session.commit()
                 return True
             except Exception as e:
-                logging.warning(f"Commit attempt {attempt + 1} failed: {e}")
+                logger.warning(f"Commit attempt {attempt + 1} failed: {e}")
                 if attempt < max_retries - 1:
                     self.refresh_session()
                     time.sleep(1)
@@ -109,9 +114,9 @@ class ContinuousBusinessDiscovery:
             # 동적 아이디어를 먼저 배치하여 우선 선택되게 함
             combined_ideas = dynamic_ideas + template_ideas
 
-            # 최대 3개까지 중복되지 않은 아이디어 선택
+            # 설정된 개수만큼 중복되지 않은 아이디어 선택
             selected_count = 0
-            max_select = 3
+            max_select = self.ideas_per_run
 
             for opp in combined_ideas:
                 if selected_count >= max_select:
@@ -133,21 +138,8 @@ class ContinuousBusinessDiscovery:
         return all_opportunities
 
     def generate_keyword(self, business_name):
-        """사업 이름에서 검색 키워드 생성"""
-        # 불필요한 단어 제거
-        remove_words = ['앱', '서비스', '플랫폼', '시스템', '솔루션', '도구', '개발']
-        keyword = business_name
-
-        for word in remove_words:
-            keyword = keyword.replace(word, '')
-
-        keyword = keyword.strip()
-
-        # 너무 짧으면 원본 사용
-        if len(keyword) < 3:
-            keyword = business_name
-
-        return keyword
+        """사업 이름에서 검색 키워드 생성 (utils.clean_keyword 사용)"""
+        return clean_keyword(business_name)
 
     def create_business_config(self, opportunity):
         """기회를 분석 가능한 설정으로 변환"""
@@ -293,7 +285,7 @@ class ContinuousBusinessDiscovery:
             # 실행 계획 추출 (있으면)
             action_plan = analysis_result.get('action_plan')
 
-            saved_to_db = total_score >= 70  # 70점 이상으로 변경 (실제 AI 분석 결과가 보수적이므로)
+            saved_to_db = total_score >= self.min_score  # 설정 기반 최소 점수
 
             # [HISTORY] 히스토리에 기록 (모든 분석 결과 저장)
             self.history_tracker.record_analysis(
@@ -313,12 +305,15 @@ class ContinuousBusinessDiscovery:
                 full_analysis=opportunity
             )
 
-            # 50점 미만이면 low_score_businesses 테이블에 저장
-            if total_score < 60:
+            # 저점수 기준 (설정에서 가져옴)
+            low_score_threshold = DiscoveryConfig.DEFAULT_LOW_SCORE_THRESHOLD
+
+            # 저점수 사업은 low_score_businesses 테이블에 저장
+            if total_score < low_score_threshold:
                 # 실패 원인 판단
-                if market_score < 60 and revenue_score < 60:
+                if market_score < low_score_threshold and revenue_score < low_score_threshold:
                     failure_reason = 'both'
-                elif market_score < 60:
+                elif market_score < low_score_threshold:
                     failure_reason = 'low_market'
                 else:
                     failure_reason = 'low_revenue'
@@ -339,8 +334,8 @@ class ContinuousBusinessDiscovery:
                     full_data=opportunity
                 )
 
-                print(f"   [LOW] 저점수 사업 (50점 미만). low_score_businesses 테이블에 저장 (개선 분석용)")
-                logging.info(f"Saved to low_score_businesses: {name} (Score: {total_score}, Reason: {failure_reason})")
+                print(f"   [LOW] 저점수 사업 ({low_score_threshold}점 미만). low_score_businesses 테이블에 저장")
+                logger.info(f"Saved to low_score_businesses: {name} (Score: {total_score}, Reason: {failure_reason})")
 
                 return {
                     'saved': False,
@@ -352,8 +347,8 @@ class ContinuousBusinessDiscovery:
                     'failure_reason': failure_reason
                 }
 
-            # 50점 이상 business_plans 테이블에 저장 (50-69: 검토 대상, 70+: 우수)
-            elif total_score >= 50:
+            # 저점수 이상은 business_plans 테이블에 저장
+            elif total_score >= low_score_threshold:
                 print(f"   [SAVE] 우수한 아이디어! DB에 저장 중...")
 
                 # 사업 계획으로 DB에 저장
@@ -379,9 +374,9 @@ class ContinuousBusinessDiscovery:
                         revenue_model=config['revenue_model'],
                         projected_revenue_12m=annual_revenue,
                         investment_required=config['budget'],
-                        risk_level='medium' if total_score > 75 else 'high',
+                        risk_level=DiscoveryConfig.get_risk_level(total_score),
                         feasibility_score=total_score / 10,
-                        priority='high' if total_score >= 85 else 'medium',
+                        priority=DiscoveryConfig.get_priority(total_score),
                         status='approved',
                         created_by='AI_Discovery_System',
                         details={
@@ -418,7 +413,7 @@ class ContinuousBusinessDiscovery:
                         'revenue_score': revenue_score,
                         'error': 'DB commit failed'
                     }
-                logging.info(f"Saved business idea: {name} (Score: {total_score})")
+                logger.info(f"Saved business idea: {name} (Score: {total_score})")
 
                 return {
                     'saved': True,
@@ -429,8 +424,8 @@ class ContinuousBusinessDiscovery:
                 }
 
             else:
-                print(f"   [SKIP] 점수 부족 (80점 미만). business_plans 건너뜀 (히스토리만 기록)")
-                logging.info(f"Skipped business_plans but recorded in history: {name} (Score: {total_score})")
+                print(f"   [SKIP] 점수 부족 ({self.min_score}점 미만). business_plans 건너뜀 (히스토리만 기록)")
+                logger.info(f"Skipped business_plans but recorded in history: {name} (Score: {total_score})")
 
                 return {
                     'saved': False,
@@ -442,7 +437,7 @@ class ContinuousBusinessDiscovery:
 
         except Exception as e:
             print(f"   [ERROR] 오류 발생: {e}")
-            logging.error(f"Error analyzing {name}: {e}")
+            logger.error(f"Error analyzing {name}: {e}")
             return {
                 'saved': False,
                 'name': name,
@@ -505,15 +500,29 @@ class ContinuousBusinessDiscovery:
         except Exception as e:
             print(f"   [WARNING] 인사이트 생성 실패: {e}")
 
-        logging.info(f"Hourly discovery completed: {saved_count}/{len(it_ideas)} saved")
+        logger.info(f"Hourly discovery completed: {saved_count}/{len(it_ideas)} saved")
 
-        return {
+        # 결과 객체 생성
+        discovery_results = {
             'timestamp': now.isoformat(),
             'batch_id': discovery_batch,
             'analyzed': len(it_ideas),
             'saved': saved_count,
             'results': results
         }
+
+        # 알림 전송 (설정된 경우)
+        try:
+            notify_discovery_complete(discovery_results)
+
+            # 고득점 아이디어 개별 알림
+            for result in results:
+                if result.get('saved') and result.get('score', 0) >= DiscoveryConfig.DEFAULT_HIGH_SCORE_THRESHOLD:
+                    notify_high_score_idea(result)
+        except Exception as e:
+            logger.warning(f"Notification failed: {e}")
+
+        return discovery_results
 
     def generate_discovery_meeting(self, results):
         """발굴 결과 회의록 생성"""
@@ -569,7 +578,7 @@ class ContinuousBusinessDiscovery:
             print(f"   [MEETING] 회의록 생성 완료!")
         else:
             print(f"   [WARN] 회의록 저장 실패")
-        logging.info(f"Meeting record created with {len(saved_ideas)} ideas")
+        logger.info(f"Meeting record created with {len(saved_ideas)} ideas")
 
     def run_continuous(self):
         """지속적 실행 (24/7)"""
@@ -606,11 +615,11 @@ class ContinuousBusinessDiscovery:
 
             except KeyboardInterrupt:
                 print("\n\n[STOP] 시스템 종료")
-                logging.info("System stopped by user")
+                logger.info("System stopped by user")
                 break
             except Exception as e:
                 print(f"\n[ERROR] 오류 발생: {e}")
-                logging.error(f"System error: {e}")
+                logger.error(f"System error: {e}")
                 time.sleep(60)
 
     def run_once_now(self):
