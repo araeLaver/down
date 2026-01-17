@@ -14,11 +14,11 @@
             --warning-color: #f59e0b;
             --danger-color: #ef4444;
             --bg-light: #f8fafc;
-            --border-color: #e2e8f0;
+            --border-color: #333;
             --hot-color: #ef4444;
             --rising-color: #f97316;
             --stable-color: #3b82f6;
-            --declining-color: #6b7280;
+            --declining-color: #888;
         }
 
         * {
@@ -44,15 +44,15 @@
             font-size: 0.7rem;
             font-weight: 600;
         }
-        .trend-hot { background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%); color: #dc2626; border: 1px solid #fecaca; }
-        .trend-rising { background: linear-gradient(135deg, #fff7ed 0%, #ffedd5 100%); color: #ea580c; border: 1px solid #fed7aa; }
-        .trend-stable { background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%); color: #2563eb; border: 1px solid #bfdbfe; }
-        .trend-declining { background: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%); color: #6b7280; border: 1px solid #e5e7eb; }
+        .trend-hot { background: #2e1a1a; color: #f87171; border: 1px solid #7f1d1d; }
+        .trend-rising { background: #2e2a1a; color: #fb923c; border: 1px solid #7c2d12; }
+        .trend-stable { background: #1a1a2e; color: #60a5fa; border: 1px solid #1e3a5f; }
+        .trend-declining { background: #1a1a1b; color: #888; border: 1px solid #333; }
 
         /* 경쟁 강도 표시 */
         .competition-bar {
             height: 6px;
-            background: #e5e7eb;
+            background: #333;
             border-radius: 3px;
             overflow: hidden;
         }
@@ -95,7 +95,7 @@
         .chart-card h3 {
             font-size: 1rem;
             font-weight: 600;
-            color: #374151;
+            color: #d1d5db;
             margin-bottom: 1rem;
             display: flex;
             align-items: center;
@@ -170,7 +170,7 @@
         }
 
         .stat-label {
-            color: #6b7280;
+            color: #888;
             font-size: 0.875rem;
         }
 
@@ -189,7 +189,7 @@
 
         .filter-label {
             font-weight: 600;
-            color: #374151;
+            color: #d1d5db;
             margin-right: 0.5rem;
         }
 
@@ -198,7 +198,7 @@
             border-radius: 8px;
             border: 1px solid var(--border-color);
             background: white;
-            color: #374151;
+            color: #d1d5db;
             font-size: 0.875rem;
             font-weight: 500;
             cursor: pointer;
@@ -311,7 +311,7 @@
         }
 
         .score-circle.medium {
-            background: #fef3c7;
+            background: #2e2a1a;
             border-color: var(--warning-color);
             color: var(--warning-color);
         }
@@ -342,11 +342,11 @@
             font-size: 1.25rem;
             font-weight: 700;
             margin-bottom: 0.5rem;
-            color: #111827;
+            color: #e5e5e5;
         }
 
         .business-description {
-            color: #6b7280;
+            color: #888;
             font-size: 0.875rem;
             margin-bottom: 0.75rem;
             line-height: 1.5;
@@ -396,14 +396,14 @@
 
         .metric-label {
             font-size: 0.75rem;
-            color: #6b7280;
+            color: #888;
             margin-bottom: 0.25rem;
         }
 
         .metric-value {
             font-size: 1.125rem;
             font-weight: 700;
-            color: #111827;
+            color: #e5e5e5;
         }
 
         .metric-value.success {
@@ -472,7 +472,7 @@
         .detail-section h6 {
             font-weight: 700;
             margin-bottom: 1rem;
-            color: #111827;
+            color: #e5e5e5;
         }
 
         .detail-list {
@@ -492,12 +492,12 @@
         }
 
         .detail-label {
-            color: #6b7280;
+            color: #888;
             font-weight: 500;
         }
 
         .detail-value {
-            color: #111827;
+            color: #e5e5e5;
             font-weight: 600;
         }
 
@@ -542,7 +542,7 @@
 
         .status-text {
             font-weight: 600;
-            color: #111827;
+            color: #e5e5e5;
         }
 
         .status-time {
@@ -564,7 +564,7 @@
         }
 
         .pagination-info {
-            color: #6b7280;
+            color: #888;
             font-size: 0.875rem;
             margin-right: 1rem;
         }
@@ -573,7 +573,7 @@
             padding: 0.5rem 1rem;
             border: 1px solid var(--border-color);
             background: white;
-            color: #374151;
+            color: #d1d5db;
             border-radius: 8px;
             font-size: 0.875rem;
             cursor: pointer;
@@ -630,7 +630,7 @@
         }
 
         .empty-state h4 {
-            color: #6b7280;
+            color: #888;
             margin-bottom: 0.5rem;
         }
 
@@ -705,7 +705,7 @@
         <!-- Stats -->
         <div class="stats-grid">
             <div class="stat-card">
-                <div class="stat-icon" style="background: #fef3c7; color: #f59e0b;">
+                <div class="stat-icon" style="background: #2e2a1a; color: #f59e0b;">
                     <i class="fas fa-lightbulb"></i>
                 </div>
                 <div class="stat-value" id="stat-total">0</div>
@@ -792,7 +792,7 @@
         <div class="business-grid" id="business-list">
             <div class="loading-state">
                 <div class="spinner"></div>
-                <p style="color: #6b7280;">사업 아이디어를 불러오는 중...</p>
+                <p style="color: #888;">사업 아이디어를 불러오는 중...</p>
             </div>
         </div>
 
@@ -809,17 +809,17 @@
         <div class="status-time" id="last-update">마지막 업데이트: -</div>
     </div>
 
-    <!-- Business Detail Modal -->
+    <!-- Business Detail Modal (Dark Theme) -->
     <div class="modal fade" id="businessModal" tabindex="-1">
         <div class="modal-dialog modal-xl modal-dialog-scrollable">
-            <div class="modal-content">
-                <div class="modal-header" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+            <div class="modal-content" style="background: #0a0a0b; border: 1px solid #222;">
+                <div class="modal-header" style="background: #111; border-bottom: 1px solid #222; color: #e5e5e5;">
                     <h5 class="modal-title" id="modalTitle"></h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                 </div>
-                <div class="modal-body" id="modalBody" style="max-height: 75vh; overflow-y: auto;"></div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+                <div class="modal-body" id="modalBody" style="max-height: 75vh; overflow-y: auto; background: #0a0a0b; color: #e5e5e5;"></div>
+                <div class="modal-footer" style="background: #111; border-top: 1px solid #222;">
+                    <button type="button" class="btn" style="background: #222; color: #e5e5e5; border: 1px solid #333;" data-bs-dismiss="modal">닫기</button>
                 </div>
             </div>
         </div>
@@ -836,6 +836,24 @@
         let itemsPerPage = 10;
         let totalItems = 0;
         let totalPages = 0;
+
+        // UTC to KST 변환 함수
+        function formatKST(dateStr) {
+            if (!dateStr) return '-';
+            try {
+                // API returns "2026-01-17 16:22" format in UTC
+                const utcDate = new Date(dateStr.replace(' ', 'T') + 'Z');
+                // Add 9 hours for KST
+                const kstDate = new Date(utcDate.getTime() + 9 * 60 * 60 * 1000);
+                const month = kstDate.getMonth() + 1;
+                const day = kstDate.getDate();
+                const hours = kstDate.getHours();
+                const minutes = String(kstDate.getMinutes()).padStart(2, '0');
+                return `${month}/${day} ${hours}:${minutes}`;
+            } catch (e) {
+                return dateStr;
+            }
+        }
 
         // Load data with server-side pagination
         async function loadBusinesses(page = 1, limit = itemsPerPage) {
@@ -1036,12 +1054,12 @@
                                     <span class="trend-tag trend-${trendClass}">
                                         <i class="fas ${trendIcon}"></i> ${trend}
                                     </span>
-                                    ${marketSize ? `<span class="tag" style="background: #f0fdf4; color: #166534; border: 1px solid #bbf7d0;">${marketSize}</span>` : ''}
+                                    ${marketSize ? `<span class="tag" style="background: #1a2e1a; color: #166534; border: 1px solid #bbf7d0;">${marketSize}</span>` : ''}
                                 </div>
 
                                 <!-- 경쟁 강도 바 -->
                                 <div style="margin-bottom: 0.75rem;">
-                                    <div style="display: flex; justify-content: space-between; font-size: 0.7rem; color: #6b7280; margin-bottom: 0.25rem;">
+                                    <div style="display: flex; justify-content: space-between; font-size: 0.7rem; color: #888; margin-bottom: 0.25rem;">
                                         <span><i class="fas fa-users"></i> 경쟁 강도</span>
                                         <span>${competitionLevel} (${competition.entry_difficulty || '보통'})</span>
                                     </div>
@@ -1053,20 +1071,20 @@
                                 <!-- 시장성/수익성 점수 바 -->
                                 <div style="display: flex; gap: 1rem;">
                                     <div style="flex: 1;">
-                                        <div style="display: flex; justify-content: space-between; font-size: 0.7rem; color: #6b7280; margin-bottom: 0.25rem;">
+                                        <div style="display: flex; justify-content: space-between; font-size: 0.7rem; color: #888; margin-bottom: 0.25rem;">
                                             <span><i class="fas fa-chart-line"></i> 시장성</span>
                                             <span>${Math.round(marketScore)}점</span>
                                         </div>
-                                        <div style="height: 6px; background: #e5e7eb; border-radius: 3px; overflow: hidden;">
+                                        <div style="height: 6px; background: #333; border-radius: 3px; overflow: hidden;">
                                             <div style="width: ${marketScore}%; height: 100%; background: linear-gradient(90deg, #10b981 0%, #059669 100%); border-radius: 3px;"></div>
                                         </div>
                                     </div>
                                     <div style="flex: 1;">
-                                        <div style="display: flex; justify-content: space-between; font-size: 0.7rem; color: #6b7280; margin-bottom: 0.25rem;">
+                                        <div style="display: flex; justify-content: space-between; font-size: 0.7rem; color: #888; margin-bottom: 0.25rem;">
                                             <span><i class="fas fa-coins"></i> 수익성</span>
                                             <span>${Math.round(revenueScore)}점</span>
                                         </div>
-                                        <div style="height: 6px; background: #e5e7eb; border-radius: 3px; overflow: hidden;">
+                                        <div style="height: 6px; background: #333; border-radius: 3px; overflow: hidden;">
                                             <div style="width: ${revenueScore}%; height: 100%; background: linear-gradient(90deg, #6366f1 0%, #4f46e5 100%); border-radius: 3px;"></div>
                                         </div>
                                     </div>
@@ -1074,21 +1092,21 @@
 
                                 <div class="business-date" style="margin-top: 0.75rem;">
                                     <i class="fas fa-clock"></i>
-                                    ${biz.created_at || '-'}
+                                    ${formatKST(biz.created_at)}
                                     ${recommendation.verdict ? `<span style="margin-left: 0.5rem; padding: 2px 6px; background: ${recommendation.verdict.includes('유망') ? '#d1fae5' : '#fef3c7'}; color: ${recommendation.verdict.includes('유망') ? '#065f46' : '#92400e'}; border-radius: 4px; font-size: 0.7rem;">${recommendation.verdict}</span>` : ''}
                                 </div>
                             </div>
                         </div>
                         <!-- 1주차 핵심 액션 -->
-                        <div style="padding: 0.75rem 1.5rem; background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%); border-top: 1px solid var(--border-color);">
-                            <div style="font-size: 0.75rem; color: #0369a1; font-weight: 600; margin-bottom: 0.5rem;">
+                        <div style="padding: 0.75rem 1.5rem; background: #111; border-top: 1px solid #222; border-top: 1px solid var(--border-color);">
+                            <div style="font-size: 0.75rem; color: #60a5fa; font-weight: 600; margin-bottom: 0.5rem;">
                                 <i class="fas fa-bolt"></i> 1주차 핵심 액션
                             </div>
                             <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
-                                <span style="font-size: 0.75rem; padding: 0.25rem 0.5rem; background: white; border: 1px solid #bae6fd; border-radius: 4px; color: #0c4a6e;">
+                                <span style="font-size: 0.75rem; padding: 0.25rem 0.5rem; background: #1a1a1b; border: 1px solid #333; border-radius: 4px; color: #93c5fd;">
                                     ${firstAction.length > 25 ? firstAction.substring(0, 25) + '...' : firstAction}
                                 </span>
-                                <span style="font-size: 0.75rem; padding: 0.25rem 0.5rem; background: white; border: 1px solid #bae6fd; border-radius: 4px; color: #0c4a6e;">
+                                <span style="font-size: 0.75rem; padding: 0.25rem 0.5rem; background: #1a1a1b; border: 1px solid #333; border-radius: 4px; color: #93c5fd;">
                                     ${secondAction.length > 25 ? secondAction.substring(0, 25) + '...' : secondAction}
                                 </span>
                             </div>
@@ -1231,59 +1249,59 @@
 
                 marketSection = `
                     <div class="detail-section">
-                        <h6><i class="fas fa-chart-line"></i> 시장 분석 <span style="font-size: 0.7rem; color: #6b7280; font-weight: normal;">(경량 분석 v2)</span></h6>
-                        <div style="background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%); border-radius: 12px; padding: 1rem;">
+                        <h6><i class="fas fa-chart-line"></i> 시장 분석 <span style="font-size: 0.7rem; color: #888; font-weight: normal;">(경량 분석 v2)</span></h6>
+                        <div style="background: #111; border: 1px solid #222; border-radius: 12px; padding: 1rem;">
                             <!-- 시장 점수 표시 -->
-                            <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem; padding: 1rem; background: white; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
+                            <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem; padding: 1rem; background: #1a1a1b; border-radius: 10px; border: 1px solid #333;">
                                 <div style="width: 70px; height: 70px; border-radius: 50%; background: linear-gradient(135deg, #10b981 0%, #059669 100%); display: flex; align-items: center; justify-content: center; color: white; font-size: 1.5rem; font-weight: 700; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);">
                                     ${Math.round(marketScore)}
                                 </div>
                                 <div style="flex: 1;">
-                                    <div style="font-weight: 700; color: #111827; font-size: 1.1rem;">시장 매력도</div>
-                                    <div style="font-size: 0.875rem; color: #6b7280; margin-top: 0.25rem;">
+                                    <div style="font-weight: 700; color: #e5e5e5; font-size: 1.1rem;">시장 매력도</div>
+                                    <div style="font-size: 0.875rem; color: #888; margin-top: 0.25rem;">
                                         ${marketScore >= 85 ? '매우 유망한 시장입니다' :
                                           marketScore >= 75 ? '성장 가능성이 높은 시장입니다' :
                                           marketScore >= 65 ? '진입 가능한 시장입니다' :
                                           '틈새 시장 공략이 필요합니다'}
                                     </div>
-                                    ${recommendation.verdict ? `<div style="margin-top: 0.5rem;"><span style="padding: 4px 10px; background: ${recommendation.verdict.includes('유망') ? 'linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%)' : '#fef3c7'}; color: ${recommendation.verdict.includes('유망') ? '#065f46' : '#92400e'}; border-radius: 6px; font-size: 0.813rem; font-weight: 600;">${recommendation.verdict}</span></div>` : ''}
+                                    ${recommendation.verdict ? `<div style="margin-top: 0.5rem;"><span style="padding: 4px 10px; background: ${recommendation.verdict.includes('유망') ? '#1a2e1a' : '#2e2a1a'}; color: ${recommendation.verdict.includes('유망') ? '#4ade80' : '#fbbf24'}; border-radius: 6px; font-size: 0.813rem; font-weight: 600;">${recommendation.verdict}</span></div>` : ''}
                                 </div>
                                 <div style="text-align: right;">
                                     <div style="display: flex; align-items: center; gap: 0.5rem; color: ${trendColor}; font-weight: 600;">
                                         <i class="fas ${trendIcon}"></i> ${trend}
                                     </div>
-                                    ${domainData.growth_rate ? `<div style="font-size: 0.75rem; color: #6b7280; margin-top: 0.25rem;">연 ${domainData.growth_rate} 성장</div>` : ''}
+                                    ${domainData.growth_rate ? `<div style="font-size: 0.75rem; color: #888; margin-top: 0.25rem;">연 ${domainData.growth_rate} 성장</div>` : ''}
                                 </div>
                             </div>
 
                             <!-- 점수 Breakdown (경량 분석 v2) -->
                             ${Object.keys(scoreBreakdown).length > 0 ? `
-                                <div style="margin-bottom: 1rem; padding: 0.75rem; background: white; border-radius: 8px;">
-                                    <div style="font-weight: 600; font-size: 0.875rem; color: #111827; margin-bottom: 0.75rem;"><i class="fas fa-chart-bar"></i> 점수 구성</div>
+                                <div style="margin-bottom: 1rem; padding: 0.75rem; background: #1a1a1b; border-radius: 8px; border: 1px solid #333;">
+                                    <div style="font-weight: 600; font-size: 0.875rem; color: #e5e5e5; margin-bottom: 0.75rem;"><i class="fas fa-chart-bar"></i> 점수 구성</div>
                                     <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.5rem;">
-                                        <div style="text-align: center; padding: 0.5rem; background: #f0fdf4; border-radius: 6px;">
+                                        <div style="text-align: center; padding: 0.5rem; background: #1a2e1a; border-radius: 6px;">
                                             <div style="font-size: 1.25rem; font-weight: 700; color: #059669;">${scoreBreakdown.base_score || 0}</div>
-                                            <div style="font-size: 0.7rem; color: #6b7280;">기본 점수</div>
+                                            <div style="font-size: 0.7rem; color: #888;">기본 점수</div>
                                         </div>
-                                        <div style="text-align: center; padding: 0.5rem; background: #eff6ff; border-radius: 6px;">
+                                        <div style="text-align: center; padding: 0.5rem; background: #1a1a2e; border-radius: 6px;">
                                             <div style="font-size: 1.25rem; font-weight: 700; color: #2563eb;">+${scoreBreakdown.domain_bonus || 0}</div>
-                                            <div style="font-size: 0.7rem; color: #6b7280;">도메인</div>
+                                            <div style="font-size: 0.7rem; color: #888;">도메인</div>
                                         </div>
-                                        <div style="text-align: center; padding: 0.5rem; background: #fef3c7; border-radius: 6px;">
+                                        <div style="text-align: center; padding: 0.5rem; background: #2e2a1a; border-radius: 6px;">
                                             <div style="font-size: 1.25rem; font-weight: 700; color: #d97706;">+${scoreBreakdown.trend_bonus || 0}</div>
-                                            <div style="font-size: 0.7rem; color: #6b7280;">트렌드</div>
+                                            <div style="font-size: 0.7rem; color: #888;">트렌드</div>
                                         </div>
-                                        <div style="text-align: center; padding: 0.5rem; background: #fce7f3; border-radius: 6px;">
+                                        <div style="text-align: center; padding: 0.5rem; background: #2e1a2a; border-radius: 6px;">
                                             <div style="font-size: 1.25rem; font-weight: 700; color: #db2777;">+${scoreBreakdown.target_bonus || 0}</div>
-                                            <div style="font-size: 0.7rem; color: #6b7280;">타겟</div>
+                                            <div style="font-size: 0.7rem; color: #888;">타겟</div>
                                         </div>
-                                        <div style="text-align: center; padding: 0.5rem; background: #f5f3ff; border-radius: 6px;">
+                                        <div style="text-align: center; padding: 0.5rem; background: #1f1a2e; border-radius: 6px;">
                                             <div style="font-size: 1.25rem; font-weight: 700; color: #7c3aed;">+${scoreBreakdown.revenue_bonus || 0}</div>
-                                            <div style="font-size: 0.7rem; color: #6b7280;">수익모델</div>
+                                            <div style="font-size: 0.7rem; color: #888;">수익모델</div>
                                         </div>
                                         <div style="text-align: center; padding: 0.5rem; background: ${(scoreBreakdown.competition_bonus || 0) >= 0 ? '#ecfdf5' : '#fef2f2'}; border-radius: 6px;">
                                             <div style="font-size: 1.25rem; font-weight: 700; color: ${(scoreBreakdown.competition_bonus || 0) >= 0 ? '#059669' : '#dc2626'};">${(scoreBreakdown.competition_bonus || 0) >= 0 ? '+' : ''}${scoreBreakdown.competition_bonus || 0}</div>
-                                            <div style="font-size: 0.7rem; color: #6b7280;">경쟁</div>
+                                            <div style="font-size: 0.7rem; color: #888;">경쟁</div>
                                         </div>
                                     </div>
                                 </div>
@@ -1291,10 +1309,10 @@
 
                             <!-- 핵심 성공 요소 -->
                             ${recommendation.key_success_factors && recommendation.key_success_factors.length > 0 ? `
-                                <div style="margin-bottom: 1rem; padding: 0.75rem; background: white; border-radius: 8px;">
-                                    <div style="font-weight: 600; font-size: 0.875rem; color: #111827; margin-bottom: 0.5rem;"><i class="fas fa-key"></i> 핵심 성공 요소</div>
+                                <div style="margin-bottom: 1rem; padding: 0.75rem; background: #1a1a1b; border-radius: 8px; border: 1px solid #333;">
+                                    <div style="font-weight: 600; font-size: 0.875rem; color: #e5e5e5; margin-bottom: 0.5rem;"><i class="fas fa-key"></i> 핵심 성공 요소</div>
                                     <div style="display: flex; flex-wrap: wrap; gap: 0.5rem;">
-                                        ${recommendation.key_success_factors.map(f => `<span style="padding: 4px 10px; background: #d1fae5; color: #065f46; border-radius: 6px; font-size: 0.75rem;">${f}</span>`).join('')}
+                                        ${recommendation.key_success_factors.map(f => `<span style="padding: 4px 10px; background: #1a2e1a; color: #4ade80; border-radius: 6px; font-size: 0.75rem;">${f}</span>`).join('')}
                                     </div>
                                 </div>
                             ` : ''}
@@ -1302,32 +1320,32 @@
                             <!-- 시장 정보 카드 (새로 추가) -->
                             ${marketInfo.market_size ? `
                                 <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.75rem; margin-bottom: 0.75rem;">
-                                    <div style="padding: 0.75rem; background: white; border-radius: 6px; border-left: 3px solid #6366f1;">
+                                    <div style="padding: 0.75rem; background: #1a1a1b; border-radius: 6px; border: 1px solid #333; border-left: 3px solid #6366f1;">
                                         <strong style="color: #6366f1; font-size: 0.875rem;"><i class="fas fa-chart-pie"></i> 시장 규모</strong>
-                                        <p style="margin: 0.25rem 0 0 0; font-size: 1rem; font-weight: 600; color: #111827;">${marketInfo.market_size}</p>
-                                        <p style="margin: 0.25rem 0 0 0; font-size: 0.75rem; color: #6b7280;">연 ${marketInfo.growth_rate || 0}% 성장</p>
+                                        <p style="margin: 0.25rem 0 0 0; font-size: 1rem; font-weight: 600; color: #e5e5e5;">${marketInfo.market_size}</p>
+                                        <p style="margin: 0.25rem 0 0 0; font-size: 0.75rem; color: #888;">연 ${marketInfo.growth_rate || 0}% 성장</p>
                                     </div>
-                                    <div style="padding: 0.75rem; background: white; border-radius: 6px; border-left: 3px solid #f59e0b;">
+                                    <div style="padding: 0.75rem; background: #1a1a1b; border-radius: 6px; border: 1px solid #333; border-left: 3px solid #f59e0b;">
                                         <strong style="color: #f59e0b; font-size: 0.875rem;"><i class="fas fa-users"></i> 타겟 규모</strong>
-                                        <p style="margin: 0.25rem 0 0 0; font-size: 1rem; font-weight: 600; color: #111827;">${marketInfo.target_size || '-'}</p>
-                                        <p style="margin: 0.25rem 0 0 0; font-size: 0.75rem; color: #6b7280;">${marketInfo.seasonality || '연중'}</p>
+                                        <p style="margin: 0.25rem 0 0 0; font-size: 1rem; font-weight: 600; color: #e5e5e5;">${marketInfo.target_size || '-'}</p>
+                                        <p style="margin: 0.25rem 0 0 0; font-size: 0.75rem; color: #888;">${marketInfo.seasonality || '연중'}</p>
                                     </div>
-                                    <div style="padding: 0.75rem; background: white; border-radius: 6px; border-left: 3px solid #ef4444;">
+                                    <div style="padding: 0.75rem; background: #1a1a1b; border-radius: 6px; border: 1px solid #333; border-left: 3px solid #ef4444;">
                                         <strong style="color: #ef4444; font-size: 0.875rem;"><i class="fas fa-shield-alt"></i> 진입 장벽</strong>
                                         <div style="margin-top: 0.5rem; display: flex; align-items: center; gap: 0.5rem;">
-                                            <div style="flex: 1; height: 8px; background: #e5e7eb; border-radius: 4px; overflow: hidden;">
+                                            <div style="flex: 1; height: 8px; background: #333; border-radius: 4px; overflow: hidden;">
                                                 <div style="width: ${marketInfo.entry_barrier_score || 50}%; height: 100%; background: ${marketInfo.entry_barrier_score > 60 ? '#ef4444' : marketInfo.entry_barrier_score > 40 ? '#f59e0b' : '#10b981'};"></div>
                                             </div>
-                                            <span style="font-size: 0.75rem; color: #374151;">${marketInfo.entry_barrier || '중간'}</span>
+                                            <span style="font-size: 0.75rem; color: #d1d5db;">${marketInfo.entry_barrier || '중간'}</span>
                                         </div>
                                     </div>
-                                    <div style="padding: 0.75rem; background: white; border-radius: 6px; border-left: 3px solid #8b5cf6;">
+                                    <div style="padding: 0.75rem; background: #1a1a1b; border-radius: 6px; border: 1px solid #333; border-left: 3px solid #8b5cf6;">
                                         <strong style="color: #8b5cf6; font-size: 0.875rem;"><i class="fas fa-fire"></i> 경쟁 강도</strong>
                                         <div style="margin-top: 0.5rem; display: flex; align-items: center; gap: 0.5rem;">
-                                            <div style="flex: 1; height: 8px; background: #e5e7eb; border-radius: 4px; overflow: hidden;">
+                                            <div style="flex: 1; height: 8px; background: #333; border-radius: 4px; overflow: hidden;">
                                                 <div style="width: ${marketAnalysis.naver?.competition_score || 55}%; height: 100%; background: ${(marketAnalysis.naver?.competition_score || 55) > 70 ? '#ef4444' : (marketAnalysis.naver?.competition_score || 55) > 50 ? '#f59e0b' : '#10b981'};"></div>
                                             </div>
-                                            <span style="font-size: 0.75rem; color: #374151;">${marketAnalysis.naver?.competition || '중간'}</span>
+                                            <span style="font-size: 0.75rem; color: #d1d5db;">${marketAnalysis.naver?.competition || '중간'}</span>
                                         </div>
                                     </div>
                                 </div>
@@ -1337,34 +1355,34 @@
                             ${hasDetailedData ? `
                                 <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.75rem; margin-bottom: 0.75rem;">
                                     ${marketAnalysis.naver ? `
-                                        <div style="padding: 0.75rem; background: white; border-radius: 6px; border-left: 3px solid #03c75a;">
+                                        <div style="padding: 0.75rem; background: #1a1a1b; border-radius: 6px; border: 1px solid #333; border-left: 3px solid #03c75a;">
                                             <strong style="color: #03c75a; font-size: 0.875rem;"><i class="fas fa-search"></i> 네이버</strong>
-                                            <p style="margin: 0.25rem 0 0 0; font-size: 0.813rem; color: #374151;">
+                                            <p style="margin: 0.25rem 0 0 0; font-size: 0.813rem; color: #d1d5db;">
                                                 검색량: ${(marketAnalysis.naver.search_count || 0).toLocaleString()}건
                                             </p>
                                         </div>
                                     ` : ''}
                                     ${marketAnalysis.google_trends || marketAnalysis.google ? `
-                                        <div style="padding: 0.75rem; background: white; border-radius: 6px; border-left: 3px solid #4285f4;">
+                                        <div style="padding: 0.75rem; background: #1a1a1b; border-radius: 6px; border: 1px solid #333; border-left: 3px solid #4285f4;">
                                             <strong style="color: #4285f4; font-size: 0.875rem;"><i class="fab fa-google"></i> Google</strong>
-                                            <p style="margin: 0.25rem 0 0 0; font-size: 0.813rem; color: #374151;">
+                                            <p style="margin: 0.25rem 0 0 0; font-size: 0.813rem; color: #d1d5db;">
                                                 관심도: ${marketAnalysis.google_trends?.global_interest || marketAnalysis.google?.interest || 0}점
                                                 ${marketAnalysis.google_trends?.trend ? ` / ${marketAnalysis.google_trends.trend}` : ''}
                                             </p>
                                         </div>
                                     ` : ''}
                                     ${marketAnalysis.youtube ? `
-                                        <div style="padding: 0.75rem; background: white; border-radius: 6px; border-left: 3px solid #ff0000;">
+                                        <div style="padding: 0.75rem; background: #1a1a1b; border-radius: 6px; border: 1px solid #333; border-left: 3px solid #ff0000;">
                                             <strong style="color: #ff0000; font-size: 0.875rem;"><i class="fab fa-youtube"></i> YouTube</strong>
-                                            <p style="margin: 0.25rem 0 0 0; font-size: 0.813rem; color: #374151;">
+                                            <p style="margin: 0.25rem 0 0 0; font-size: 0.813rem; color: #d1d5db;">
                                                 관련 영상: ${(marketAnalysis.youtube.video_count || 0).toLocaleString()}개
                                             </p>
                                         </div>
                                     ` : ''}
                                     ${marketAnalysis.kmong ? `
-                                        <div style="padding: 0.75rem; background: white; border-radius: 6px; border-left: 3px solid #ff6b35;">
+                                        <div style="padding: 0.75rem; background: #1a1a1b; border-radius: 6px; border: 1px solid #333; border-left: 3px solid #ff6b35;">
                                             <strong style="color: #ff6b35; font-size: 0.875rem;"><i class="fas fa-store"></i> 크몽</strong>
-                                            <p style="margin: 0.25rem 0 0 0; font-size: 0.813rem; color: #374151;">
+                                            <p style="margin: 0.25rem 0 0 0; font-size: 0.813rem; color: #d1d5db;">
                                                 서비스: ${marketAnalysis.kmong.service_count || 0}개
                                                 ${marketAnalysis.kmong.avg_price ? ` / 평균 ${(marketAnalysis.kmong.avg_price / 10000).toFixed(0)}만원` : ''}
                                             </p>
@@ -1373,9 +1391,9 @@
                                 </div>
                             ` : ''}
                             ${marketAnalysis.market_summary || marketAnalysis.summary ? `
-                                <div style="margin-top: 0.75rem; padding: 0.75rem; background: white; border-radius: 6px;">
+                                <div style="margin-top: 0.75rem; padding: 0.75rem; background: #1a1a1b; border-radius: 6px; border: 1px solid #333;">
                                     <strong style="font-size: 0.875rem;"><i class="fas fa-clipboard-list"></i> 시장 요약</strong>
-                                    <p style="margin: 0.5rem 0 0 0; font-size: 0.875rem; color: #374151;">${marketAnalysis.market_summary || marketAnalysis.summary}</p>
+                                    <p style="margin: 0.5rem 0 0 0; font-size: 0.875rem; color: #d1d5db;">${marketAnalysis.market_summary || marketAnalysis.summary}</p>
                                 </div>
                             ` : ''}
                         </div>
@@ -1394,28 +1412,28 @@
                 revenueSection = `
                     <div class="detail-section">
                         <h6><i class="fas fa-coins"></i> 수익성 분석</h6>
-                        <div style="background: #fef3c7; border-radius: 8px; padding: 1rem;">
+                        <div style="background: #2e2a1a; border-radius: 8px; padding: 1rem;">
                             <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-bottom: 1rem;">
-                                <div style="text-align: center; padding: 0.75rem; background: white; border-radius: 6px;">
-                                    <div style="font-size: 0.75rem; color: #6b7280;">보수적</div>
+                                <div style="text-align: center; padding: 0.75rem; background: #1a1a1b; border-radius: 6px; border: 1px solid #333;">
+                                    <div style="font-size: 0.75rem; color: #888;">보수적</div>
                                     <div style="font-size: 1.125rem; font-weight: 700; color: #dc2626;">
                                         ${((conservative.monthly_revenue || conservative.월_예상_수익 || 0) / 10000).toLocaleString()}만원/월
                                     </div>
                                 </div>
-                                <div style="text-align: center; padding: 0.75rem; background: white; border-radius: 6px; border: 2px solid var(--success-color);">
-                                    <div style="font-size: 0.75rem; color: #6b7280;">현실적</div>
+                                <div style="text-align: center; padding: 0.75rem; background: #1a1a1b; border-radius: 6px; border: 1px solid #333; border: 2px solid var(--success-color);">
+                                    <div style="font-size: 0.75rem; color: #888;">현실적</div>
                                     <div style="font-size: 1.125rem; font-weight: 700; color: var(--success-color);">
                                         ${((realistic.monthly_revenue || realistic.월_예상_수익 || monthlyRevenue) / 10000).toLocaleString()}만원/월
                                     </div>
                                 </div>
-                                <div style="text-align: center; padding: 0.75rem; background: white; border-radius: 6px;">
-                                    <div style="font-size: 0.75rem; color: #6b7280;">낙관적</div>
+                                <div style="text-align: center; padding: 0.75rem; background: #1a1a1b; border-radius: 6px; border: 1px solid #333;">
+                                    <div style="font-size: 0.75rem; color: #888;">낙관적</div>
                                     <div style="font-size: 1.125rem; font-weight: 700; color: #2563eb;">
                                         ${((optimistic.monthly_revenue || optimistic.월_예상_수익 || 0) / 10000).toLocaleString()}만원/월
                                     </div>
                                 </div>
                             </div>
-                            <ul class="detail-list" style="background: white; border-radius: 6px; padding: 0.75rem;">
+                            <ul class="detail-list" style="background: #1a1a1b; border-radius: 6px; border: 1px solid #333; padding: 0.75rem;">
                                 <li>
                                     <span class="detail-label">초기 투자비</span>
                                     <span class="detail-value">${((revenueAnalysis.startup_cost || revenueAnalysis.initial_investment || biz.investment) / 10000).toLocaleString()}만원</span>
@@ -1434,7 +1452,7 @@
                                 </li>
                             </ul>
                             ${revenueAnalysis.revenue_summary || revenueAnalysis.summary ? `
-                                <div style="margin-top: 0.75rem; padding: 0.75rem; background: white; border-radius: 6px;">
+                                <div style="margin-top: 0.75rem; padding: 0.75rem; background: #1a1a1b; border-radius: 6px; border: 1px solid #333;">
                                     <strong><i class="fas fa-lightbulb"></i> 수익성 요약</strong>
                                     <p style="margin: 0.5rem 0 0 0; font-size: 0.875rem;">${revenueAnalysis.revenue_summary || revenueAnalysis.summary}</p>
                                 </div>
@@ -1461,13 +1479,13 @@
                         const isLast = i === 4;
 
                         weeksHtml += `
-                            <div style="${isLast ? '' : 'margin-bottom: 1rem;'} padding: 0.75rem; background: white; border-radius: 6px; border-left: 4px solid ${color};">
+                            <div style="${isLast ? '' : 'margin-bottom: 1rem;'} padding: 0.75rem; background: #1a1a1b; border-radius: 6px; border: 1px solid #333; border-left: 4px solid ${color};">
                                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
                                     <strong style="color: ${color};">${i}주차</strong>
-                                    <span style="font-size: 0.75rem; color: #6b7280;">${goal}</span>
+                                    <span style="font-size: 0.75rem; color: #888;">${goal}</span>
                                 </div>
                                 ${tasks.length > 0 ? `
-                                    <ul style="margin: 0; padding-left: 1.25rem; font-size: 0.875rem; color: #374151;">
+                                    <ul style="margin: 0; padding-left: 1.25rem; font-size: 0.875rem; color: #d1d5db;">
                                         ${tasks.map(t => `<li style="margin-bottom: 0.25rem;">${typeof t === 'string' ? t : t.task || t}</li>`).join('')}
                                     </ul>
                                 ` : ''}
@@ -1484,7 +1502,7 @@
                                 ${actionPlan.summary ? `<p style="margin-bottom: 1rem; font-size: 0.875rem; color: #4b5563;">${actionPlan.summary}</p>` : ''}
                                 ${weeksHtml}
                                 ${actionPlan.total_budget ? `
-                                    <div style="margin-top: 1rem; padding: 0.75rem; background: white; border-radius: 6px; text-align: center;">
+                                    <div style="margin-top: 1rem; padding: 0.75rem; background: #1a1a1b; border-radius: 6px; border: 1px solid #333; text-align: center;">
                                         <strong>예상 총 예산: ${(actionPlan.total_budget / 10000).toLocaleString()}만원</strong>
                                     </div>
                                 ` : ''}
@@ -1543,7 +1561,7 @@
                         </li>
                         <li>
                             <span class="detail-label">발굴일시</span>
-                            <span class="detail-value">${biz.created_at || '-'}</span>
+                            <span class="detail-value">${formatKST(biz.created_at)}</span>
                         </li>
                     </ul>
                 </div>
@@ -1576,7 +1594,7 @@
                                 </div>
                             ` : ''}
                             ${coreFeatures.length > 0 ? `
-                                <div style="margin-bottom: 0.75rem; padding: 0.75rem; background: white; border-radius: 6px;">
+                                <div style="margin-bottom: 0.75rem; padding: 0.75rem; background: #1a1a1b; border-radius: 6px; border: 1px solid #333;">
                                     <strong style="font-size: 0.813rem; color: #4c1d95;">핵심 기능</strong>
                                     <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 0.5rem;">
                                         ${coreFeatures.map(f => `<span style="padding: 0.25rem 0.5rem; background: #ede9fe; color: #5b21b6; border-radius: 4px; font-size: 0.75rem;">${f}</span>`).join('')}
@@ -1584,21 +1602,21 @@
                                 </div>
                             ` : ''}
                             ${differentiator ? `
-                                <div style="margin-bottom: 0.75rem; padding: 0.75rem; background: white; border-radius: 6px; border-left: 3px solid #8b5cf6;">
+                                <div style="margin-bottom: 0.75rem; padding: 0.75rem; background: #1a1a1b; border-radius: 6px; border: 1px solid #333; border-left: 3px solid #8b5cf6;">
                                     <strong style="font-size: 0.813rem; color: #4c1d95;">차별화 포인트</strong>
-                                    <p style="margin: 0.5rem 0 0 0; font-size: 0.875rem; color: #374151;">${differentiator}</p>
+                                    <p style="margin: 0.5rem 0 0 0; font-size: 0.875rem; color: #d1d5db;">${differentiator}</p>
                                 </div>
                             ` : ''}
                             ${revenueModels.length > 0 ? `
-                                <div style="margin-bottom: 0.75rem; padding: 0.75rem; background: white; border-radius: 6px;">
+                                <div style="margin-bottom: 0.75rem; padding: 0.75rem; background: #1a1a1b; border-radius: 6px; border: 1px solid #333;">
                                     <strong style="font-size: 0.813rem; color: #4c1d95;">수익 모델</strong>
                                     <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 0.5rem;">
-                                        ${revenueModels.map(m => `<span style="padding: 0.25rem 0.5rem; background: #d1fae5; color: #065f46; border-radius: 4px; font-size: 0.75rem;">${m}</span>`).join('')}
+                                        ${revenueModels.map(m => `<span style="padding: 0.25rem 0.5rem; background: #1a2e1a; color: #4ade80; border-radius: 4px; font-size: 0.75rem;">${m}</span>`).join('')}
                                     </div>
                                 </div>
                             ` : ''}
                             ${techStack.length > 0 ? `
-                                <div style="padding: 0.75rem; background: white; border-radius: 6px;">
+                                <div style="padding: 0.75rem; background: #1a1a1b; border-radius: 6px; border: 1px solid #333;">
                                     <strong style="font-size: 0.813rem; color: #4c1d95;">추천 기술 스택</strong>
                                     <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 0.5rem;">
                                         ${techStack.map(t => `<span style="padding: 0.25rem 0.5rem; background: #dbeafe; color: #1e40af; border-radius: 4px; font-size: 0.75rem;">${t}</span>`).join('')}
@@ -1617,17 +1635,17 @@
                 day1Section = `
                     <div class="detail-section">
                         <h6><i class="fas fa-play-circle"></i> ${checklist.title || 'Day 1: 오늘 당장 시작하기'}</h6>
-                        <div style="background: #fef2f2; border-radius: 8px; padding: 1rem; border: 2px solid #ef4444;">
+                        <div style="background: #2e1a1a; border-radius: 8px; padding: 1rem; border: 2px solid #ef4444;">
                             ${(checklist.tasks || []).map((task, i) => `
-                                <div style="margin-bottom: 1rem; padding: 0.75rem; background: white; border-radius: 6px; display: flex; gap: 1rem; align-items: flex-start;">
+                                <div style="margin-bottom: 1rem; padding: 0.75rem; background: #1a1a1b; border-radius: 6px; border: 1px solid #333; display: flex; gap: 1rem; align-items: flex-start;">
                                     <div style="background: #ef4444; color: white; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; flex-shrink: 0;">${i+1}</div>
                                     <div style="flex: 1;">
-                                        <strong style="color: #111827;">${task.task}</strong>
-                                        <p style="margin: 0.25rem 0 0 0; font-size: 0.813rem; color: #6b7280;">${task.detail}</p>
+                                        <strong style="color: #e5e5e5;">${task.task}</strong>
+                                        <p style="margin: 0.25rem 0 0 0; font-size: 0.813rem; color: #888;">${task.detail}</p>
                                         <div style="margin-top: 0.5rem; display: flex; gap: 0.75rem; flex-wrap: wrap; font-size: 0.75rem;">
                                             <span style="background: #dbeafe; color: #1e40af; padding: 0.25rem 0.5rem; border-radius: 4px;">🔧 ${task.tool}</span>
-                                            <span style="background: #d1fae5; color: #065f46; padding: 0.25rem 0.5rem; border-radius: 4px;">💰 ${task.cost}</span>
-                                            <span style="background: #fef3c7; color: #92400e; padding: 0.25rem 0.5rem; border-radius: 4px;">⏱️ ${task.time}</span>
+                                            <span style="background: #1a2e1a; color: #4ade80; padding: 0.25rem 0.5rem; border-radius: 4px;">💰 ${task.cost}</span>
+                                            <span style="background: #2e2a1a; color: #92400e; padding: 0.25rem 0.5rem; border-radius: 4px;">⏱️ ${task.time}</span>
                                         </div>
                                     </div>
                                 </div>
@@ -1645,24 +1663,24 @@
                     <div class="detail-section">
                         <h6><i class="fas fa-code"></i> 추천 기술 스택</h6>
                         <div style="background: #f0f9ff; border-radius: 8px; padding: 1rem;">
-                            <div style="background: white; border-radius: 6px; padding: 1rem; margin-bottom: 0.75rem;">
-                                <div style="font-size: 1.125rem; font-weight: 700; color: #0369a1; margin-bottom: 0.5rem;">
+                            <div style="background: #1a1a1b; border-radius: 6px; border: 1px solid #333; padding: 1rem; margin-bottom: 0.75rem;">
+                                <div style="font-size: 1.125rem; font-weight: 700; color: #60a5fa; margin-bottom: 0.5rem;">
                                     ${tech.recommended}
                                 </div>
-                                <p style="margin: 0; font-size: 0.875rem; color: #6b7280;">${tech.reason}</p>
+                                <p style="margin: 0; font-size: 0.875rem; color: #888;">${tech.reason}</p>
                             </div>
                             <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.75rem;">
-                                <div style="background: white; border-radius: 6px; padding: 0.75rem;">
-                                    <div style="font-size: 0.75rem; color: #6b7280;">추천 도구</div>
-                                    <div style="font-weight: 600; color: #111827;">${(tech.tools || []).join(', ')}</div>
+                                <div style="background: #1a1a1b; border-radius: 6px; border: 1px solid #333; padding: 0.75rem;">
+                                    <div style="font-size: 0.75rem; color: #888;">추천 도구</div>
+                                    <div style="font-weight: 600; color: #e5e5e5;">${(tech.tools || []).join(', ')}</div>
                                 </div>
-                                <div style="background: white; border-radius: 6px; padding: 0.75rem;">
-                                    <div style="font-size: 0.75rem; color: #6b7280;">예상 비용</div>
-                                    <div style="font-weight: 600; color: #111827;">${tech.cost}</div>
+                                <div style="background: #1a1a1b; border-radius: 6px; border: 1px solid #333; padding: 0.75rem;">
+                                    <div style="font-size: 0.75rem; color: #888;">예상 비용</div>
+                                    <div style="font-weight: 600; color: #e5e5e5;">${tech.cost}</div>
                                 </div>
-                                <div style="background: white; border-radius: 6px; padding: 0.75rem;">
-                                    <div style="font-size: 0.75rem; color: #6b7280;">학습 기간</div>
-                                    <div style="font-weight: 600; color: #111827;">${tech.learning_time}</div>
+                                <div style="background: #1a1a1b; border-radius: 6px; border: 1px solid #333; padding: 0.75rem;">
+                                    <div style="font-size: 0.75rem; color: #888;">학습 기간</div>
+                                    <div style="font-weight: 600; color: #e5e5e5;">${tech.learning_time}</div>
                                 </div>
                             </div>
                         </div>
@@ -1677,16 +1695,16 @@
                 customerSection = `
                     <div class="detail-section">
                         <h6><i class="fas fa-users"></i> ${strategy.title || '첫 10명 고객 확보 전략'}</h6>
-                        <div style="background: #f0fdf4; border-radius: 8px; padding: 1rem;">
+                        <div style="background: #1a2e1a; border-radius: 8px; padding: 1rem;">
                             ${(strategy.steps || []).map(step => `
-                                <div style="display: flex; gap: 1rem; margin-bottom: 0.75rem; padding: 0.75rem; background: white; border-radius: 6px;">
+                                <div style="display: flex; gap: 1rem; margin-bottom: 0.75rem; padding: 0.75rem; background: #1a1a1b; border-radius: 6px; border: 1px solid #333;">
                                     <div style="background: #10b981; color: white; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; flex-shrink: 0;">
                                         ${step.step}
                                     </div>
                                     <div style="flex: 1;">
-                                        <strong style="color: #111827;">${step.action}</strong>
-                                        <p style="margin: 0.25rem 0 0 0; font-size: 0.813rem; color: #6b7280;">${step.detail}</p>
-                                        <span style="display: inline-block; margin-top: 0.25rem; background: #d1fae5; color: #065f46; padding: 0.125rem 0.5rem; border-radius: 4px; font-size: 0.75rem;">목표: ${step.target}</span>
+                                        <strong style="color: #e5e5e5;">${step.action}</strong>
+                                        <p style="margin: 0.25rem 0 0 0; font-size: 0.813rem; color: #888;">${step.detail}</p>
+                                        <span style="display: inline-block; margin-top: 0.25rem; background: #1a2e1a; color: #4ade80; padding: 0.125rem 0.5rem; border-radius: 4px; font-size: 0.75rem;">목표: ${step.target}</span>
                                     </div>
                                 </div>
                             `).join('')}
@@ -1707,10 +1725,10 @@
                                 <strong style="color: #7c3aed;">무료 채널</strong>
                                 <div style="margin-top: 0.5rem; display: grid; gap: 0.5rem;">
                                     ${(channels.free || []).map(ch => `
-                                        <div style="background: white; border-radius: 6px; padding: 0.75rem; display: flex; justify-content: space-between; align-items: center;">
+                                        <div style="background: #1a1a1b; border-radius: 6px; border: 1px solid #333; padding: 0.75rem; display: flex; justify-content: space-between; align-items: center;">
                                             <div>
                                                 <strong style="font-size: 0.875rem;">${ch.channel}</strong>
-                                                <p style="margin: 0.25rem 0 0 0; font-size: 0.75rem; color: #6b7280;">${ch.strategy}</p>
+                                                <p style="margin: 0.25rem 0 0 0; font-size: 0.75rem; color: #888;">${ch.strategy}</p>
                                             </div>
                                             <span style="font-size: 0.75rem; color: #7c3aed; white-space: nowrap;">${ch.expected}</span>
                                         </div>
@@ -1721,12 +1739,12 @@
                                 <strong style="color: #dc2626;">유료 채널</strong>
                                 <div style="margin-top: 0.5rem; display: grid; gap: 0.5rem;">
                                     ${(channels.paid || []).map(ch => `
-                                        <div style="background: white; border-radius: 6px; padding: 0.75rem; display: flex; justify-content: space-between; align-items: center;">
+                                        <div style="background: #1a1a1b; border-radius: 6px; border: 1px solid #333; padding: 0.75rem; display: flex; justify-content: space-between; align-items: center;">
                                             <div>
                                                 <strong style="font-size: 0.875rem;">${ch.channel}</strong>
                                                 <span style="margin-left: 0.5rem; font-size: 0.75rem; color: #dc2626;">${ch.budget}</span>
                                             </div>
-                                            <span style="font-size: 0.75rem; color: #6b7280;">${ch.expected}</span>
+                                            <span style="font-size: 0.75rem; color: #888;">${ch.expected}</span>
                                         </div>
                                     `).join('')}
                                 </div>
@@ -1754,7 +1772,7 @@
                                     <div style="font-size: 1.5rem; font-weight: 700; color: #2563eb;">${(costs.total_recommended || 0).toLocaleString()}원/월</div>
                                 </div>
                             </div>
-                            <div style="background: white; border-radius: 6px; padding: 0.75rem;">
+                            <div style="background: #1a1a1b; border-radius: 6px; border: 1px solid #333; padding: 0.75rem;">
                                 <strong style="font-size: 0.875rem;">필수 항목</strong>
                                 ${(costs.essential || []).map(item => `
                                     <div style="display: flex; justify-content: space-between; margin-top: 0.5rem; font-size: 0.813rem;">
@@ -1763,7 +1781,7 @@
                                     </div>
                                 `).join('')}
                             </div>
-                            <div style="background: white; border-radius: 6px; padding: 0.75rem; margin-top: 0.5rem;">
+                            <div style="background: #1a1a1b; border-radius: 6px; border: 1px solid #333; padding: 0.75rem; margin-top: 0.5rem;">
                                 <strong style="font-size: 0.875rem;">권장 항목</strong>
                                 ${(costs.recommended || []).map(item => `
                                     <div style="display: flex; justify-content: space-between; margin-top: 0.5rem; font-size: 0.813rem;">
@@ -1783,9 +1801,9 @@
                 riskSection = `
                     <div class="detail-section">
                         <h6><i class="fas fa-shield-alt"></i> 리스크 관리</h6>
-                        <div style="background: #fef2f2; border-radius: 8px; padding: 1rem;">
+                        <div style="background: #2e1a1a; border-radius: 8px; padding: 1rem;">
                             ${startupGuide.risk_management.map(risk => `
-                                <div style="background: white; border-radius: 6px; padding: 0.75rem; margin-bottom: 0.75rem;">
+                                <div style="background: #1a1a1b; border-radius: 6px; border: 1px solid #333; padding: 0.75rem; margin-bottom: 0.75rem;">
                                     <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
                                         <span style="color: #dc2626;">⚠️</span>
                                         <strong style="color: #dc2626;">${risk.risk}</strong>
@@ -1810,12 +1828,12 @@
                 metricsSection = `
                     <div class="detail-section">
                         <h6><i class="fas fa-flag-checkered"></i> 성공 목표</h6>
-                        <div style="background: #ecfdf5; border-radius: 8px; padding: 1rem;">
+                        <div style="background: #1a2e1a; border-radius: 8px; padding: 1rem;">
                             <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.75rem;">
                                 ${Object.entries(metrics).map(([period, data]) => `
-                                    <div style="background: white; border-radius: 6px; padding: 0.75rem;">
-                                        <div style="font-size: 0.75rem; color: #6b7280; text-transform: uppercase;">${period}</div>
-                                        <div style="font-weight: 600; color: #111827; margin: 0.25rem 0;">${data.goal}</div>
+                                    <div style="background: #1a1a1b; border-radius: 6px; border: 1px solid #333; padding: 0.75rem;">
+                                        <div style="font-size: 0.75rem; color: #888; text-transform: uppercase;">${period}</div>
+                                        <div style="font-weight: 600; color: #e5e5e5; margin: 0.25rem 0;">${data.goal}</div>
                                         <div style="font-size: 0.75rem; color: #059669;">${data.importance}</div>
                                     </div>
                                 `).join('')}
