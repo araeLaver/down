@@ -1263,27 +1263,47 @@ def generate_default_revenue_analysis(business_name, score):
 
 @app.route('/api/discovered-businesses')
 def api_discovered_businesses():
-    """자동 발굴된 사업 목록 API (50점 이상 모두 포함, 중복 제거)"""
+    """자동 발굴된 사업 목록 API (50점 이상 모두 포함, 서버 사이드 페이징)"""
     session = None
     try:
         session = get_db_session()
 
-        # BusinessDiscoveryHistory에서 50점 이상 사업 모두 조회
+        # 페이징 파라미터
+        page = request.args.get('page', 1, type=int)
+        limit = request.args.get('limit', 10, type=int)
+        limit = min(limit, 100)  # 최대 100개
+        offset = (page - 1) * limit
+
+        # 전체 개수 조회 (50점 이상)
+        total_count = session.query(func.count(BusinessDiscoveryHistory.id)).filter(
+            BusinessDiscoveryHistory.total_score >= 50
+        ).scalar()
+
+        # 오늘/이번주 통계
+        from datetime import datetime, timedelta
+        today = datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
+        week_ago = today - timedelta(days=7)
+
+        today_count = session.query(func.count(BusinessDiscoveryHistory.id)).filter(
+            BusinessDiscoveryHistory.total_score >= 50,
+            BusinessDiscoveryHistory.discovered_at >= today
+        ).scalar()
+
+        week_count = session.query(func.count(BusinessDiscoveryHistory.id)).filter(
+            BusinessDiscoveryHistory.total_score >= 50,
+            BusinessDiscoveryHistory.discovered_at >= week_ago
+        ).scalar()
+
+        high_score_count = session.query(func.count(BusinessDiscoveryHistory.id)).filter(
+            BusinessDiscoveryHistory.total_score >= 85
+        ).scalar()
+
+        # 페이징된 데이터 조회
         histories = session.query(BusinessDiscoveryHistory).filter(
             BusinessDiscoveryHistory.total_score >= 50
-        ).order_by(BusinessDiscoveryHistory.discovered_at.desc()).limit(200).all()
+        ).order_by(BusinessDiscoveryHistory.discovered_at.desc()).offset(offset).limit(limit).all()
 
-        # 중복 제거: 같은 이름의 사업은 가장 최신 것만 유지
-        seen_names = set()
-        unique_histories = []
-        for biz in histories:
-            if biz.business_name not in seen_names:
-                seen_names.add(biz.business_name)
-                unique_histories.append(biz)
-
-        histories = unique_histories[:100]  # 최대 100개
-
-        logger.info(f"[API] discovered-businesses: {len(histories)}건 조회 (중복 제거됨)")
+        logger.info(f"[API] discovered-businesses: page={page}, limit={limit}, total={total_count}")
 
         business_list = []
         for biz in histories:
@@ -1437,27 +1457,22 @@ def api_discovered_businesses():
             })
 
         # 통계
-        today = datetime.utcnow().date()
-        today_count = session.query(BusinessDiscoveryHistory).filter(
-            BusinessDiscoveryHistory.total_score >= 50,
-            BusinessDiscoveryHistory.discovered_at >= today
-        ).count()
-
-        week_ago = datetime.utcnow() - timedelta(days=7)
-        week_count = session.query(BusinessDiscoveryHistory).filter(
-            BusinessDiscoveryHistory.total_score >= 50,
-            BusinessDiscoveryHistory.discovered_at >= week_ago
-        ).count()
-
-        high_score_count = len([b for b in business_list if b['score'] >= 85])
+        # 페이지 정보 계산
+        total_pages = (total_count + limit - 1) // limit
 
         return jsonify({
             'businesses': business_list,
             'stats': {
-                'total': len(business_list),
+                'total': total_count,
                 'today': today_count,
                 'this_week': week_count,
                 'high_score': high_score_count
+            },
+            'pagination': {
+                'page': page,
+                'limit': limit,
+                'total_pages': total_pages,
+                'total_items': total_count
             }
         })
     except Exception as e:

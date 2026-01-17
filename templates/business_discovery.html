@@ -831,18 +831,27 @@
         let filteredBusinesses = [];
         let currentFilter = 'all';
 
-        // Pagination state
+        // Server-side Pagination state
         let currentPage = 1;
         let itemsPerPage = 10;
+        let totalItems = 0;
+        let totalPages = 0;
 
-        // Load data
-        async function loadBusinesses() {
+        // Load data with server-side pagination
+        async function loadBusinesses(page = 1, limit = itemsPerPage) {
             try {
-                const response = await fetch('/api/discovered-businesses');
+                const response = await fetch(`/api/discovered-businesses?page=${page}&limit=${limit}`);
                 const data = await response.json();
 
                 allBusinesses = data.businesses;
                 filteredBusinesses = allBusinesses;
+
+                // Update pagination state from server
+                if (data.pagination) {
+                    currentPage = data.pagination.page;
+                    totalItems = data.pagination.total_items;
+                    totalPages = data.pagination.total_pages;
+                }
 
                 // Update stats
                 document.getElementById('stat-total').textContent = data.stats.total;
@@ -850,11 +859,14 @@
                 document.getElementById('stat-week').textContent = data.stats.this_week;
                 document.getElementById('stat-highscore').textContent = data.stats.high_score;
 
-                // Display businesses
-                displayBusinesses(filteredBusinesses);
+                // Display businesses (server already paginated, no client pagination needed)
+                displayBusinessesDirect(filteredBusinesses);
 
-                // Render charts
-                renderCharts(allBusinesses);
+                // Update pagination UI
+                updateServerPagination();
+
+                // Render charts (only on first page)
+                if (page === 1) renderCharts(allBusinesses);
 
                 // Update timestamp
                 document.getElementById('last-update').textContent =
@@ -872,13 +884,70 @@
             }
         }
 
-        // Display businesses with pagination
+        // Display businesses directly (server already paginated)
+        function displayBusinessesDirect(businesses) {
+            const container = document.getElementById('business-list');
+            if (businesses.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-inbox"></i>
+                        <h4>발굴된 사업이 없습니다</h4>
+                        <p>AI가 24/7 시장을 분석하고 있습니다.</p>
+                    </div>
+                `;
+                return;
+            }
+            // Reuse displayBusinesses logic but skip client pagination
+            displayBusinesses(businesses, false);
+        }
+
+        // Server-side pagination UI
+        function updateServerPagination() {
+            const container = document.getElementById('pagination-container');
+            if (!container || totalItems === 0) {
+                if (container) container.style.display = 'none';
+                return;
+            }
+            container.style.display = 'flex';
+            const startItem = (currentPage - 1) * itemsPerPage + 1;
+            const endItem = Math.min(currentPage * itemsPerPage, totalItems);
+
+            let html = `<span class="pagination-info">${startItem}-${endItem} / ${totalItems}개</span>`;
+            html += `<button class="pagination-btn" onclick="goToServerPage(1)" ${currentPage === 1 ? 'disabled' : ''}><i class="fas fa-angle-double-left"></i></button>`;
+            html += `<button class="pagination-btn" onclick="goToServerPage(${currentPage - 1})" ${currentPage === 1 ? 'disabled' : ''}><i class="fas fa-angle-left"></i> 이전</button>`;
+            html += `<div class="pagination-numbers">`;
+
+            let startPage = Math.max(1, currentPage - 2);
+            let endPage = Math.min(totalPages, startPage + 4);
+            for (let i = startPage; i <= endPage; i++) {
+                html += `<button class="pagination-btn ${i === currentPage ? 'active' : ''}" onclick="goToServerPage(${i})">${i}</button>`;
+            }
+
+            html += `</div>`;
+            html += `<button class="pagination-btn" onclick="goToServerPage(${currentPage + 1})" ${currentPage === totalPages ? 'disabled' : ''}>다음 <i class="fas fa-angle-right"></i></button>`;
+            html += `<button class="pagination-btn" onclick="goToServerPage(${totalPages})" ${currentPage === totalPages ? 'disabled' : ''}><i class="fas fa-angle-double-right"></i></button>`;
+            html += `<select class="page-size-select" onchange="changeServerPageSize(this.value)">
+                <option value="10" ${itemsPerPage === 10 ? 'selected' : ''}>10개씩</option>
+                <option value="20" ${itemsPerPage === 20 ? 'selected' : ''}>20개씩</option>
+                <option value="50" ${itemsPerPage === 50 ? 'selected' : ''}>50개씩</option>
+            </select>`;
+            container.innerHTML = html;
+        }
+
+        function goToServerPage(page) {
+            if (page < 1 || page > totalPages) return;
+            loadBusinesses(page, itemsPerPage);
+            document.getElementById('business-list').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        function changeServerPageSize(size) {
+            itemsPerPage = parseInt(size);
+            loadBusinesses(1, itemsPerPage);
+        }
+
+        // Display businesses (server handles pagination now)
         function displayBusinesses(businesses, resetPage = false) {
             const container = document.getElementById('business-list');
-
-            if (resetPage) {
-                currentPage = 1;
-            }
 
             if (businesses.length === 0) {
                 container.innerHTML = `
@@ -888,20 +957,13 @@
                         <p>AI가 24/7 시장을 분석하고 있습니다. 잠시만 기다려주세요.</p>
                     </div>
                 `;
-                updatePagination(0);
                 return;
             }
 
-            // Calculate pagination
-            const totalItems = businesses.length;
-            const totalPages = Math.ceil(totalItems / itemsPerPage);
-            const startIndex = (currentPage - 1) * itemsPerPage;
-            const endIndex = Math.min(startIndex + itemsPerPage, totalItems);
-            const paginatedBusinesses = businesses.slice(startIndex, endIndex);
-
+            // Display all businesses (server already paginated)
             let html = '';
 
-            paginatedBusinesses.forEach(biz => {
+            businesses.forEach(biz => {
                 const scoreClass = biz.score >= 85 ? 'high' :
                                  biz.score >= 80 ? 'medium' : 'low';
                 const cardClass = biz.score >= 85 ? 'high-score' : biz.score >= 80 ? 'medium-score' : '';
@@ -1059,96 +1121,6 @@
             });
 
             container.innerHTML = html;
-
-            // Update pagination UI
-            updatePagination(totalItems);
-        }
-
-        // Pagination functions
-        function updatePagination(totalItems) {
-            const paginationContainer = document.getElementById('pagination-container');
-            if (!paginationContainer) return;
-
-            const totalPages = Math.ceil(totalItems / itemsPerPage);
-
-            if (totalItems === 0) {
-                paginationContainer.style.display = 'none';
-                return;
-            }
-
-            paginationContainer.style.display = 'flex';
-
-            const startItem = (currentPage - 1) * itemsPerPage + 1;
-            const endItem = Math.min(currentPage * itemsPerPage, totalItems);
-
-            let paginationHtml = `
-                <span class="pagination-info">${startItem}-${endItem} / ${totalItems}개</span>
-                <button class="pagination-btn" onclick="goToPage(1)" ${currentPage === 1 ? 'disabled' : ''}>
-                    <i class="fas fa-angle-double-left"></i>
-                </button>
-                <button class="pagination-btn" onclick="prevPage()" ${currentPage === 1 ? 'disabled' : ''}>
-                    <i class="fas fa-angle-left"></i> 이전
-                </button>
-                <div class="pagination-numbers">
-            `;
-
-            // Calculate page range to show
-            let startPage = Math.max(1, currentPage - 2);
-            let endPage = Math.min(totalPages, startPage + 4);
-            if (endPage - startPage < 4) {
-                startPage = Math.max(1, endPage - 4);
-            }
-
-            for (let i = startPage; i <= endPage; i++) {
-                paginationHtml += `
-                    <button class="pagination-btn ${i === currentPage ? 'active' : ''}" onclick="goToPage(${i})">${i}</button>
-                `;
-            }
-
-            paginationHtml += `
-                </div>
-                <button class="pagination-btn" onclick="nextPage()" ${currentPage === totalPages ? 'disabled' : ''}>
-                    다음 <i class="fas fa-angle-right"></i>
-                </button>
-                <button class="pagination-btn" onclick="goToPage(${totalPages})" ${currentPage === totalPages ? 'disabled' : ''}>
-                    <i class="fas fa-angle-double-right"></i>
-                </button>
-                <select class="page-size-select" onchange="changePageSize(this.value)">
-                    <option value="10" ${itemsPerPage === 10 ? 'selected' : ''}>10개씩</option>
-                    <option value="20" ${itemsPerPage === 20 ? 'selected' : ''}>20개씩</option>
-                    <option value="50" ${itemsPerPage === 50 ? 'selected' : ''}>50개씩</option>
-                </select>
-            `;
-
-            paginationContainer.innerHTML = paginationHtml;
-        }
-
-        function goToPage(page) {
-            const totalPages = Math.ceil(filteredBusinesses.length / itemsPerPage);
-            if (page < 1 || page > totalPages) return;
-            currentPage = page;
-            displayBusinesses(filteredBusinesses);
-            // Scroll to top of list
-            document.getElementById('business-list').scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }
-
-        function prevPage() {
-            if (currentPage > 1) {
-                goToPage(currentPage - 1);
-            }
-        }
-
-        function nextPage() {
-            const totalPages = Math.ceil(filteredBusinesses.length / itemsPerPage);
-            if (currentPage < totalPages) {
-                goToPage(currentPage + 1);
-            }
-        }
-
-        function changePageSize(size) {
-            itemsPerPage = parseInt(size);
-            currentPage = 1;
-            displayBusinesses(filteredBusinesses);
         }
 
         // Filter businesses
