@@ -868,19 +868,15 @@
         let totalItems = 0;
         let totalPages = 0;
 
-        // UTC to KST 변환 함수
+        // 날짜 포맷 함수 (서버가 KST로 저장하므로 그대로 표시)
         function formatKST(dateStr) {
             if (!dateStr) return '-';
             try {
-                // API returns "2026-01-17 16:22" format in UTC
-                const utcDate = new Date(dateStr.replace(' ', 'T') + 'Z');
-                // Add 9 hours for KST
-                const kstDate = new Date(utcDate.getTime() + 9 * 60 * 60 * 1000);
-                const month = kstDate.getMonth() + 1;
-                const day = kstDate.getDate();
-                const hours = kstDate.getHours();
-                const minutes = String(kstDate.getMinutes()).padStart(2, '0');
-                return `${month}/${day} ${hours}:${minutes}`;
+                // 서버에서 "2026-01-17 16:22" 형식으로 KST 반환
+                const [datePart, timePart] = dateStr.split(' ');
+                const [year, month, day] = datePart.split('-');
+                const [hours, minutes] = timePart.split(':');
+                return `${parseInt(month)}월 ${parseInt(day)}일 ${hours}:${minutes}`;
             } catch (e) {
                 return dateStr;
             }
