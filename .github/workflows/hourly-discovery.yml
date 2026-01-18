@@ -2,7 +2,7 @@ name: Business Discovery (8-Hour Interval)
 
 on:
   schedule:
-    # 8시간 간격 실행: 00:00, 08:00, 16:00 UTC (09:00, 17:00, 01:00 KST)
+    # 매시간 정각에 실행 (UTC 기준)
     - cron: '0 0,8,16 * * *'
   workflow_dispatch:  # 수동 실행 가능
 

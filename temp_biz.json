@@ -1,0 +1,2200 @@
+{
+  "businesses": [
+    {
+      "competition_level": 55,
+      "created_at": "2026-01-17 16:22",
+      "description": "\uc2e4\uc2dc\uac04 \uc678\uad6d\uc5b4 \ub300\ud654 \ub9e4\uce6d - \uc2dc\uc7a5\uc131 52\uc810, \uc218\uc775\uc131 70\uc810",
+      "details": {
+        "action_plan": {
+          "summary": "\uc2e4\uc2dc\uac04 \uc678\uad6d\uc5b4 \ub300\ud654 \ub9e4\uce6d\ub97c 4\uc8fc \uc548\uc5d0 \ub7f0\uce6d\ud558\uae30 \uc704\ud55c \uc2e4\ud589 \uacc4\ud68d\uc785\ub2c8\ub2e4.",
+          "total_budget": 8000000,
+          "week_1": {
+            "goal": "MVP \uac1c\ubc1c \ubc0f \uc2dc\uc7a5 \uc870\uc0ac",
+            "tasks": [
+              "\uc2e4\uc2dc\uac04 \uc678\uad6d\uc5b4 \ub300\ud654 \ub9e4\uce6d \ud575\uc2ec \uae30\ub2a5 \uc815\uc758",
+              "\uacbd\uc7c1\uc0ac \ubd84\uc11d \ubc0f \ucc28\ubcc4\ud654 \ud3ec\uc778\ud2b8 \ub3c4\ucd9c",
+              "\ub79c\ub529\ud398\uc774\uc9c0 \uc81c\uc791 (Webflow/Notion)",
+              "\ucd08\uae30 \uace0\uac1d \ud0c0\uac9f \uc815\uc758"
+            ]
+          },
+          "week_2": {
+            "goal": "\ud504\ub85c\ud1a0\ud0c0\uc785 \ubc0f \uac80\uc99d",
+            "tasks": [
+              "MVP \ud504\ub85c\ud1a0\ud0c0\uc785 \uc81c\uc791",
+              "\ubca0\ud0c0 \ud14c\uc2a4\ud130 10\uba85 \ubaa8\uc9d1",
+              "\uc0ac\uc6a9\uc790 \ud53c\ub4dc\ubc31 \uc218\uc9d1",
+              "\uac00\uaca9 \ucc45\uc815 \ud14c\uc2a4\ud2b8"
+            ]
+          },
+          "week_3": {
+            "goal": "\ub9c8\ucf00\ud305 \ubc0f \uace0\uac1d \ud655\ubcf4",
+            "tasks": [
+              "SNS \ub9c8\ucf00\ud305 \uc2dc\uc791 (\uc778\uc2a4\ud0c0/\ud398\uc774\uc2a4\ubd81)",
+              "\uc18c\uaddc\ubaa8 \uc720\ub8cc \uad11\uace0 \ud14c\uc2a4\ud2b8 (\uc77c 1\ub9cc\uc6d0)",
+              "\uccab \uc720\ub8cc \uace0\uac1d \ud655\ubcf4",
+              "\uace0\uac1d \ud6c4\uae30 \uc218\uc9d1"
+            ]
+          },
+          "week_4": {
+            "goal": "\ucd5c\uc801\ud654 \ubc0f \ud655\uc7a5",
+            "tasks": [
+              "\uc804\ud658\uc728 \ucd5c\uc801\ud654",
+              "\uc790\ub3d9\ud654 \uc2dc\uc2a4\ud15c \uad6c\ucd95",
+              "\ucd94\uac00 \uae30\ub2a5 \uac1c\ubc1c",
+              "\uc6d4 \ubaa9\ud45c \ub9e4\ucd9c \ub2ec\uc131"
+            ]
+          }
+        },
+        "analysis_score": 59.2,
+        "category": "\uad50\uc721/\uc2a4\ud0ac \uc571",
+        "full_analysis": {
+          "business": {
+            "core_features": [
+              "\ub370\uc774\ud130 \uad00\ub9ac",
+              "\uc54c\ub9bc \uc2dc\uc2a4\ud15c",
+              "\ubd84\uc11d \ub300\uc2dc\ubcf4\ub4dc"
+            ],
+            "differentiator": "\uae30\uc874 \uc11c\ube44\uc2a4 \ub300\ube44 50% \uc800\ub834\ud55c \uac00\uaca9",
+            "it_type": "saas",
+            "it_type_label": "SaaS",
+            "revenue_models": [
+              "\uc6d4\uc815\uc561 \uad6c\ub3c5",
+              "\ud504\ub9ac\ubbf8\uc5c4 \uc694\uae08\uc81c"
+            ],
+            "target_audience": "\uc9c1\uc7a5\uc778",
+            "tech_stack": [
+              "Bubble.io",
+              "Supabase"
+            ]
+          },
+          "category": "\uad50\uc721/\uc2a4\ud0ac \uc571",
+          "priority": "\ub9e4\uc6b0 \ub192\uc74c",
+          "type": "\uace0\uc218\uc775 \uc571 \uac1c\ubc1c"
+        },
+        "keyword": "\uc2e4\uc2dc\uac04 \uc678\uad6d\uc5b4 \ub300\ud654 \ub9e4\uce6d",
+        "market_analysis": {
+          "analysis_date": "2026-01-17T07:22:09.668804",
+          "business_idea": "\uc2e4\uc2dc\uac04 \uc678\uad6d\uc5b4 \ub300\ud654 \ub9e4\uce6d",
+          "data_sources": {
+            "google": {
+              "entry_difficulty": "medium",
+              "estimated": true,
+              "organic_results": 347,
+              "platform": "\uad6c\uae00"
+            },
+            "kmong": {
+              "avg_price": 85731,
+              "competition_level": "medium",
+              "estimated": true,
+              "platform": "\ud06c\ubabd",
+              "service_count": 66
+            },
+            "naver": {
+              "estimated": true,
+              "keyword": "IT\uc11c\ube44\uc2a4",
+              "platform": "\ub124\uc774\ubc84",
+              "popularity_score": 60,
+              "related_searches": 10
+            },
+            "youtube": {
+              "estimated": true,
+              "estimated_videos": 78,
+              "interest_indicator": "medium",
+              "platform": "\uc720\ud29c\ube0c"
+            }
+          },
+          "google_trends": {
+            "global_interest": 73,
+            "growth_rate": 15,
+            "trend": "\uc548\uc815\uc801"
+          },
+          "keyword": "\uc2e4\uc2dc\uac04 \uc678\uad6d\uc5b4 \ub300\ud654 \ub9e4\uce6d",
+          "market_analysis": {
+            "competition": {
+              "description": "\uc801\uc815 \uacbd\uc7c1, \ucc28\ubcc4\ud654 \ud544\uc694",
+              "entry_difficulty": "\ubcf4\ud1b5",
+              "level": "\uc911\uac04",
+              "score_bonus": 5
+            },
+            "domain": {
+              "domain": "IT\uc11c\ube44\uc2a4",
+              "growth_rate": "5%",
+              "market_size": "\uc911\ud615",
+              "score_bonus": 5,
+              "trend": "\uc548\uc815"
+            },
+            "market_size": {
+              "addressable_market": "\uc57d 8,400\uc5b5\uc6d0",
+              "estimated_size_billion_krw": 8400,
+              "size_category": "\uc911\ud615",
+              "target_population_thousands": 2800
+            },
+            "target_audience": {
+              "digital_affinity": "\ub192\uc74c",
+              "population_millions": 2800,
+              "score_bonus": 8,
+              "spending_power": "\ub192\uc74c",
+              "target": "\uc9c1\uc7a5\uc778"
+            },
+            "trend_keywords_found": []
+          },
+          "market_info": {
+            "domain": "default",
+            "entry_barrier": "\uc911\uac04",
+            "entry_barrier_score": 50,
+            "growth_rate": 15,
+            "market_size": "1\uc870\uc6d0",
+            "seasonality": "\uc5f0\uc911 \uafb8\uc900",
+            "target_size": "\uc7a0\uc7ac \uace0\uac1d 100\ub9cc+"
+          },
+          "market_score": 52,
+          "market_summary": "\uc2e4\uc2dc\uac04 \uc678\uad6d\uc5b4 \ub300\ud654 \ub9e4\uce6d \uad00\ub828 \uc2dc\uc7a5 \uaddc\ubaa8\ub294 1\uc870\uc6d0\uc774\uba70, \uc5f0 15% \uc131\uc7a5 \uc911\uc785\ub2c8\ub2e4. \uacbd\uc7c1 \uac15\ub3c4\ub294 '\uc911\uac04'\uc774\uace0, \uc9c4\uc785 \uc7a5\ubcbd\uc740 '\uc911\uac04' \uc218\uc900\uc785\ub2c8\ub2e4. \uc7a0\uc7ac \uace0\uac1d 100\ub9cc+\uc758 \uc7a0\uc7ac \uace0\uac1d\uc774 \uc788\uc2b5\ub2c8\ub2e4.",
+          "mode": "lightweight_v2",
+          "naver": {
+            "competition": "\uc911\uac04",
+            "competition_score": 55,
+            "related_keywords": [
+              "\uc2e4\uc2dc\uac04 \uc678\uad6d\uc5b4 \ub300\ud654 \ub9e4\uce6d",
+              "\uc2e4\uc2dc\uac04 \uc678\uad6d\uc5b4 \ub300\ud654 \ub9e4\uce6d \ucd94\ucc9c",
+              "\uc2e4\uc2dc\uac04 \uc678\uad6d\uc5b4 \ub300\ud654 \ub9e4\uce6d \ud6c4\uae30",
+              "\uc2e4\uc2dc\uac04 \uc678\uad6d\uc5b4 \ub300\ud654 \ub9e4\uce6d \ube44\uad50"
+            ],
+            "search_count": 31500
+          },
+          "recommendation": {
+            "action": "\ub2e4\ub978 \uc544\uc774\ub514\uc5b4 \ud0d0\uc0c9 \uad8c\uc7a5",
+            "confidence": "\ub0ae\uc74c",
+            "key_success_factors": [
+              "\uba85\ud655\ud55c \ucc28\ubcc4\ud654 \ud3ec\uc778\ud2b8 \ud544\uc218",
+              "\ub2c8\uce58 \ub9c8\ucf13 \uc9d1\uc911 \uc804\ub7b5",
+              "\ube60\ub978 MVP \ucd9c\uc2dc \ubc0f \ud53c\ub4dc\ubc31 \ubc18\uc601",
+              "\ud6a8\uacfc\uc801\uc778 \uace0\uac1d \ud68d\ub4dd \ucc44\ub110 \ud655\ubcf4"
+            ],
+            "priority": "\uc81c\uc678",
+            "verdict": "\ube44\ucd94\ucc9c"
+          },
+          "score_breakdown": {
+            "base_score": 71,
+            "competition_bonus": 5,
+            "domain_bonus": 5,
+            "revenue_bonus": 6,
+            "synergy_bonus": 0,
+            "target_bonus": 8,
+            "trend_bonus": 0
+          }
+        },
+        "market_score": 52.0,
+        "revenue_analysis": {
+          "mode": "lightweight_v2",
+          "revenue_models": [
+            {
+              "model": "\uc77c\ud68c\uc131 \uad6c\ub9e4",
+              "scalability": "\uc911\uac04",
+              "score": 6,
+              "stability": "\ub0ae\uc74c"
+            }
+          ],
+          "scenarios": {
+            "conservative": {
+              "monthly_profit": 345888,
+              "monthly_revenue": 2305926
+            },
+            "optimistic": {
+              "monthly_profit": 1383554,
+              "monthly_revenue": 9223704
+            },
+            "realistic": {
+              "monthly_profit": 691777,
+              "monthly_revenue": 4611852
+            }
+          },
+          "verdict": {
+            "recurring_potential": false,
+            "score": 70
+          }
+        },
+        "revenue_score": 70.0,
+        "startup_guide": {
+          "cost_breakdown": {
+            "essential": [
+              {
+                "cost": 15000,
+                "item": "\ub3c4\uba54\uc778",
+                "period": "\ub144"
+              },
+              {
+                "cost": 0,
+                "item": "\ud638\uc2a4\ud305/\uc11c\ubc84",
+                "note": "Vercel/Netlify \ubb34\ub8cc",
+                "period": "\uc6d4"
+              },
+              {
+                "cost": 0,
+                "item": "\uc774\uba54\uc77c \uc11c\ube44\uc2a4",
+                "note": "Mailchimp \ubb34\ub8cc (500\uba85\uae4c\uc9c0)",
+                "period": "\uc6d4"
+              }
+            ],
+            "recommended": [
+              {
+                "cost": 50000,
+                "item": "No-Code \ud234",
+                "period": "\uc6d4"
+              },
+              {
+                "cost": 300000,
+                "item": "\uad11\uace0\ube44",
+                "period": "\uc6d4"
+              },
+              {
+                "cost": 15000,
+                "item": "\ub514\uc790\uc778 \ud234",
+                "note": "Canva Pro",
+                "period": "\uc6d4"
+              }
+            ],
+            "total_minimum": 15000,
+            "total_recommended": 380000
+          },
+          "day1_checklist": {
+            "tasks": [
+              {
+                "cost": "1-2\ub9cc\uc6d0/\ub144",
+                "detail": "\uc2e4\uc2dc\uac04\uc678\uad6d\uc5b4\ub300\ud654\ub9e4\uce6d.com \ub610\ub294 .kr",
+                "task": "\ub3c4\uba54\uc778 \uad6c\ub9e4",
+                "time": "10\ubd84",
+                "tool": "Namecheap, \uac00\ube44\uc544"
+              },
+              {
+                "cost": "0\uc6d0",
+                "detail": "\uc11c\ube44\uc2a4 \uc18c\uac1c + \uc774\uba54\uc77c \uc218\uc9d1 \ud3fc",
+                "task": "\ub79c\ub529\ud398\uc774\uc9c0 \uc81c\uc791",
+                "time": "2-3\uc2dc\uac04",
+                "tool": "Notion, Webflow (\ubb34\ub8cc)"
+              },
+              {
+                "cost": "0\uc6d0",
+                "detail": "\uac00\uaca9, \uae30\ub2a5, \ub9ac\ubdf0 \uc815\ub9ac",
+                "task": "\uacbd\uc7c1\uc0ac 5\uac1c \ubd84\uc11d",
+                "time": "1-2\uc2dc\uac04",
+                "tool": "Google \uc2a4\ud504\ub808\ub4dc\uc2dc\ud2b8"
+              },
+              {
+                "cost": "0\uc6d0",
+                "detail": "\uc778\uc2a4\ud0c0\uadf8\ub7a8 \ube44\uc988\ub2c8\uc2a4 \uacc4\uc815",
+                "task": "SNS \uacc4\uc815 \uc0dd\uc131",
+                "time": "30\ubd84",
+                "tool": "Instagram, \ud398\uc774\uc2a4\ubd81"
+              }
+            ],
+            "title": "Day 1: \uc624\ub298 \ub2f9\uc7a5 \uc2dc\uc791\ud558\uae30"
+          },
+          "first_customer_strategy": {
+            "steps": [
+              {
+                "action": "\ubb34\ub8cc/\ud560\uc778 \uc81c\uacf5",
+                "detail": "\uccab \ub2ec \ubb34\ub8cc \ub610\ub294 50% \ud560\uc778\uc73c\ub85c \uc9c4\uc785 \uc7a5\ubcbd \ub0ae\ucd94\uae30",
+                "step": 1,
+                "target": "3\uba85"
+              },
+              {
+                "action": "\uc9c0\uc778 \uc601\uc5c5",
+                "detail": "\uce74\ud1a1, \uc778\uc2a4\ud0c0 DM\uc73c\ub85c \uc9c1\uc811 \uc5f0\ub77d. \uc194\uc9c1\ud558\uac8c \ub3c4\uc6c0 \uc694\uccad",
+                "step": 2,
+                "target": "3\uba85"
+              },
+              {
+                "action": "\ucee4\ubba4\ub2c8\ud2f0 \ud65c\ub3d9",
+                "detail": "\uad00\ub828 \uc624\ud508\uce74\ud1a1, \ud398\uc774\uc2a4\ubd81 \uadf8\ub8f9\uc5d0\uc11c \ubb34\ub8cc \uc0c1\ub2f4 \uc81c\uacf5",
+                "step": 3,
+                "target": "2\uba85"
+              },
+              {
+                "action": "\ucf58\ud150\uce20 \ub9c8\ucf00\ud305",
+                "detail": "\ube14\ub85c\uadf8 \uae00 \ud558\ub2e8\uc5d0 CTA \uc0bd\uc785",
+                "step": 4,
+                "target": "2\uba85"
+              }
+            ],
+            "title": "\uccab 10\uba85 \uace0\uac1d \ud655\ubcf4 \uc804\ub7b5"
+          },
+          "marketing_channels": {
+            "free": [
+              {
+                "channel": "\uc778\uc2a4\ud0c0\uadf8\ub7a8",
+                "expected": "\uc6d4 100-500 \ud314\ub85c\uc6cc",
+                "strategy": "\uad00\ub828 \ud574\uc2dc\ud0dc\uadf8\ub85c \uc77c 1\ud3ec\uc2a4\ud305"
+              },
+              {
+                "channel": "\ube14\ub85c\uadf8/\ube0c\ub7f0\uce58",
+                "expected": "\uc6d4 1000-5000 \ubc29\ubb38\uc790",
+                "strategy": "\uc8fc 2\ud68c \uc804\ubb38 \ucf58\ud150\uce20 \ubc1c\ud589"
+              },
+              {
+                "channel": "\ucee4\ubba4\ub2c8\ud2f0",
+                "expected": "\ucd08\uae30 \ubca0\ud0c0 \ud14c\uc2a4\ud130 \ud655\ubcf4",
+                "strategy": "\ub124\uc774\ubc84 \uce74\ud398, \uc624\ud508\uce74\ud1a1 \ucc38\uc5ec"
+              },
+              {
+                "channel": "\uc9c0\uc778 \ub124\ud2b8\uc6cc\ud06c",
+                "expected": "\uccab 10\uba85 \uace0\uac1d",
+                "strategy": "\uce74\ud1a1/\ub9c1\ud06c\ub4dc\uc778\uc73c\ub85c \ub7f0\uce6d \uc54c\ub9bc"
+              }
+            ],
+            "paid": [
+              {
+                "budget": "\uc77c 1-3\ub9cc\uc6d0",
+                "channel": "\ud398\uc774\uc2a4\ubd81/\uc778\uc2a4\ud0c0 \uad11\uace0",
+                "expected": "CPC 300-500\uc6d0"
+              },
+              {
+                "budget": "\uc77c 1-2\ub9cc\uc6d0",
+                "channel": "\ub124\uc774\ubc84 \uac80\uc0c9\uad11\uace0",
+                "expected": "\ud0c0\uac9f \ud0a4\uc6cc\ub4dc \ub178\ucd9c"
+              },
+              {
+                "budget": "\uac74\ub2f9 5-30\ub9cc\uc6d0",
+                "channel": "\uc778\ud50c\ub8e8\uc5b8\uc11c",
+                "expected": "\uc2e0\ub8b0\ub3c4 \ud655\ubcf4"
+              }
+            ]
+          },
+          "risk_management": [
+            {
+              "prevention": "\ub7f0\uce6d \uc804 \ucd5c\uc18c 10\uba85 \uc0ac\uc804 \ub4f1\ub85d \ud655\ubcf4",
+              "risk": "\uace0\uac1d\uc774 \uc548 \ubaa8\uc784",
+              "solution": "\uac00\uaca9 \ub0ae\ucd94\uae30, \ubb34\ub8cc \uccb4\ud5d8 \uc5f0\uc7a5, \ud0c0\uac9f \uc7ac\uc124\uc815"
+            },
+            {
+              "prevention": "\ucc28\ubcc4\ud654 \ud3ec\uc778\ud2b8 3\uac1c \uc774\uc0c1 \uc900\ube44",
+              "risk": "\uacbd\uc7c1\uc0ac\uac00 \ub108\ubb34 \uac15\ud568",
+              "solution": "\ub2c8\uce58 \uc2dc\uc7a5 \uc9d1\uc911, \ud2b9\uc815 \uace0\uac1d\uad70 \uc804\ubb38\ud654"
+            },
+            {
+              "prevention": "MVP\ub294 \ucd5c\ub300\ud55c \ub2e8\uc21c\ud558\uac8c",
+              "risk": "\uae30\uc220\uc801 \ubb38\uc81c",
+              "solution": "No-Code\ub85c \uc6b0\ud68c, \uc678\uc8fc \ud65c\uc6a9"
+            }
+          ],
+          "success_metrics": {
+            "month3": {
+              "goal": "\uc6d4 200\ub9cc\uc6d0 \ub9e4\ucd9c + \uace0\uac1d 30\uba85",
+              "importance": "\uc9c0\uc18d \uac00\ub2a5\uc131 \ud655\uc778"
+            },
+            "week1": {
+              "goal": "\ub79c\ub529\ud398\uc774\uc9c0 \uc644\uc131 + \uc774\uba54\uc77c 20\uac1c \uc218\uc9d1",
+              "importance": "\uc2dc\uc7a5 \uad00\uc2ec\ub3c4 \uac80\uc99d"
+            },
+            "week2": {
+              "goal": "\ubca0\ud0c0 \ud14c\uc2a4\ud130 10\uba85 + \ud53c\ub4dc\ubc31 \uc218\uc9d1",
+              "importance": "\uc81c\ud488-\uc2dc\uc7a5 \uc801\ud569\uc131 \ud655\uc778"
+            },
+            "week4": {
+              "goal": "\uc720\ub8cc \uace0\uac1d 5\uba85 + \uc6d4 50\ub9cc\uc6d0 \ub9e4\ucd9c",
+              "importance": "\uc218\uc775 \ubaa8\ub378 \uac80\uc99d"
+            }
+          },
+          "tech_stack": {
+            "cost": "\uc6d4 10-30\ub9cc\uc6d0",
+            "learning_time": "2-3\uc8fc",
+            "reason": "\ub9c8\ucf13\ud50c\ub808\uc774\uc2a4\ub294 \uc591\uba74 \uc2dc\uc7a5. \ube60\ub978 \ub7f0\uce6d \ud6c4 \uc218\uc694/\uacf5\uae09 \ud14c\uc2a4\ud2b8 \ud544\uc694",
+            "recommended": "No-Code \ub9c8\ucf13\ud50c\ub808\uc774\uc2a4 \ube4c\ub354",
+            "tools": [
+              "Sharetribe",
+              "Bubble.io",
+              "Webflow + Memberstack"
+            ]
+          }
+        }
+      },
+      "feasibility": 5.92,
+      "id": 2936,
+      "investment": 2960000.0,
+      "market_size": "1\uc870\uc6d0",
+      "name": "\uc2e4\uc2dc\uac04 \uc678\uad6d\uc5b4 \ub300\ud654 \ub9e4\uce6d",
+      "priority": "medium",
+      "revenue_12m": 55342224,
+      "revenue_model": "subscription",
+      "risk": "high",
+      "score": 59.2,
+      "score_breakdown": {
+        "base_score": 71,
+        "competition_bonus": 5,
+        "domain_bonus": 5,
+        "revenue_bonus": 6,
+        "synergy_bonus": 0,
+        "target_bonus": 8,
+        "trend_bonus": 0
+      },
+      "trend": "\uc548\uc815",
+      "type": "marketplace"
+    },
+    {
+      "competition_level": 55,
+      "created_at": "2026-01-17 16:22",
+      "description": "\ud504\ub9ac\ub79c\uc11c \ub9db\uc9d1 \uc194\ub8e8\uc158 - \uc2dc\uc7a5\uc131 50\uc810, \uc218\uc775\uc131 87\uc810",
+      "details": {
+        "action_plan": {
+          "summary": "\ud504\ub9ac\ub79c\uc11c \ub9db\uc9d1 \uc194\ub8e8\uc158\ub97c 4\uc8fc \uc548\uc5d0 \ub7f0\uce6d\ud558\uae30 \uc704\ud55c \uc2e4\ud589 \uacc4\ud68d\uc785\ub2c8\ub2e4.",
+          "total_budget": 1000000,
+          "week_1": {
+            "goal": "MVP \uac1c\ubc1c \ubc0f \uc2dc\uc7a5 \uc870\uc0ac",
+            "tasks": [
+              "\ud504\ub9ac\ub79c\uc11c \ub9db\uc9d1 \uc194\ub8e8\uc158 \ud575\uc2ec \uae30\ub2a5 \uc815\uc758",
+              "\uacbd\uc7c1\uc0ac \ubd84\uc11d \ubc0f \ucc28\ubcc4\ud654 \ud3ec\uc778\ud2b8 \ub3c4\ucd9c",
+              "\ub79c\ub529\ud398\uc774\uc9c0 \uc81c\uc791 (Webflow/Notion)",
+              "\ucd08\uae30 \uace0\uac1d \ud0c0\uac9f \uc815\uc758"
+            ]
+          },
+          "week_2": {
+            "goal": "\ud504\ub85c\ud1a0\ud0c0\uc785 \ubc0f \uac80\uc99d",
+            "tasks": [
+              "MVP \ud504\ub85c\ud1a0\ud0c0\uc785 \uc81c\uc791",
+              "\ubca0\ud0c0 \ud14c\uc2a4\ud130 10\uba85 \ubaa8\uc9d1",
+              "\uc0ac\uc6a9\uc790 \ud53c\ub4dc\ubc31 \uc218\uc9d1",
+              "\uac00\uaca9 \ucc45\uc815 \ud14c\uc2a4\ud2b8"
+            ]
+          },
+          "week_3": {
+            "goal": "\ub9c8\ucf00\ud305 \ubc0f \uace0\uac1d \ud655\ubcf4",
+            "tasks": [
+              "SNS \ub9c8\ucf00\ud305 \uc2dc\uc791 (\uc778\uc2a4\ud0c0/\ud398\uc774\uc2a4\ubd81)",
+              "\uc18c\uaddc\ubaa8 \uc720\ub8cc \uad11\uace0 \ud14c\uc2a4\ud2b8 (\uc77c 1\ub9cc\uc6d0)",
+              "\uccab \uc720\ub8cc \uace0\uac1d \ud655\ubcf4",
+              "\uace0\uac1d \ud6c4\uae30 \uc218\uc9d1"
+            ]
+          },
+          "week_4": {
+            "goal": "\ucd5c\uc801\ud654 \ubc0f \ud655\uc7a5",
+            "tasks": [
+              "\uc804\ud658\uc728 \ucd5c\uc801\ud654",
+              "\uc790\ub3d9\ud654 \uc2dc\uc2a4\ud15c \uad6c\ucd95",
+              "\ucd94\uac00 \uae30\ub2a5 \uac1c\ubc1c",
+              "\uc6d4 \ubaa9\ud45c \ub9e4\ucd9c \ub2ec\uc131"
+            ]
+          }
+        },
+        "analysis_score": 64.80000000000001,
+        "category": "IT/\ub514\uc9c0\ud138",
+        "full_analysis": {
+          "business": {
+            "competitors_hint": "\ub9db\uc9d1 \ubd84\uc57c \uae30\uc874 \uc11c\ube44\uc2a4 \ub300\ube44 \ud504\ub9ac\ub79c\uc11c \ud2b9\ud654",
+            "core_features": [
+              "\ubd84\uc11d \ub300\uc2dc\ubcf4\ub4dc",
+              "\uc0ac\uc6a9\uc790 \ub9de\ucda4\ud654",
+              "\ub370\uc774\ud130 \uad00\ub9ac"
+            ],
+            "description": "\ud504\ub9ac\ub79c\uc11c\uc744 \uc704\ud55c \ub9db\uc9d1 \ubd84\uc57c \uad6c\ub3c5 \uae30\ubc18 \uc18c\ud504\ud2b8\uc6e8\uc5b4 \uc11c\ube44\uc2a4. \ubd84\uc11d \ub300\uc2dc\ubcf4\ub4dc, \uc0ac\uc6a9\uc790 \ub9de\ucda4\ud654 \uae30\ub2a5\uc744 \uc81c\uacf5\ud558\uba70, \uc2e4\uc2dc\uac04 \ub9db\uc9d1 \ub370\uc774\ud130 \uc81c\uacf5.",
+            "differentiator": "\uc2e4\uc2dc\uac04 \ub9db\uc9d1 \ub370\uc774\ud130 \uc81c\uacf5",
+            "difficulty": "\ubcf4\ud1b5",
+            "domain": "\ub9db\uc9d1",
+            "it_type": "saas",
+            "it_type_label": "SaaS",
+            "monthly_revenue": "200-800\ub9cc\uc6d0",
+            "name": "\ud504\ub9ac\ub79c\uc11c \ub9db\uc9d1 \uc194\ub8e8\uc158",
+            "revenue_models": [
+              "\uc6d4\uc815\uc561 \uad6c\ub3c5",
+              "\uc0ac\uc6a9\ub7c9 \uae30\ubc18 \uacfc\uae08"
+            ],
+            "revenue_potential": "\uc6d4 200-800\ub9cc\uc6d0",
+            "startup_cost": "100-300\ub9cc\uc6d0",
+            "target_audience": "\ud504\ub9ac\ub79c\uc11c",
+            "tech_stack": [
+              "Supabase",
+              "Webflow"
+            ],
+            "timeline": "1\uac1c\uc6d4 \ub0b4 \uc2dc\uc791",
+            "viability": "\ub192\uc74c"
+          },
+          "category": "IT/\ub514\uc9c0\ud138",
+          "priority": "\ub9e4\uc6b0 \ub192\uc74c",
+          "type": "\ub3d9\uc801 \uc870\ud569 \uc544\uc774\ub514\uc5b4"
+        },
+        "keyword": "\ud504\ub9ac\ub79c\uc11c \ub9db\uc9d1",
+        "market_analysis": {
+          "analysis_date": "2026-01-17T07:22:05.582847",
+          "business_idea": "\ud504\ub9ac\ub79c\uc11c \ub9db\uc9d1 \uc194\ub8e8\uc158",
+          "data_sources": {
+            "google": {
+              "entry_difficulty": "medium",
+              "estimated": true,
+              "organic_results": 203,
+              "platform": "\uad6c\uae00"
+            },
+            "kmong": {
+              "avg_price": 179278,
+              "competition_level": "medium",
+              "estimated": true,
+              "platform": "\ud06c\ubabd",
+              "service_count": 61
+            },
+            "naver": {
+              "estimated": true,
+              "keyword": "IT\uc11c\ube44\uc2a4",
+              "platform": "\ub124\uc774\ubc84",
+              "popularity_score": 48,
+              "related_searches": 8
+            },
+            "youtube": {
+              "estimated": true,
+              "estimated_videos": 71,
+              "interest_indicator": "medium",
+              "platform": "\uc720\ud29c\ube0c"
+            }
+          },
+          "google_trends": {
+            "global_interest": 72,
+            "growth_rate": 15,
+            "trend": "\uc548\uc815\uc801"
+          },
+          "keyword": "\ud504\ub9ac\ub79c\uc11c \ub9db\uc9d1",
+          "market_analysis": {
+            "competition": {
+              "description": "\uc801\uc815 \uacbd\uc7c1, \ucc28\ubcc4\ud654 \ud544\uc694",
+              "entry_difficulty": "\ubcf4\ud1b5",
+              "level": "\uc911\uac04",
+              "score_bonus": 5
+            },
+            "domain": {
+              "domain": "IT\uc11c\ube44\uc2a4",
+              "growth_rate": "5%",
+              "market_size": "\uc911\ud615",
+              "score_bonus": 5,
+              "trend": "\uc548\uc815"
+            },
+            "market_size": {
+              "addressable_market": "\uc57d 8,400\uc5b5\uc6d0",
+              "estimated_size_billion_krw": 8400,
+              "size_category": "\uc911\ud615",
+              "target_population_thousands": 2800
+            },
+            "target_audience": {
+              "digital_affinity": "\ub192\uc74c",
+              "population_millions": 2800,
+              "score_bonus": 8,
+              "spending_power": "\ub192\uc74c",
+              "target": "\uc9c1\uc7a5\uc778"
+            },
+            "trend_keywords_found": []
+          },
+          "market_info": {
+            "domain": "default",
+            "entry_barrier": "\uc911\uac04",
+            "entry_barrier_score": 50,
+            "growth_rate": 15,
+            "market_size": "1\uc870\uc6d0",
+            "seasonality": "\uc5f0\uc911 \uafb8\uc900",
+            "target_size": "\uc7a0\uc7ac \uace0\uac1d 100\ub9cc+"
+          },
+          "market_score": 50,
+          "market_summary": "\ud504\ub9ac\ub79c\uc11c \ub9db\uc9d1 \uc194\ub8e8\uc158 \uad00\ub828 \uc2dc\uc7a5 \uaddc\ubaa8\ub294 1\uc870\uc6d0\uc774\uba70, \uc5f0 15% \uc131\uc7a5 \uc911\uc785\ub2c8\ub2e4. \uacbd\uc7c1 \uac15\ub3c4\ub294 '\uc911\uac04'\uc774\uace0, \uc9c4\uc785 \uc7a5\ubcbd\uc740 '\uc911\uac04' \uc218\uc900\uc785\ub2c8\ub2e4. \uc7a0\uc7ac \uace0\uac1d 100\ub9cc+\uc758 \uc7a0\uc7ac \uace0\uac1d\uc774 \uc788\uc2b5\ub2c8\ub2e4.",
+          "mode": "lightweight_v2",
+          "naver": {
+            "competition": "\uc911\uac04",
+            "competition_score": 55,
+            "related_keywords": [
+              "\ud504\ub9ac\ub79c\uc11c \ub9db\uc9d1",
+              "\ud504\ub9ac\ub79c\uc11c \ub9db\uc9d1 \ucd94\ucc9c",
+              "\ud504\ub9ac\ub79c\uc11c \ub9db\uc9d1 \ud6c4\uae30",
+              "\ud504\ub9ac\ub79c\uc11c \ub9db\uc9d1 \ube44\uad50"
+            ],
+            "search_count": 30300
+          },
+          "recommendation": {
+            "action": "\ub2e4\ub978 \uc544\uc774\ub514\uc5b4 \ud0d0\uc0c9 \uad8c\uc7a5",
+            "confidence": "\ub0ae\uc74c",
+            "key_success_factors": [
+              "\uba85\ud655\ud55c \ucc28\ubcc4\ud654 \ud3ec\uc778\ud2b8 \ud544\uc218",
+              "\ub2c8\uce58 \ub9c8\ucf13 \uc9d1\uc911 \uc804\ub7b5",
+              "\ube60\ub978 MVP \ucd9c\uc2dc \ubc0f \ud53c\ub4dc\ubc31 \ubc18\uc601",
+              "\ud6a8\uacfc\uc801\uc778 \uace0\uac1d \ud68d\ub4dd \ucc44\ub110 \ud655\ubcf4"
+            ],
+            "priority": "\uc81c\uc678",
+            "verdict": "\ube44\ucd94\ucc9c"
+          },
+          "score_breakdown": {
+            "base_score": 76,
+            "competition_bonus": 5,
+            "domain_bonus": 5,
+            "revenue_bonus": 12,
+            "synergy_bonus": 0,
+            "target_bonus": 8,
+            "trend_bonus": 0
+          }
+        },
+        "market_score": 50.0,
+        "revenue_analysis": {
+          "mode": "lightweight_v2",
+          "revenue_models": [
+            {
+              "model": "\uc6d4\uc815\uc561 \uad6c\ub3c5",
+              "scalability": "\ub192\uc74c",
+              "score": 12,
+              "stability": "\ub9e4\uc6b0 \ub192\uc74c"
+            }
+          ],
+          "scenarios": {
+            "conservative": {
+              "monthly_profit": 21875000,
+              "monthly_revenue": 31250000
+            },
+            "optimistic": {
+              "monthly_profit": 87500000,
+              "monthly_revenue": 125000000
+            },
+            "realistic": {
+              "monthly_profit": 43750000,
+              "monthly_revenue": 62500000
+            }
+          },
+          "verdict": {
+            "recurring_potential": true,
+            "score": 87
+          }
+        },
+        "revenue_score": 87.0,
+        "startup_guide": {
+          "cost_breakdown": {
+            "essential": [
+              {
+                "cost": 15000,
+                "item": "\ub3c4\uba54\uc778",
+                "period": "\ub144"
+              },
+              {
+                "cost": 0,
+                "item": "\ud638\uc2a4\ud305/\uc11c\ubc84",
+                "note": "Vercel/Netlify \ubb34\ub8cc",
+                "period": "\uc6d4"
+              },
+              {
+                "cost": 0,
+                "item": "\uc774\uba54\uc77c \uc11c\ube44\uc2a4",
+                "note": "Mailchimp \ubb34\ub8cc (500\uba85\uae4c\uc9c0)",
+                "period": "\uc6d4"
+              }
+            ],
+            "recommended": [
+              {
+                "cost": 50000,
+                "item": "No-Code \ud234",
+                "period": "\uc6d4"
+              },
+              {
+                "cost": 300000,
+                "item": "\uad11\uace0\ube44",
+                "period": "\uc6d4"
+              },
+              {
+                "cost": 15000,
+                "item": "\ub514\uc790\uc778 \ud234",
+                "note": "Canva Pro",
+                "period": "\uc6d4"
+              }
+            ],
+            "total_minimum": 15000,
+            "total_recommended": 380000
+          },
+          "day1_checklist": {
+            "tasks": [
+              {
+                "cost": "1-2\ub9cc\uc6d0/\ub144",
+                "detail": "\ud504\ub9ac\ub79c\uc11c\ub9db\uc9d1\uc194\ub8e8\uc158.com \ub610\ub294 .kr",
+                "task": "\ub3c4\uba54\uc778 \uad6c\ub9e4",
+                "time": "10\ubd84",
+                "tool": "Namecheap, \uac00\ube44\uc544"
+              },
+              {
+                "cost": "0\uc6d0",
+                "detail": "\uc11c\ube44\uc2a4 \uc18c\uac1c + \uc774\uba54\uc77c \uc218\uc9d1 \ud3fc",
+                "task": "\ub79c\ub529\ud398\uc774\uc9c0 \uc81c\uc791",
+                "time": "2-3\uc2dc\uac04",
+                "tool": "Notion, Webflow (\ubb34\ub8cc)"
+              },
+              {
+                "cost": "0\uc6d0",
+                "detail": "\uac00\uaca9, \uae30\ub2a5, \ub9ac\ubdf0 \uc815\ub9ac",
+                "task": "\uacbd\uc7c1\uc0ac 5\uac1c \ubd84\uc11d",
+                "time": "1-2\uc2dc\uac04",
+                "tool": "Google \uc2a4\ud504\ub808\ub4dc\uc2dc\ud2b8"
+              },
+              {
+                "cost": "0\uc6d0",
+                "detail": "\uc778\uc2a4\ud0c0\uadf8\ub7a8 \ube44\uc988\ub2c8\uc2a4 \uacc4\uc815",
+                "task": "SNS \uacc4\uc815 \uc0dd\uc131",
+                "time": "30\ubd84",
+                "tool": "Instagram, \ud398\uc774\uc2a4\ubd81"
+              }
+            ],
+            "title": "Day 1: \uc624\ub298 \ub2f9\uc7a5 \uc2dc\uc791\ud558\uae30"
+          },
+          "first_customer_strategy": {
+            "steps": [
+              {
+                "action": "\ubb34\ub8cc/\ud560\uc778 \uc81c\uacf5",
+                "detail": "\uccab \ub2ec \ubb34\ub8cc \ub610\ub294 50% \ud560\uc778\uc73c\ub85c \uc9c4\uc785 \uc7a5\ubcbd \ub0ae\ucd94\uae30",
+                "step": 1,
+                "target": "3\uba85"
+              },
+              {
+                "action": "\uc9c0\uc778 \uc601\uc5c5",
+                "detail": "\uce74\ud1a1, \uc778\uc2a4\ud0c0 DM\uc73c\ub85c \uc9c1\uc811 \uc5f0\ub77d. \uc194\uc9c1\ud558\uac8c \ub3c4\uc6c0 \uc694\uccad",
+                "step": 2,
+                "target": "3\uba85"
+              },
+              {
+                "action": "\ucee4\ubba4\ub2c8\ud2f0 \ud65c\ub3d9",
+                "detail": "\uad00\ub828 \uc624\ud508\uce74\ud1a1, \ud398\uc774\uc2a4\ubd81 \uadf8\ub8f9\uc5d0\uc11c \ubb34\ub8cc \uc0c1\ub2f4 \uc81c\uacf5",
+                "step": 3,
+                "target": "2\uba85"
+              },
+              {
+                "action": "\ucf58\ud150\uce20 \ub9c8\ucf00\ud305",
+                "detail": "\ube14\ub85c\uadf8 \uae00 \ud558\ub2e8\uc5d0 CTA \uc0bd\uc785",
+                "step": 4,
+                "target": "2\uba85"
+              }
+            ],
+            "title": "\uccab 10\uba85 \uace0\uac1d \ud655\ubcf4 \uc804\ub7b5"
+          },
+          "marketing_channels": {
+            "free": [
+              {
+                "channel": "\uc778\uc2a4\ud0c0\uadf8\ub7a8",
+                "expected": "\uc6d4 100-500 \ud314\ub85c\uc6cc",
+                "strategy": "\uad00\ub828 \ud574\uc2dc\ud0dc\uadf8\ub85c \uc77c 1\ud3ec\uc2a4\ud305"
+              },
+              {
+                "channel": "\ube14\ub85c\uadf8/\ube0c\ub7f0\uce58",
+                "expected": "\uc6d4 1000-5000 \ubc29\ubb38\uc790",
+                "strategy": "\uc8fc 2\ud68c \uc804\ubb38 \ucf58\ud150\uce20 \ubc1c\ud589"
+              },
+              {
+                "channel": "\ucee4\ubba4\ub2c8\ud2f0",
+                "expected": "\ucd08\uae30 \ubca0\ud0c0 \ud14c\uc2a4\ud130 \ud655\ubcf4",
+                "strategy": "\ub124\uc774\ubc84 \uce74\ud398, \uc624\ud508\uce74\ud1a1 \ucc38\uc5ec"
+              },
+              {
+                "channel": "\uc9c0\uc778 \ub124\ud2b8\uc6cc\ud06c",
+                "expected": "\uccab 10\uba85 \uace0\uac1d",
+                "strategy": "\uce74\ud1a1/\ub9c1\ud06c\ub4dc\uc778\uc73c\ub85c \ub7f0\uce6d \uc54c\ub9bc"
+              }
+            ],
+            "paid": [
+              {
+                "budget": "\uc77c 1-3\ub9cc\uc6d0",
+                "channel": "\ud398\uc774\uc2a4\ubd81/\uc778\uc2a4\ud0c0 \uad11\uace0",
+                "expected": "CPC 300-500\uc6d0"
+              },
+              {
+                "budget": "\uc77c 1-2\ub9cc\uc6d0",
+                "channel": "\ub124\uc774\ubc84 \uac80\uc0c9\uad11\uace0",
+                "expected": "\ud0c0\uac9f \ud0a4\uc6cc\ub4dc \ub178\ucd9c"
+              },
+              {
+                "budget": "\uac74\ub2f9 5-30\ub9cc\uc6d0",
+                "channel": "\uc778\ud50c\ub8e8\uc5b8\uc11c",
+                "expected": "\uc2e0\ub8b0\ub3c4 \ud655\ubcf4"
+              }
+            ]
+          },
+          "risk_management": [
+            {
+              "prevention": "\ub7f0\uce6d \uc804 \ucd5c\uc18c 10\uba85 \uc0ac\uc804 \ub4f1\ub85d \ud655\ubcf4",
+              "risk": "\uace0\uac1d\uc774 \uc548 \ubaa8\uc784",
+              "solution": "\uac00\uaca9 \ub0ae\ucd94\uae30, \ubb34\ub8cc \uccb4\ud5d8 \uc5f0\uc7a5, \ud0c0\uac9f \uc7ac\uc124\uc815"
+            },
+            {
+              "prevention": "\ucc28\ubcc4\ud654 \ud3ec\uc778\ud2b8 3\uac1c \uc774\uc0c1 \uc900\ube44",
+              "risk": "\uacbd\uc7c1\uc0ac\uac00 \ub108\ubb34 \uac15\ud568",
+              "solution": "\ub2c8\uce58 \uc2dc\uc7a5 \uc9d1\uc911, \ud2b9\uc815 \uace0\uac1d\uad70 \uc804\ubb38\ud654"
+            },
+            {
+              "prevention": "MVP\ub294 \ucd5c\ub300\ud55c \ub2e8\uc21c\ud558\uac8c",
+              "risk": "\uae30\uc220\uc801 \ubb38\uc81c",
+              "solution": "No-Code\ub85c \uc6b0\ud68c, \uc678\uc8fc \ud65c\uc6a9"
+            }
+          ],
+          "success_metrics": {
+            "month3": {
+              "goal": "\uc6d4 200\ub9cc\uc6d0 \ub9e4\ucd9c + \uace0\uac1d 30\uba85",
+              "importance": "\uc9c0\uc18d \uac00\ub2a5\uc131 \ud655\uc778"
+            },
+            "week1": {
+              "goal": "\ub79c\ub529\ud398\uc774\uc9c0 \uc644\uc131 + \uc774\uba54\uc77c 20\uac1c \uc218\uc9d1",
+              "importance": "\uc2dc\uc7a5 \uad00\uc2ec\ub3c4 \uac80\uc99d"
+            },
+            "week2": {
+              "goal": "\ubca0\ud0c0 \ud14c\uc2a4\ud130 10\uba85 + \ud53c\ub4dc\ubc31 \uc218\uc9d1",
+              "importance": "\uc81c\ud488-\uc2dc\uc7a5 \uc801\ud569\uc131 \ud655\uc778"
+            },
+            "week4": {
+              "goal": "\uc720\ub8cc \uace0\uac1d 5\uba85 + \uc6d4 50\ub9cc\uc6d0 \ub9e4\ucd9c",
+              "importance": "\uc218\uc775 \ubaa8\ub378 \uac80\uc99d"
+            }
+          },
+          "tech_stack": {
+            "cost": "\uc6d4 5-10\ub9cc\uc6d0",
+            "learning_time": "1-2\uc8fc",
+            "reason": "SaaS\ub294 \ube60\ub978 MVP \uac80\uc99d\uc774 \uc911\uc694. \ucf54\ub529 \uc5c6\uc774 2\uc8fc \ub0b4 \ub7f0\uce6d \uac00\ub2a5",
+            "recommended": "No-Code / Low-Code",
+            "tools": [
+              "Bubble.io",
+              "Webflow",
+              "Airtable",
+              "Zapier"
+            ]
+          }
+        }
+      },
+      "feasibility": 6.480000000000001,
+      "id": 2935,
+      "investment": 3240000.0000000005,
+      "market_size": "1\uc870\uc6d0",
+      "name": "\ud504\ub9ac\ub79c\uc11c \ub9db\uc9d1 \uc194\ub8e8\uc158",
+      "priority": "medium",
+      "revenue_12m": 750000000,
+      "revenue_model": "subscription",
+      "risk": "high",
+      "score": 64.80000000000001,
+      "score_breakdown": {
+        "base_score": 76,
+        "competition_bonus": 5,
+        "domain_bonus": 5,
+        "revenue_bonus": 12,
+        "synergy_bonus": 0,
+        "target_bonus": 8,
+        "trend_bonus": 0
+      },
+      "trend": "\uc548\uc815",
+      "type": "saas"
+    },
+    {
+      "competition_level": 55,
+      "created_at": "2026-01-17 16:22",
+      "description": "\uc62c\uc778\uc6d0 \uc1fc\ud551 \ub9ac\ud3ec\ud2b8 - \uc2dc\uc7a5\uc131 53\uc810, \uc218\uc775\uc131 83\uc810",
+      "details": {
+        "action_plan": {
+          "summary": "\uc62c\uc778\uc6d0 \uc1fc\ud551 \ub9ac\ud3ec\ud2b8\ub97c 4\uc8fc \uc548\uc5d0 \ub7f0\uce6d\ud558\uae30 \uc704\ud55c \uc2e4\ud589 \uacc4\ud68d\uc785\ub2c8\ub2e4.",
+          "total_budget": 1000000,
+          "week_1": {
+            "goal": "MVP \uac1c\ubc1c \ubc0f \uc2dc\uc7a5 \uc870\uc0ac",
+            "tasks": [
+              "\uc62c\uc778\uc6d0 \uc1fc\ud551 \ub9ac\ud3ec\ud2b8 \ud575\uc2ec \uae30\ub2a5 \uc815\uc758",
+              "\uacbd\uc7c1\uc0ac \ubd84\uc11d \ubc0f \ucc28\ubcc4\ud654 \ud3ec\uc778\ud2b8 \ub3c4\ucd9c",
+              "\ub79c\ub529\ud398\uc774\uc9c0 \uc81c\uc791 (Webflow/Notion)",
+              "\ucd08\uae30 \uace0\uac1d \ud0c0\uac9f \uc815\uc758"
+            ]
+          },
+          "week_2": {
+            "goal": "\ud504\ub85c\ud1a0\ud0c0\uc785 \ubc0f \uac80\uc99d",
+            "tasks": [
+              "MVP \ud504\ub85c\ud1a0\ud0c0\uc785 \uc81c\uc791",
+              "\ubca0\ud0c0 \ud14c\uc2a4\ud130 10\uba85 \ubaa8\uc9d1",
+              "\uc0ac\uc6a9\uc790 \ud53c\ub4dc\ubc31 \uc218\uc9d1",
+              "\uac00\uaca9 \ucc45\uc815 \ud14c\uc2a4\ud2b8"
+            ]
+          },
+          "week_3": {
+            "goal": "\ub9c8\ucf00\ud305 \ubc0f \uace0\uac1d \ud655\ubcf4",
+            "tasks": [
+              "SNS \ub9c8\ucf00\ud305 \uc2dc\uc791 (\uc778\uc2a4\ud0c0/\ud398\uc774\uc2a4\ubd81)",
+              "\uc18c\uaddc\ubaa8 \uc720\ub8cc \uad11\uace0 \ud14c\uc2a4\ud2b8 (\uc77c 1\ub9cc\uc6d0)",
+              "\uccab \uc720\ub8cc \uace0\uac1d \ud655\ubcf4",
+              "\uace0\uac1d \ud6c4\uae30 \uc218\uc9d1"
+            ]
+          },
+          "week_4": {
+            "goal": "\ucd5c\uc801\ud654 \ubc0f \ud655\uc7a5",
+            "tasks": [
+              "\uc804\ud658\uc728 \ucd5c\uc801\ud654",
+              "\uc790\ub3d9\ud654 \uc2dc\uc2a4\ud15c \uad6c\ucd95",
+              "\ucd94\uac00 \uae30\ub2a5 \uac1c\ubc1c",
+              "\uc6d4 \ubaa9\ud45c \ub9e4\ucd9c \ub2ec\uc131"
+            ]
+          }
+        },
+        "analysis_score": 65.0,
+        "category": "IT/\ub514\uc9c0\ud138",
+        "full_analysis": {
+          "business": {
+            "competitors_hint": "\uc1fc\ud551 \ubd84\uc57c \uae30\uc874 \uc11c\ube44\uc2a4 \ub300\ube44 \ud504\ub9ac\ub79c\uc11c \ud2b9\ud654",
+            "core_features": [
+              "\ub370\uc774\ud130 \uad00\ub9ac",
+              "\uc0ac\uc6a9\uc790 \ub9de\ucda4\ud654",
+              "\uc54c\ub9bc \uc2dc\uc2a4\ud15c"
+            ],
+            "description": "\ud504\ub9ac\ub79c\uc11c\uc744 \uc704\ud55c \uc1fc\ud551 \ubd84\uc57c \uad6c\ub3c5 \uae30\ubc18 \uc18c\ud504\ud2b8\uc6e8\uc5b4 \uc11c\ube44\uc2a4. \ub370\uc774\ud130 \uad00\ub9ac, \uc0ac\uc6a9\uc790 \ub9de\ucda4\ud654 \uae30\ub2a5\uc744 \uc81c\uacf5\ud558\uba70, 5\ubd84 \ub9cc\uc5d0 \uc2dc\uc791 \uac00\ub2a5\ud55c \uac04\ud3b8 \uc628\ubcf4\ub529.",
+            "differentiator": "5\ubd84 \ub9cc\uc5d0 \uc2dc\uc791 \uac00\ub2a5\ud55c \uac04\ud3b8 \uc628\ubcf4\ub529",
+            "difficulty": "\ubcf4\ud1b5",
+            "domain": "\uc1fc\ud551",
+            "it_type": "saas",
+            "it_type_label": "SaaS",
+            "monthly_revenue": "200-800\ub9cc\uc6d0",
+            "name": "\uc62c\uc778\uc6d0 \uc1fc\ud551 \ub9ac\ud3ec\ud2b8",
+            "revenue_models": [
+              "\uc6d4\uc815\uc561 \uad6c\ub3c5",
+              "\uc0ac\uc6a9\ub7c9 \uae30\ubc18 \uacfc\uae08"
+            ],
+            "revenue_potential": "\uc6d4 200-800\ub9cc\uc6d0",
+            "startup_cost": "100-300\ub9cc\uc6d0",
+            "target_audience": "\ud504\ub9ac\ub79c\uc11c",
+            "tech_stack": [
+              "Supabase",
+              "Webflow"
+            ],
+            "timeline": "1\uac1c\uc6d4 \ub0b4 \uc2dc\uc791",
+            "viability": "\ub9e4\uc6b0 \ub192\uc74c"
+          },
+          "category": "IT/\ub514\uc9c0\ud138",
+          "priority": "\ub192\uc74c",
+          "type": "\ub3d9\uc801 \uc870\ud569 \uc544\uc774\ub514\uc5b4"
+        },
+        "keyword": "\uc62c\uc778\uc6d0 \uc1fc\ud551 \ub9ac\ud3ec\ud2b8",
+        "market_analysis": {
+          "analysis_date": "2026-01-17T07:22:00.380366",
+          "business_idea": "\uc62c\uc778\uc6d0 \uc1fc\ud551 \ub9ac\ud3ec\ud2b8",
+          "data_sources": {
+            "google": {
+              "entry_difficulty": "hard",
+              "estimated": true,
+              "organic_results": 245,
+              "platform": "\uad6c\uae00"
+            },
+            "kmong": {
+              "avg_price": 141892,
+              "competition_level": "medium",
+              "estimated": true,
+              "platform": "\ud06c\ubabd",
+              "service_count": 21
+            },
+            "naver": {
+              "estimated": true,
+              "keyword": "\uc1fc\ud551",
+              "platform": "\ub124\uc774\ubc84",
+              "popularity_score": 59,
+              "related_searches": 6
+            },
+            "youtube": {
+              "estimated": true,
+              "estimated_videos": 102,
+              "interest_indicator": "low",
+              "platform": "\uc720\ud29c\ube0c"
+            }
+          },
+          "google_trends": {
+            "global_interest": 72,
+            "growth_rate": 15,
+            "trend": "\uc548\uc815\uc801 \uc131\uc7a5"
+          },
+          "keyword": "\uc62c\uc778\uc6d0 \uc1fc\ud551 \ub9ac\ud3ec\ud2b8",
+          "market_analysis": {
+            "competition": {
+              "description": "\uacbd\uc7c1 \uce58\uc5f4, \uac15\ub825\ud55c \ucc28\ubcc4\ud654 \ud544\uc218",
+              "entry_difficulty": "\uc5b4\ub824\uc6c0",
+              "level": "\ub192\uc74c",
+              "score_bonus": 0
+            },
+            "domain": {
+              "domain": "\uc1fc\ud551",
+              "growth_rate": "5%",
+              "market_size": "\ub300\ud615",
+              "score_bonus": 3,
+              "trend": "\ud3ec\ud654"
+            },
+            "market_size": {
+              "addressable_market": "\uc57d 28,000\uc5b5\uc6d0",
+              "estimated_size_billion_krw": 28000,
+              "size_category": "\ub300\ud615",
+              "target_population_thousands": 2800
+            },
+            "target_audience": {
+              "digital_affinity": "\ub192\uc74c",
+              "population_millions": 2800,
+              "score_bonus": 8,
+              "spending_power": "\ub192\uc74c",
+              "target": "\uc9c1\uc7a5\uc778"
+            },
+            "trend_keywords_found": [
+              "\uc1fc\ud551 (moderate)"
+            ]
+          },
+          "market_info": {
+            "domain": "ecommerce",
+            "entry_barrier": "\ub0ae\uc74c",
+            "entry_barrier_score": 25,
+            "growth_rate": 15,
+            "market_size": "8\uc870\uc6d0",
+            "seasonality": "\uc5f0\ub9d0 \uc131\uc218\uae30",
+            "target_size": "\uc628\ub77c\uc778 \uc18c\ube44\uc790 3\ucc9c\ub9cc+"
+          },
+          "market_score": 53,
+          "market_summary": "\uc62c\uc778\uc6d0 \uc1fc\ud551 \ub9ac\ud3ec\ud2b8 \uad00\ub828 \uc2dc\uc7a5 \uaddc\ubaa8\ub294 8\uc870\uc6d0\uc774\uba70, \uc5f0 15% \uc131\uc7a5 \uc911\uc785\ub2c8\ub2e4. \uacbd\uc7c1 \uac15\ub3c4\ub294 '\ub9e4\uc6b0 \ub192\uc74c'\uc774\uace0, \uc9c4\uc785 \uc7a5\ubcbd\uc740 '\ub0ae\uc74c' \uc218\uc900\uc785\ub2c8\ub2e4. \uc628\ub77c\uc778 \uc18c\ube44\uc790 3\ucc9c\ub9cc+\uc758 \uc7a0\uc7ac \uace0\uac1d\uc774 \uc788\uc2b5\ub2c8\ub2e4.",
+          "mode": "lightweight_v2",
+          "naver": {
+            "competition": "\ub9e4\uc6b0 \ub192\uc74c",
+            "competition_score": 90,
+            "related_keywords": [
+              "\uc62c\uc778\uc6d0 \uc1fc\ud551 \ub9ac\ud3ec\ud2b8",
+              "\uc62c\uc778\uc6d0 \uc1fc\ud551 \ub9ac\ud3ec\ud2b8 \ucd94\ucc9c",
+              "\uc62c\uc778\uc6d0 \uc1fc\ud551 \ub9ac\ud3ec\ud2b8 \ud6c4\uae30",
+              "\uc62c\uc778\uc6d0 \uc1fc\ud551 \ub9ac\ud3ec\ud2b8 \ube44\uad50"
+            ],
+            "search_count": 121200
+          },
+          "recommendation": {
+            "action": "\ub2e4\ub978 \uc544\uc774\ub514\uc5b4 \ud0d0\uc0c9 \uad8c\uc7a5",
+            "confidence": "\ub0ae\uc74c",
+            "key_success_factors": [
+              "\uba85\ud655\ud55c \ucc28\ubcc4\ud654 \ud3ec\uc778\ud2b8 \ud544\uc218",
+              "\ub300\uaddc\ubaa8 \ud0c0\uac9f \uc2dc\uc7a5 \uacf5\ub7b5",
+              "\ube60\ub978 MVP \ucd9c\uc2dc \ubc0f \ud53c\ub4dc\ubc31 \ubc18\uc601",
+              "\ud6a8\uacfc\uc801\uc778 \uace0\uac1d \ud68d\ub4dd \ucc44\ub110 \ud655\ubcf4"
+            ],
+            "priority": "\uc81c\uc678",
+            "verdict": "\ube44\ucd94\ucc9c"
+          },
+          "score_breakdown": {
+            "base_score": 76,
+            "competition_bonus": 0,
+            "domain_bonus": 3,
+            "revenue_bonus": 12,
+            "synergy_bonus": 0,
+            "target_bonus": 8,
+            "trend_bonus": 4
+          }
+        },
+        "market_score": 53.0,
+        "revenue_analysis": {
+          "mode": "lightweight_v2",
+          "revenue_models": [
+            {
+              "model": "\uc6d4\uc815\uc561 \uad6c\ub3c5",
+              "scalability": "\ub192\uc74c",
+              "score": 12,
+              "stability": "\ub9e4\uc6b0 \ub192\uc74c"
+            }
+          ],
+          "scenarios": {
+            "conservative": {
+              "monthly_profit": 21875000,
+              "monthly_revenue": 31250000
+            },
+            "optimistic": {
+              "monthly_profit": 87500000,
+              "monthly_revenue": 125000000
+            },
+            "realistic": {
+              "monthly_profit": 43750000,
+              "monthly_revenue": 62500000
+            }
+          },
+          "verdict": {
+            "recurring_potential": true,
+            "score": 83
+          }
+        },
+        "revenue_score": 83.0,
+        "startup_guide": {
+          "cost_breakdown": {
+            "essential": [
+              {
+                "cost": 15000,
+                "item": "\ub3c4\uba54\uc778",
+                "period": "\ub144"
+              },
+              {
+                "cost": 0,
+                "item": "\ud638\uc2a4\ud305/\uc11c\ubc84",
+                "note": "Vercel/Netlify \ubb34\ub8cc",
+                "period": "\uc6d4"
+              },
+              {
+                "cost": 0,
+                "item": "\uc774\uba54\uc77c \uc11c\ube44\uc2a4",
+                "note": "Mailchimp \ubb34\ub8cc (500\uba85\uae4c\uc9c0)",
+                "period": "\uc6d4"
+              }
+            ],
+            "recommended": [
+              {
+                "cost": 50000,
+                "item": "No-Code \ud234",
+                "period": "\uc6d4"
+              },
+              {
+                "cost": 300000,
+                "item": "\uad11\uace0\ube44",
+                "period": "\uc6d4"
+              },
+              {
+                "cost": 15000,
+                "item": "\ub514\uc790\uc778 \ud234",
+                "note": "Canva Pro",
+                "period": "\uc6d4"
+              }
+            ],
+            "total_minimum": 15000,
+            "total_recommended": 380000
+          },
+          "day1_checklist": {
+            "tasks": [
+              {
+                "cost": "1-2\ub9cc\uc6d0/\ub144",
+                "detail": "\uc62c\uc778\uc6d0\uc1fc\ud551\ub9ac\ud3ec\ud2b8.com \ub610\ub294 .kr",
+                "task": "\ub3c4\uba54\uc778 \uad6c\ub9e4",
+                "time": "10\ubd84",
+                "tool": "Namecheap, \uac00\ube44\uc544"
+              },
+              {
+                "cost": "0\uc6d0",
+                "detail": "\uc11c\ube44\uc2a4 \uc18c\uac1c + \uc774\uba54\uc77c \uc218\uc9d1 \ud3fc",
+                "task": "\ub79c\ub529\ud398\uc774\uc9c0 \uc81c\uc791",
+                "time": "2-3\uc2dc\uac04",
+                "tool": "Notion, Webflow (\ubb34\ub8cc)"
+              },
+              {
+                "cost": "0\uc6d0",
+                "detail": "\uac00\uaca9, \uae30\ub2a5, \ub9ac\ubdf0 \uc815\ub9ac",
+                "task": "\uacbd\uc7c1\uc0ac 5\uac1c \ubd84\uc11d",
+                "time": "1-2\uc2dc\uac04",
+                "tool": "Google \uc2a4\ud504\ub808\ub4dc\uc2dc\ud2b8"
+              },
+              {
+                "cost": "0\uc6d0",
+                "detail": "\uc778\uc2a4\ud0c0\uadf8\ub7a8 \ube44\uc988\ub2c8\uc2a4 \uacc4\uc815",
+                "task": "SNS \uacc4\uc815 \uc0dd\uc131",
+                "time": "30\ubd84",
+                "tool": "Instagram, \ud398\uc774\uc2a4\ubd81"
+              }
+            ],
+            "title": "Day 1: \uc624\ub298 \ub2f9\uc7a5 \uc2dc\uc791\ud558\uae30"
+          },
+          "first_customer_strategy": {
+            "steps": [
+              {
+                "action": "\ubb34\ub8cc/\ud560\uc778 \uc81c\uacf5",
+                "detail": "\uccab \ub2ec \ubb34\ub8cc \ub610\ub294 50% \ud560\uc778\uc73c\ub85c \uc9c4\uc785 \uc7a5\ubcbd \ub0ae\ucd94\uae30",
+                "step": 1,
+                "target": "3\uba85"
+              },
+              {
+                "action": "\uc9c0\uc778 \uc601\uc5c5",
+                "detail": "\uce74\ud1a1, \uc778\uc2a4\ud0c0 DM\uc73c\ub85c \uc9c1\uc811 \uc5f0\ub77d. \uc194\uc9c1\ud558\uac8c \ub3c4\uc6c0 \uc694\uccad",
+                "step": 2,
+                "target": "3\uba85"
+              },
+              {
+                "action": "\ucee4\ubba4\ub2c8\ud2f0 \ud65c\ub3d9",
+                "detail": "\uad00\ub828 \uc624\ud508\uce74\ud1a1, \ud398\uc774\uc2a4\ubd81 \uadf8\ub8f9\uc5d0\uc11c \ubb34\ub8cc \uc0c1\ub2f4 \uc81c\uacf5",
+                "step": 3,
+                "target": "2\uba85"
+              },
+              {
+                "action": "\ucf58\ud150\uce20 \ub9c8\ucf00\ud305",
+                "detail": "\ube14\ub85c\uadf8 \uae00 \ud558\ub2e8\uc5d0 CTA \uc0bd\uc785",
+                "step": 4,
+                "target": "2\uba85"
+              }
+            ],
+            "title": "\uccab 10\uba85 \uace0\uac1d \ud655\ubcf4 \uc804\ub7b5"
+          },
+          "marketing_channels": {
+            "free": [
+              {
+                "channel": "\uc778\uc2a4\ud0c0\uadf8\ub7a8",
+                "expected": "\uc6d4 100-500 \ud314\ub85c\uc6cc",
+                "strategy": "\uad00\ub828 \ud574\uc2dc\ud0dc\uadf8\ub85c \uc77c 1\ud3ec\uc2a4\ud305"
+              },
+              {
+                "channel": "\ube14\ub85c\uadf8/\ube0c\ub7f0\uce58",
+                "expected": "\uc6d4 1000-5000 \ubc29\ubb38\uc790",
+                "strategy": "\uc8fc 2\ud68c \uc804\ubb38 \ucf58\ud150\uce20 \ubc1c\ud589"
+              },
+              {
+                "channel": "\ucee4\ubba4\ub2c8\ud2f0",
+                "expected": "\ucd08\uae30 \ubca0\ud0c0 \ud14c\uc2a4\ud130 \ud655\ubcf4",
+                "strategy": "\ub124\uc774\ubc84 \uce74\ud398, \uc624\ud508\uce74\ud1a1 \ucc38\uc5ec"
+              },
+              {
+                "channel": "\uc9c0\uc778 \ub124\ud2b8\uc6cc\ud06c",
+                "expected": "\uccab 10\uba85 \uace0\uac1d",
+                "strategy": "\uce74\ud1a1/\ub9c1\ud06c\ub4dc\uc778\uc73c\ub85c \ub7f0\uce6d \uc54c\ub9bc"
+              }
+            ],
+            "paid": [
+              {
+                "budget": "\uc77c 1-3\ub9cc\uc6d0",
+                "channel": "\ud398\uc774\uc2a4\ubd81/\uc778\uc2a4\ud0c0 \uad11\uace0",
+                "expected": "CPC 300-500\uc6d0"
+              },
+              {
+                "budget": "\uc77c 1-2\ub9cc\uc6d0",
+                "channel": "\ub124\uc774\ubc84 \uac80\uc0c9\uad11\uace0",
+                "expected": "\ud0c0\uac9f \ud0a4\uc6cc\ub4dc \ub178\ucd9c"
+              },
+              {
+                "budget": "\uac74\ub2f9 5-30\ub9cc\uc6d0",
+                "channel": "\uc778\ud50c\ub8e8\uc5b8\uc11c",
+                "expected": "\uc2e0\ub8b0\ub3c4 \ud655\ubcf4"
+              }
+            ]
+          },
+          "risk_management": [
+            {
+              "prevention": "\ub7f0\uce6d \uc804 \ucd5c\uc18c 10\uba85 \uc0ac\uc804 \ub4f1\ub85d \ud655\ubcf4",
+              "risk": "\uace0\uac1d\uc774 \uc548 \ubaa8\uc784",
+              "solution": "\uac00\uaca9 \ub0ae\ucd94\uae30, \ubb34\ub8cc \uccb4\ud5d8 \uc5f0\uc7a5, \ud0c0\uac9f \uc7ac\uc124\uc815"
+            },
+            {
+              "prevention": "\ucc28\ubcc4\ud654 \ud3ec\uc778\ud2b8 3\uac1c \uc774\uc0c1 \uc900\ube44",
+              "risk": "\uacbd\uc7c1\uc0ac\uac00 \ub108\ubb34 \uac15\ud568",
+              "solution": "\ub2c8\uce58 \uc2dc\uc7a5 \uc9d1\uc911, \ud2b9\uc815 \uace0\uac1d\uad70 \uc804\ubb38\ud654"
+            },
+            {
+              "prevention": "MVP\ub294 \ucd5c\ub300\ud55c \ub2e8\uc21c\ud558\uac8c",
+              "risk": "\uae30\uc220\uc801 \ubb38\uc81c",
+              "solution": "No-Code\ub85c \uc6b0\ud68c, \uc678\uc8fc \ud65c\uc6a9"
+            }
+          ],
+          "success_metrics": {
+            "month3": {
+              "goal": "\uc6d4 200\ub9cc\uc6d0 \ub9e4\ucd9c + \uace0\uac1d 30\uba85",
+              "importance": "\uc9c0\uc18d \uac00\ub2a5\uc131 \ud655\uc778"
+            },
+            "week1": {
+              "goal": "\ub79c\ub529\ud398\uc774\uc9c0 \uc644\uc131 + \uc774\uba54\uc77c 20\uac1c \uc218\uc9d1",
+              "importance": "\uc2dc\uc7a5 \uad00\uc2ec\ub3c4 \uac80\uc99d"
+            },
+            "week2": {
+              "goal": "\ubca0\ud0c0 \ud14c\uc2a4\ud130 10\uba85 + \ud53c\ub4dc\ubc31 \uc218\uc9d1",
+              "importance": "\uc81c\ud488-\uc2dc\uc7a5 \uc801\ud569\uc131 \ud655\uc778"
+            },
+            "week4": {
+              "goal": "\uc720\ub8cc \uace0\uac1d 5\uba85 + \uc6d4 50\ub9cc\uc6d0 \ub9e4\ucd9c",
+              "importance": "\uc218\uc775 \ubaa8\ub378 \uac80\uc99d"
+            }
+          },
+          "tech_stack": {
+            "cost": "\uc6d4 5-10\ub9cc\uc6d0",
+            "learning_time": "1-2\uc8fc",
+            "reason": "SaaS\ub294 \ube60\ub978 MVP \uac80\uc99d\uc774 \uc911\uc694. \ucf54\ub529 \uc5c6\uc774 2\uc8fc \ub0b4 \ub7f0\uce6d \uac00\ub2a5",
+            "recommended": "No-Code / Low-Code",
+            "tools": [
+              "Bubble.io",
+              "Webflow",
+              "Airtable",
+              "Zapier"
+            ]
+          }
+        }
+      },
+      "feasibility": 6.5,
+      "id": 2934,
+      "investment": 3250000.0,
+      "market_size": "8\uc870\uc6d0",
+      "name": "\uc62c\uc778\uc6d0 \uc1fc\ud551 \ub9ac\ud3ec\ud2b8",
+      "priority": "medium",
+      "revenue_12m": 750000000,
+      "revenue_model": "subscription",
+      "risk": "high",
+      "score": 65.0,
+      "score_breakdown": {
+        "base_score": 76,
+        "competition_bonus": 0,
+        "domain_bonus": 3,
+        "revenue_bonus": 12,
+        "synergy_bonus": 0,
+        "target_bonus": 8,
+        "trend_bonus": 4
+      },
+      "trend": "\uc548\uc815",
+      "type": "saas"
+    },
+    {
+      "competition_level": 55,
+      "created_at": "2026-01-17 15:35",
+      "description": "\uc628\ub514\ub9e8\ub4dc \uc2a4\ud2b8\ub808\uc2a4\uad00\ub9ac \uc790\ub3d9\ud654 - \uc2dc\uc7a5\uc131 60\uc810, \uc218\uc775\uc131 87\uc810",
+      "details": {
+        "action_plan": {
+          "summary": "\uc628\ub514\ub9e8\ub4dc \uc2a4\ud2b8\ub808\uc2a4\uad00\ub9ac \uc790\ub3d9\ud654\ub97c 4\uc8fc \uc548\uc5d0 \ub7f0\uce6d\ud558\uae30 \uc704\ud55c \uc2e4\ud589 \uacc4\ud68d\uc785\ub2c8\ub2e4.",
+          "total_budget": 1000000,
+          "week_1": {
+            "goal": "MVP \uac1c\ubc1c \ubc0f \uc2dc\uc7a5 \uc870\uc0ac",
+            "tasks": [
+              "\uc628\ub514\ub9e8\ub4dc \uc2a4\ud2b8\ub808\uc2a4\uad00\ub9ac \uc790\ub3d9\ud654 \ud575\uc2ec \uae30\ub2a5 \uc815\uc758",
+              "\uacbd\uc7c1\uc0ac \ubd84\uc11d \ubc0f \ucc28\ubcc4\ud654 \ud3ec\uc778\ud2b8 \ub3c4\ucd9c",
+              "\ub79c\ub529\ud398\uc774\uc9c0 \uc81c\uc791 (Webflow/Notion)",
+              "\ucd08\uae30 \uace0\uac1d \ud0c0\uac9f \uc815\uc758"
+            ]
+          },
+          "week_2": {
+            "goal": "\ud504\ub85c\ud1a0\ud0c0\uc785 \ubc0f \uac80\uc99d",
+            "tasks": [
+              "MVP \ud504\ub85c\ud1a0\ud0c0\uc785 \uc81c\uc791",
+              "\ubca0\ud0c0 \ud14c\uc2a4\ud130 10\uba85 \ubaa8\uc9d1",
+              "\uc0ac\uc6a9\uc790 \ud53c\ub4dc\ubc31 \uc218\uc9d1",
+              "\uac00\uaca9 \ucc45\uc815 \ud14c\uc2a4\ud2b8"
+            ]
+          },
+          "week_3": {
+            "goal": "\ub9c8\ucf00\ud305 \ubc0f \uace0\uac1d \ud655\ubcf4",
+            "tasks": [
+              "SNS \ub9c8\ucf00\ud305 \uc2dc\uc791 (\uc778\uc2a4\ud0c0/\ud398\uc774\uc2a4\ubd81)",
+              "\uc18c\uaddc\ubaa8 \uc720\ub8cc \uad11\uace0 \ud14c\uc2a4\ud2b8 (\uc77c 1\ub9cc\uc6d0)",
+              "\uccab \uc720\ub8cc \uace0\uac1d \ud655\ubcf4",
+              "\uace0\uac1d \ud6c4\uae30 \uc218\uc9d1"
+            ]
+          },
+          "week_4": {
+            "goal": "\ucd5c\uc801\ud654 \ubc0f \ud655\uc7a5",
+            "tasks": [
+              "\uc804\ud658\uc728 \ucd5c\uc801\ud654",
+              "\uc790\ub3d9\ud654 \uc2dc\uc2a4\ud15c \uad6c\ucd95",
+              "\ucd94\uac00 \uae30\ub2a5 \uac1c\ubc1c",
+              "\uc6d4 \ubaa9\ud45c \ub9e4\ucd9c \ub2ec\uc131"
+            ]
+          }
+        },
+        "analysis_score": 70.80000000000001,
+        "category": "IT/\ub514\uc9c0\ud138",
+        "full_analysis": {
+          "business": {
+            "competitors_hint": "\uc2a4\ud2b8\ub808\uc2a4\uad00\ub9ac \ubd84\uc57c \uae30\uc874 \uc11c\ube44\uc2a4 \ub300\ube44 MZ\uc138\ub300 \ud2b9\ud654",
+            "core_features": [
+              "\uc0ac\uc6a9\uc790 \ub9de\ucda4\ud654",
+              "\ubd84\uc11d \ub300\uc2dc\ubcf4\ub4dc",
+              "\uc54c\ub9bc \uc2dc\uc2a4\ud15c"
+            ],
+            "description": "MZ\uc138\ub300\uc744 \uc704\ud55c \uc2a4\ud2b8\ub808\uc2a4\uad00\ub9ac \ubd84\uc57c \uad6c\ub3c5 \uae30\ubc18 \uc18c\ud504\ud2b8\uc6e8\uc5b4 \uc11c\ube44\uc2a4. \uc0ac\uc6a9\uc790 \ub9de\ucda4\ud654, \ubd84\uc11d \ub300\uc2dc\ubcf4\ub4dc \uae30\ub2a5\uc744 \uc81c\uacf5\ud558\uba70, \ubaa8\ubc14\uc77c \uc571 + \uc6f9 \ub3d9\uc2dc \uc9c0\uc6d0.",
+            "differentiator": "\ubaa8\ubc14\uc77c \uc571 + \uc6f9 \ub3d9\uc2dc \uc9c0\uc6d0",
+            "difficulty": "\uc26c\uc6c0",
+            "domain": "\uc2a4\ud2b8\ub808\uc2a4\uad00\ub9ac",
+            "it_type": "saas",
+            "it_type_label": "SaaS",
+            "monthly_revenue": "200-800\ub9cc\uc6d0",
+            "name": "\uc628\ub514\ub9e8\ub4dc \uc2a4\ud2b8\ub808\uc2a4\uad00\ub9ac \uc790\ub3d9\ud654",
+            "revenue_models": [
+              "\ud504\ub9ac\ubbf8\uc5c4 \uc694\uae08\uc81c",
+              "\uc0ac\uc6a9\ub7c9 \uae30\ubc18 \uacfc\uae08"
+            ],
+            "revenue_potential": "\uc6d4 200-800\ub9cc\uc6d0",
+            "startup_cost": "100-300\ub9cc\uc6d0",
+            "target_audience": "MZ\uc138\ub300",
+            "tech_stack": [
+              "Webflow",
+              "Vercel"
+            ],
+            "timeline": "2\uc8fc \ub0b4 \uc2dc\uc791",
+            "viability": "\ub192\uc74c"
+          },
+          "category": "IT/\ub514\uc9c0\ud138",
+          "priority": "\ub9e4\uc6b0 \ub192\uc74c",
+          "type": "\ub3d9\uc801 \uc870\ud569 \uc544\uc774\ub514\uc5b4"
+        },
+        "keyword": "\uc628\ub514\ub9e8\ub4dc \uc2a4\ud2b8\ub808\uc2a4\uad00\ub9ac \uc790\ub3d9\ud654",
+        "market_analysis": {
+          "analysis_date": "2026-01-17T06:35:09.783513",
+          "business_idea": "\uc628\ub514\ub9e8\ub4dc \uc2a4\ud2b8\ub808\uc2a4\uad00\ub9ac \uc790\ub3d9\ud654",
+          "data_sources": {
+            "google": {
+              "entry_difficulty": "medium",
+              "estimated": true,
+              "organic_results": 470,
+              "platform": "\uad6c\uae00"
+            },
+            "kmong": {
+              "avg_price": 217497,
+              "competition_level": "medium",
+              "estimated": true,
+              "platform": "\ud06c\ubabd",
+              "service_count": 14
+            },
+            "naver": {
+              "estimated": true,
+              "keyword": "IT\uc11c\ube44\uc2a4",
+              "platform": "\ub124\uc774\ubc84",
+              "popularity_score": 57,
+              "related_searches": 14
+            },
+            "youtube": {
+              "estimated": true,
+              "estimated_videos": 191,
+              "interest_indicator": "medium",
+              "platform": "\uc720\ud29c\ube0c"
+            }
+          },
+          "google_trends": {
+            "global_interest": 88,
+            "growth_rate": 35,
+            "trend": "\uae09\uc131\uc7a5"
+          },
+          "keyword": "\uc628\ub514\ub9e8\ub4dc \uc2a4\ud2b8\ub808\uc2a4\uad00\ub9ac \uc790\ub3d9\ud654",
+          "market_analysis": {
+            "competition": {
+              "description": "\uc801\uc815 \uacbd\uc7c1, \ucc28\ubcc4\ud654 \ud544\uc694",
+              "entry_difficulty": "\ubcf4\ud1b5",
+              "level": "\uc911\uac04",
+              "score_bonus": 5
+            },
+            "domain": {
+              "domain": "IT\uc11c\ube44\uc2a4",
+              "growth_rate": "5%",
+              "market_size": "\uc911\ud615",
+              "score_bonus": 5,
+              "trend": "\uc548\uc815"
+            },
+            "market_size": {
+              "addressable_market": "\uc57d 8,400\uc5b5\uc6d0",
+              "estimated_size_billion_krw": 8400,
+              "size_category": "\uc911\ud615",
+              "target_population_thousands": 2800
+            },
+            "target_audience": {
+              "digital_affinity": "\ub192\uc74c",
+              "population_millions": 2800,
+              "score_bonus": 8,
+              "spending_power": "\ub192\uc74c",
+              "target": "\uc9c1\uc7a5\uc778"
+            },
+            "trend_keywords_found": [
+              "\uc790\ub3d9\ud654 (hot)"
+            ]
+          },
+          "market_info": {
+            "domain": "ai",
+            "entry_barrier": "\uc911\uac04",
+            "entry_barrier_score": 50,
+            "growth_rate": 35,
+            "market_size": "2\uc870 5\ucc9c\uc5b5\uc6d0",
+            "seasonality": "\uc5f0\uc911 \uafb8\uc900",
+            "target_size": "\uae30\uc5c5 \uace0\uac1d 50\ub9cc+"
+          },
+          "market_score": 60,
+          "market_summary": "\uc628\ub514\ub9e8\ub4dc \uc2a4\ud2b8\ub808\uc2a4\uad00\ub9ac \uc790\ub3d9\ud654 \uad00\ub828 \uc2dc\uc7a5 \uaddc\ubaa8\ub294 2\uc870 5\ucc9c\uc5b5\uc6d0\uc774\uba70, \uc5f0 35% \uc131\uc7a5 \uc911\uc785\ub2c8\ub2e4. \uacbd\uc7c1 \uac15\ub3c4\ub294 '\ub192\uc74c'\uc774\uace0, \uc9c4\uc785 \uc7a5\ubcbd\uc740 '\uc911\uac04' \uc218\uc900\uc785\ub2c8\ub2e4. \uae30\uc5c5 \uace0\uac1d 50\ub9cc+\uc758 \uc7a0\uc7ac \uace0\uac1d\uc774 \uc788\uc2b5\ub2c8\ub2e4.",
+          "mode": "lightweight_v2",
+          "naver": {
+            "competition": "\ub192\uc74c",
+            "competition_score": 75,
+            "related_keywords": [
+              "\uc628\ub514\ub9e8\ub4dc \uc2a4\ud2b8\ub808\uc2a4\uad00\ub9ac \uc790\ub3d9\ud654",
+              "\uc628\ub514\ub9e8\ub4dc \uc2a4\ud2b8\ub808\uc2a4\uad00\ub9ac \uc790\ub3d9\ud654 \ucd94\ucc9c",
+              "\uc628\ub514\ub9e8\ub4dc \uc2a4\ud2b8\ub808\uc2a4\uad00\ub9ac \uc790\ub3d9\ud654 \ud6c4\uae30",
+              "\uc628\ub514\ub9e8\ub4dc \uc2a4\ud2b8\ub808\uc2a4\uad00\ub9ac \uc790\ub3d9\ud654 \ube44\uad50"
+            ],
+            "search_count": 87550
+          },
+          "recommendation": {
+            "action": "\ucc28\ubcc4\ud654 \uc804\ub7b5 \ud544\uc218",
+            "confidence": "\uc911\uac04",
+            "key_success_factors": [
+              "\uba85\ud655\ud55c \ucc28\ubcc4\ud654 \ud3ec\uc778\ud2b8 \ud544\uc218",
+              "\ub2c8\uce58 \ub9c8\ucf13 \uc9d1\uc911 \uc804\ub7b5",
+              "\ube60\ub978 MVP \ucd9c\uc2dc \ubc0f \ud53c\ub4dc\ubc31 \ubc18\uc601",
+              "\ud6a8\uacfc\uc801\uc778 \uace0\uac1d \ud68d\ub4dd \ucc44\ub110 \ud655\ubcf4"
+            ],
+            "priority": "\ub0ae\uc74c",
+            "verdict": "\uc8fc\uc758 \ud544\uc694"
+          },
+          "score_breakdown": {
+            "base_score": 76,
+            "competition_bonus": 5,
+            "domain_bonus": 5,
+            "revenue_bonus": 12,
+            "synergy_bonus": 0,
+            "target_bonus": 8,
+            "trend_bonus": 18
+          }
+        },
+        "market_score": 60.0,
+        "revenue_analysis": {
+          "mode": "lightweight_v2",
+          "revenue_models": [
+            {
+              "model": "\uc6d4\uc815\uc561 \uad6c\ub3c5",
+              "scalability": "\ub192\uc74c",
+              "score": 12,
+              "stability": "\ub9e4\uc6b0 \ub192\uc74c"
+            }
+          ],
+          "scenarios": {
+            "conservative": {
+              "monthly_profit": 21875000,
+              "monthly_revenue": 31250000
+            },
+            "optimistic": {
+              "monthly_profit": 87500000,
+              "monthly_revenue": 125000000
+            },
+            "realistic": {
+              "monthly_profit": 43750000,
+              "monthly_revenue": 62500000
+            }
+          },
+          "verdict": {
+            "recurring_potential": true,
+            "score": 87
+          }
+        },
+        "revenue_score": 87.0,
+        "startup_guide": {
+          "cost_breakdown": {
+            "essential": [
+              {
+                "cost": 15000,
+                "item": "\ub3c4\uba54\uc778",
+                "period": "\ub144"
+              },
+              {
+                "cost": 0,
+                "item": "\ud638\uc2a4\ud305/\uc11c\ubc84",
+                "note": "Vercel/Netlify \ubb34\ub8cc",
+                "period": "\uc6d4"
+              },
+              {
+                "cost": 0,
+                "item": "\uc774\uba54\uc77c \uc11c\ube44\uc2a4",
+                "note": "Mailchimp \ubb34\ub8cc (500\uba85\uae4c\uc9c0)",
+                "period": "\uc6d4"
+              }
+            ],
+            "recommended": [
+              {
+                "cost": 50000,
+                "item": "No-Code \ud234",
+                "period": "\uc6d4"
+              },
+              {
+                "cost": 300000,
+                "item": "\uad11\uace0\ube44",
+                "period": "\uc6d4"
+              },
+              {
+                "cost": 15000,
+                "item": "\ub514\uc790\uc778 \ud234",
+                "note": "Canva Pro",
+                "period": "\uc6d4"
+              }
+            ],
+            "total_minimum": 15000,
+            "total_recommended": 380000
+          },
+          "day1_checklist": {
+            "tasks": [
+              {
+                "cost": "1-2\ub9cc\uc6d0/\ub144",
+                "detail": "\uc628\ub514\ub9e8\ub4dc\uc2a4\ud2b8\ub808\uc2a4\uad00\ub9ac\uc790\ub3d9\ud654.com \ub610\ub294 .kr",
+                "task": "\ub3c4\uba54\uc778 \uad6c\ub9e4",
+                "time": "10\ubd84",
+                "tool": "Namecheap, \uac00\ube44\uc544"
+              },
+              {
+                "cost": "0\uc6d0",
+                "detail": "\uc11c\ube44\uc2a4 \uc18c\uac1c + \uc774\uba54\uc77c \uc218\uc9d1 \ud3fc",
+                "task": "\ub79c\ub529\ud398\uc774\uc9c0 \uc81c\uc791",
+                "time": "2-3\uc2dc\uac04",
+                "tool": "Notion, Webflow (\ubb34\ub8cc)"
+              },
+              {
+                "cost": "0\uc6d0",
+                "detail": "\uac00\uaca9, \uae30\ub2a5, \ub9ac\ubdf0 \uc815\ub9ac",
+                "task": "\uacbd\uc7c1\uc0ac 5\uac1c \ubd84\uc11d",
+                "time": "1-2\uc2dc\uac04",
+                "tool": "Google \uc2a4\ud504\ub808\ub4dc\uc2dc\ud2b8"
+              },
+              {
+                "cost": "0\uc6d0",
+                "detail": "\uc778\uc2a4\ud0c0\uadf8\ub7a8 \ube44\uc988\ub2c8\uc2a4 \uacc4\uc815",
+                "task": "SNS \uacc4\uc815 \uc0dd\uc131",
+                "time": "30\ubd84",
+                "tool": "Instagram, \ud398\uc774\uc2a4\ubd81"
+              }
+            ],
+            "title": "Day 1: \uc624\ub298 \ub2f9\uc7a5 \uc2dc\uc791\ud558\uae30"
+          },
+          "first_customer_strategy": {
+            "steps": [
+              {
+                "action": "\ubb34\ub8cc/\ud560\uc778 \uc81c\uacf5",
+                "detail": "\uccab \ub2ec \ubb34\ub8cc \ub610\ub294 50% \ud560\uc778\uc73c\ub85c \uc9c4\uc785 \uc7a5\ubcbd \ub0ae\ucd94\uae30",
+                "step": 1,
+                "target": "3\uba85"
+              },
+              {
+                "action": "\uc9c0\uc778 \uc601\uc5c5",
+                "detail": "\uce74\ud1a1, \uc778\uc2a4\ud0c0 DM\uc73c\ub85c \uc9c1\uc811 \uc5f0\ub77d. \uc194\uc9c1\ud558\uac8c \ub3c4\uc6c0 \uc694\uccad",
+                "step": 2,
+                "target": "3\uba85"
+              },
+              {
+                "action": "\ucee4\ubba4\ub2c8\ud2f0 \ud65c\ub3d9",
+                "detail": "\uad00\ub828 \uc624\ud508\uce74\ud1a1, \ud398\uc774\uc2a4\ubd81 \uadf8\ub8f9\uc5d0\uc11c \ubb34\ub8cc \uc0c1\ub2f4 \uc81c\uacf5",
+                "step": 3,
+                "target": "2\uba85"
+              },
+              {
+                "action": "\ucf58\ud150\uce20 \ub9c8\ucf00\ud305",
+                "detail": "\ube14\ub85c\uadf8 \uae00 \ud558\ub2e8\uc5d0 CTA \uc0bd\uc785",
+                "step": 4,
+                "target": "2\uba85"
+              }
+            ],
+            "title": "\uccab 10\uba85 \uace0\uac1d \ud655\ubcf4 \uc804\ub7b5"
+          },
+          "marketing_channels": {
+            "free": [
+              {
+                "channel": "\uc778\uc2a4\ud0c0\uadf8\ub7a8",
+                "expected": "\uc6d4 100-500 \ud314\ub85c\uc6cc",
+                "strategy": "\uad00\ub828 \ud574\uc2dc\ud0dc\uadf8\ub85c \uc77c 1\ud3ec\uc2a4\ud305"
+              },
+              {
+                "channel": "\ube14\ub85c\uadf8/\ube0c\ub7f0\uce58",
+                "expected": "\uc6d4 1000-5000 \ubc29\ubb38\uc790",
+                "strategy": "\uc8fc 2\ud68c \uc804\ubb38 \ucf58\ud150\uce20 \ubc1c\ud589"
+              },
+              {
+                "channel": "\ucee4\ubba4\ub2c8\ud2f0",
+                "expected": "\ucd08\uae30 \ubca0\ud0c0 \ud14c\uc2a4\ud130 \ud655\ubcf4",
+                "strategy": "\ub124\uc774\ubc84 \uce74\ud398, \uc624\ud508\uce74\ud1a1 \ucc38\uc5ec"
+              },
+              {
+                "channel": "\uc9c0\uc778 \ub124\ud2b8\uc6cc\ud06c",
+                "expected": "\uccab 10\uba85 \uace0\uac1d",
+                "strategy": "\uce74\ud1a1/\ub9c1\ud06c\ub4dc\uc778\uc73c\ub85c \ub7f0\uce6d \uc54c\ub9bc"
+              }
+            ],
+            "paid": [
+              {
+                "budget": "\uc77c 1-3\ub9cc\uc6d0",
+                "channel": "\ud398\uc774\uc2a4\ubd81/\uc778\uc2a4\ud0c0 \uad11\uace0",
+                "expected": "CPC 300-500\uc6d0"
+              },
+              {
+                "budget": "\uc77c 1-2\ub9cc\uc6d0",
+                "channel": "\ub124\uc774\ubc84 \uac80\uc0c9\uad11\uace0",
+                "expected": "\ud0c0\uac9f \ud0a4\uc6cc\ub4dc \ub178\ucd9c"
+              },
+              {
+                "budget": "\uac74\ub2f9 5-30\ub9cc\uc6d0",
+                "channel": "\uc778\ud50c\ub8e8\uc5b8\uc11c",
+                "expected": "\uc2e0\ub8b0\ub3c4 \ud655\ubcf4"
+              }
+            ]
+          },
+          "risk_management": [
+            {
+              "prevention": "\ub7f0\uce6d \uc804 \ucd5c\uc18c 10\uba85 \uc0ac\uc804 \ub4f1\ub85d \ud655\ubcf4",
+              "risk": "\uace0\uac1d\uc774 \uc548 \ubaa8\uc784",
+              "solution": "\uac00\uaca9 \ub0ae\ucd94\uae30, \ubb34\ub8cc \uccb4\ud5d8 \uc5f0\uc7a5, \ud0c0\uac9f \uc7ac\uc124\uc815"
+            },
+            {
+              "prevention": "\ucc28\ubcc4\ud654 \ud3ec\uc778\ud2b8 3\uac1c \uc774\uc0c1 \uc900\ube44",
+              "risk": "\uacbd\uc7c1\uc0ac\uac00 \ub108\ubb34 \uac15\ud568",
+              "solution": "\ub2c8\uce58 \uc2dc\uc7a5 \uc9d1\uc911, \ud2b9\uc815 \uace0\uac1d\uad70 \uc804\ubb38\ud654"
+            },
+            {
+              "prevention": "MVP\ub294 \ucd5c\ub300\ud55c \ub2e8\uc21c\ud558\uac8c",
+              "risk": "\uae30\uc220\uc801 \ubb38\uc81c",
+              "solution": "No-Code\ub85c \uc6b0\ud68c, \uc678\uc8fc \ud65c\uc6a9"
+            }
+          ],
+          "success_metrics": {
+            "month3": {
+              "goal": "\uc6d4 200\ub9cc\uc6d0 \ub9e4\ucd9c + \uace0\uac1d 30\uba85",
+              "importance": "\uc9c0\uc18d \uac00\ub2a5\uc131 \ud655\uc778"
+            },
+            "week1": {
+              "goal": "\ub79c\ub529\ud398\uc774\uc9c0 \uc644\uc131 + \uc774\uba54\uc77c 20\uac1c \uc218\uc9d1",
+              "importance": "\uc2dc\uc7a5 \uad00\uc2ec\ub3c4 \uac80\uc99d"
+            },
+            "week2": {
+              "goal": "\ubca0\ud0c0 \ud14c\uc2a4\ud130 10\uba85 + \ud53c\ub4dc\ubc31 \uc218\uc9d1",
+              "importance": "\uc81c\ud488-\uc2dc\uc7a5 \uc801\ud569\uc131 \ud655\uc778"
+            },
+            "week4": {
+              "goal": "\uc720\ub8cc \uace0\uac1d 5\uba85 + \uc6d4 50\ub9cc\uc6d0 \ub9e4\ucd9c",
+              "importance": "\uc218\uc775 \ubaa8\ub378 \uac80\uc99d"
+            }
+          },
+          "tech_stack": {
+            "cost": "\uc6d4 5-10\ub9cc\uc6d0",
+            "learning_time": "1-2\uc8fc",
+            "reason": "SaaS\ub294 \ube60\ub978 MVP \uac80\uc99d\uc774 \uc911\uc694. \ucf54\ub529 \uc5c6\uc774 2\uc8fc \ub0b4 \ub7f0\uce6d \uac00\ub2a5",
+            "recommended": "No-Code / Low-Code",
+            "tools": [
+              "Bubble.io",
+              "Webflow",
+              "Airtable",
+              "Zapier"
+            ]
+          }
+        }
+      },
+      "feasibility": 7.080000000000001,
+      "id": 2933,
+      "investment": 3540000.0000000005,
+      "market_size": "2\uc870 5\ucc9c\uc5b5\uc6d0",
+      "name": "\uc628\ub514\ub9e8\ub4dc \uc2a4\ud2b8\ub808\uc2a4\uad00\ub9ac \uc790\ub3d9\ud654",
+      "priority": "medium",
+      "revenue_12m": 750000000,
+      "revenue_model": "subscription",
+      "risk": "medium",
+      "score": 70.80000000000001,
+      "score_breakdown": {
+        "base_score": 76,
+        "competition_bonus": 5,
+        "domain_bonus": 5,
+        "revenue_bonus": 12,
+        "synergy_bonus": 0,
+        "target_bonus": 8,
+        "trend_bonus": 18
+      },
+      "trend": "\uc548\uc815",
+      "type": "saas"
+    },
+    {
+      "competition_level": 55,
+      "created_at": "2026-01-17 15:35",
+      "description": "\uac1c\uc778 \uc7ac\uc815 \ucee8\uc124\ud305 - \uc2dc\uc7a5\uc131 50\uc810, \uc218\uc775\uc131 69\uc810",
+      "details": {
+        "action_plan": {
+          "summary": "\uac1c\uc778 \uc7ac\uc815 \ucee8\uc124\ud305\ub97c 4\uc8fc \uc548\uc5d0 \ub7f0\uce6d\ud558\uae30 \uc704\ud55c \uc2e4\ud589 \uacc4\ud68d\uc785\ub2c8\ub2e4.",
+          "total_budget": 300000,
+          "week_1": {
+            "goal": "MVP \uac1c\ubc1c \ubc0f \uc2dc\uc7a5 \uc870\uc0ac",
+            "tasks": [
+              "\uac1c\uc778 \uc7ac\uc815 \ucee8\uc124\ud305 \ud575\uc2ec \uae30\ub2a5 \uc815\uc758",
+              "\uacbd\uc7c1\uc0ac \ubd84\uc11d \ubc0f \ucc28\ubcc4\ud654 \ud3ec\uc778\ud2b8 \ub3c4\ucd9c",
+              "\ub79c\ub529\ud398\uc774\uc9c0 \uc81c\uc791 (Webflow/Notion)",
+              "\ucd08\uae30 \uace0\uac1d \ud0c0\uac9f \uc815\uc758"
+            ]
+          },
+          "week_2": {
+            "goal": "\ud504\ub85c\ud1a0\ud0c0\uc785 \ubc0f \uac80\uc99d",
+            "tasks": [
+              "MVP \ud504\ub85c\ud1a0\ud0c0\uc785 \uc81c\uc791",
+              "\ubca0\ud0c0 \ud14c\uc2a4\ud130 10\uba85 \ubaa8\uc9d1",
+              "\uc0ac\uc6a9\uc790 \ud53c\ub4dc\ubc31 \uc218\uc9d1",
+              "\uac00\uaca9 \ucc45\uc815 \ud14c\uc2a4\ud2b8"
+            ]
+          },
+          "week_3": {
+            "goal": "\ub9c8\ucf00\ud305 \ubc0f \uace0\uac1d \ud655\ubcf4",
+            "tasks": [
+              "SNS \ub9c8\ucf00\ud305 \uc2dc\uc791 (\uc778\uc2a4\ud0c0/\ud398\uc774\uc2a4\ubd81)",
+              "\uc18c\uaddc\ubaa8 \uc720\ub8cc \uad11\uace0 \ud14c\uc2a4\ud2b8 (\uc77c 1\ub9cc\uc6d0)",
+              "\uccab \uc720\ub8cc \uace0\uac1d \ud655\ubcf4",
+              "\uace0\uac1d \ud6c4\uae30 \uc218\uc9d1"
+            ]
+          },
+          "week_4": {
+            "goal": "\ucd5c\uc801\ud654 \ubc0f \ud655\uc7a5",
+            "tasks": [
+              "\uc804\ud658\uc728 \ucd5c\uc801\ud654",
+              "\uc790\ub3d9\ud654 \uc2dc\uc2a4\ud15c \uad6c\ucd95",
+              "\ucd94\uac00 \uae30\ub2a5 \uac1c\ubc1c",
+              "\uc6d4 \ubaa9\ud45c \ub9e4\ucd9c \ub2ec\uc131"
+            ]
+          }
+        },
+        "analysis_score": 57.6,
+        "category": "\uc804\ubb38 \uc11c\ube44\uc2a4",
+        "full_analysis": {
+          "business": {
+            "core_features": [
+              "\ub370\uc774\ud130 \uad00\ub9ac",
+              "\uc54c\ub9bc \uc2dc\uc2a4\ud15c",
+              "\ubd84\uc11d \ub300\uc2dc\ubcf4\ub4dc"
+            ],
+            "differentiator": "\uae30\uc874 \uc11c\ube44\uc2a4 \ub300\ube44 50% \uc800\ub834\ud55c \uac00\uaca9",
+            "it_type": "saas",
+            "it_type_label": "SaaS",
+            "revenue_models": [
+              "\uc6d4\uc815\uc561 \uad6c\ub3c5",
+              "\ud504\ub9ac\ubbf8\uc5c4 \uc694\uae08\uc81c"
+            ],
+            "target_audience": "\uc9c1\uc7a5\uc778",
+            "tech_stack": [
+              "Bubble.io",
+              "Supabase"
+            ]
+          },
+          "category": "\uc804\ubb38 \uc11c\ube44\uc2a4",
+          "priority": "\ub192\uc74c",
+          "type": "\uc989\uc2dc \uc2dc\uc791 \uac00\ub2a5"
+        },
+        "keyword": "\uac1c\uc778 \uc7ac\uc815 \ucee8\uc124\ud305",
+        "market_analysis": {
+          "analysis_date": "2026-01-17T06:35:05.435242",
+          "business_idea": "\uac1c\uc778 \uc7ac\uc815 \ucee8\uc124\ud305",
+          "data_sources": {
+            "google": {
+              "entry_difficulty": "hard",
+              "estimated": true,
+              "organic_results": 266,
+              "platform": "\uad6c\uae00"
+            },
+            "kmong": {
+              "avg_price": 543680,
+              "competition_level": "medium",
+              "estimated": true,
+              "platform": "\ud06c\ubabd",
+              "service_count": 53
+            },
+            "naver": {
+              "estimated": true,
+              "keyword": "IT\uc11c\ube44\uc2a4",
+              "platform": "\ub124\uc774\ubc84",
+              "popularity_score": 56,
+              "related_searches": 11
+            },
+            "youtube": {
+              "estimated": true,
+              "estimated_videos": 130,
+              "interest_indicator": "medium",
+              "platform": "\uc720\ud29c\ube0c"
+            }
+          },
+          "google_trends": {
+            "global_interest": 70,
+            "growth_rate": 15,
+            "trend": "\uc548\uc815\uc801"
+          },
+          "keyword": "\uac1c\uc778 \uc7ac\uc815 \ucee8\uc124\ud305",
+          "market_analysis": {
+            "competition": {
+              "description": "\uacbd\uc7c1 \uce58\uc5f4, \uac15\ub825\ud55c \ucc28\ubcc4\ud654 \ud544\uc218",
+              "entry_difficulty": "\uc5b4\ub824\uc6c0",
+              "level": "\ub192\uc74c",
+              "score_bonus": 0
+            },
+            "domain": {
+              "domain": "IT\uc11c\ube44\uc2a4",
+              "growth_rate": "5%",
+              "market_size": "\uc911\ud615",
+              "score_bonus": 5,
+              "trend": "\uc548\uc815"
+            },
+            "market_size": {
+              "addressable_market": "\uc57d 8,400\uc5b5\uc6d0",
+              "estimated_size_billion_krw": 8400,
+              "size_category": "\uc911\ud615",
+              "target_population_thousands": 2800
+            },
+            "target_audience": {
+              "digital_affinity": "\ub192\uc74c",
+              "population_millions": 2800,
+              "score_bonus": 8,
+              "spending_power": "\ub192\uc74c",
+              "target": "\uc9c1\uc7a5\uc778"
+            },
+            "trend_keywords_found": []
+          },
+          "market_info": {
+            "domain": "default",
+            "entry_barrier": "\uc911\uac04",
+            "entry_barrier_score": 50,
+            "growth_rate": 15,
+            "market_size": "1\uc870\uc6d0",
+            "seasonality": "\uc5f0\uc911 \uafb8\uc900",
+            "target_size": "\uc7a0\uc7ac \uace0\uac1d 100\ub9cc+"
+          },
+          "market_score": 50,
+          "market_summary": "\uac1c\uc778 \uc7ac\uc815 \ucee8\uc124\ud305 \uad00\ub828 \uc2dc\uc7a5 \uaddc\ubaa8\ub294 1\uc870\uc6d0\uc774\uba70, \uc5f0 15% \uc131\uc7a5 \uc911\uc785\ub2c8\ub2e4. \uacbd\uc7c1 \uac15\ub3c4\ub294 '\uc911\uac04'\uc774\uace0, \uc9c4\uc785 \uc7a5\ubcbd\uc740 '\uc911\uac04' \uc218\uc900\uc785\ub2c8\ub2e4. \uc7a0\uc7ac \uace0\uac1d 100\ub9cc+\uc758 \uc7a0\uc7ac \uace0\uac1d\uc774 \uc788\uc2b5\ub2c8\ub2e4.",
+          "mode": "lightweight_v2",
+          "naver": {
+            "competition": "\uc911\uac04",
+            "competition_score": 55,
+            "related_keywords": [
+              "\uac1c\uc778 \uc7ac\uc815 \ucee8\uc124\ud305",
+              "\uac1c\uc778 \uc7ac\uc815 \ucee8\uc124\ud305 \ucd94\ucc9c",
+              "\uac1c\uc778 \uc7ac\uc815 \ucee8\uc124\ud305 \ud6c4\uae30",
+              "\uac1c\uc778 \uc7ac\uc815 \ucee8\uc124\ud305 \ube44\uad50"
+            ],
+            "search_count": 27899
+          },
+          "recommendation": {
+            "action": "\ub2e4\ub978 \uc544\uc774\ub514\uc5b4 \ud0d0\uc0c9 \uad8c\uc7a5",
+            "confidence": "\ub0ae\uc74c",
+            "key_success_factors": [
+              "\uba85\ud655\ud55c \ucc28\ubcc4\ud654 \ud3ec\uc778\ud2b8 \ud544\uc218",
+              "\ub2c8\uce58 \ub9c8\ucf13 \uc9d1\uc911 \uc804\ub7b5",
+              "\ube60\ub978 MVP \ucd9c\uc2dc \ubc0f \ud53c\ub4dc\ubc31 \ubc18\uc601",
+              "\ud6a8\uacfc\uc801\uc778 \uace0\uac1d \ud68d\ub4dd \ucc44\ub110 \ud655\ubcf4"
+            ],
+            "priority": "\uc81c\uc678",
+            "verdict": "\ube44\ucd94\ucc9c"
+          },
+          "score_breakdown": {
+            "base_score": 68,
+            "competition_bonus": 0,
+            "domain_bonus": 5,
+            "revenue_bonus": 6,
+            "synergy_bonus": 0,
+            "target_bonus": 8,
+            "trend_bonus": 0
+          }
+        },
+        "market_score": 50.0,
+        "revenue_analysis": {
+          "mode": "lightweight_v2",
+          "revenue_models": [
+            {
+              "model": "\uc77c\ud68c\uc131 \uad6c\ub9e4",
+              "scalability": "\uc911\uac04",
+              "score": 6,
+              "stability": "\ub0ae\uc74c"
+            }
+          ],
+          "scenarios": {
+            "conservative": {
+              "monthly_profit": 27500000,
+              "monthly_revenue": 68750000
+            },
+            "optimistic": {
+              "monthly_profit": 110000000,
+              "monthly_revenue": 275000000
+            },
+            "realistic": {
+              "monthly_profit": 55000000,
+              "monthly_revenue": 137500000
+            }
+          },
+          "verdict": {
+            "recurring_potential": false,
+            "score": 69
+          }
+        },
+        "revenue_score": 69.0,
+        "startup_guide": {
+          "cost_breakdown": {
+            "essential": [
+              {
+                "cost": 15000,
+                "item": "\ub3c4\uba54\uc778",
+                "period": "\ub144"
+              },
+              {
+                "cost": 0,
+                "item": "\ud638\uc2a4\ud305/\uc11c\ubc84",
+                "note": "Vercel/Netlify \ubb34\ub8cc",
+                "period": "\uc6d4"
+              },
+              {
+                "cost": 0,
+                "item": "\uc774\uba54\uc77c \uc11c\ube44\uc2a4",
+                "note": "Mailchimp \ubb34\ub8cc (500\uba85\uae4c\uc9c0)",
+                "period": "\uc6d4"
+              }
+            ],
+            "recommended": [
+              {
+                "cost": 50000,
+                "item": "No-Code \ud234",
+                "period": "\uc6d4"
+              },
+              {
+                "cost": 300000,
+                "item": "\uad11\uace0\ube44",
+                "period": "\uc6d4"
+              },
+              {
+                "cost": 15000,
+                "item": "\ub514\uc790\uc778 \ud234",
+                "note": "Canva Pro",
+                "period": "\uc6d4"
+              }
+            ],
+            "total_minimum": 15000,
+            "total_recommended": 380000
+          },
+          "day1_checklist": {
+            "tasks": [
+              {
+                "cost": "1-2\ub9cc\uc6d0/\ub144",
+                "detail": "\uac1c\uc778\uc7ac\uc815\ucee8\uc124\ud305.com \ub610\ub294 .kr",
+                "task": "\ub3c4\uba54\uc778 \uad6c\ub9e4",
+                "time": "10\ubd84",
+                "tool": "Namecheap, \uac00\ube44\uc544"
+              },
+              {
+                "cost": "0\uc6d0",
+                "detail": "\uc11c\ube44\uc2a4 \uc18c\uac1c + \uc774\uba54\uc77c \uc218\uc9d1 \ud3fc",
+                "task": "\ub79c\ub529\ud398\uc774\uc9c0 \uc81c\uc791",
+                "time": "2-3\uc2dc\uac04",
+                "tool": "Notion, Webflow (\ubb34\ub8cc)"
+              },
+              {
+                "cost": "0\uc6d0",
+                "detail": "\uac00\uaca9, \uae30\ub2a5, \ub9ac\ubdf0 \uc815\ub9ac",
+                "task": "\uacbd\uc7c1\uc0ac 5\uac1c \ubd84\uc11d",
+                "time": "1-2\uc2dc\uac04",
+                "tool": "Google \uc2a4\ud504\ub808\ub4dc\uc2dc\ud2b8"
+              },
+              {
+                "cost": "0\uc6d0",
+                "detail": "\uc778\uc2a4\ud0c0\uadf8\ub7a8 \ube44\uc988\ub2c8\uc2a4 \uacc4\uc815",
+                "task": "SNS \uacc4\uc815 \uc0dd\uc131",
+                "time": "30\ubd84",
+                "tool": "Instagram, \ud398\uc774\uc2a4\ubd81"
+              }
+            ],
+            "title": "Day 1: \uc624\ub298 \ub2f9\uc7a5 \uc2dc\uc791\ud558\uae30"
+          },
+          "first_customer_strategy": {
+            "steps": [
+              {
+                "action": "\ubb34\ub8cc/\ud560\uc778 \uc81c\uacf5",
+                "detail": "\uccab \ub2ec \ubb34\ub8cc \ub610\ub294 50% \ud560\uc778\uc73c\ub85c \uc9c4\uc785 \uc7a5\ubcbd \ub0ae\ucd94\uae30",
+                "step": 1,
+                "target": "3\uba85"
+              },
+              {
+                "action": "\uc9c0\uc778 \uc601\uc5c5",
+                "detail": "\uce74\ud1a1, \uc778\uc2a4\ud0c0 DM\uc73c\ub85c \uc9c1\uc811 \uc5f0\ub77d. \uc194\uc9c1\ud558\uac8c \ub3c4\uc6c0 \uc694\uccad",
+                "step": 2,
+                "target": "3\uba85"
+              },
+              {
+                "action": "\ucee4\ubba4\ub2c8\ud2f0 \ud65c\ub3d9",
+                "detail": "\uad00\ub828 \uc624\ud508\uce74\ud1a1, \ud398\uc774\uc2a4\ubd81 \uadf8\ub8f9\uc5d0\uc11c \ubb34\ub8cc \uc0c1\ub2f4 \uc81c\uacf5",
+                "step": 3,
+                "target": "2\uba85"
+              },
+              {
+                "action": "\ucf58\ud150\uce20 \ub9c8\ucf00\ud305",
+                "detail": "\ube14\ub85c\uadf8 \uae00 \ud558\ub2e8\uc5d0 CTA \uc0bd\uc785",
+                "step": 4,
+                "target": "2\uba85"
+              }
+            ],
+            "title": "\uccab 10\uba85 \uace0\uac1d \ud655\ubcf4 \uc804\ub7b5"
+          },
+          "marketing_channels": {
+            "free": [
+              {
+                "channel": "\uc778\uc2a4\ud0c0\uadf8\ub7a8",
+                "expected": "\uc6d4 100-500 \ud314\ub85c\uc6cc",
+                "strategy": "\uad00\ub828 \ud574\uc2dc\ud0dc\uadf8\ub85c \uc77c 1\ud3ec\uc2a4\ud305"
+              },
+              {
+                "channel": "\ube14\ub85c\uadf8/\ube0c\ub7f0\uce58",
+                "expected": "\uc6d4 1000-5000 \ubc29\ubb38\uc790",
+                "strategy": "\uc8fc 2\ud68c \uc804\ubb38 \ucf58\ud150\uce20 \ubc1c\ud589"
+              },
+              {
+                "channel": "\ucee4\ubba4\ub2c8\ud2f0",
+                "expected": "\ucd08\uae30 \ubca0\ud0c0 \ud14c\uc2a4\ud130 \ud655\ubcf4",
+                "strategy": "\ub124\uc774\ubc84 \uce74\ud398, \uc624\ud508\uce74\ud1a1 \ucc38\uc5ec"
+              },
+              {
+                "channel": "\uc9c0\uc778 \ub124\ud2b8\uc6cc\ud06c",
+                "expected": "\uccab 10\uba85 \uace0\uac1d",
+                "strategy": "\uce74\ud1a1/\ub9c1\ud06c\ub4dc\uc778\uc73c\ub85c \ub7f0\uce6d \uc54c\ub9bc"
+              }
+            ],
+            "paid": [
+              {
+                "budget": "\uc77c 1-3\ub9cc\uc6d0",
+                "channel": "\ud398\uc774\uc2a4\ubd81/\uc778\uc2a4\ud0c0 \uad11\uace0",
+                "expected": "CPC 300-500\uc6d0"
+              },
+              {
+                "budget": "\uc77c 1-2\ub9cc\uc6d0",
+                "channel": "\ub124\uc774\ubc84 \uac80\uc0c9\uad11\uace0",
+                "expected": "\ud0c0\uac9f \ud0a4\uc6cc\ub4dc \ub178\ucd9c"
+              },
+              {
+                "budget": "\uac74\ub2f9 5-30\ub9cc\uc6d0",
+                "channel": "\uc778\ud50c\ub8e8\uc5b8\uc11c",
+                "expected": "\uc2e0\ub8b0\ub3c4 \ud655\ubcf4"
+              }
+            ]
+          },
+          "risk_management": [
+            {
+              "prevention": "\ub7f0\uce6d \uc804 \ucd5c\uc18c 10\uba85 \uc0ac\uc804 \ub4f1\ub85d \ud655\ubcf4",
+              "risk": "\uace0\uac1d\uc774 \uc548 \ubaa8\uc784",
+              "solution": "\uac00\uaca9 \ub0ae\ucd94\uae30, \ubb34\ub8cc \uccb4\ud5d8 \uc5f0\uc7a5, \ud0c0\uac9f \uc7ac\uc124\uc815"
+            },
+            {
+              "prevention": "\ucc28\ubcc4\ud654 \ud3ec\uc778\ud2b8 3\uac1c \uc774\uc0c1 \uc900\ube44",
+              "risk": "\uacbd\uc7c1\uc0ac\uac00 \ub108\ubb34 \uac15\ud568",
+              "solution": "\ub2c8\uce58 \uc2dc\uc7a5 \uc9d1\uc911, \ud2b9\uc815 \uace0\uac1d\uad70 \uc804\ubb38\ud654"
+            },
+            {
+              "prevention": "MVP\ub294 \ucd5c\ub300\ud55c \ub2e8\uc21c\ud558\uac8c",
+              "risk": "\uae30\uc220\uc801 \ubb38\uc81c",
+              "solution": "No-Code\ub85c \uc6b0\ud68c, \uc678\uc8fc \ud65c\uc6a9"
+            }
+          ],
+          "success_metrics": {
+            "month3": {
+              "goal": "\uc6d4 200\ub9cc\uc6d0 \ub9e4\ucd9c + \uace0\uac1d 30\uba85",
+              "importance": "\uc9c0\uc18d \uac00\ub2a5\uc131 \ud655\uc778"
+            },
+            "week1": {
+              "goal": "\ub79c\ub529\ud398\uc774\uc9c0 \uc644\uc131 + \uc774\uba54\uc77c 20\uac1c \uc218\uc9d1",
+              "importance": "\uc2dc\uc7a5 \uad00\uc2ec\ub3c4 \uac80\uc99d"
+            },
+            "week2": {
+              "goal": "\ubca0\ud0c0 \ud14c\uc2a4\ud130 10\uba85 + \ud53c\ub4dc\ubc31 \uc218\uc9d1",
+              "importance": "\uc81c\ud488-\uc2dc\uc7a5 \uc801\ud569\uc131 \ud655\uc778"
+            },
+            "week4": {
+              "goal": "\uc720\ub8cc \uace0\uac1d 5\uba85 + \uc6d4 50\ub9cc\uc6d0 \ub9e4\ucd9c",
+              "importance": "\uc218\uc775 \ubaa8\ub378 \uac80\uc99d"
+            }
+          },
+          "tech_stack": {
+            "cost": "\uc6d4 0-5\ub9cc\uc6d0",
+            "learning_time": "\uc989\uc2dc \uc2dc\uc791 \uac00\ub2a5",
+            "reason": "\uc5d0\uc774\uc804\uc2dc\ub294 \uae30\uc220\ubcf4\ub2e4 \uc601\uc5c5\ub825\uc774 \uc911\uc694. \ud50c\ub7ab\ud3fc \ud65c\uc6a9\uc73c\ub85c \uc989\uc2dc \uc2dc\uc791",
+            "recommended": "\ud3ec\ud2b8\ud3f4\ub9ac\uc624 + \ud504\ub9ac\ub79c\uc11c \ud50c\ub7ab\ud3fc",
+            "tools": [
+              "Notion",
+              "Figma",
+              "\ud06c\ubabd",
+              "\uc228\uace0",
+              "LinkedIn"
+            ]
+          }
+        }
+      },
+      "feasibility": 5.76,
+      "id": 2932,
+      "investment": 2880000.0,
+      "market_size": "1\uc870\uc6d0",
+      "name": "\uac1c\uc778 \uc7ac\uc815 \ucee8\uc124\ud305",
+      "priority": "medium",
+      "revenue_12m": 1650000000,
+      "revenue_model": "subscription",
+      "risk": "high",
+      "score": 57.6,
+      "score_breakdown": {
+        "base_score": 68,
+        "competition_bonus": 0,
+        "domain_bonus": 5,
+        "revenue_bonus": 6,
+        "synergy_bonus": 0,
+        "target_bonus": 8,
+        "trend_bonus": 0
+      },
+      "trend": "\uc548\uc815",
+      "type": "agency"
+    }
+  ],
+  "pagination": {
+    "limit": 5,
+    "page": 1,
+    "total_items": 2636,
+    "total_pages": 528
+  },
+  "stats": {
+    "high_score": 249,
+    "this_week": 660,
+    "today": 60,
+    "total": 2636
+  }
+}

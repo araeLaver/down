@@ -1263,7 +1263,7 @@ def generate_default_revenue_analysis(business_name, score):
 
 @app.route('/api/discovered-businesses')
 def api_discovered_businesses():
-    """자동 발굴된 사업 목록 API (50점 이상 모두 포함, 서버 사이드 페이징)"""
+    """자동 발굴된 사업 목록 API (전체 점수 포함, 서버 사이드 페이징)"""
     session = None
     try:
         session = get_db_session()
@@ -1274,10 +1274,8 @@ def api_discovered_businesses():
         limit = min(limit, 100)  # 최대 100개
         offset = (page - 1) * limit
 
-        # 전체 개수 조회 (50점 이상)
-        total_count = session.query(func.count(BusinessDiscoveryHistory.id)).filter(
-            BusinessDiscoveryHistory.total_score >= 50
-        ).scalar()
+        # 전체 개수 조회
+        total_count = session.query(func.count(BusinessDiscoveryHistory.id)).scalar()
 
         # 오늘/이번주 통계
         from datetime import datetime, timedelta
@@ -1285,12 +1283,10 @@ def api_discovered_businesses():
         week_ago = today - timedelta(days=7)
 
         today_count = session.query(func.count(BusinessDiscoveryHistory.id)).filter(
-            BusinessDiscoveryHistory.total_score >= 50,
             BusinessDiscoveryHistory.discovered_at >= today
         ).scalar()
 
         week_count = session.query(func.count(BusinessDiscoveryHistory.id)).filter(
-            BusinessDiscoveryHistory.total_score >= 50,
             BusinessDiscoveryHistory.discovered_at >= week_ago
         ).scalar()
 
@@ -1298,10 +1294,10 @@ def api_discovered_businesses():
             BusinessDiscoveryHistory.total_score >= 85
         ).scalar()
 
-        # 페이징된 데이터 조회
-        histories = session.query(BusinessDiscoveryHistory).filter(
-            BusinessDiscoveryHistory.total_score >= 50
-        ).order_by(BusinessDiscoveryHistory.discovered_at.desc()).offset(offset).limit(limit).all()
+        # 페이징된 데이터 조회 (전체)
+        histories = session.query(BusinessDiscoveryHistory).order_by(
+            BusinessDiscoveryHistory.discovered_at.desc()
+        ).offset(offset).limit(limit).all()
 
         logger.info(f"[API] discovered-businesses: page={page}, limit={limit}, total={total_count}")
 
