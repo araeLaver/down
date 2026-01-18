@@ -13,8 +13,9 @@
             --success-color: #10b981;
             --warning-color: #f59e0b;
             --danger-color: #ef4444;
-            --bg-light: #f8fafc;
-            --border-color: #333;
+            --bg-light: #0d0d0e;
+            --bg-card: #111;
+            --border-color: #222;
             --hot-color: #ef4444;
             --rising-color: #f97316;
             --stable-color: #3b82f6;
@@ -28,10 +29,10 @@
         }
 
         body {
-            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            background: #0a0a0b;
             min-height: 100vh;
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
-            color: #1f2937;
+            color: #e5e5e5;
         }
 
         /* 트렌드 태그 */
@@ -81,7 +82,7 @@
         }
 
         .chart-card {
-            background: white;
+            background: var(--bg-card);
             border-radius: 12px;
             padding: 1.25rem;
             border: 1px solid var(--border-color);
@@ -89,13 +90,14 @@
         }
 
         .chart-card:hover {
-            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            border-color: #333;
         }
 
         .chart-card h3 {
             font-size: 1rem;
             font-weight: 600;
-            color: #d1d5db;
+            color: #e5e5e5;
             margin-bottom: 1rem;
             display: flex;
             align-items: center;
@@ -113,21 +115,25 @@
 
         /* Header */
         .header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: #111;
             color: white;
-            padding: 1.5rem 0;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            padding: 100px 0 2rem;
+            border-bottom: 1px solid #222;
         }
 
         .header h1 {
             font-size: 1.75rem;
             font-weight: 700;
-            margin-bottom: 0.25rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .header h1 i {
+            color: #4ade80;
         }
 
         .header .subtitle {
             font-size: 0.95rem;
-            opacity: 0.95;
+            color: #888;
         }
 
         /* Stats Grid */
@@ -139,7 +145,7 @@
         }
 
         .stat-card {
-            background: white;
+            background: var(--bg-card);
             border-radius: 12px;
             padding: 1.5rem;
             border: 1px solid var(--border-color);
@@ -148,7 +154,8 @@
 
         .stat-card:hover {
             transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            border-color: #333;
         }
 
         .stat-icon {
@@ -167,6 +174,7 @@
             font-weight: 700;
             line-height: 1;
             margin-bottom: 0.25rem;
+            color: #fff;
         }
 
         .stat-label {
@@ -176,7 +184,7 @@
 
         /* Filters */
         .filter-bar {
-            background: white;
+            background: var(--bg-card);
             border-radius: 12px;
             padding: 1.25rem;
             margin-bottom: 1.5rem;
@@ -189,16 +197,16 @@
 
         .filter-label {
             font-weight: 600;
-            color: #d1d5db;
+            color: #e5e5e5;
             margin-right: 0.5rem;
         }
 
         .filter-btn {
             padding: 0.5rem 1rem;
             border-radius: 8px;
-            border: 1px solid var(--border-color);
-            background: white;
-            color: #d1d5db;
+            border: 1px solid #333;
+            background: #1a1a1b;
+            color: #888;
             font-size: 0.875rem;
             font-weight: 500;
             cursor: pointer;
@@ -206,8 +214,9 @@
         }
 
         .filter-btn:hover {
-            background: var(--bg-light);
+            background: #222;
             border-color: var(--primary-color);
+            color: #e5e5e5;
         }
 
         .filter-btn.active {
@@ -225,9 +234,20 @@
         .search-box input {
             width: 100%;
             padding: 0.5rem 1rem 0.5rem 2.5rem;
-            border: 1px solid var(--border-color);
+            border: 1px solid #333;
             border-radius: 8px;
             font-size: 0.875rem;
+            background: #1a1a1b;
+            color: #e5e5e5;
+        }
+
+        .search-box input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+
+        .search-box input::placeholder {
+            color: #666;
         }
 
         .search-box i {
@@ -235,7 +255,7 @@
             left: 0.875rem;
             top: 50%;
             transform: translateY(-50%);
-            color: #9ca3af;
+            color: #666;
         }
 
         /* Business Cards */
@@ -245,7 +265,7 @@
         }
 
         .business-card {
-            background: white;
+            background: var(--bg-card);
             border-radius: 16px;
             border: 1px solid var(--border-color);
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -266,8 +286,9 @@
         }
 
         .business-card:hover {
-            box-shadow: 0 12px 40px rgba(99, 102, 241, 0.15);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
             transform: translateY(-4px);
+            border-color: #333;
         }
 
         .business-card:hover::before {
@@ -305,19 +326,19 @@
         }
 
         .score-circle.high {
-            background: #d1fae5;
+            background: rgba(16, 185, 129, 0.15);
             border-color: var(--success-color);
             color: var(--success-color);
         }
 
         .score-circle.medium {
-            background: #2e2a1a;
+            background: rgba(245, 158, 11, 0.15);
             border-color: var(--warning-color);
             color: var(--warning-color);
         }
 
         .score-circle.low {
-            background: #fee2e2;
+            background: rgba(239, 68, 68, 0.15);
             border-color: var(--danger-color);
             color: var(--danger-color);
         }
@@ -367,18 +388,18 @@
         }
 
         .tag-type {
-            background: #dbeafe;
-            color: #1e40af;
+            background: rgba(96, 165, 250, 0.15);
+            color: #60a5fa;
         }
 
         .tag-model {
-            background: #e0e7ff;
-            color: #4338ca;
+            background: rgba(129, 140, 248, 0.15);
+            color: #818cf8;
         }
 
         .tag-priority {
-            background: #d1fae5;
-            color: #065f46;
+            background: rgba(74, 222, 128, 0.15);
+            color: #4ade80;
         }
 
         .business-metrics {
@@ -449,16 +470,24 @@
         /* Modal */
         .modal-content {
             border-radius: 12px;
-            border: none;
+            border: 1px solid var(--border-color);
+            background: var(--bg-card);
+            color: #e5e5e5;
         }
 
         .modal-header {
             border-bottom: 1px solid var(--border-color);
             padding: 1.5rem;
+            background: var(--bg-card);
+        }
+
+        .modal-header .btn-close {
+            filter: invert(1);
         }
 
         .modal-body {
             padding: 1.5rem;
+            background: var(--bg-card);
         }
 
         .detail-section {
@@ -506,10 +535,10 @@
             position: fixed;
             bottom: 2rem;
             right: 2rem;
-            background: white;
+            background: var(--bg-card);
             padding: 1rem 1.5rem;
             border-radius: 12px;
-            box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+            box-shadow: 0 4px 16px rgba(0,0,0,0.4);
             z-index: 1000;
             border: 1px solid var(--border-color);
         }
@@ -558,7 +587,7 @@
             gap: 0.5rem;
             margin-top: 2rem;
             padding: 1rem;
-            background: white;
+            background: var(--bg-card);
             border-radius: 12px;
             border: 1px solid var(--border-color);
         }
@@ -571,9 +600,9 @@
 
         .pagination-btn {
             padding: 0.5rem 1rem;
-            border: 1px solid var(--border-color);
-            background: white;
-            color: #d1d5db;
+            border: 1px solid #333;
+            background: #1a1a1b;
+            color: #888;
             border-radius: 8px;
             font-size: 0.875rem;
             cursor: pointer;
@@ -584,7 +613,7 @@
         }
 
         .pagination-btn:hover:not(:disabled) {
-            background: var(--bg-light);
+            background: #222;
             border-color: var(--primary-color);
             color: var(--primary-color);
         }
@@ -607,25 +636,27 @@
 
         .page-size-select {
             padding: 0.5rem 0.75rem;
-            border: 1px solid var(--border-color);
+            border: 1px solid #333;
             border-radius: 8px;
             font-size: 0.875rem;
             margin-left: 1rem;
             cursor: pointer;
+            background: #1a1a1b;
+            color: #e5e5e5;
         }
 
         /* Empty State */
         .empty-state {
             text-align: center;
             padding: 4rem 2rem;
-            background: white;
+            background: var(--bg-card);
             border-radius: 12px;
             border: 1px solid var(--border-color);
         }
 
         .empty-state i {
             font-size: 4rem;
-            color: #d1d5db;
+            color: #333;
             margin-bottom: 1rem;
         }
 
@@ -635,7 +666,7 @@
         }
 
         .empty-state p {
-            color: #9ca3af;
+            color: #666;
         }
 
         /* Loading */
@@ -705,28 +736,28 @@
         <!-- Stats -->
         <div class="stats-grid">
             <div class="stat-card">
-                <div class="stat-icon" style="background: #2e2a1a; color: #f59e0b;">
+                <div class="stat-icon" style="background: rgba(245, 158, 11, 0.15); color: #f59e0b;">
                     <i class="fas fa-lightbulb"></i>
                 </div>
                 <div class="stat-value" id="stat-total">0</div>
                 <div class="stat-label">총 발굴 사업</div>
             </div>
             <div class="stat-card">
-                <div class="stat-icon" style="background: #dbeafe; color: #3b82f6;">
+                <div class="stat-icon" style="background: rgba(59, 130, 246, 0.15); color: #3b82f6;">
                     <i class="fas fa-calendar-day"></i>
                 </div>
                 <div class="stat-value" id="stat-today">0</div>
                 <div class="stat-label">오늘 발굴</div>
             </div>
             <div class="stat-card">
-                <div class="stat-icon" style="background: #e0e7ff; color: #6366f1;">
+                <div class="stat-icon" style="background: rgba(99, 102, 241, 0.15); color: #6366f1;">
                     <i class="fas fa-calendar-week"></i>
                 </div>
                 <div class="stat-value" id="stat-week">0</div>
                 <div class="stat-label">이번 주</div>
             </div>
             <div class="stat-card">
-                <div class="stat-icon" style="background: #d1fae5; color: #10b981;">
+                <div class="stat-icon" style="background: rgba(16, 185, 129, 0.15); color: #10b981;">
                     <i class="fas fa-star"></i>
                 </div>
                 <div class="stat-value" id="stat-highscore">0</div>
@@ -1866,6 +1897,11 @@
         let scoreChart = null;
         let categoryChart = null;
         let trendChart = null;
+
+        // Chart.js 다크 테마 기본값 설정
+        Chart.defaults.color = '#888';
+        Chart.defaults.borderColor = '#333';
+        Chart.defaults.plugins.legend.labels.color = '#888';
 
         // Render all charts
         function renderCharts(businesses) {
