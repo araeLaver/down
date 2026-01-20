@@ -1,4 +1,4 @@
-# TravelMate 창업 실행 가이드 (A to Z)
+# Fryndo 창업 실행 가이드 (A to Z)
 
 > 실제 창업을 위한 단계별 체크리스트 및 실행 가이드
 
@@ -35,8 +35,8 @@
 
 ```
 ┌─────────────────────────────────────────────────────────┐
-│  회사명: 주식회사 트래블메이트 (TravelMate Inc.)          │
-│  영문명: TravelMate Inc.                                │
+│  회사명: 주식회사 프린도 (Fryndo Inc.)          │
+│  영문명: Fryndo Inc.                                │
 │  사업목적:                                               │
 │    1. 여행 정보 제공 및 중개 서비스업                     │
 │    2. 소프트웨어 개발 및 판매업                           │
@@ -379,7 +379,7 @@ const payment = await toss.billPayment({
   billingKey: billingKey,
   amount: 9900,
   orderId: 'subscription_001',
-  orderName: 'TravelMate Plus 월 구독',
+  orderName: 'Fryndo Plus 월 구독',
 });
 ```
 
@@ -494,7 +494,7 @@ const payment = await toss.billPayment({
 #### SNS 채널 개설
 - [ ] Instagram: @travelmate_official
 - [ ] TikTok: @travelmate
-- [ ] YouTube: TravelMate 트래블메이트
+- [ ] YouTube: Fryndo 프린도
 - [ ] Twitter/X: @travelmate_app
 
 ### 6.2 베타 테스터 모집
