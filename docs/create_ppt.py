@@ -103,8 +103,7 @@ def slide_01_cover(prs):
     line.line.fill.background()
     add_text_box(slide, 1, 5.8, 14, 0.5, "2026 예비창업패키지 IR",
                  font_size=20, color=WHITE, align=PP_ALIGN.CENTER)
-    # [수정 필요] 발표자 이름
-    add_text_box(slide, 1, 6.4, 14, 0.5, "발표자: [이름]",
+    add_text_box(slide, 1, 6.4, 14, 0.5, "발표자: 김다운",
                  font_size=18, color=WHITE, align=PP_ALIGN.CENTER)
 
 
@@ -814,8 +813,7 @@ def slide_21_qna(prs):
     add_text_box(slide, 1, 5, 14, 0.6, "질문 있으시면 말씀해 주세요",
                  font_size=24, color=GRAY, align=PP_ALIGN.CENTER)
 
-    # [수정 필요] 실제 연락처로 변경
-    add_text_box(slide, 1, 7, 14, 0.5, "📧 [이메일]  |  📱 [전화번호]",
+    add_text_box(slide, 1, 7, 14, 0.5, "📧 kimdan2@nate.com  |  📱 010-9639-9622",
                  font_size=18, color=GRAY, align=PP_ALIGN.CENTER)
 
 
@@ -844,7 +842,7 @@ slide_20_closing(prs)
 slide_21_qna(prs)
 
 # 저장
-output_path = r"C:\Develop\workspace\00.Down_ai\docs\Fryndo_AR_Companion_IR.pptx"
+output_path = r"C:\Develop\00.down\down\docs\Fryndo_AR_Companion_IR.pptx"
 prs.save(output_path)
 print(f"PPT 생성 완료: {output_path}")
 print(f"총 {len(prs.slides)}개 슬라이드")
