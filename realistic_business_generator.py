@@ -732,8 +732,11 @@ class RealisticBusinessGenerator:
             })
         return ideas
 
-    def generate_monthly_opportunities(self):
+    def generate_monthly_opportunities(self, exclude_names=None):
         """매월 새로운 현실적 사업 기회 생성 - 대량 생성 버전"""
+        if exclude_names is None:
+            exclude_names = set()
+
         current_month = datetime.now().month
         seasons = ["겨울", "겨울", "봄", "봄", "봄", "여름", "여름", "여름", "가을", "가을", "가을", "겨울"]
         current_season = seasons[current_month - 1]
@@ -805,12 +808,20 @@ class RealisticBusinessGenerator:
             opportunities.append(app)
 
         # 추가: 동적 조합 아이디어 (10개) - 매번 새로운 조합 생성
+        # 내부 중복 + 외부 exclude_names 모두 제외
         existing_names = set([o['business']['name'] for o in opportunities])
-        dynamic_ideas = self.generate_dynamic_combination_ideas(exclude_names=existing_names)
+        all_exclude = existing_names.union(exclude_names)
+        dynamic_ideas = self.generate_dynamic_combination_ideas(exclude_names=all_exclude)
         for idea in dynamic_ideas:
             opportunities.append(idea)
 
-        return opportunities
+        # exclude_names에 있는 사업은 최종 결과에서 제외
+        filtered_opportunities = [
+            opp for opp in opportunities
+            if opp.get('business', {}).get('name', '') not in exclude_names
+        ]
+
+        return filtered_opportunities
 
     def generate_high_viability_themes(self):
         """사업성 높은 테마들을 체계적으로 생성"""

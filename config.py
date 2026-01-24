@@ -187,8 +187,8 @@ class DiscoveryConfig:
     DEFAULT_LOW_SCORE_THRESHOLD = 50  # 저점수 기준
     DEFAULT_HIGH_SCORE_THRESHOLD = 85  # 고득점 기준 (high priority)
 
-    # 스케줄 (8시간 간격)
-    DEFAULT_SCHEDULE_HOURS = [1, 9, 17]  # KST 기준
+    # 스케줄 (하루 1회)
+    DEFAULT_SCHEDULE_HOURS = [9]  # KST 기준 오전 9시
 
     # 실행당 아이디어 수
     DEFAULT_IDEAS_PER_RUN = 3

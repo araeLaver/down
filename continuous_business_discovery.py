@@ -107,8 +107,8 @@ class ContinuousBusinessDiscovery:
             dynamic_ideas = self.idea_generator.generate_dynamic_combination_ideas(exclude_names=recent_names)
             random.shuffle(dynamic_ideas)
 
-            # 템플릿 아이디어도 생성 (백업용)
-            template_ideas = self.idea_generator.generate_monthly_opportunities()
+            # 템플릿 아이디어도 생성 (백업용) - exclude_names 전달하여 중복 방지
+            template_ideas = self.idea_generator.generate_monthly_opportunities(exclude_names=recent_names)
             random.shuffle(template_ideas)
 
             # 동적 아이디어를 먼저 배치하여 우선 선택되게 함
