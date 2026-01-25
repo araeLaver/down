@@ -80,7 +80,7 @@ class ContinuousBusinessDiscovery:
         return False
 
     def get_it_business_ideas(self):
-        """템플릿 기반 사업 아이디어 생성 (메모리 최적화 + 다양화)"""
+        """템플릿 기반 사업 아이디어 생성 (메모리 최적화 + 중복 방지 강화)"""
         all_opportunities = []
         recent_names = set()
 
@@ -103,33 +103,27 @@ class ContinuousBusinessDiscovery:
         print("\n[GENERATE] 다양한 아이디어 생성 중...")
 
         try:
-            # 동적 조합 아이디어 우선 생성 (수천 가지 조합 가능)
-            dynamic_ideas = self.idea_generator.generate_dynamic_combination_ideas(exclude_names=recent_names)
-            random.shuffle(dynamic_ideas)
+            # 동적 조합 아이디어만 생성 (generate_monthly_opportunities 내부에서 중복 호출 제거)
+            # generate_monthly_opportunities는 내부에서 동적 아이디어를 또 생성하므로 한 번만 호출
+            all_ideas = self.idea_generator.generate_monthly_opportunities(exclude_names=recent_names)
+            random.shuffle(all_ideas)
 
-            # 동적 아이디어 이름들을 exclude에 추가 (중복 방지)
-            dynamic_names = set([opp.get('business', {}).get('name', '') for opp in dynamic_ideas])
-            all_exclude_names = recent_names.union(dynamic_names)
-
-            # 템플릿 아이디어도 생성 (백업용) - 동적 아이디어 이름도 제외
-            template_ideas = self.idea_generator.generate_monthly_opportunities(exclude_names=all_exclude_names)
-            random.shuffle(template_ideas)
-
-            # 동적 아이디어를 먼저 배치하여 우선 선택되게 함
-            combined_ideas = dynamic_ideas + template_ideas
+            # 선택된 이름 추적 (이번 실행 내 중복 방지)
+            selected_names = set()
 
             # 설정된 개수만큼 중복되지 않은 아이디어 선택
             selected_count = 0
             max_select = self.ideas_per_run
 
-            for opp in combined_ideas:
+            for opp in all_ideas:
                 if selected_count >= max_select:
                     break
 
                 name = opp.get('business', {}).get('name', '')
-                if name and name not in recent_names:
+                # DB 중복 + 이번 실행 내 중복 모두 체크
+                if name and name not in recent_names and name not in selected_names:
                     all_opportunities.append(opp)
-                    recent_names.add(name)
+                    selected_names.add(name)
                     selected_count += 1
                     print(f"   [OK] 선택 {selected_count}: {name}")
 

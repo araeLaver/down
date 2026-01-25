@@ -733,7 +733,7 @@ class RealisticBusinessGenerator:
         return ideas
 
     def generate_monthly_opportunities(self, exclude_names=None):
-        """매월 새로운 현실적 사업 기회 생성 - 대량 생성 버전"""
+        """매월 새로운 현실적 사업 기회 생성 - 중복 방지 강화 버전"""
         if exclude_names is None:
             exclude_names = set()
 
@@ -742,41 +742,52 @@ class RealisticBusinessGenerator:
         current_season = seasons[current_month - 1]
 
         opportunities = []
+        # 이번 생성에서 추가된 이름 추적 (내부 중복 방지)
+        added_names = set()
 
-        # 즉시 시작 가능한 사업 5-8개 (기존 2개에서 확대)
+        def add_if_not_duplicate(opp):
+            """중복이 아닌 경우에만 추가"""
+            name = opp.get('business', {}).get('name', '')
+            if name and name not in exclude_names and name not in added_names:
+                opportunities.append(opp)
+                added_names.add(name)
+                return True
+            return False
+
+        # 즉시 시작 가능한 사업 (중복 체크)
         for category_data in self.immediate_businesses:
             for business in random.sample(category_data["businesses"], min(2, len(category_data["businesses"]))):
-                opportunities.append({
+                add_if_not_duplicate({
                     "type": "즉시 시작 가능",
                     "category": category_data["category"],
                     "business": business,
                     "priority": "높음"
                 })
 
-        # 고수익 앱 테마 8-10개 (기존 2개에서 확대)
+        # 고수익 앱 테마 (중복 체크)
         for app_category in self.high_potential_app_themes:
             for app in random.sample(app_category["apps"], min(2, len(app_category["apps"]))):
-                opportunities.append({
+                add_if_not_duplicate({
                     "type": "고수익 앱 개발",
                     "category": app_category["category"],
                     "business": app,
                     "priority": "매우 높음"
                 })
 
-        # 혁신 사업 아이디어 4-5개 (기존 1개에서 확대)
+        # 혁신 사업 아이디어 (중복 체크)
         for category in self.innovative_business_ideas:
             for idea in category["ideas"]:
-                opportunities.append({
+                add_if_not_duplicate({
                     "type": "혁신 사업 모델",
                     "category": category["category"],
                     "business": idea,
                     "priority": "높음"
                 })
 
-        # 계절 특화 사업 3-4개 (기존 1개에서 확대)
+        # 계절 특화 사업 (중복 체크)
         for seasonal_business in random.sample(self.seasonal_opportunities[current_season],
                                               min(3, len(self.seasonal_opportunities[current_season]))):
-            opportunities.append({
+            add_if_not_duplicate({
                 "type": "계절 특화",
                 "season": current_season,
                 "business": {
@@ -789,39 +800,39 @@ class RealisticBusinessGenerator:
                 "priority": "보통"
             })
 
-        # 기술 활용 사업 3개 (기존 1개에서 확대)
+        # 기술 활용 사업 (중복 체크)
         for tech_business in self.tech_enabled_businesses:
-            opportunities.append({
+            add_if_not_duplicate({
                 "type": "기술 활용",
                 "business": tech_business,
                 "priority": "높음"
             })
 
-        # 추가: 마이크로 사업 아이디어들
-        micro_businesses = self.generate_micro_business_ideas()
-        for micro in micro_businesses:
-            opportunities.append(micro)
+        # 마이크로 사업 아이디어들 (중복 체크)
+        for micro in random.sample(self.micro_business_ideas, min(5, len(self.micro_business_ideas))):
+            add_if_not_duplicate({
+                "type": "마이크로 비즈니스",
+                "category": "초소형 창업",
+                "business": micro,
+                "priority": "보통"
+            })
 
-        # 추가: 소규모 앱 아이디어들
-        small_apps = self.generate_small_app_ideas()
-        for app in small_apps:
-            opportunities.append(app)
+        # 소규모 앱 아이디어들 (중복 체크)
+        for app in random.sample(self.small_app_ideas, min(5, len(self.small_app_ideas))):
+            add_if_not_duplicate({
+                "type": "소규모 앱 개발",
+                "category": "간단 앱",
+                "business": app,
+                "priority": "높음"
+            })
 
-        # 추가: 동적 조합 아이디어 (10개) - 매번 새로운 조합 생성
-        # 내부 중복 + 외부 exclude_names 모두 제외
-        existing_names = set([o['business']['name'] for o in opportunities])
-        all_exclude = existing_names.union(exclude_names)
+        # 동적 조합 아이디어 - exclude_names + added_names 모두 제외
+        all_exclude = added_names.union(exclude_names)
         dynamic_ideas = self.generate_dynamic_combination_ideas(exclude_names=all_exclude)
         for idea in dynamic_ideas:
-            opportunities.append(idea)
+            add_if_not_duplicate(idea)
 
-        # exclude_names에 있는 사업은 최종 결과에서 제외
-        filtered_opportunities = [
-            opp for opp in opportunities
-            if opp.get('business', {}).get('name', '') not in exclude_names
-        ]
-
-        return filtered_opportunities
+        return opportunities
 
     def generate_high_viability_themes(self):
         """사업성 높은 테마들을 체계적으로 생성"""
