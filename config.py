@@ -137,7 +137,7 @@ class MarketAnalysisMode(Enum):
 class MarketConfig:
     """시장 분석 설정"""
 
-    DEFAULT_MODE = MarketAnalysisMode.LIGHTWEIGHT
+    DEFAULT_MODE = MarketAnalysisMode.FULL
     DEFAULT_TIMEOUT = 10  # 초
     DEFAULT_DELAY = 2.0   # API 호출 간 대기 시간 (초)
 
