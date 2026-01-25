@@ -147,7 +147,10 @@ class MarketConfig:
         mode_str = os.environ.get(EnvKeys.MARKET_ANALYSIS_MODE, "").lower()
         if mode_str == "full":
             return MarketAnalysisMode.FULL
-        return MarketAnalysisMode.LIGHTWEIGHT
+        elif mode_str == "lightweight":
+            return MarketAnalysisMode.LIGHTWEIGHT
+        # 환경변수 미설정 시 DEFAULT_MODE 사용
+        return cls.DEFAULT_MODE
 
     @classmethod
     def is_lightweight(cls) -> bool:
