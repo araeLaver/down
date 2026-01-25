@@ -1294,10 +1294,21 @@ def api_discovered_businesses():
             BusinessDiscoveryHistory.total_score >= 85
         ).scalar()
 
-        # 페이징된 데이터 조회 (전체)
-        histories = session.query(BusinessDiscoveryHistory).order_by(
+        # 페이징된 데이터 조회 (중복 제거 - 같은 이름은 가장 최근 것만)
+        # 서브쿼리로 각 business_name의 최신 ID 선택
+        from sqlalchemy import func as sqlfunc
+        subquery = session.query(
+            sqlfunc.max(BusinessDiscoveryHistory.id).label('max_id')
+        ).group_by(BusinessDiscoveryHistory.business_name).subquery()
+
+        histories = session.query(BusinessDiscoveryHistory).join(
+            subquery, BusinessDiscoveryHistory.id == subquery.c.max_id
+        ).order_by(
             BusinessDiscoveryHistory.discovered_at.desc()
         ).offset(offset).limit(limit).all()
+
+        # 전체 개수도 중복 제거된 개수로 갱신
+        total_count = session.query(sqlfunc.count(sqlfunc.distinct(BusinessDiscoveryHistory.business_name))).scalar()
 
         logger.info(f"[API] discovered-businesses: page={page}, limit={limit}, total={total_count}")
 
