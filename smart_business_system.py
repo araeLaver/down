@@ -171,73 +171,25 @@ class SmartBusinessSystem:
         )
 
     def _analyze_with_external_api(self, business_idea, keyword, business_config):
-        """외부 API를 사용한 실시간 분석"""
-        print("[1] 시장 분석 중... (전체 모드 - 실시간 수집)")
+        """외부 API를 사용한 종합 분석 (10+ 플랫폼)"""
+        print("[1] 시장 분석 중... (전체 모드 - 종합 크롤링)")
 
-        # 실제 플랫폼별 데이터 수집
         search_keyword = keyword or business_idea
-        data_sources = {}
-        market_signals = []
 
+        # comprehensive_analysis()로 10+ 플랫폼 종합 분석
         try:
-            # 크몽 시장 분석
-            print("   → 크몽 분석 중...")
-            kmong_data = self.market_analyzer.analyze_kmong_market(search_keyword)
-            data_sources['kmong'] = kmong_data
-            if 'error' not in kmong_data:
-                market_signals.append(('kmong', kmong_data.get('service_count', 0)))
-                print(f"      서비스 수: {kmong_data.get('service_count', 0)}개, 평균가: {kmong_data.get('avg_price', 0):,}원")
+            comp_results = self.market_analyzer.comprehensive_analysis(business_idea, search_keyword)
         except Exception as e:
-            print(f"   [WARN] 크몽 분석 실패: {e}")
+            print(f"   [WARN] 종합 분석 실패, 기본값 사용: {e}")
+            comp_results = {
+                'data_sources': {},
+                'market_score': 65,
+                'recommendation': {'verdict': '분석 실패 - 재시도 필요'}
+            }
 
-        try:
-            # 네이버 검색량 분석
-            print("   → 네이버 검색량 분석 중...")
-            naver_data = self.market_analyzer.analyze_naver_search_volume(search_keyword)
-            data_sources['naver'] = naver_data
-            if 'error' not in naver_data:
-                market_signals.append(('naver', naver_data.get('popularity_score', 0)))
-                print(f"      인기도: {naver_data.get('popularity_score', 0)}/100, 연관검색어: {naver_data.get('related_searches', 0)}개")
-        except Exception as e:
-            print(f"   [WARN] 네이버 분석 실패: {e}")
-
-        try:
-            # 구글 경쟁사 분석
-            print("   → 구글 경쟁사 분석 중...")
-            google_data = self.market_analyzer.analyze_competitors_google(search_keyword)
-            data_sources['google'] = google_data
-            if 'error' not in google_data:
-                print(f"      검색결과: {google_data.get('organic_results', 0)}개, 광고경쟁: {google_data.get('ad_competition', 'N/A')}")
-        except Exception as e:
-            print(f"   [WARN] 구글 분석 실패: {e}")
-
-        try:
-            # 유튜브 관심도 분석
-            print("   → 유튜브 관심도 분석 중...")
-            youtube_data = self.market_analyzer.analyze_youtube_interest(search_keyword)
-            data_sources['youtube'] = youtube_data
-            if 'error' not in youtube_data:
-                print(f"      관심도: {youtube_data.get('interest_indicator', 'N/A')}")
-        except Exception as e:
-            print(f"   [WARN] 유튜브 분석 실패: {e}")
-
-        # 시장 점수 계산 (수집된 데이터 기반)
-        base_score = 60
-        if market_signals:
-            # 크몽 서비스 수 기반 (적당히 있으면 좋음)
-            kmong_count = next((s[1] for s in market_signals if s[0] == 'kmong'), 0)
-            if 10 <= kmong_count <= 100:
-                base_score += 10  # 적절한 경쟁
-            elif kmong_count < 10:
-                base_score += 15  # 블루오션
-            else:
-                base_score += 5   # 레드오션
-
-            # 네이버 인기도 반영
-            naver_pop = next((s[1] for s in market_signals if s[0] == 'naver'), 0)
-            base_score += min(naver_pop // 10, 15)
-
-        market_score = min(95, max(50, base_score + random.randint(-5, 5)))
+        data_sources = comp_results.get('data_sources', {})
+        market_score = comp_results.get('market_score', 65)
+        platform_count = len([k for k, v in data_sources.items() if isinstance(v, dict) and 'error' not in v])
 
         market_data = {
             'business_idea': business_idea,
@@ -245,17 +197,26 @@ class SmartBusinessSystem:
             'market_score': market_score,
             'analysis_date': datetime.now().isoformat(),
             'mode': 'full',
-            'data_sources': data_sources
+            'platform_count': platform_count,
+            'data_sources': data_sources,
+            'recommendation': comp_results.get('recommendation', {}),
+            'is_blockchain': comp_results.get('is_blockchain', False)
         }
 
-        print(f"\n   시장 점수: {market_score}/100 (실시간 분석)")
+        print(f"\n   시장 점수: {market_score}/100 (종합 분석, {platform_count}개 플랫폼)")
 
-        print("\n[2] 수익성 검증 중... (전체 모드)")
+        print("\n[2] 수익성 검증 중... (전체 모드 - 종합 가격 데이터)")
 
-        # 크몽 가격 데이터 기반 수익 추정
-        avg_price = data_sources.get('kmong', {}).get('avg_price', 100000)
-        monthly_revenue = avg_price * random.randint(20, 50)  # 월 20~50건 가정
-        margin_rate = 0.6  # 60% 마진
+        # 크몽+숨고+위시켓 가격 데이터 종합 활용
+        kmong_price = data_sources.get('kmong', {}).get('avg_price', 0)
+        soomgo_price = data_sources.get('soomgo', {}).get('avg_price', 0)
+        wishket_price = data_sources.get('wishket', {}).get('avg_budget', 0)
+
+        price_sources = [p for p in [kmong_price, soomgo_price, wishket_price] if p > 0]
+        avg_price = int(sum(price_sources) / len(price_sources)) if price_sources else 100000
+
+        monthly_revenue = avg_price * random.randint(20, 50)
+        margin_rate = 0.6
         monthly_profit = int(monthly_revenue * margin_rate)
 
         verdict_score = min(95, max(50, 60 + (monthly_profit // 500000) + random.randint(-3, 3)))
@@ -268,13 +229,15 @@ class SmartBusinessSystem:
             },
             'verdict': {'score': verdict_score},
             'mode': 'full',
-            'avg_market_price': avg_price
+            'avg_market_price': avg_price,
+            'price_sources': len(price_sources)
         }
         realistic_scenario = revenue_data['scenarios']['realistic']
 
         print(f"   수익성 점수: {verdict_score}/100")
         print(f"   월 예상 매출: {realistic_scenario['monthly_revenue']:,}원")
         print(f"   월 예상 순이익: {realistic_scenario['monthly_profit']:,}원")
+        print(f"   가격 참고 플랫폼: {len(price_sources)}개")
 
         total_score = (market_score * 0.6) + (verdict_score * 0.4)
 

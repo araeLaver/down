@@ -1227,7 +1227,7 @@
             displayBusinesses(searched, true);
         }
 
-        // Show detail
+        // Show detail - 5개 핵심 섹션 모달
         function showDetail(bizId) {
             const biz = allBusinesses.find(b => b.id === bizId) || filteredBusinesses.find(b => b.id === bizId);
             if (!biz) return;
@@ -1240,650 +1240,210 @@
             const revenueAnalysis = details.revenue_analysis || {};
             const actionPlan = details.action_plan || {};
             const startupGuide = details.startup_guide || {};
+            const fullAnalysis = details.full_analysis || {};
+            const businessInfo = fullAnalysis.business || {};
 
             const monthlyRevenue = biz.revenue_12m ? Math.round(biz.revenue_12m / 12) : 0;
             const roi = biz.revenue_12m && biz.investment ?
                 Math.round((biz.revenue_12m - biz.investment) / biz.investment * 100) : 0;
 
-            // 시장 분석 섹션 생성 (경량 분석 v2 개선)
-            let marketSection = '';
             const marketScore = marketAnalysis.market_score || details.market_score || 0;
-            const marketInfo = marketAnalysis.market_info || {};
-            const scoreBreakdown = marketAnalysis.score_breakdown || {};
+            const revenueScore = details.revenue_score || 0;
+            const totalScore = biz.score || 0;
+            const platformCount = marketAnalysis.platform_count || Object.keys(marketAnalysis.data_sources || {}).length || 0;
             const recommendation = marketAnalysis.recommendation || {};
             const domainData = marketAnalysis.domain || {};
-            const competitionData = marketAnalysis.competition || {};
-            const targetData = marketAnalysis.target_audience || {};
-            const dataSources = marketAnalysis.data_sources || {};
-            const hasDetailedData = marketAnalysis.naver || marketAnalysis.google_trends || marketAnalysis.youtube || marketAnalysis.kmong || dataSources.naver;
+            const marketInfo = marketAnalysis.market_info || {};
 
-            // 도메인 라벨 매핑
-            const domainLabels = {
-                'ai': 'AI/자동화', 'saas': 'SaaS', 'ecommerce': '이커머스',
-                'education': '교육', 'content': '콘텐츠', 'marketing': '마케팅',
-                'finance': '금융', 'health': '헬스케어', 'default': '일반'
-            };
+            // --- 카드 스타일 헬퍼 ---
+            const cardStyle = (color) => `background: #111; border: 1px solid #222; border-radius: 12px; padding: 1.25rem; border-top: 4px solid ${color};`;
+            const sectionTitle = (icon, title, color) => `<div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem;"><i class="fas ${icon}" style="color: ${color}; font-size: 1.1rem;"></i><span style="font-weight: 700; font-size: 1rem; color: ${color};">${title}</span></div>`;
+            const infoRow = (label, value) => `<div style="display: flex; justify-content: space-between; padding: 0.5rem 0; border-bottom: 1px solid #222;"><span style="color: #888; font-size: 0.875rem;">${label}</span><span style="color: #e5e5e5; font-weight: 600; font-size: 0.875rem;">${value}</span></div>`;
 
-            if (Object.keys(marketAnalysis).length > 0 || marketScore > 0) {
-                // 트렌드 아이콘/색상
-                const trend = domainData.trend || marketInfo.trend || '안정';
-                const trendColor = trend.includes('급상승') ? '#dc2626' :
-                                  trend.includes('상승') ? '#ea580c' :
-                                  trend.includes('하락') ? '#6b7280' : '#2563eb';
-                const trendIcon = trend.includes('급상승') ? 'fa-fire' :
-                                 trend.includes('상승') ? 'fa-arrow-trend-up' :
-                                 trend.includes('하락') ? 'fa-arrow-trend-down' : 'fa-minus';
-
-                marketSection = `
-                    <div class="detail-section">
-                        <h6><i class="fas fa-chart-line"></i> 시장 분석 <span style="font-size: 0.7rem; color: #888; font-weight: normal;">(경량 분석 v2)</span></h6>
-                        <div style="background: #111; border: 1px solid #222; border-radius: 12px; padding: 1rem;">
-                            <!-- 시장 점수 표시 -->
-                            <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem; padding: 1rem; background: #1a1a1b; border-radius: 10px; border: 1px solid #333;">
-                                <div style="width: 70px; height: 70px; border-radius: 50%; background: linear-gradient(135deg, #10b981 0%, #059669 100%); display: flex; align-items: center; justify-content: center; color: white; font-size: 1.5rem; font-weight: 700; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);">
-                                    ${Math.round(marketScore)}
-                                </div>
-                                <div style="flex: 1;">
-                                    <div style="font-weight: 700; color: #e5e5e5; font-size: 1.1rem;">시장 매력도</div>
-                                    <div style="font-size: 0.875rem; color: #888; margin-top: 0.25rem;">
-                                        ${marketScore >= 85 ? '매우 유망한 시장입니다' :
-                                          marketScore >= 75 ? '성장 가능성이 높은 시장입니다' :
-                                          marketScore >= 65 ? '진입 가능한 시장입니다' :
-                                          '틈새 시장 공략이 필요합니다'}
-                                    </div>
-                                    ${recommendation.verdict ? `<div style="margin-top: 0.5rem;"><span style="padding: 4px 10px; background: ${recommendation.verdict.includes('유망') ? '#1a2e1a' : '#2e2a1a'}; color: ${recommendation.verdict.includes('유망') ? '#4ade80' : '#fbbf24'}; border-radius: 6px; font-size: 0.813rem; font-weight: 600;">${recommendation.verdict}</span></div>` : ''}
-                                </div>
-                                <div style="text-align: right;">
-                                    <div style="display: flex; align-items: center; gap: 0.5rem; color: ${trendColor}; font-weight: 600;">
-                                        <i class="fas ${trendIcon}"></i> ${trend}
-                                    </div>
-                                    ${domainData.growth_rate ? `<div style="font-size: 0.75rem; color: #888; margin-top: 0.25rem;">연 ${domainData.growth_rate} 성장</div>` : ''}
-                                </div>
-                            </div>
-
-                            <!-- 점수 Breakdown (경량 분석 v2) -->
-                            ${Object.keys(scoreBreakdown).length > 0 ? `
-                                <div style="margin-bottom: 1rem; padding: 0.75rem; background: #1a1a1b; border-radius: 8px; border: 1px solid #333;">
-                                    <div style="font-weight: 600; font-size: 0.875rem; color: #e5e5e5; margin-bottom: 0.75rem;"><i class="fas fa-chart-bar"></i> 점수 구성</div>
-                                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.5rem;">
-                                        <div style="text-align: center; padding: 0.5rem; background: #1a2e1a; border-radius: 6px;">
-                                            <div style="font-size: 1.25rem; font-weight: 700; color: #059669;">${scoreBreakdown.base_score || 0}</div>
-                                            <div style="font-size: 0.7rem; color: #888;">기본 점수</div>
-                                        </div>
-                                        <div style="text-align: center; padding: 0.5rem; background: #1a1a2e; border-radius: 6px;">
-                                            <div style="font-size: 1.25rem; font-weight: 700; color: #2563eb;">+${scoreBreakdown.domain_bonus || 0}</div>
-                                            <div style="font-size: 0.7rem; color: #888;">도메인</div>
-                                        </div>
-                                        <div style="text-align: center; padding: 0.5rem; background: #2e2a1a; border-radius: 6px;">
-                                            <div style="font-size: 1.25rem; font-weight: 700; color: #d97706;">+${scoreBreakdown.trend_bonus || 0}</div>
-                                            <div style="font-size: 0.7rem; color: #888;">트렌드</div>
-                                        </div>
-                                        <div style="text-align: center; padding: 0.5rem; background: #2e1a2a; border-radius: 6px;">
-                                            <div style="font-size: 1.25rem; font-weight: 700; color: #db2777;">+${scoreBreakdown.target_bonus || 0}</div>
-                                            <div style="font-size: 0.7rem; color: #888;">타겟</div>
-                                        </div>
-                                        <div style="text-align: center; padding: 0.5rem; background: #1f1a2e; border-radius: 6px;">
-                                            <div style="font-size: 1.25rem; font-weight: 700; color: #7c3aed;">+${scoreBreakdown.revenue_bonus || 0}</div>
-                                            <div style="font-size: 0.7rem; color: #888;">수익모델</div>
-                                        </div>
-                                        <div style="text-align: center; padding: 0.5rem; background: ${(scoreBreakdown.competition_bonus || 0) >= 0 ? '#ecfdf5' : '#fef2f2'}; border-radius: 6px;">
-                                            <div style="font-size: 1.25rem; font-weight: 700; color: ${(scoreBreakdown.competition_bonus || 0) >= 0 ? '#059669' : '#dc2626'};">${(scoreBreakdown.competition_bonus || 0) >= 0 ? '+' : ''}${scoreBreakdown.competition_bonus || 0}</div>
-                                            <div style="font-size: 0.7rem; color: #888;">경쟁</div>
-                                        </div>
-                                    </div>
-                                </div>
-                            ` : ''}
-
-                            <!-- 핵심 성공 요소 -->
-                            ${recommendation.key_success_factors && recommendation.key_success_factors.length > 0 ? `
-                                <div style="margin-bottom: 1rem; padding: 0.75rem; background: #1a1a1b; border-radius: 8px; border: 1px solid #333;">
-                                    <div style="font-weight: 600; font-size: 0.875rem; color: #e5e5e5; margin-bottom: 0.5rem;"><i class="fas fa-key"></i> 핵심 성공 요소</div>
-                                    <div style="display: flex; flex-wrap: wrap; gap: 0.5rem;">
-                                        ${recommendation.key_success_factors.map(f => `<span style="padding: 4px 10px; background: #1a2e1a; color: #4ade80; border-radius: 6px; font-size: 0.75rem;">${f}</span>`).join('')}
-                                    </div>
-                                </div>
-                            ` : ''}
-
-                            <!-- 시장 정보 카드 (새로 추가) -->
-                            ${marketInfo.market_size ? `
-                                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.75rem; margin-bottom: 0.75rem;">
-                                    <div style="padding: 0.75rem; background: #1a1a1b; border-radius: 6px; border: 1px solid #333; border-left: 3px solid #6366f1;">
-                                        <strong style="color: #6366f1; font-size: 0.875rem;"><i class="fas fa-chart-pie"></i> 시장 규모</strong>
-                                        <p style="margin: 0.25rem 0 0 0; font-size: 1rem; font-weight: 600; color: #e5e5e5;">${marketInfo.market_size}</p>
-                                        <p style="margin: 0.25rem 0 0 0; font-size: 0.75rem; color: #888;">연 ${marketInfo.growth_rate || 0}% 성장</p>
-                                    </div>
-                                    <div style="padding: 0.75rem; background: #1a1a1b; border-radius: 6px; border: 1px solid #333; border-left: 3px solid #f59e0b;">
-                                        <strong style="color: #f59e0b; font-size: 0.875rem;"><i class="fas fa-users"></i> 타겟 규모</strong>
-                                        <p style="margin: 0.25rem 0 0 0; font-size: 1rem; font-weight: 600; color: #e5e5e5;">${marketInfo.target_size || '-'}</p>
-                                        <p style="margin: 0.25rem 0 0 0; font-size: 0.75rem; color: #888;">${marketInfo.seasonality || '연중'}</p>
-                                    </div>
-                                    <div style="padding: 0.75rem; background: #1a1a1b; border-radius: 6px; border: 1px solid #333; border-left: 3px solid #ef4444;">
-                                        <strong style="color: #ef4444; font-size: 0.875rem;"><i class="fas fa-shield-alt"></i> 진입 장벽</strong>
-                                        <div style="margin-top: 0.5rem; display: flex; align-items: center; gap: 0.5rem;">
-                                            <div style="flex: 1; height: 8px; background: #333; border-radius: 4px; overflow: hidden;">
-                                                <div style="width: ${marketInfo.entry_barrier_score || 50}%; height: 100%; background: ${marketInfo.entry_barrier_score > 60 ? '#ef4444' : marketInfo.entry_barrier_score > 40 ? '#f59e0b' : '#10b981'};"></div>
-                                            </div>
-                                            <span style="font-size: 0.75rem; color: #d1d5db;">${marketInfo.entry_barrier || '중간'}</span>
-                                        </div>
-                                    </div>
-                                    <div style="padding: 0.75rem; background: #1a1a1b; border-radius: 6px; border: 1px solid #333; border-left: 3px solid #8b5cf6;">
-                                        <strong style="color: #8b5cf6; font-size: 0.875rem;"><i class="fas fa-fire"></i> 경쟁 강도</strong>
-                                        <div style="margin-top: 0.5rem; display: flex; align-items: center; gap: 0.5rem;">
-                                            <div style="flex: 1; height: 8px; background: #333; border-radius: 4px; overflow: hidden;">
-                                                <div style="width: ${marketAnalysis.naver?.competition_score || 55}%; height: 100%; background: ${(marketAnalysis.naver?.competition_score || 55) > 70 ? '#ef4444' : (marketAnalysis.naver?.competition_score || 55) > 50 ? '#f59e0b' : '#10b981'};"></div>
-                                            </div>
-                                            <span style="font-size: 0.75rem; color: #d1d5db;">${marketAnalysis.naver?.competition || '중간'}</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            ` : ''}
-
-                            <!-- 기존 플랫폼별 데이터 -->
-                            ${hasDetailedData ? `
-                                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.75rem; margin-bottom: 0.75rem;">
-                                    ${marketAnalysis.naver ? `
-                                        <div style="padding: 0.75rem; background: #1a1a1b; border-radius: 6px; border: 1px solid #333; border-left: 3px solid #03c75a;">
-                                            <strong style="color: #03c75a; font-size: 0.875rem;"><i class="fas fa-search"></i> 네이버</strong>
-                                            <p style="margin: 0.25rem 0 0 0; font-size: 0.813rem; color: #d1d5db;">
-                                                검색량: ${(marketAnalysis.naver.search_count || 0).toLocaleString()}건
-                                            </p>
-                                        </div>
-                                    ` : ''}
-                                    ${marketAnalysis.google_trends || marketAnalysis.google ? `
-                                        <div style="padding: 0.75rem; background: #1a1a1b; border-radius: 6px; border: 1px solid #333; border-left: 3px solid #4285f4;">
-                                            <strong style="color: #4285f4; font-size: 0.875rem;"><i class="fab fa-google"></i> Google</strong>
-                                            <p style="margin: 0.25rem 0 0 0; font-size: 0.813rem; color: #d1d5db;">
-                                                관심도: ${marketAnalysis.google_trends?.global_interest || marketAnalysis.google?.interest || 0}점
-                                                ${marketAnalysis.google_trends?.trend ? ` / ${marketAnalysis.google_trends.trend}` : ''}
-                                            </p>
-                                        </div>
-                                    ` : ''}
-                                    ${marketAnalysis.youtube ? `
-                                        <div style="padding: 0.75rem; background: #1a1a1b; border-radius: 6px; border: 1px solid #333; border-left: 3px solid #ff0000;">
-                                            <strong style="color: #ff0000; font-size: 0.875rem;"><i class="fab fa-youtube"></i> YouTube</strong>
-                                            <p style="margin: 0.25rem 0 0 0; font-size: 0.813rem; color: #d1d5db;">
-                                                관련 영상: ${(marketAnalysis.youtube.video_count || 0).toLocaleString()}개
-                                            </p>
-                                        </div>
-                                    ` : ''}
-                                    ${marketAnalysis.kmong ? `
-                                        <div style="padding: 0.75rem; background: #1a1a1b; border-radius: 6px; border: 1px solid #333; border-left: 3px solid #ff6b35;">
-                                            <strong style="color: #ff6b35; font-size: 0.875rem;"><i class="fas fa-store"></i> 크몽</strong>
-                                            <p style="margin: 0.25rem 0 0 0; font-size: 0.813rem; color: #d1d5db;">
-                                                서비스: ${marketAnalysis.kmong.service_count || 0}개
-                                                ${marketAnalysis.kmong.avg_price ? ` / 평균 ${(marketAnalysis.kmong.avg_price / 10000).toFixed(0)}만원` : ''}
-                                            </p>
-                                        </div>
-                                    ` : ''}
-                                </div>
-                            ` : ''}
-                            ${marketAnalysis.market_summary || marketAnalysis.summary ? `
-                                <div style="margin-top: 0.75rem; padding: 0.75rem; background: #1a1a1b; border-radius: 6px; border: 1px solid #333;">
-                                    <strong style="font-size: 0.875rem;"><i class="fas fa-clipboard-list"></i> 시장 요약</strong>
-                                    <p style="margin: 0.5rem 0 0 0; font-size: 0.875rem; color: #d1d5db;">${marketAnalysis.market_summary || marketAnalysis.summary}</p>
-                                </div>
-                            ` : ''}
-                        </div>
-                    </div>
-                `;
-            }
-
-            // 수익 분석 섹션 생성
-            let revenueSection = '';
-            if (Object.keys(revenueAnalysis).length > 0) {
-                const scenarios = revenueAnalysis.scenarios || {};
-                const conservative = scenarios.conservative || scenarios['보수적'] || {};
-                const realistic = scenarios.realistic || scenarios['현실적'] || {};
-                const optimistic = scenarios.optimistic || scenarios['낙관적'] || {};
-
-                revenueSection = `
-                    <div class="detail-section">
-                        <h6><i class="fas fa-coins"></i> 수익성 분석</h6>
-                        <div style="background: #2e2a1a; border-radius: 8px; padding: 1rem;">
-                            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-bottom: 1rem;">
-                                <div style="text-align: center; padding: 0.75rem; background: #1a1a1b; border-radius: 6px; border: 1px solid #333;">
-                                    <div style="font-size: 0.75rem; color: #888;">보수적</div>
-                                    <div style="font-size: 1.125rem; font-weight: 700; color: #dc2626;">
-                                        ${((conservative.monthly_revenue || conservative.월_예상_수익 || 0) / 10000).toLocaleString()}만원/월
-                                    </div>
-                                </div>
-                                <div style="text-align: center; padding: 0.75rem; background: #1a1a1b; border-radius: 6px; border: 1px solid #333; border: 2px solid var(--success-color);">
-                                    <div style="font-size: 0.75rem; color: #888;">현실적</div>
-                                    <div style="font-size: 1.125rem; font-weight: 700; color: var(--success-color);">
-                                        ${((realistic.monthly_revenue || realistic.월_예상_수익 || monthlyRevenue) / 10000).toLocaleString()}만원/월
-                                    </div>
-                                </div>
-                                <div style="text-align: center; padding: 0.75rem; background: #1a1a1b; border-radius: 6px; border: 1px solid #333;">
-                                    <div style="font-size: 0.75rem; color: #888;">낙관적</div>
-                                    <div style="font-size: 1.125rem; font-weight: 700; color: #2563eb;">
-                                        ${((optimistic.monthly_revenue || optimistic.월_예상_수익 || 0) / 10000).toLocaleString()}만원/월
-                                    </div>
-                                </div>
-                            </div>
-                            <ul class="detail-list" style="background: #1a1a1b; border-radius: 6px; border: 1px solid #333; padding: 0.75rem;">
-                                <li>
-                                    <span class="detail-label">초기 투자비</span>
-                                    <span class="detail-value">${((revenueAnalysis.startup_cost || revenueAnalysis.initial_investment || biz.investment) / 10000).toLocaleString()}만원</span>
-                                </li>
-                                <li>
-                                    <span class="detail-label">손익분기점</span>
-                                    <span class="detail-value">${revenueAnalysis.break_even_months || revenueAnalysis.payback_period || realistic.break_even_months || '-'}개월</span>
-                                </li>
-                                <li>
-                                    <span class="detail-label">연간 ROI</span>
-                                    <span class="detail-value" style="color: var(--primary-color);">${revenueAnalysis.annual_roi || roi}%</span>
-                                </li>
-                                <li>
-                                    <span class="detail-label">수익 모델</span>
-                                    <span class="detail-value">${revenueAnalysis.revenue_model || biz.revenue_model || '-'}</span>
-                                </li>
-                            </ul>
-                            ${revenueAnalysis.revenue_summary || revenueAnalysis.summary ? `
-                                <div style="margin-top: 0.75rem; padding: 0.75rem; background: #1a1a1b; border-radius: 6px; border: 1px solid #333;">
-                                    <strong><i class="fas fa-lightbulb"></i> 수익성 요약</strong>
-                                    <p style="margin: 0.5rem 0 0 0; font-size: 0.875rem;">${revenueAnalysis.revenue_summary || revenueAnalysis.summary}</p>
-                                </div>
-                            ` : ''}
-                        </div>
-                    </div>
-                `;
-            }
-
-            // 실행 계획 섹션 생성 (간소화된 로직)
-            let actionPlanSection = '';
-            if (Object.keys(actionPlan).length > 0) {
-                // 주차별 데이터 추출
-                const weekColors = ['#6366f1', '#10b981', '#f59e0b', '#ef4444'];
-                const weekLabels = ['1주차: MVP 개발', '2주차: 프로토타입 검증', '3주차: 마케팅 시작', '4주차: 최적화 및 확장'];
-
-                let weeksHtml = '';
-                for (let i = 1; i <= 4; i++) {
-                    const weekData = actionPlan[`week_${i}`] || actionPlan[`${i}주차`];
-                    if (weekData) {
-                        const goal = weekData.goal || weekLabels[i-1];
-                        const tasks = Array.isArray(weekData) ? weekData : (weekData.tasks || []);
-                        const color = weekColors[i-1];
-                        const isLast = i === 4;
-
-                        weeksHtml += `
-                            <div style="${isLast ? '' : 'margin-bottom: 1rem;'} padding: 0.75rem; background: #1a1a1b; border-radius: 6px; border: 1px solid #333; border-left: 4px solid ${color};">
-                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
-                                    <strong style="color: ${color};">${i}주차</strong>
-                                    <span style="font-size: 0.75rem; color: #888;">${goal}</span>
-                                </div>
-                                ${tasks.length > 0 ? `
-                                    <ul style="margin: 0; padding-left: 1.25rem; font-size: 0.875rem; color: #d1d5db;">
-                                        ${tasks.map(t => `<li style="margin-bottom: 0.25rem;">${typeof t === 'string' ? t : t.task || t}</li>`).join('')}
-                                    </ul>
-                                ` : ''}
-                            </div>
-                        `;
-                    }
-                }
-
-                if (weeksHtml) {
-                    actionPlanSection = `
-                        <div class="detail-section">
-                            <h6><i class="fas fa-tasks"></i> 4주 실행 계획</h6>
-                            <div style="background: #ede9fe; border-radius: 8px; padding: 1rem;">
-                                ${actionPlan.summary ? `<p style="margin-bottom: 1rem; font-size: 0.875rem; color: #4b5563;">${actionPlan.summary}</p>` : ''}
-                                ${weeksHtml}
-                                ${actionPlan.total_budget ? `
-                                    <div style="margin-top: 1rem; padding: 0.75rem; background: #1a1a1b; border-radius: 6px; border: 1px solid #333; text-align: center;">
-                                        <strong>예상 총 예산: ${(actionPlan.total_budget / 10000).toLocaleString()}만원</strong>
-                                    </div>
-                                ` : ''}
-                            </div>
-                        </div>
-                    `;
-                } else if (actionPlan.steps || actionPlan.plan || actionPlan.summary) {
-                    // 다른 형식의 실행 계획
-                    const steps = actionPlan.steps || actionPlan.plan || [];
-                    actionPlanSection = `
-                        <div class="detail-section">
-                            <h6><i class="fas fa-tasks"></i> 실행 계획</h6>
-                            <div style="background: #ede9fe; border-radius: 8px; padding: 1rem;">
-                                ${actionPlan.summary ? `<p style="margin-bottom: 1rem;">${actionPlan.summary}</p>` : ''}
-                                ${Array.isArray(steps) && steps.length > 0 ? `
-                                    <ul style="margin: 0; padding-left: 1.25rem;">
-                                        ${steps.map(s => `<li style="margin-bottom: 0.5rem;">${typeof s === 'string' ? s : s.step || s.task || s}</li>`).join('')}
-                                    </ul>
-                                ` : ''}
-                            </div>
-                        </div>
-                    `;
-                }
-            }
-
-            // 기본 정보 섹션
-            const basicInfoSection = `
+            // ========== 1. 사업 목적 (보라) ==========
+            const itType = businessInfo.it_type_label || fullAnalysis.type || '';
+            const category = details.category || biz.type || '-';
+            const section1 = `
                 <div class="detail-section">
-                    <h6><i class="fas fa-chart-bar"></i> 평가 점수</h6>
-                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.75rem; margin-bottom: 1rem;">
-                        <div style="text-align: center; padding: 1rem; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 8px; color: white;">
-                            <div style="font-size: 1.75rem; font-weight: 700;">${biz.score}</div>
-                            <div style="font-size: 0.75rem; opacity: 0.9;">종합 점수</div>
-                        </div>
-                        <div style="text-align: center; padding: 1rem; background: #d1fae5; border-radius: 8px;">
-                            <div style="font-size: 1.75rem; font-weight: 700; color: #059669;">${Math.round(details.market_score || 0)}</div>
-                            <div style="font-size: 0.75rem; color: #065f46;">시장성</div>
-                        </div>
-                        <div style="text-align: center; padding: 1rem; background: #dbeafe; border-radius: 8px;">
-                            <div style="font-size: 1.75rem; font-weight: 700; color: #2563eb;">${Math.round(details.revenue_score || 0)}</div>
-                            <div style="font-size: 0.75rem; color: #1e40af;">수익성</div>
+                    <div style="${cardStyle('#6366f1')}">
+                        ${sectionTitle('fa-bullseye', '사업 목적', '#6366f1')}
+                        <p style="color: #d1d5db; font-size: 0.9rem; margin: 0 0 1rem 0; line-height: 1.6;">${biz.description || details.description || '-'}</p>
+                        <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                            ${itType ? `<span style="padding: 0.3rem 0.75rem; background: linear-gradient(135deg, #6366f1, #8b5cf6); color: white; border-radius: 20px; font-size: 0.813rem; font-weight: 600;">${itType}</span>` : ''}
+                            <span style="padding: 0.3rem 0.75rem; background: #1f1a2e; color: #a78bfa; border-radius: 20px; font-size: 0.813rem;">${category}</span>
+                            ${details.keyword ? `<span style="padding: 0.3rem 0.75rem; background: #1a1a2e; color: #818cf8; border-radius: 20px; font-size: 0.813rem;">${details.keyword}</span>` : ''}
                         </div>
                     </div>
-                    <ul class="detail-list">
-                        <li>
-                            <span class="detail-label">카테고리</span>
-                            <span class="detail-value">${details.category || biz.type || '-'}</span>
-                        </li>
-                        <li>
-                            <span class="detail-label">키워드</span>
-                            <span class="detail-value">${details.keyword || '-'}</span>
-                        </li>
-                        <li>
-                            <span class="detail-label">위험도</span>
-                            <span class="detail-value">${biz.risk === 'low' ? '낮음 ✅' : biz.risk === 'medium' ? '보통 ⚠️' : '높음 ⚡'}</span>
-                        </li>
-                        <li>
-                            <span class="detail-label">발굴일시</span>
-                            <span class="detail-value">${formatKST(biz.created_at)}</span>
-                        </li>
-                    </ul>
                 </div>
             `;
 
-            // 사업 상세 정보 섹션 (IT 유형, 핵심 기능, 차별화 포인트)
-            const fullAnalysis = details.full_analysis || {};
-            const businessInfo = fullAnalysis.business || {};
-            let businessDetailSection = '';
-
-            // IT 사업 유형 또는 핵심 정보가 있는 경우
-            const itType = businessInfo.it_type_label || fullAnalysis.type || '';
-            const coreFeatures = businessInfo.core_features || [];
+            // ========== 2. 사업 방향 (초록) ==========
+            const trend = domainData.trend || marketInfo.trend || '안정';
+            const growthRate = domainData.growth_rate || marketInfo.growth_rate || '';
             const differentiator = businessInfo.differentiator || '';
-            const techStack = businessInfo.tech_stack || [];
             const revenueModels = businessInfo.revenue_models || [];
-            const targetAudience = businessInfo.target_audience || '';
+            const revenueModel = revenueAnalysis.revenue_model || biz.revenue_model || revenueModels.join(', ') || '-';
 
-            if (itType || coreFeatures.length > 0 || differentiator || techStack.length > 0) {
-                businessDetailSection = `
-                    <div class="detail-section">
-                        <h6><i class="fas fa-lightbulb"></i> 사업 상세 정보</h6>
-                        <div style="background: #faf5ff; border-radius: 8px; padding: 1rem;">
-                            ${itType ? `
-                                <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 0.75rem;">
-                                    <span style="padding: 0.25rem 0.75rem; background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%); color: white; border-radius: 20px; font-size: 0.813rem; font-weight: 600;">
-                                        ${itType}
-                                    </span>
-                                    ${targetAudience ? `<span style="padding: 0.25rem 0.75rem; background: #e0e7ff; color: #3730a3; border-radius: 20px; font-size: 0.813rem;">${targetAudience} 대상</span>` : ''}
-                                </div>
-                            ` : ''}
-                            ${coreFeatures.length > 0 ? `
-                                <div style="margin-bottom: 0.75rem; padding: 0.75rem; background: #1a1a1b; border-radius: 6px; border: 1px solid #333;">
-                                    <strong style="font-size: 0.813rem; color: #4c1d95;">핵심 기능</strong>
-                                    <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 0.5rem;">
-                                        ${coreFeatures.map(f => `<span style="padding: 0.25rem 0.5rem; background: #ede9fe; color: #5b21b6; border-radius: 4px; font-size: 0.75rem;">${f}</span>`).join('')}
-                                    </div>
-                                </div>
-                            ` : ''}
-                            ${differentiator ? `
-                                <div style="margin-bottom: 0.75rem; padding: 0.75rem; background: #1a1a1b; border-radius: 6px; border: 1px solid #333; border-left: 3px solid #8b5cf6;">
-                                    <strong style="font-size: 0.813rem; color: #4c1d95;">차별화 포인트</strong>
-                                    <p style="margin: 0.5rem 0 0 0; font-size: 0.875rem; color: #d1d5db;">${differentiator}</p>
-                                </div>
-                            ` : ''}
-                            ${revenueModels.length > 0 ? `
-                                <div style="margin-bottom: 0.75rem; padding: 0.75rem; background: #1a1a1b; border-radius: 6px; border: 1px solid #333;">
-                                    <strong style="font-size: 0.813rem; color: #4c1d95;">수익 모델</strong>
-                                    <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 0.5rem;">
-                                        ${revenueModels.map(m => `<span style="padding: 0.25rem 0.5rem; background: #1a2e1a; color: #4ade80; border-radius: 4px; font-size: 0.75rem;">${m}</span>`).join('')}
-                                    </div>
-                                </div>
-                            ` : ''}
-                            ${techStack.length > 0 ? `
-                                <div style="padding: 0.75rem; background: #1a1a1b; border-radius: 6px; border: 1px solid #333;">
-                                    <strong style="font-size: 0.813rem; color: #4c1d95;">추천 기술 스택</strong>
-                                    <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 0.5rem;">
-                                        ${techStack.map(t => `<span style="padding: 0.25rem 0.5rem; background: #dbeafe; color: #1e40af; border-radius: 4px; font-size: 0.75rem;">${t}</span>`).join('')}
-                                    </div>
-                                </div>
-                            ` : ''}
-                        </div>
-                    </div>
-                `;
-            }
-
-            // Day 1 체크리스트 섹션
-            let day1Section = '';
-            if (startupGuide.day1_checklist) {
-                const checklist = startupGuide.day1_checklist;
-                day1Section = `
-                    <div class="detail-section">
-                        <h6><i class="fas fa-play-circle"></i> ${checklist.title || 'Day 1: 오늘 당장 시작하기'}</h6>
-                        <div style="background: #2e1a1a; border-radius: 8px; padding: 1rem; border: 2px solid #ef4444;">
-                            ${(checklist.tasks || []).map((task, i) => `
-                                <div style="margin-bottom: 1rem; padding: 0.75rem; background: #1a1a1b; border-radius: 6px; border: 1px solid #333; display: flex; gap: 1rem; align-items: flex-start;">
-                                    <div style="background: #ef4444; color: white; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; flex-shrink: 0;">${i+1}</div>
-                                    <div style="flex: 1;">
-                                        <strong style="color: #e5e5e5;">${task.task}</strong>
-                                        <p style="margin: 0.25rem 0 0 0; font-size: 0.813rem; color: #888;">${task.detail}</p>
-                                        <div style="margin-top: 0.5rem; display: flex; gap: 0.75rem; flex-wrap: wrap; font-size: 0.75rem;">
-                                            <span style="background: #dbeafe; color: #1e40af; padding: 0.25rem 0.5rem; border-radius: 4px;">🔧 ${task.tool}</span>
-                                            <span style="background: #1a2e1a; color: #4ade80; padding: 0.25rem 0.5rem; border-radius: 4px;">💰 ${task.cost}</span>
-                                            <span style="background: #2e2a1a; color: #92400e; padding: 0.25rem 0.5rem; border-radius: 4px;">⏱️ ${task.time}</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            `).join('')}
-                        </div>
-                    </div>
-                `;
-            }
-
-            // 기술 스택 추천 섹션
-            let techStackSection = '';
-            if (startupGuide.tech_stack) {
-                const tech = startupGuide.tech_stack;
-                techStackSection = `
-                    <div class="detail-section">
-                        <h6><i class="fas fa-code"></i> 추천 기술 스택</h6>
-                        <div style="background: #f0f9ff; border-radius: 8px; padding: 1rem;">
-                            <div style="background: #1a1a1b; border-radius: 6px; border: 1px solid #333; padding: 1rem; margin-bottom: 0.75rem;">
-                                <div style="font-size: 1.125rem; font-weight: 700; color: #60a5fa; margin-bottom: 0.5rem;">
-                                    ${tech.recommended}
-                                </div>
-                                <p style="margin: 0; font-size: 0.875rem; color: #888;">${tech.reason}</p>
+            const section2 = `
+                <div class="detail-section">
+                    <div style="${cardStyle('#34d399')}">
+                        ${sectionTitle('fa-compass', '사업 방향', '#34d399')}
+                        ${infoRow('분야', category)}
+                        ${infoRow('트렌드', trend)}
+                        ${infoRow('수익 모델', revenueModel)}
+                        ${growthRate ? infoRow('연간 성장률', typeof growthRate === 'number' ? growthRate + '%' : growthRate) : ''}
+                        ${differentiator ? `
+                            <div style="margin-top: 1rem; padding: 0.75rem; background: #0d1f17; border-radius: 8px; border-left: 3px solid #34d399;">
+                                <div style="font-size: 0.75rem; color: #34d399; font-weight: 600; margin-bottom: 0.25rem;">차별화 포인트</div>
+                                <p style="margin: 0; color: #d1d5db; font-size: 0.875rem;">${differentiator}</p>
                             </div>
-                            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.75rem;">
-                                <div style="background: #1a1a1b; border-radius: 6px; border: 1px solid #333; padding: 0.75rem;">
-                                    <div style="font-size: 0.75rem; color: #888;">추천 도구</div>
-                                    <div style="font-weight: 600; color: #e5e5e5;">${(tech.tools || []).join(', ')}</div>
-                                </div>
-                                <div style="background: #1a1a1b; border-radius: 6px; border: 1px solid #333; padding: 0.75rem;">
-                                    <div style="font-size: 0.75rem; color: #888;">예상 비용</div>
-                                    <div style="font-weight: 600; color: #e5e5e5;">${tech.cost}</div>
-                                </div>
-                                <div style="background: #1a1a1b; border-radius: 6px; border: 1px solid #333; padding: 0.75rem;">
-                                    <div style="font-size: 0.75rem; color: #888;">학습 기간</div>
-                                    <div style="font-weight: 600; color: #e5e5e5;">${tech.learning_time}</div>
+                        ` : ''}
+                    </div>
+                </div>
+            `;
+
+            // ========== 3. 타겟 (파랑) ==========
+            const targetAudience = businessInfo.target_audience || marketAnalysis.target_audience?.description || '';
+            const marketSize = marketInfo.market_size || '';
+            const targetSize = marketInfo.target_size || '';
+
+            const section3 = `
+                <div class="detail-section">
+                    <div style="${cardStyle('#60a5fa')}">
+                        ${sectionTitle('fa-users', '타겟', '#60a5fa')}
+                        ${targetAudience ? infoRow('타겟 고객', targetAudience) : ''}
+                        ${marketSize ? infoRow('시장 규모', marketSize) : ''}
+                        ${targetSize ? infoRow('타겟 규모', targetSize) : ''}
+                        ${infoRow('위험도', biz.risk === 'low' ? '낮음' : biz.risk === 'medium' ? '보통' : '높음')}
+                        ${marketInfo.seasonality ? infoRow('계절성', marketInfo.seasonality) : ''}
+                    </div>
+                </div>
+            `;
+
+            // ========== 4. 준비사항 (노랑) ==========
+            const techStack = businessInfo.tech_stack || [];
+            const techGuide = startupGuide.tech_stack || {};
+            const costBreakdown = startupGuide.cost_breakdown || {};
+            const initialInvestment = revenueAnalysis.startup_cost || revenueAnalysis.initial_investment || biz.investment || 0;
+            const risks = startupGuide.risk_management || [];
+
+            // 1주차 할일 추출
+            const week1 = actionPlan.week_1 || actionPlan['1주차'] || {};
+            const week1Tasks = Array.isArray(week1) ? week1 : (week1.tasks || []);
+            const day1Tasks = startupGuide.day1_checklist?.tasks || [];
+
+            const section4 = `
+                <div class="detail-section">
+                    <div style="${cardStyle('#fbbf24')}">
+                        ${sectionTitle('fa-clipboard-check', '준비사항', '#fbbf24')}
+                        ${infoRow('초기 투자', (initialInvestment / 10000).toLocaleString() + '만원')}
+                        ${techStack.length > 0 || techGuide.recommended ? `
+                            <div style="margin-top: 0.75rem;">
+                                <div style="font-size: 0.813rem; color: #fbbf24; font-weight: 600; margin-bottom: 0.5rem;">기술 스택</div>
+                                <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                                    ${(techStack.length > 0 ? techStack : (techGuide.tools || [techGuide.recommended || ''])).map(t => `<span style="padding: 0.25rem 0.5rem; background: #1a1a1b; color: #fbbf24; border: 1px solid #333; border-radius: 4px; font-size: 0.75rem;">${t}</span>`).join('')}
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                `;
-            }
-
-            // 첫 고객 확보 전략 섹션
-            let customerSection = '';
-            if (startupGuide.first_customer_strategy) {
-                const strategy = startupGuide.first_customer_strategy;
-                customerSection = `
-                    <div class="detail-section">
-                        <h6><i class="fas fa-users"></i> ${strategy.title || '첫 10명 고객 확보 전략'}</h6>
-                        <div style="background: #1a2e1a; border-radius: 8px; padding: 1rem;">
-                            ${(strategy.steps || []).map(step => `
-                                <div style="display: flex; gap: 1rem; margin-bottom: 0.75rem; padding: 0.75rem; background: #1a1a1b; border-radius: 6px; border: 1px solid #333;">
-                                    <div style="background: #10b981; color: white; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; flex-shrink: 0;">
-                                        ${step.step}
+                        ` : ''}
+                        ${(day1Tasks.length > 0 || week1Tasks.length > 0) ? `
+                            <div style="margin-top: 0.75rem;">
+                                <div style="font-size: 0.813rem; color: #fbbf24; font-weight: 600; margin-bottom: 0.5rem;">1주차 할일</div>
+                                <ul style="margin: 0; padding-left: 1.25rem; color: #d1d5db; font-size: 0.875rem;">
+                                    ${(day1Tasks.length > 0 ? day1Tasks.map(t => `<li style="margin-bottom: 0.25rem;">${t.task}</li>`) : week1Tasks.map(t => `<li style="margin-bottom: 0.25rem;">${typeof t === 'string' ? t : t.task || t}</li>`)).join('')}
+                                </ul>
+                            </div>
+                        ` : ''}
+                        ${risks.length > 0 ? `
+                            <div style="margin-top: 0.75rem;">
+                                <div style="font-size: 0.813rem; color: #fbbf24; font-weight: 600; margin-bottom: 0.5rem;">리스크</div>
+                                ${risks.slice(0, 3).map(r => `
+                                    <div style="padding: 0.5rem; background: #1a1a1b; border-radius: 6px; border: 1px solid #333; margin-bottom: 0.5rem;">
+                                        <div style="font-size: 0.813rem; color: #ef4444; font-weight: 600;">${r.risk}</div>
+                                        <div style="font-size: 0.75rem; color: #888; margin-top: 0.25rem;">${r.solution}</div>
                                     </div>
-                                    <div style="flex: 1;">
-                                        <strong style="color: #e5e5e5;">${step.action}</strong>
-                                        <p style="margin: 0.25rem 0 0 0; font-size: 0.813rem; color: #888;">${step.detail}</p>
-                                        <span style="display: inline-block; margin-top: 0.25rem; background: #1a2e1a; color: #4ade80; padding: 0.125rem 0.5rem; border-radius: 4px; font-size: 0.75rem;">목표: ${step.target}</span>
-                                    </div>
-                                </div>
-                            `).join('')}
-                        </div>
+                                `).join('')}
+                            </div>
+                        ` : ''}
                     </div>
-                `;
-            }
+                </div>
+            `;
 
-            // 마케팅 채널 섹션
-            let marketingSection = '';
-            if (startupGuide.marketing_channels) {
-                const channels = startupGuide.marketing_channels;
-                marketingSection = `
-                    <div class="detail-section">
-                        <h6><i class="fas fa-bullhorn"></i> 마케팅 채널</h6>
-                        <div style="background: #faf5ff; border-radius: 8px; padding: 1rem;">
-                            <div style="margin-bottom: 1rem;">
-                                <strong style="color: #7c3aed;">무료 채널</strong>
-                                <div style="margin-top: 0.5rem; display: grid; gap: 0.5rem;">
-                                    ${(channels.free || []).map(ch => `
-                                        <div style="background: #1a1a1b; border-radius: 6px; border: 1px solid #333; padding: 0.75rem; display: flex; justify-content: space-between; align-items: center;">
-                                            <div>
-                                                <strong style="font-size: 0.875rem;">${ch.channel}</strong>
-                                                <p style="margin: 0.25rem 0 0 0; font-size: 0.75rem; color: #888;">${ch.strategy}</p>
-                                            </div>
-                                            <span style="font-size: 0.75rem; color: #7c3aed; white-space: nowrap;">${ch.expected}</span>
-                                        </div>
-                                    `).join('')}
+            // ========== 5. 매출 계획 (핑크) ==========
+            const scenarios = revenueAnalysis.scenarios || {};
+            const conservative = scenarios.conservative || scenarios['보수적'] || {};
+            const realistic = scenarios.realistic || scenarios['현실적'] || {};
+            const optimistic = scenarios.optimistic || scenarios['낙관적'] || {};
+            const breakEven = revenueAnalysis.break_even_months || revenueAnalysis.payback_period || realistic.break_even_months || '-';
+            const annualRoi = revenueAnalysis.annual_roi || roi;
+            const realisticMonthly = realistic.monthly_revenue || realistic.월_예상_수익 || monthlyRevenue || 0;
+            const annual12m = biz.revenue_12m || (realisticMonthly * 12);
+
+            const section5 = `
+                <div class="detail-section">
+                    <div style="${cardStyle('#f472b6')}">
+                        ${sectionTitle('fa-chart-line', '매출 계획', '#f472b6')}
+                        <!-- 3단계 시나리오 -->
+                        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.75rem; margin-bottom: 1rem;">
+                            <div style="text-align: center; padding: 0.75rem; background: #1a1a1b; border-radius: 8px; border: 1px solid #333;">
+                                <div style="font-size: 0.7rem; color: #888; margin-bottom: 0.25rem;">보수적</div>
+                                <div style="font-size: 1.1rem; font-weight: 700; color: #f87171;">
+                                    ${((conservative.monthly_revenue || conservative.월_예상_수익 || 0) / 10000).toLocaleString()}만
                                 </div>
+                                <div style="font-size: 0.7rem; color: #666;">/월</div>
+                            </div>
+                            <div style="text-align: center; padding: 0.75rem; background: #1a1a1b; border-radius: 8px; border: 2px solid #f472b6;">
+                                <div style="font-size: 0.7rem; color: #f472b6; margin-bottom: 0.25rem;">현실적</div>
+                                <div style="font-size: 1.1rem; font-weight: 700; color: #f472b6;">
+                                    ${(realisticMonthly / 10000).toLocaleString()}만
+                                </div>
+                                <div style="font-size: 0.7rem; color: #666;">/월</div>
+                            </div>
+                            <div style="text-align: center; padding: 0.75rem; background: #1a1a1b; border-radius: 8px; border: 1px solid #333;">
+                                <div style="font-size: 0.7rem; color: #888; margin-bottom: 0.25rem;">낙관적</div>
+                                <div style="font-size: 1.1rem; font-weight: 700; color: #60a5fa;">
+                                    ${((optimistic.monthly_revenue || optimistic.월_예상_수익 || 0) / 10000).toLocaleString()}만
+                                </div>
+                                <div style="font-size: 0.7rem; color: #666;">/월</div>
+                            </div>
+                        </div>
+                        ${infoRow('12개월 예상 매출', (annual12m / 10000).toLocaleString() + '만원')}
+                        ${infoRow('연간 ROI', annualRoi + '%')}
+                        ${infoRow('손익분기점', breakEven + '개월')}
+                    </div>
+                </div>
+            `;
+
+            // ========== 하단: 종합점수 + 플랫폼 수 ==========
+            const scoreColor = totalScore >= 85 ? '#10b981' : totalScore >= 70 ? '#3b82f6' : totalScore >= 55 ? '#f59e0b' : '#ef4444';
+            const bottomSection = `
+                <div class="detail-section">
+                    <div style="background: #111; border: 1px solid #222; border-radius: 12px; padding: 1rem; display: flex; align-items: center; justify-content: space-between;">
+                        <div style="display: flex; align-items: center; gap: 1rem;">
+                            <div style="width: 56px; height: 56px; border-radius: 50%; background: linear-gradient(135deg, ${scoreColor}, ${scoreColor}88); display: flex; align-items: center; justify-content: center; color: white; font-size: 1.25rem; font-weight: 700;">
+                                ${totalScore}
                             </div>
                             <div>
-                                <strong style="color: #dc2626;">유료 채널</strong>
-                                <div style="margin-top: 0.5rem; display: grid; gap: 0.5rem;">
-                                    ${(channels.paid || []).map(ch => `
-                                        <div style="background: #1a1a1b; border-radius: 6px; border: 1px solid #333; padding: 0.75rem; display: flex; justify-content: space-between; align-items: center;">
-                                            <div>
-                                                <strong style="font-size: 0.875rem;">${ch.channel}</strong>
-                                                <span style="margin-left: 0.5rem; font-size: 0.75rem; color: #dc2626;">${ch.budget}</span>
-                                            </div>
-                                            <span style="font-size: 0.75rem; color: #888;">${ch.expected}</span>
-                                        </div>
-                                    `).join('')}
-                                </div>
+                                <div style="font-weight: 700; color: #e5e5e5;">종합 점수</div>
+                                <div style="font-size: 0.75rem; color: #888;">시장 ${Math.round(marketScore)} / 수익 ${Math.round(revenueScore)}</div>
                             </div>
                         </div>
-                    </div>
-                `;
-            }
-
-            // 비용 상세 섹션
-            let costSection = '';
-            if (startupGuide.cost_breakdown) {
-                const costs = startupGuide.cost_breakdown;
-                costSection = `
-                    <div class="detail-section">
-                        <h6><i class="fas fa-calculator"></i> 비용 상세</h6>
-                        <div style="background: #fffbeb; border-radius: 8px; padding: 1rem;">
-                            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; margin-bottom: 1rem;">
-                                <div style="background: #d1fae5; border-radius: 8px; padding: 1rem; text-align: center;">
-                                    <div style="font-size: 0.75rem; color: #065f46;">최소 시작 비용</div>
-                                    <div style="font-size: 1.5rem; font-weight: 700; color: #10b981;">${(costs.total_minimum || 0).toLocaleString()}원</div>
-                                </div>
-                                <div style="background: #dbeafe; border-radius: 8px; padding: 1rem; text-align: center;">
-                                    <div style="font-size: 0.75rem; color: #1e40af;">권장 투자 비용</div>
-                                    <div style="font-size: 1.5rem; font-weight: 700; color: #2563eb;">${(costs.total_recommended || 0).toLocaleString()}원/월</div>
-                                </div>
-                            </div>
-                            <div style="background: #1a1a1b; border-radius: 6px; border: 1px solid #333; padding: 0.75rem;">
-                                <strong style="font-size: 0.875rem;">필수 항목</strong>
-                                ${(costs.essential || []).map(item => `
-                                    <div style="display: flex; justify-content: space-between; margin-top: 0.5rem; font-size: 0.813rem;">
-                                        <span>${item.item} ${item.note ? `<span style="color: #9ca3af;">(${item.note})</span>` : ''}</span>
-                                        <span style="font-weight: 600;">${item.cost.toLocaleString()}원/${item.period}</span>
-                                    </div>
-                                `).join('')}
-                            </div>
-                            <div style="background: #1a1a1b; border-radius: 6px; border: 1px solid #333; padding: 0.75rem; margin-top: 0.5rem;">
-                                <strong style="font-size: 0.875rem;">권장 항목</strong>
-                                ${(costs.recommended || []).map(item => `
-                                    <div style="display: flex; justify-content: space-between; margin-top: 0.5rem; font-size: 0.813rem;">
-                                        <span>${item.item} ${item.note ? `<span style="color: #9ca3af;">(${item.note})</span>` : ''}</span>
-                                        <span style="font-weight: 600;">${item.cost.toLocaleString()}원/${item.period}</span>
-                                    </div>
-                                `).join('')}
-                            </div>
+                        <div style="text-align: right;">
+                            ${platformCount > 0 ? `<div style="font-size: 0.875rem; color: #888;"><i class="fas fa-globe" style="color: #6366f1;"></i> ${platformCount}개 플랫폼 분석</div>` : ''}
+                            <div style="font-size: 0.75rem; color: #555; margin-top: 0.25rem;">${formatKST(biz.created_at)}</div>
+                            ${recommendation.verdict ? `<div style="margin-top: 0.25rem;"><span style="padding: 2px 8px; background: ${recommendation.verdict.includes('유망') ? '#1a2e1a' : '#2e2a1a'}; color: ${recommendation.verdict.includes('유망') ? '#4ade80' : '#fbbf24'}; border-radius: 4px; font-size: 0.75rem;">${recommendation.verdict}</span></div>` : ''}
                         </div>
                     </div>
-                `;
-            }
+                </div>
+            `;
 
-            // 리스크 관리 섹션
-            let riskSection = '';
-            if (startupGuide.risk_management && startupGuide.risk_management.length > 0) {
-                riskSection = `
-                    <div class="detail-section">
-                        <h6><i class="fas fa-shield-alt"></i> 리스크 관리</h6>
-                        <div style="background: #2e1a1a; border-radius: 8px; padding: 1rem;">
-                            ${startupGuide.risk_management.map(risk => `
-                                <div style="background: #1a1a1b; border-radius: 6px; border: 1px solid #333; padding: 0.75rem; margin-bottom: 0.75rem;">
-                                    <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
-                                        <span style="color: #dc2626;">⚠️</span>
-                                        <strong style="color: #dc2626;">${risk.risk}</strong>
-                                    </div>
-                                    <div style="font-size: 0.813rem; margin-bottom: 0.25rem;">
-                                        <span style="color: #059669;">✅ 해결책:</span> ${risk.solution}
-                                    </div>
-                                    <div style="font-size: 0.813rem;">
-                                        <span style="color: #2563eb;">🛡️ 예방:</span> ${risk.prevention}
-                                    </div>
-                                </div>
-                            `).join('')}
-                        </div>
-                    </div>
-                `;
-            }
-
-            // 성공 지표 섹션
-            let metricsSection = '';
-            if (startupGuide.success_metrics) {
-                const metrics = startupGuide.success_metrics;
-                metricsSection = `
-                    <div class="detail-section">
-                        <h6><i class="fas fa-flag-checkered"></i> 성공 목표</h6>
-                        <div style="background: #1a2e1a; border-radius: 8px; padding: 1rem;">
-                            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.75rem;">
-                                ${Object.entries(metrics).map(([period, data]) => `
-                                    <div style="background: #1a1a1b; border-radius: 6px; border: 1px solid #333; padding: 0.75rem;">
-                                        <div style="font-size: 0.75rem; color: #888; text-transform: uppercase;">${period}</div>
-                                        <div style="font-weight: 600; color: #e5e5e5; margin: 0.25rem 0;">${data.goal}</div>
-                                        <div style="font-size: 0.75rem; color: #059669;">${data.importance}</div>
-                                    </div>
-                                `).join('')}
-                            </div>
-                        </div>
-                    </div>
-                `;
-            }
-
-            // 모달 내용 조합
+            // 모달 내용 조합 - 5개 핵심 섹션 + 하단 종합
             document.getElementById('modalBody').innerHTML = `
-                ${basicInfoSection}
-                ${businessDetailSection}
-                ${day1Section}
-                ${techStackSection}
-                ${marketSection}
-                ${revenueSection}
-                ${actionPlanSection}
-                ${customerSection}
-                ${marketingSection}
-                ${costSection}
-                ${riskSection}
-                ${metricsSection}
+                ${section1}
+                ${section2}
+                ${section3}
+                ${section4}
+                ${section5}
+                ${bottomSection}
             `;
 
             new bootstrap.Modal(document.getElementById('businessModal')).show();
