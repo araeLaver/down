@@ -207,17 +207,36 @@ class SmartBusinessSystem:
 
         print("\n[2] 수익성 검증 중... (전체 모드 - 종합 가격 데이터)")
 
-        # 크몽+숨고+위시켓 가격 데이터 종합 활용
+        # 크몽/숨고(건당 서비스)와 위시켓(프로젝트 외주)을 분리하여 계산
         kmong_price = data_sources.get('kmong', {}).get('avg_price', 0)
         soomgo_price = data_sources.get('soomgo', {}).get('avg_price', 0)
-        wishket_price = data_sources.get('wishket', {}).get('avg_budget', 0)
+        wishket_budget = data_sources.get('wishket', {}).get('avg_budget', 0)
 
-        price_sources = [p for p in [kmong_price, soomgo_price, wishket_price] if p > 0]
-        avg_price = int(sum(price_sources) / len(price_sources)) if price_sources else 100000
+        # 소규모 서비스 가격 (크몽/숨고) - 월 20~50건 가능
+        service_prices = [p for p in [kmong_price, soomgo_price] if p > 0]
+        # 위시켓은 프로젝트 외주 단가이므로 월 1~3건으로 별도 계산
+        has_wishket = wishket_budget > 0
 
-        monthly_revenue = avg_price * random.randint(20, 50)
+        if service_prices:
+            avg_service_price = int(sum(service_prices) / len(service_prices))
+            monthly_service_revenue = avg_service_price * random.randint(20, 50)
+        else:
+            avg_service_price = 100000
+            monthly_service_revenue = avg_service_price * random.randint(20, 50)
+
+        if has_wishket:
+            # 위시켓 프로젝트는 월 1~3건으로 현실적 산정
+            monthly_project_revenue = wishket_budget * random.randint(1, 3)
+        else:
+            monthly_project_revenue = 0
+
+        # 소규모 서비스 기준으로 월매출 산정 (위시켓은 보조 지표)
+        avg_price = avg_service_price
+        monthly_revenue = monthly_service_revenue
         margin_rate = 0.6
         monthly_profit = int(monthly_revenue * margin_rate)
+
+        price_sources = service_prices + ([wishket_budget] if has_wishket else [])
 
         verdict_score = min(95, max(50, 60 + (monthly_profit // 500000) + random.randint(-3, 3)))
 

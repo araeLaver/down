@@ -25,73 +25,58 @@ class RealMarketAnalyzer:
         self.api_delay = MarketConfig.get_api_delay()
         self.api_timeout = MarketConfig.get_timeout()
 
+    # 키워드 카테고리별 시장 가격 참고 테이블 (크몽/숨고 크롤링 불가 시 사용)
+    CATEGORY_PRICE_MAP = {
+        # (avg_price, min_price, max_price)
+        '블로그': (30000, 10000, 100000),
+        '마케팅': (200000, 50000, 1000000),
+        '디자인': (150000, 30000, 500000),
+        '영상': (300000, 100000, 2000000),
+        '번역': (50000, 20000, 200000),
+        '개발': (500000, 100000, 5000000),
+        '앱': (1000000, 300000, 10000000),
+        '웹': (500000, 150000, 5000000),
+        'AI': (300000, 100000, 3000000),
+        '데이터': (200000, 50000, 1000000),
+        '컨설팅': (300000, 100000, 2000000),
+        '교육': (100000, 30000, 500000),
+        '대필': (30000, 10000, 100000),
+        '글쓰기': (30000, 10000, 100000),
+        '사진': (150000, 50000, 500000),
+        '음악': (100000, 30000, 500000),
+        'SNS': (100000, 30000, 300000),
+        '광고': (200000, 50000, 1000000),
+        'SEO': (150000, 50000, 500000),
+        '자동화': (300000, 100000, 2000000),
+    }
+
+    def _estimate_price_by_keyword(self, keyword):
+        """키워드 기반 카테고리 가격 추정 (크롤링 실패 시 fallback)"""
+        keyword_lower = keyword.lower()
+        for cat_key, prices in self.CATEGORY_PRICE_MAP.items():
+            if cat_key in keyword_lower:
+                return prices
+        # 매칭 안되면 일반 서비스 기본값
+        return (100000, 30000, 500000)
+
     def analyze_kmong_market(self, keyword):
-        """크몽에서 실제 시장 데이터 수집 (2026 업데이트)"""
+        """크몽 시장 데이터 수집 (크몽은 SPA로 직접 크롤링 불가, 카테고리 기반 추정)"""
         try:
-            # 크몽 검색 API 직접 호출
-            api_url = f"https://kmong.com/api/search/gig?keyword={quote(keyword)}&page=1&size=20"
-            headers = {
-                **self.headers,
-                'Referer': 'https://kmong.com/',
-            }
-            response = requests.get(api_url, headers=headers, timeout=self.api_timeout)
-
-            prices = []
-            reviews = []
-            service_count = 0
-
-            if response.status_code == 200:
-                try:
-                    data = response.json()
-                    gigs = data.get('data', {}).get('gigs', []) or data.get('gigs', []) or []
-                    service_count = data.get('data', {}).get('totalCount', len(gigs)) or len(gigs)
-
-                    for gig in gigs[:20]:
-                        try:
-                            price = gig.get('price') or gig.get('minPrice') or gig.get('startPrice', 0)
-                            if price:
-                                prices.append(int(price))
-                            review_count = gig.get('reviewCount') or gig.get('review_count', 0)
-                            if review_count:
-                                reviews.append(int(review_count))
-                        except:
-                            continue
-                except:
-                    pass
-
-            # API 실패 시 HTML 파싱 시도
-            if service_count == 0:
-                html_url = f"https://kmong.com/search?keyword={quote(keyword)}"
-                html_response = requests.get(html_url, headers=headers, timeout=self.api_timeout)
-                soup = BeautifulSoup(html_response.content, 'html.parser')
-
-                # 2026 크몽 셀렉터 (다중 시도)
-                services = (
-                    soup.find_all('div', {'data-testid': 'gig-card'}) or
-                    soup.find_all('div', class_=lambda x: x and 'GigCard' in x) or
-                    soup.find_all('article', class_=lambda x: x and 'gig' in str(x).lower()) or
-                    soup.find_all('a', {'href': lambda x: x and '/gig/' in str(x)})
-                )
-                service_count = len(services)
-
-                # 가격 추출
-                for elem in soup.find_all(text=lambda t: t and '원' in t and any(c.isdigit() for c in t)):
-                    try:
-                        price_text = ''.join(filter(str.isdigit, elem.strip()))
-                        if price_text and 1000 <= int(price_text) <= 50000000:
-                            prices.append(int(price_text))
-                    except:
-                        continue
+            # 크몽은 Next.js SPA로 서버사이드 크롤링으로 가격 데이터 수집 불가
+            # 카테고리 기반 가격 추정 사용
+            avg_price, min_price, max_price = self._estimate_price_by_keyword(keyword)
 
             return {
                 'platform': '크몽',
-                'service_count': service_count,
-                'avg_price': sum(prices) // len(prices) if prices else 50000,
-                'min_price': min(prices) if prices else 10000,
-                'max_price': max(prices) if prices else 500000,
-                'avg_reviews': sum(reviews) // len(reviews) if reviews else 0,
-                'competition_level': self._calculate_competition(service_count),
-                'market_saturation': self._calculate_saturation(service_count, sum(reviews) if reviews else 0)
+                'service_count': 0,
+                'avg_price': avg_price,
+                'min_price': min_price,
+                'max_price': max_price,
+                'avg_reviews': 0,
+                'competition_level': 'unknown',
+                'market_saturation': 'unknown',
+                'data_source': 'estimated',
+                'note': '크몽 SPA 크롤링 불가 - 카테고리 기반 추정값'
             }
         except Exception as e:
             print(f"크몽 분석 실패: {e}")
@@ -245,112 +230,65 @@ class RealMarketAnalyzer:
             }
             response = requests.get(url, headers=headers, timeout=self.api_timeout)
             soup = BeautifulSoup(response.content, 'html.parser')
+            import re
 
-            # 2026 프로젝트 셀렉터 (다중 시도)
-            projects = (
-                soup.find_all('div', class_=lambda x: x and 'project-card' in str(x)) or
-                soup.find_all('div', {'data-project-id': True}) or
-                soup.find_all('article', class_=lambda x: x and 'project' in str(x).lower()) or
-                soup.find_all('a', {'href': lambda x: x and '/project/' in str(x)})
-            )
-
+            # 프로젝트 카드 수 (project-info-box)
+            projects = soup.find_all('div', class_='project-info-box')
             project_count = len(projects)
 
-            # 결과 없으면 페이지 크기로 추정
-            if project_count == 0:
-                content_size = len(response.content)
-                if content_size > 100000:
-                    project_count = content_size // 10000
+            # 총 프로젝트 수 추출 ("63,377개의 프로젝트")
+            total_match = re.search(r'([\d,]+)개의 프로젝트', response.text)
+            total_projects = int(total_match.group(1).replace(',', '')) if total_match else project_count
 
-            # 예산 추출 (다중 방법)
+            # 예산 추출: "6,000,000원" 패턴 (실제 위시켓 HTML에서 확인됨)
             budgets = []
-            # 방법 1: 금액 텍스트에서 추출
-            for elem in soup.find_all(text=lambda t: t and ('만원' in t or '원' in t) and any(c.isdigit() for c in t)):
+            price_matches = re.findall(r'([\d,]+)원', response.text)
+            for pm in price_matches:
                 try:
-                    text = elem.strip()
-                    if '만원' in text:
-                        num = int(''.join(filter(str.isdigit, text.split('만원')[0])))
-                        if 10 <= num <= 50000:
-                            budgets.append(num * 10000)
-                    elif '원' in text:
-                        num = int(''.join(filter(str.isdigit, text)))
-                        if 100000 <= num <= 500000000:
-                            budgets.append(num)
+                    val = int(pm.replace(',', ''))
+                    # 위시켓 프로젝트 예산 범위: 50만~5억
+                    if 500000 <= val <= 500000000:
+                        budgets.append(val)
                 except:
                     continue
+
+            avg_budget = sum(budgets) // len(budgets) if budgets else 1500000
+            data_source = 'crawled' if budgets else 'estimated'
 
             return {
                 'platform': '위시켓',
                 'project_count': project_count,
-                'avg_budget': sum(budgets) // len(budgets) if budgets else 1500000,
-                'demand_level': 'high' if project_count > 20 else 'medium' if project_count > 5 else 'low',
-                'market_active': project_count > 0
+                'total_projects': total_projects,
+                'avg_budget': avg_budget,
+                'min_budget': min(budgets) if budgets else 500000,
+                'max_budget': max(budgets) if budgets else 5000000,
+                'budget_samples': len(budgets),
+                'demand_level': 'high' if total_projects > 20 else 'medium' if total_projects > 5 else 'low',
+                'market_active': total_projects > 0,
+                'data_source': data_source
             }
         except Exception as e:
             print(f"위시켓 분석 실패: {e}")
             return {'platform': '위시켓', 'error': str(e), 'project_count': 0}
 
     def analyze_soomgo_market(self, keyword):
-        """숨고 서비스 시장 분석 (2026 업데이트)"""
+        """숨고 서비스 시장 분석 (숨고는 SPA로 가격 크롤링 불가, 카테고리 기반 추정)"""
         try:
-            url = f"https://soomgo.com/search/pro?keyword={quote(keyword)}"
-            headers = {
-                **self.headers,
-                'Referer': 'https://soomgo.com/',
-            }
-            response = requests.get(url, headers=headers, timeout=self.api_timeout)
-            soup = BeautifulSoup(response.content, 'html.parser')
-            content = response.text
-
-            # 2026 전문가 카드 셀렉터 (다중 시도)
-            pros = (
-                soup.find_all('div', class_=lambda x: x and 'pro-card' in str(x).lower()) or
-                soup.find_all('div', {'data-pro-id': True}) or
-                soup.find_all('article', class_=lambda x: x and 'pro' in str(x).lower()) or
-                soup.find_all('a', {'href': lambda x: x and '/pros/' in str(x)})
-            )
-
-            expert_count = len(pros)
-
-            # JSON 데이터에서 전문가 수 추출 시도
-            if expert_count == 0:
-                import re
-                pro_ids = re.findall(r'"proId":\s*(\d+)', content)
-                expert_count = len(set(pro_ids))
-
-            # 결과 없으면 페이지 크기로 추정
-            if expert_count == 0:
-                content_size = len(response.content)
-                if content_size > 50000:
-                    expert_count = content_size // 8000
-
-            # 리뷰 수 추출 (다중 방법)
-            reviews = []
-            import re
-            # JSON에서 리뷰 수 추출
-            review_matches = re.findall(r'"reviewCount":\s*(\d+)', content)
-            for rm in review_matches[:20]:
-                try:
-                    reviews.append(int(rm))
-                except:
-                    continue
-
-            # HTML에서 리뷰 수 추출
-            if not reviews:
-                for elem in soup.find_all(text=lambda t: t and '리뷰' in t and any(c.isdigit() for c in t)):
-                    try:
-                        num = int(''.join(filter(str.isdigit, elem)))
-                        if 0 < num < 10000:
-                            reviews.append(num)
-                    except:
-                        continue
+            # 숨고는 완전 SPA로 서버사이드 크롤링으로 가격/전문가 데이터 수집 불가
+            # 카테고리 기반 가격 추정 사용
+            avg_price, min_price, max_price = self._estimate_price_by_keyword(keyword)
 
             return {
                 'platform': '숨고',
-                'expert_count': expert_count,
-                'avg_reviews': sum(reviews) // len(reviews) if reviews else 5,
-                'competition': 'high' if expert_count > 50 else 'medium' if expert_count > 10 else 'low',
-                'market_maturity': 'mature' if sum(reviews) > 500 else 'growing'
+                'expert_count': 0,
+                'avg_price': avg_price,
+                'min_price': min_price,
+                'max_price': max_price,
+                'avg_reviews': 0,
+                'competition': 'unknown',
+                'market_maturity': 'unknown',
+                'data_source': 'estimated',
+                'note': '숨고 SPA 크롤링 불가 - 카테고리 기반 추정값'
             }
         except Exception as e:
             print(f"숨고 분석 실패: {e}")

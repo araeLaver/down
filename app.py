@@ -1592,10 +1592,10 @@ def trigger_discovery():
                 if results['saved'] > 0:
                     discovery.generate_discovery_meeting(results)
 
-                logging.info(f"Discovery completed: analyzed={results.get('analyzed')}, saved={results.get('saved')}")
+                logger.info(f"Discovery completed: analyzed={results.get('analyzed')}, saved={results.get('saved')}")
                 print(f"[TRIGGER] Discovery completed: {results.get('analyzed')} analyzed, {results.get('saved')} saved")
             except Exception as e:
-                logging.error(f"Background discovery error: {e}")
+                logger.error(f"Background discovery error: {e}")
                 print(f"[TRIGGER ERROR] {e}")
 
         # 백그라운드 스레드로 실행
