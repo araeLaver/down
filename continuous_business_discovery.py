@@ -358,11 +358,22 @@ class ContinuousBusinessDiscovery:
                     print(f"   [UPDATE] 이미 존재하는 사업. 점수 업데이트")
                     existing.feasibility_score = total_score / 10
                 else:
-                    # 실제 AI 분석 결과에서 매출 추정값 추출
+                    # 실제 AI 분석 결과에서 매출 추정값 추출 (현실적 상한선 적용)
                     realistic_scenario = revenue_data.get('scenarios', {}).get('realistic', {})
                     monthly_profit = realistic_scenario.get('monthly_profit', 0)
                     monthly_revenue_estimate = realistic_scenario.get('monthly_revenue', 0)
-                    annual_revenue = monthly_revenue_estimate * 12 if monthly_revenue_estimate > 0 else config['pricing'].get('monthly', 50000) * 12 * 20
+
+                    # 현실적 상한선: 1인 창업 월매출 최대 1,000만원
+                    monthly_revenue_estimate = min(monthly_revenue_estimate, 10000000)
+
+                    if monthly_revenue_estimate > 0:
+                        annual_revenue = monthly_revenue_estimate * 12
+                    else:
+                        # 폴백: 현실적인 기본값 (월 300만원 × 12개월)
+                        annual_revenue = 3000000 * 12
+
+                    # 연매출 상한선: 1억 2천만원 (1인 창업 현실적 상한)
+                    annual_revenue = min(annual_revenue, 120000000)
 
                     business_plan = BusinessPlan(
                         plan_name=name,

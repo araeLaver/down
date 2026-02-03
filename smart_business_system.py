@@ -110,14 +110,23 @@ class SmartBusinessSystem:
         verdict_score += random.randint(-3, 3)
         verdict_score = max(50, min(95, verdict_score))
 
-        # 월 수익 추정 (사업 설정 기반)
+        # 월 수익 추정 (현실적인 1인/소규모 창업 기준)
+        # 1인 창업 기준 현실적 고객 수: 월 10~50명 (구독), 월 5~20건 (일회성)
         pricing = business_config.get('pricing', {})
         if pricing.get('monthly'):
-            monthly_revenue = pricing['monthly'] * business_config.get('target_market_size', 100) * 0.05
+            # 구독 모델: 월 10~50명 고객 확보 가정 (현실적)
+            realistic_customers = random.randint(10, 50)
+            monthly_revenue = pricing['monthly'] * realistic_customers
         elif pricing.get('one_time'):
-            monthly_revenue = pricing['one_time'] * business_config.get('target_market_size', 100) * 0.02
+            # 일회성 모델: 월 5~20건 거래 가정 (현실적)
+            realistic_transactions = random.randint(5, 20)
+            monthly_revenue = pricing['one_time'] * realistic_transactions
         else:
-            monthly_revenue = random.randint(2000000, 6000000)
+            # 기본값: 월 200~500만원 (1인 창업 현실적 범위)
+            monthly_revenue = random.randint(2000000, 5000000)
+
+        # 상한선 설정: 1인 창업 월매출 최대 1,000만원 (현실적)
+        monthly_revenue = min(monthly_revenue, 10000000)
 
         monthly_profit = int(monthly_revenue * it_type_data.get('avg_margin', 50) / 100)
 
@@ -212,21 +221,22 @@ class SmartBusinessSystem:
         soomgo_price = data_sources.get('soomgo', {}).get('avg_price', 0)
         wishket_budget = data_sources.get('wishket', {}).get('avg_budget', 0)
 
-        # 소규모 서비스 가격 (크몽/숨고) - 월 20~50건 가능
+        # 소규모 서비스 가격 (크몽/숨고) - 1인 창업 현실적 건수: 월 5~15건
         service_prices = [p for p in [kmong_price, soomgo_price] if p > 0]
-        # 위시켓은 프로젝트 외주 단가이므로 월 1~3건으로 별도 계산
+        # 위시켓은 프로젝트 외주 단가이므로 월 0~1건으로 현실적 산정
         has_wishket = wishket_budget > 0
 
         if service_prices:
             avg_service_price = int(sum(service_prices) / len(service_prices))
-            monthly_service_revenue = avg_service_price * random.randint(20, 50)
+            # 현실적 월 건수: 5~15건 (1인 기준)
+            monthly_service_revenue = avg_service_price * random.randint(5, 15)
         else:
             avg_service_price = 100000
-            monthly_service_revenue = avg_service_price * random.randint(20, 50)
+            monthly_service_revenue = avg_service_price * random.randint(5, 15)
 
         if has_wishket:
-            # 위시켓 프로젝트는 월 1~3건으로 현실적 산정
-            monthly_project_revenue = wishket_budget * random.randint(1, 3)
+            # 위시켓 프로젝트는 월 0~1건으로 현실적 산정 (큰 프로젝트는 드묾)
+            monthly_project_revenue = wishket_budget * random.randint(0, 1)
         else:
             monthly_project_revenue = 0
 
@@ -235,6 +245,10 @@ class SmartBusinessSystem:
         monthly_revenue = monthly_service_revenue
         margin_rate = 0.6
         monthly_profit = int(monthly_revenue * margin_rate)
+
+        # 현실적 상한선: 1인 창업 월매출 최대 1,000만원
+        monthly_revenue = min(monthly_revenue, 10000000)
+        monthly_profit = min(monthly_profit, 6000000)
 
         price_sources = service_prices + ([wishket_budget] if has_wishket else [])
 
