@@ -1,0 +1,1017 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>렌트미 - 좋은 세입자임을 증명하면 보증금이 달라집니다</title>
+    <meta name="description" content="세입자 신뢰 프로필 플랫폼. 재직/소득 인증, 이전 집주인 레퍼런스로 보증금을 낮추세요.">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --primary-light: #818cf8;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --bg-dark: #0f0f10;
+            --bg-card: #18181b;
+            --bg-card-hover: #1f1f23;
+            --text-primary: #fafafa;
+            --text-secondary: #a1a1aa;
+            --text-muted: #71717a;
+            --border: #27272a;
+        }
+
+        body {
+            font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+
+        /* Navigation */
+        .nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            padding: 1rem 2rem;
+            background: rgba(15, 15, 16, 0.8);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--text-primary);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .logo-icon {
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+        }
+
+        .nav-cta {
+            padding: 0.6rem 1.2rem;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+
+        .nav-cta:hover {
+            background: var(--primary-dark);
+            transform: translateY(-1px);
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 8rem 2rem 4rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background:
+                radial-gradient(ellipse at 20% 20%, rgba(99, 102, 241, 0.15) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 80%, rgba(16, 185, 129, 0.1) 0%, transparent 50%);
+            pointer-events: none;
+        }
+
+        .hero-content {
+            max-width: 800px;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: rgba(99, 102, 241, 0.1);
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            border-radius: 50px;
+            font-size: 0.85rem;
+            color: var(--primary-light);
+            margin-bottom: 1.5rem;
+        }
+
+        .hero-title {
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            font-weight: 800;
+            line-height: 1.2;
+            margin-bottom: 1.5rem;
+        }
+
+        .hero-title .highlight {
+            background: linear-gradient(135deg, var(--primary), var(--success));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-subtitle {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            margin-bottom: 2.5rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .hero-cta-group {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn-primary {
+            padding: 1rem 2rem;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 40px rgba(99, 102, 241, 0.3);
+        }
+
+        .btn-secondary {
+            padding: 1rem 2rem;
+            background: transparent;
+            color: var(--text-primary);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--primary);
+            background: rgba(99, 102, 241, 0.1);
+        }
+
+        .hero-stats {
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            margin-top: 4rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border);
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--primary-light);
+        }
+
+        .stat-label {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-top: 0.25rem;
+        }
+
+        /* Problem Section */
+        .section {
+            padding: 6rem 2rem;
+        }
+
+        .section-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .section-label {
+            display: inline-block;
+            padding: 0.4rem 1rem;
+            background: rgba(99, 102, 241, 0.1);
+            border-radius: 50px;
+            font-size: 0.85rem;
+            color: var(--primary-light);
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .section-title {
+            font-size: clamp(1.75rem, 4vw, 2.5rem);
+            font-weight: 800;
+            margin-bottom: 1rem;
+        }
+
+        .section-subtitle {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .problem-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .problem-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 2rem;
+            transition: all 0.3s;
+        }
+
+        .problem-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-4px);
+        }
+
+        .problem-card.tenant {
+            border-top: 3px solid var(--primary);
+        }
+
+        .problem-card.landlord {
+            border-top: 3px solid var(--success);
+        }
+
+        .problem-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .tenant .problem-icon {
+            background: rgba(99, 102, 241, 0.15);
+            color: var(--primary-light);
+        }
+
+        .landlord .problem-icon {
+            background: rgba(16, 185, 129, 0.15);
+            color: var(--success);
+        }
+
+        .problem-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .problem-list {
+            list-style: none;
+            margin-top: 1rem;
+        }
+
+        .problem-list li {
+            padding: 0.5rem 0;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+            font-size: 0.95rem;
+        }
+
+        .problem-list li i {
+            color: #ef4444;
+            margin-top: 0.25rem;
+        }
+
+        /* Solution Section */
+        .solution-section {
+            background: linear-gradient(180deg, var(--bg-dark) 0%, rgba(99, 102, 241, 0.03) 50%, var(--bg-dark) 100%);
+        }
+
+        .solution-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .solution-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .solution-card:hover {
+            border-color: var(--primary);
+            background: var(--bg-card-hover);
+        }
+
+        .solution-icon {
+            width: 64px;
+            height: 64px;
+            margin: 0 auto 1.5rem;
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(16, 185, 129, 0.2));
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.75rem;
+            color: var(--primary-light);
+        }
+
+        .solution-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .solution-badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--success);
+            border-radius: 50px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+        }
+
+        .solution-desc {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        /* How it Works */
+        .steps-container {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .step {
+            display: flex;
+            gap: 2rem;
+            align-items: flex-start;
+        }
+
+        .step-number {
+            width: 48px;
+            height: 48px;
+            min-width: 48px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            font-weight: 800;
+        }
+
+        .step-content {
+            flex: 1;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .step:last-child .step-content {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        .step-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .step-desc {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        /* Value Proposition */
+        .value-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+        }
+
+        .value-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 2.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .value-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+        }
+
+        .value-card.tenant::before {
+            background: linear-gradient(90deg, var(--primary), var(--primary-light));
+        }
+
+        .value-card.landlord::before {
+            background: linear-gradient(90deg, var(--success), #34d399);
+        }
+
+        .value-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .value-avatar {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        .tenant .value-avatar {
+            background: rgba(99, 102, 241, 0.15);
+            color: var(--primary-light);
+        }
+
+        .landlord .value-avatar {
+            background: rgba(16, 185, 129, 0.15);
+            color: var(--success);
+        }
+
+        .value-label {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .value-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+        }
+
+        .value-list {
+            list-style: none;
+        }
+
+        .value-list li {
+            padding: 0.75rem 0;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 0.95rem;
+        }
+
+        .value-list li:last-child {
+            border-bottom: none;
+        }
+
+        .value-list li i {
+            color: var(--success);
+        }
+
+        /* CTA Section */
+        .cta-section {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(16, 185, 129, 0.05) 100%);
+            border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .cta-content {
+            text-align: center;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .cta-title {
+            font-size: clamp(1.5rem, 4vw, 2.25rem);
+            font-weight: 800;
+            margin-bottom: 1rem;
+        }
+
+        .cta-desc {
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+            font-size: 1.1rem;
+        }
+
+        .cta-form {
+            display: flex;
+            gap: 0.75rem;
+            max-width: 450px;
+            margin: 0 auto;
+        }
+
+        .cta-input {
+            flex: 1;
+            padding: 1rem 1.25rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            color: var(--text-primary);
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .cta-input:focus {
+            border-color: var(--primary);
+        }
+
+        .cta-input::placeholder {
+            color: var(--text-muted);
+        }
+
+        .cta-submit {
+            padding: 1rem 1.5rem;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+
+        .cta-submit:hover {
+            background: var(--primary-dark);
+        }
+
+        .cta-note {
+            margin-top: 1rem;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        /* Footer */
+        .footer {
+            padding: 3rem 2rem;
+            border-top: 1px solid var(--border);
+        }
+
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .footer-logo {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .footer-text {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        .footer-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.2s;
+        }
+
+        .footer-links a:hover {
+            color: var(--primary-light);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero-stats {
+                flex-direction: column;
+                gap: 1.5rem;
+            }
+
+            .step {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .cta-form {
+                flex-direction: column;
+            }
+
+            .footer-container {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .value-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Animation */
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .hero-badge {
+            animation: float 3s ease-in-out infinite;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="nav">
+        <div class="nav-container">
+            <a href="#" class="logo">
+                <div class="logo-icon"><i class="fas fa-home"></i></div>
+                렌트미
+            </a>
+            <a href="#waitlist" class="nav-cta">사전 등록</a>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-bg"></div>
+        <div class="hero-content">
+            <div class="hero-badge">
+                <i class="fas fa-sparkles"></i>
+                세입자를 위한 새로운 방법
+            </div>
+            <h1 class="hero-title">
+                좋은 세입자임을 증명하면<br>
+                <span class="highlight">보증금이 달라집니다</span>
+            </h1>
+            <p class="hero-subtitle">
+                재직/소득 인증, 이전 집주인 레퍼런스로 신뢰를 쌓으세요.
+                신뢰점수가 높으면 보증금을 최대 50%까지 낮출 수 있습니다.
+            </p>
+            <div class="hero-cta-group">
+                <a href="#waitlist" class="btn-primary">
+                    <i class="fas fa-rocket"></i>
+                    사전 등록하기
+                </a>
+                <a href="#how" class="btn-secondary">
+                    <i class="fas fa-play-circle"></i>
+                    어떻게 작동하나요?
+                </a>
+            </div>
+            <div class="hero-stats">
+                <div class="stat-item">
+                    <div class="stat-value">804만</div>
+                    <div class="stat-label">1인 가구</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">60%</div>
+                    <div class="stat-label">월세 비중</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">50%</div>
+                    <div class="stat-label">보증금 절감 가능</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Problem Section -->
+    <section class="section">
+        <div class="section-container">
+            <div class="section-header">
+                <div class="section-label">Problem</div>
+                <h2 class="section-title">왜 보증금은 항상 부담일까요?</h2>
+                <p class="section-subtitle">
+                    좋은 세입자도, 좋은 집주인도 서로를 알 방법이 없습니다
+                </p>
+            </div>
+            <div class="problem-grid">
+                <div class="problem-card tenant">
+                    <div class="problem-icon">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <h3 class="problem-title">세입자의 고민</h3>
+                    <ul class="problem-list">
+                        <li><i class="fas fa-times"></i> 서울 원룸 전세 평균 2억 1,700만원</li>
+                        <li><i class="fas fa-times"></i> 월세 보증금 500~1,000만원도 부담</li>
+                        <li><i class="fas fa-times"></i> 이전에 문제없이 살았던 기록 활용 불가</li>
+                        <li><i class="fas fa-times"></i> 결국 "돈"으로만 신뢰를 담보</li>
+                    </ul>
+                </div>
+                <div class="problem-card landlord">
+                    <div class="problem-icon">
+                        <i class="fas fa-building"></i>
+                    </div>
+                    <h3 class="problem-title">집주인의 고민</h3>
+                    <ul class="problem-list">
+                        <li><i class="fas fa-times"></i> 전세사기 이후 세입자 선별 더 신중</li>
+                        <li><i class="fas fa-times"></i> 월세 연체, 시설 파손 이력 확인 불가</li>
+                        <li><i class="fas fa-times"></i> 확인 가능한 건 신분증, 재직증명서 뿐</li>
+                        <li><i class="fas fa-times"></i> 무보증 월세 증가로 리스크 상승</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Solution Section -->
+    <section class="section solution-section">
+        <div class="section-container">
+            <div class="section-header">
+                <div class="section-label">Solution</div>
+                <h2 class="section-title">렌트미가 해결합니다</h2>
+                <p class="section-subtitle">
+                    세입자의 LinkedIn - 신뢰를 자산으로 만드는 플랫폼
+                </p>
+            </div>
+            <div class="solution-grid">
+                <div class="solution-card">
+                    <div class="solution-icon">
+                        <i class="fas fa-shield-check"></i>
+                    </div>
+                    <div class="solution-badge">자동 인증</div>
+                    <h3 class="solution-title">신뢰 인증 시스템</h3>
+                    <p class="solution-desc">
+                        재직, 소득, 신용 정보를 API로 자동 연동.
+                        위변조 불가능한 인증 뱃지를 획득하세요.
+                    </p>
+                </div>
+                <div class="solution-card">
+                    <div class="solution-icon">
+                        <i class="fas fa-comments"></i>
+                    </div>
+                    <div class="solution-badge">한국 최초</div>
+                    <h3 class="solution-title">집주인 레퍼런스</h3>
+                    <p class="solution-desc">
+                        이전 집주인에게 레퍼런스를 요청하세요.
+                        "문제 없이 잘 살았다"는 증명이 됩니다.
+                    </p>
+                </div>
+                <div class="solution-card">
+                    <div class="solution-icon">
+                        <i class="fas fa-wand-magic-sparkles"></i>
+                    </div>
+                    <div class="solution-badge">AI 생성</div>
+                    <h3 class="solution-title">AI 자기소개서</h3>
+                    <p class="solution-desc">
+                        라이프스타일 기반으로 자기소개서를 자동 생성.
+                        집주인이 원하는 정보를 효과적으로 전달합니다.
+                    </p>
+                </div>
+                <div class="solution-card">
+                    <div class="solution-icon">
+                        <i class="fas fa-hand-holding-dollar"></i>
+                    </div>
+                    <div class="solution-badge">보증금 절감</div>
+                    <h3 class="solution-title">보증보험 연계</h3>
+                    <p class="solution-desc">
+                        신뢰점수가 높으면 보증보험 가입이 쉬워집니다.
+                        보증금을 최대 50%까지 낮출 수 있어요.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How it Works -->
+    <section class="section" id="how">
+        <div class="section-container">
+            <div class="section-header">
+                <div class="section-label">How it Works</div>
+                <h2 class="section-title">이렇게 사용하세요</h2>
+            </div>
+            <div class="steps-container">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        <h3 class="step-title">프로필 생성</h3>
+                        <p class="step-desc">
+                            기본 정보와 라이프스타일을 입력하세요. 반려동물, 흡연 여부, 직업 등
+                            집주인이 궁금해하는 정보를 미리 정리합니다.
+                        </p>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <div class="step-content">
+                        <h3 class="step-title">인증 뱃지 획득</h3>
+                        <p class="step-desc">
+                            재직 인증, 소득 인증, 신용 인증을 진행하세요.
+                            인증이 많을수록 신뢰점수가 올라갑니다.
+                        </p>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <div class="step-content">
+                        <h3 class="step-title">레퍼런스 요청</h3>
+                        <p class="step-desc">
+                            이전에 살았던 집의 집주인에게 레퍼런스를 요청하세요.
+                            좋은 평가를 받으면 강력한 신뢰 지표가 됩니다.
+                        </p>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-number">4</div>
+                    <div class="step-content">
+                        <h3 class="step-title">프로필 공유</h3>
+                        <p class="step-desc">
+                            완성된 프로필을 집주인에게 공유하세요.
+                            신뢰점수와 인증 뱃지로 협상력을 높일 수 있습니다.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Value Proposition -->
+    <section class="section">
+        <div class="section-container">
+            <div class="section-header">
+                <div class="section-label">Value</div>
+                <h2 class="section-title">모두에게 좋은 거래</h2>
+            </div>
+            <div class="value-grid">
+                <div class="value-card tenant">
+                    <div class="value-header">
+                        <div class="value-avatar">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <div>
+                            <div class="value-label">세입자라면</div>
+                            <div class="value-title">협상력을 높이세요</div>
+                        </div>
+                    </div>
+                    <ul class="value-list">
+                        <li><i class="fas fa-check"></i> 신뢰 프로필로 좋은 세입자임을 증명</li>
+                        <li><i class="fas fa-check"></i> 보증금 협상에서 유리한 위치 확보</li>
+                        <li><i class="fas fa-check"></i> 보증보험 연계로 보증금 50% 절감</li>
+                        <li><i class="fas fa-check"></i> 이사할 때마다 쌓이는 신뢰 자산</li>
+                    </ul>
+                </div>
+                <div class="value-card landlord">
+                    <div class="value-header">
+                        <div class="value-avatar">
+                            <i class="fas fa-building"></i>
+                        </div>
+                        <div>
+                            <div class="value-label">집주인이라면</div>
+                            <div class="value-title">검증된 세입자를 찾으세요</div>
+                        </div>
+                    </div>
+                    <ul class="value-list">
+                        <li><i class="fas fa-check"></i> 재직/소득 자동 인증으로 신뢰 확인</li>
+                        <li><i class="fas fa-check"></i> 이전 집주인 레퍼런스로 이력 파악</li>
+                        <li><i class="fas fa-check"></i> 라이프스타일 매칭으로 적합한 세입자</li>
+                        <li><i class="fas fa-check"></i> 공실 기간 단축, 리스크 최소화</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="section cta-section" id="waitlist">
+        <div class="section-container">
+            <div class="cta-content">
+                <h2 class="cta-title">사전 등록하고<br>먼저 시작하세요</h2>
+                <p class="cta-desc">
+                    곧 출시됩니다. 사전 등록하시면 오픈 시 가장 먼저 알려드립니다.
+                    초기 사용자에게는 프리미엄 기능을 무료로 제공해 드려요.
+                </p>
+                <form class="cta-form" onsubmit="handleSubmit(event)">
+                    <input type="email" class="cta-input" placeholder="이메일 주소" required>
+                    <button type="submit" class="cta-submit">등록하기</button>
+                </form>
+                <p class="cta-note">
+                    <i class="fas fa-lock"></i> 스팸 없이 출시 소식만 전달드려요
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-logo">
+                <i class="fas fa-home"></i>
+                렌트미
+            </div>
+            <div class="footer-text">
+                &copy; 2026 RentMe. All rights reserved.
+            </div>
+            <div class="footer-links">
+                <a href="#">이용약관</a>
+                <a href="#">개인정보처리방침</a>
+                <a href="#">문의하기</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        function handleSubmit(event) {
+            event.preventDefault();
+            const email = event.target.querySelector('input').value;
+
+            // TODO: 실제 백엔드 연동
+            alert('감사합니다! ' + email + '로 출시 소식을 보내드릴게요.');
+            event.target.reset();
+        }
+
+        // Smooth scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
