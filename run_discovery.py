@@ -5,6 +5,10 @@ Koyeb Cron Job 또는 외부 스케줄러에서 호출
 import sys
 import os
 
+# 환경변수 로드
+from dotenv import load_dotenv
+load_dotenv()
+
 # 인코딩 설정
 if sys.platform == 'win32':
     sys.stdout.reconfigure(encoding='utf-8')
