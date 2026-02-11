@@ -779,26 +779,18 @@ class RealMarketAnalyzer:
     def _calculate_market_score(self, data_sources):
         """종합 시장 점수 계산 (0-100) - 10개 플랫폼 통합"""
         score = 0
-        error_count = 0
-        empty_data_count = 0
-        total_sources = 10
+        successful_sources = 0
+        total_possible = 0  # 성공한 플랫폼들의 배점 합계
 
-        # 에러 및 빈 데이터 카운트
-        for source in data_sources.values():
-            if source.get('error'):
-                error_count += 1
-            # 데이터가 비어있으면 빈 데이터로 카운트
-            elif source.get('service_count', -1) == 0 or source.get('project_count', -1) == 0:
-                empty_data_count += 1
-
-        # 스크래핑 실패 또는 빈 데이터가 많으면 기본 점수 75점 부여
-        if error_count + empty_data_count >= 3:
-            return 75  # 데이터 부족 시 기본 점수
-
-        # 크몽 데이터 평가 (20점)
+        # 크몽 데이터 평가 (배점 20점)
         kmong = data_sources.get('kmong', {})
         if not kmong.get('error'):
-            competition = kmong.get('competition_level', 'high')
+            successful_sources += 1
+            total_possible += 20
+            # 'unknown'은 추정 데이터이므로 'medium'으로 처리
+            competition = kmong.get('competition_level', 'medium')
+            if competition in ('unknown', ''):
+                competition = 'medium'
             if competition == 'very_low':
                 score += 15
             elif competition == 'low':
@@ -816,16 +808,20 @@ class RealMarketAnalyzer:
             elif avg_price > 20000:
                 score += 2
 
-        # 네이버 인기도 (15점)
+        # 네이버 인기도 (배점 15점)
         naver = data_sources.get('naver', {})
         if not naver.get('error'):
+            successful_sources += 1
+            total_possible += 15
             popularity = naver.get('popularity_score', 0)
             score += min(popularity * 0.15, 15)
 
-        # 구글 경쟁 강도 (10점)
+        # 구글 경쟁 강도 (배점 10점)
         google = data_sources.get('google', {})
         if not google.get('error'):
-            difficulty = google.get('entry_difficulty', 'hard')
+            successful_sources += 1
+            total_possible += 10
+            difficulty = google.get('entry_difficulty', 'medium')
             if difficulty == 'easy':
                 score += 10
             elif difficulty == 'medium':
@@ -833,9 +829,11 @@ class RealMarketAnalyzer:
             elif difficulty == 'hard':
                 score += 3
 
-        # 유튜브 관심도 (5점)
+        # 유튜브 관심도 (배점 5점)
         youtube = data_sources.get('youtube', {})
         if not youtube.get('error'):
+            successful_sources += 1
+            total_possible += 5
             interest = youtube.get('interest_indicator', 'low')
             if interest == 'high':
                 score += 5
@@ -844,9 +842,11 @@ class RealMarketAnalyzer:
             elif interest == 'low':
                 score += 1
 
-        # 위시켓 프리랜서 시장 (15점)
+        # 위시켓 프리랜서 시장 (배점 15점)
         wishket = data_sources.get('wishket', {})
         if not wishket.get('error'):
+            successful_sources += 1
+            total_possible += 15
             demand = wishket.get('demand_level', 'low')
             if demand == 'high':
                 score += 10
@@ -863,10 +863,15 @@ class RealMarketAnalyzer:
             elif avg_budget > 500000:
                 score += 2
 
-        # 숨고 서비스 시장 (10점)
+        # 숨고 서비스 시장 (배점 10점)
         soomgo = data_sources.get('soomgo', {})
         if not soomgo.get('error'):
-            competition = soomgo.get('competition', 'high')
+            successful_sources += 1
+            total_possible += 10
+            # 'unknown'은 추정 데이터이므로 'medium'으로 처리
+            competition = soomgo.get('competition', 'medium')
+            if competition in ('unknown', ''):
+                competition = 'medium'
             if competition == 'low':
                 score += 7
             elif competition == 'medium':
@@ -874,13 +879,20 @@ class RealMarketAnalyzer:
             elif competition == 'high':
                 score += 2
 
-            expert_count = soomgo.get('expert_count', 0)
-            if expert_count > 0:
+            # 추정 데이터(SPA)인 경우에도 avg_price 기반 보너스
+            avg_price = soomgo.get('avg_price', 0)
+            if avg_price > 100000:
                 score += 3
+            elif avg_price > 50000:
+                score += 2
+            elif avg_price > 0:
+                score += 1
 
-        # 탈잉 교육/재능 플랫폼 (5점)
+        # 탈잉 교육/재능 플랫폼 (배점 5점)
         brokerage = data_sources.get('brokerage', {})
         if not brokerage.get('error'):
+            successful_sources += 1
+            total_possible += 5
             if brokerage.get('market_presence'):
                 score += 3
             class_count = brokerage.get('class_count', 0)
@@ -889,9 +901,11 @@ class RealMarketAnalyzer:
             elif class_count > 0:
                 score += 1
 
-        # 쿠팡 마켓플레이스 (10점)
+        # 쿠팡 마켓플레이스 (배점 10점)
         coupang = data_sources.get('coupang', {})
         if not coupang.get('error'):
+            successful_sources += 1
+            total_possible += 10
             potential = coupang.get('e_commerce_potential', 'low')
             if potential == 'high':
                 score += 7
@@ -904,23 +918,36 @@ class RealMarketAnalyzer:
             elif product_count > 10:
                 score += 2
 
-        # 네이버 블로그 트렌드 (5점)
+        # 네이버 블로그 트렌드 (배점 5점)
         blog = data_sources.get('blog', {})
         if not blog.get('error'):
+            successful_sources += 1
+            total_possible += 5
             trend = blog.get('trend_indicator', '보통')
             if trend == '상승중':
                 score += 5
             elif trend == '보통':
                 score += 3
 
-        # 인스타그램 비즈니스 (5점)
+        # 인스타그램 비즈니스 (배점 5점)
         instagram = data_sources.get('instagram', {})
         if not instagram.get('error'):
+            successful_sources += 1
+            total_possible += 5
             presence = instagram.get('social_presence', 'low')
             if presence == 'high':
                 score += 5
             elif presence == 'medium':
                 score += 3
+
+        # 성공한 플랫폼 수 기반 정규화 (부분 실패 보정)
+        if total_possible > 0 and total_possible < 100:
+            # 성공한 플랫폼 배점 기준으로 100점 만점 환산
+            score = int(score * 100 / total_possible)
+
+        # 데이터 수집 자체가 거의 실패한 경우 기본 점수
+        if successful_sources <= 2:
+            return max(score, 65)
 
         # ==================== 블록체인/Web3 추가 점수 (최대 +15점) ====================
         blockchain_bonus = 0

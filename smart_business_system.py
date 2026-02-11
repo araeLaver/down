@@ -180,25 +180,43 @@ class SmartBusinessSystem:
         )
 
     def _analyze_with_external_api(self, business_idea, keyword, business_config):
-        """외부 API를 사용한 종합 분석 (10+ 플랫폼)"""
+        """외부 API를 사용한 종합 분석 (10+ 플랫폼) + 경량 분석 하한선"""
         print("[1] 시장 분석 중... (전체 모드 - 종합 크롤링)")
 
         search_keyword = keyword or business_idea
+
+        # 경량 분석으로 하한선 점수 확보
+        business_data = {
+            'name': business_idea,
+            'it_type': business_config.get('type', 'saas'),
+            'domain': self._extract_domain(business_idea, keyword),
+            'target_audience': business_config.get('target_audience', '직장인'),
+            'revenue_models': self._extract_revenue_models(business_config),
+            'description': business_config.get('description', business_idea)
+        }
+        lightweight_result = self.lightweight_analyzer.analyze(business_data)
+        lightweight_score = lightweight_result['market_score']
+        print(f"   경량 분석 하한선: {lightweight_score}/100")
 
         # comprehensive_analysis()로 10+ 플랫폼 종합 분석
         try:
             comp_results = self.market_analyzer.comprehensive_analysis(business_idea, search_keyword)
         except Exception as e:
-            print(f"   [WARN] 종합 분석 실패, 기본값 사용: {e}")
+            print(f"   [WARN] 종합 분석 실패, 경량 분석 사용: {e}")
             comp_results = {
                 'data_sources': {},
-                'market_score': 65,
-                'recommendation': {'verdict': '분석 실패 - 재시도 필요'}
+                'market_score': lightweight_score,
+                'recommendation': {'verdict': '크롤링 실패 - 경량 분석 사용'}
             }
 
         data_sources = comp_results.get('data_sources', {})
-        market_score = comp_results.get('market_score', 65)
+        crawled_score = comp_results.get('market_score', 65)
         platform_count = len([k for k, v in data_sources.items() if isinstance(v, dict) and 'error' not in v])
+
+        # 크롤링 점수와 경량 분석 점수 중 높은 쪽 채택
+        market_score = max(crawled_score, lightweight_score)
+        if crawled_score < lightweight_score:
+            print(f"   [ADJUST] 크롤링 점수({crawled_score}) < 경량 분석({lightweight_score}) → 경량 분석 채택")
 
         market_data = {
             'business_idea': business_idea,

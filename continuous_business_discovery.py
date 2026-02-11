@@ -43,8 +43,10 @@ class ContinuousBusinessDiscovery:
         self.schedule_hours = DiscoveryConfig.get_schedule_hours()
         self.ideas_per_run = DiscoveryConfig.get_ideas_per_run()
 
+        from config import MarketConfig
+        mode_label = "경량 모드" if MarketConfig.is_lightweight() else "전체 모드"
         print("="*80)
-        print("[DISCOVERY] 사업 발굴 시스템 시작 (경량 모드)")
+        print(f"[DISCOVERY] 사업 발굴 시스템 시작 ({mode_label})")
         print("="*80)
         print(f"스케줄: {self.schedule_hours} (KST)")
         print(f"최소 저장 점수: {self.min_score}점")
