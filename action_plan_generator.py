@@ -331,7 +331,11 @@ class ActionPlanGenerator:
                 print(f"\n  [OUTPUT] 산출물: {task_group['deliverable']}")
 
                 if 'budget' in task_group:
-                    print(f"  [BUDGET] 예산: {task_group['budget']:,}원")
+                    budget = task_group['budget']
+                    if isinstance(budget, (int, float)):
+                        print(f"  [BUDGET] 예산: {budget:,}원")
+                    else:
+                        print(f"  [BUDGET] 예산: {budget}")
 
                 if 'time_required' in task_group:
                     print(f"  [TIME] 소요 시간: {task_group['time_required']}")
@@ -354,14 +358,14 @@ class ActionPlanGenerator:
         print(f"총 예산: {total_budget:,}원")
         print(f"기술 스택: {tech_stack['tools'][0]}")
         print(f"\n주요 마일스톤:")
-        print(f"  • 1주차: MVP 완성 + 베타 테스터 10명")
-        print(f"  • 2주차: 첫 유료 고객 확보")
-        print(f"  • 3주차: 자동화 시스템 구축")
-        print(f"  • 4주차: 주간 50명 고객 확보")
+        print(f"  - 1주차: MVP 완성 + 베타 테스터 10명")
+        print(f"  - 2주차: 첫 유료 고객 확보")
+        print(f"  - 3주차: 자동화 시스템 구축")
+        print(f"  - 4주차: 주간 50명 고객 확보")
         print(f"\n예상 결과:")
-        print(f"  • 총 고객: 80-150명")
-        print(f"  • 월 매출: 300-800만원")
-        print(f"  • 손익분기: 2-3개월")
+        print(f"  - 총 고객: 80-150명")
+        print(f"  - 월 매출: 300-800만원")
+        print(f"  - 손익분기: 2-3개월")
 
         return {
             'business_name': business_config['name'],
